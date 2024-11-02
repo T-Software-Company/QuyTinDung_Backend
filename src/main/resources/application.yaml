@@ -1,0 +1,35 @@
+server:
+  port: 8080  # Đặt cổng mà ứng dụng sẽ chạy (ở đây là 8080)
+  servlet:
+    context-path: /profile  # Đặt context path cho ứng dụng là "/profile", URL bắt đầu sẽ là localhost:8080/profile
+    encoding:
+      charset: UTF-8  # Đặt bộ ký tự mặc định cho ứng dụng là UTF-8 để hỗ trợ tốt tiếng Việt
+      enabled: true  # Bật mã hóa ký tự UTF-8 cho các yêu cầu và phản hồi
+      force: true  # Đảm bảo rằng mọi phản hồi đều dùng UTF-8, bất kể cài đặt mặc định của trình duyệt hoặc yêu cầu
+
+spring:
+  application:
+    name: qtd-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/qtd_tsoftware
+    username: myuser
+    password: mypassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # Tự động cập nhật cấu trúc cơ sở dữ liệu dựa trên các thay đổi trong entity (các bảng sẽ tự tạo mới và cập nhật khi có thay đổi)
+    show-sql: true  # Hiển thị các câu truy vấn SQL trên console để theo dõi quá trình xử lý của Hibernate
+    properties:
+      hibernate:
+        format_sql: true  # Định dạng các câu truy vấn SQL cho dễ đọc trong console
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/tsoftware
+
+idp:
+  url: http://localhost:8180
+  client-id: tsoftware_backend
+  client-secret: jqUtYH7iycezKv1hq02MjznaBCRcIiSB

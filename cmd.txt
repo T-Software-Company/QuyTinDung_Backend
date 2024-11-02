@@ -1,0 +1,2 @@
+xoá dữ liệu cũ
+docker-compose down -v
