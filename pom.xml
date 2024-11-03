@@ -165,21 +165,35 @@
 				<version>${spotless.version}</version>
 				<configuration>
 					<java>
-						<removeUnusedImports />
-						<toggleOffOn/>
-						<trimTrailingWhitespace/>
-						<endWithNewline/>
-						<indent>
-							<tabs>true</tabs>
-							<spacesPerTab>4</spacesPerTab>
-						</indent>
-						<palantirJavaFormat/>
-						<importOrder>
-							<!-- Specify either order or file, but not both -->
-							<order>java,jakarta,org,com,com.diffplug,</order>
-						</importOrder>
+						<googleJavaFormat/>
 					</java>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>install-git-hooks</id>
+						<phase>initialize</phase>
+						<configuration>
+							<target>
+								<copy file="hooks/pre-commit"
+									  tofile="${basedir}/.git/hooks/pre-commit"
+									  overwrite="true" />
+								<chmod file="${basedir}/.git/hooks/pre-commit" perm="755" />
+								<copy file="hooks/commit-msg"
+									  tofile="${basedir}/.git/hooks/commit-msg"
+									  overwrite="true" />
+								<chmod file="${basedir}/.git/hooks/commit-msg" perm="755" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

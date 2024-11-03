@@ -16,13 +16,12 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
-    // Mã phản hồi mặc định là 1000
-    @Builder.Default
-    private int code = 1000;
+  // Mã phản hồi mặc định là 1000
+  @Builder.Default private int code = 1000;
 
-    // Thông báo phản hồi, có thể là lỗi hoặc thành công
-    private String message;
+  // Thông báo phản hồi, có thể là lỗi hoặc thành công
+  private String message;
 
-    // Kết quả (dữ liệu) trả về từ API, kiểu T là kiểu tổng quát
-    private T result;
+  // Kết quả (dữ liệu) trả về từ API, kiểu T là kiểu tổng quát
+  private T result;
 }

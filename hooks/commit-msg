@@ -1,0 +1,46 @@
+#!/bin/bash
+echo "*********************************************************"
+echo "Running git commit-msg hook. Checking commit message style"
+echo "*********************************************************"
+
+
+error_msg="Your commit message is invalid. Please ensure it follows the format:
+
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer]
+
+Examples:
+1. Feat: Add login functionality
+2. Fix(UI): Resolve button alignment issue
+3. Docs: Update installation instructions
+4. Chore(Deps): Upgrade lombok to version 4.17.21
+5. Style(CSS): Fix indentation in main.css
+6. Refactor(API): Restructure user service for better readability
+7. Perf(Image): Optimize image loading speed
+8. Test(API): Add unit tests for user service
+9. Build(Webpack): Update webpack configuration for better bundling
+10. Ci(GitHub): Update GitHub Actions configuration
+11. Revert: Revert commit abc123
+....
+
+Examples with optional parts:
+1. Feat(API): Add login functionality
+
+   - Added OAuth2 support for user authentication.
+
+2. Fix(UI): Resolve button alignment issue
+
+   - Fixed alignment for primary buttons in the header.
+
+...
+"
+
+commit_message=$(cat "$1")
+if ! [[ $commit_message =~ ^[A-Z][a-zA-Z0-9]+(\(.+\))?:\ [A-Z].*$ ]]; then
+  echo "$error_msg"
+  exit 1
+fi
+exit 0
