@@ -27,7 +27,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegistrationRequest {
+public class ProfileUpdateRequest {
 
     @NotBlank(message = "USERNAME_REQUIRED")
     @Size(min = 4, message = "INVALID_USERNAME")
@@ -41,6 +41,14 @@ public class RegistrationRequest {
     @Email(message = "INVALID_EMAIL_FORMAT")
     String email; // Email người dùng
 
+    @NotBlank(message = "ADDRESS_REQUIRED")
+    @Size(max = 100, message = "ADDRESS_TOO_LONG")
+    String address; // Địa chỉ người dùng, tối đa 100 ký tự
+
+    @NotBlank(message = "EMPLOYEE_CODE_REQUIRED")
+    @Size(max = 20, message = "EMPLOYEE_CODE_TOO_LONG")
+    String employee_code; // Mã nhân viên, tối đa 20 ký tự
+
     @NotBlank(message = "FIRST_NAME_REQUIRED")
     String firstName; // Tên
 
@@ -48,10 +56,10 @@ public class RegistrationRequest {
     String lastName; // Họ
 
     @NotBlank(message = "ROLE_NAME_REQUIRED")
-    String roleName; // Role name, e.g., "ADMIN"
+    String roleName; // Role name
 
     @NotBlank(message = "ROLE_ID_REQUIRED")
-    String roleId; // Role ID, required for role assignment
+    String roleId; // Role ID
 
     @NotNull(message = "DOB_REQUIRED")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -59,7 +67,7 @@ public class RegistrationRequest {
     LocalDate dob; // Ngày sinh, phải ở quá khứ
 
     @NotNull(message = "GENDER_REQUIRED")
-    Gender gender; // Giới tính, không thể null
+    Gender gender; // Giới tính
 
     @NotNull(message = "EMPLOYMENT_STATUS_REQUIRED")
     EmploymentStatus employmentStatus; // Trạng thái làm việc
@@ -70,13 +78,5 @@ public class RegistrationRequest {
     @NotBlank(message = "PHONE_REQUIRED")
     @Size(max = 15, message = "PHONE_TOO_LONG")
     @Pattern(regexp = "^[0-9\\-\\+]{9,15}$", message = "INVALID_PHONE_FORMAT")
-    String phone; // Số điện thoại của người dùng
-
-    @NotBlank(message = "ADDRESS_REQUIRED")
-    @Size(max = 100, message = "ADDRESS_TOO_LONG")
-    String address; // Địa chỉ người dùng, tối đa 100 ký tự
-
-    @NotBlank(message = "EMPLOYEE_CODE_REQUIRED")
-    @Size(max = 20, message = "EMPLOYEE_CODE_TOO_LONG")
-    String employee_code; // Mã nhân viên, tối đa 20 ký tự
+    String phone; // Số điện thoại, có thể có ký tự đặc biệt
 }

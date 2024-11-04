@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.tsoftware.qtd.dto.identity.KeyCloakError;
-import com.tsoftware.qtd.exception.AppException;
-import com.tsoftware.qtd.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tsoftware.qtd.dto.identity.KeyCloakError;
 
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;

@@ -9,46 +9,32 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-// Đánh dấu đây là lớp cấu hình bảo mật
 @Configuration
-@EnableWebSecurity  // Kích hoạt cấu hình bảo mật cho các endpoint web
-@EnableMethodSecurity  // Kích hoạt bảo mật cấp phương thức dựa trên anotasi như @PreAuthorize
+@EnableWebSecurity // Kích hoạt bảo mật web cho ứng dụng
+@EnableMethodSecurity // Kích hoạt bảo mật ở mức phương thức với các annotation như @PreAuthorize
 public class SecurityConfig {
 
-    // Định nghĩa các endpoint công khai không yêu cầu xác thực
-    private final String[] PUBLIC_ENDPOINTS = {"/register"};
-
-    // Định nghĩa bean cấu hình SecurityFilterChain để thiết lập cấu hình bảo mật cho HttpSecurity
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        // Cấu hình ủy quyền cho các endpoint
-        httpSecurity.authorizeHttpRequests(request -> request
-                .requestMatchers(PUBLIC_ENDPOINTS)  // Cho phép truy cập công khai vào các endpoint định nghĩa trong PUBLIC_ENDPOINTS
-                .permitAll()
-                .anyRequest()  // Yêu cầu xác thực cho tất cả các endpoint khác
-                .authenticated());
-
-        // Thiết lập OAuth2 Resource Server với xác thực JWT
-        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwtConfigurer -> jwtConfigurer
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))  // Sử dụng bộ chuyển đổi xác thực JWT
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));  // Xử lý khi không có xác thực hợp lệ
-
-        // Tắt CSRF (Cross-Site Request Forgery) cho API REST (thường không cần CSRF)
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        httpSecurity
+                .authorizeHttpRequests(
+                        auth -> auth.anyRequest().authenticated() // Yêu cầu xác thực cho tất cả các endpoint
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(
+                                jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
+                // Cấu hình máy chủ tài nguyên để sử dụng OAuth2 với xác thực JWT
+                .csrf(AbstractHttpConfigurer::disable); // Tắt CSRF cho các API
 
         return httpSecurity.build();
     }
 
-    // Định nghĩa bean JwtAuthenticationConverter để chuyển đổi JWT thành đối tượng GrantedAuthority
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter(){
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-
-        // Thiết lập CustomAuthoritiesConverter để chuyển đổi các vai trò từ JWT sang GrantedAuthority
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new CustomAuthoritiesConverter());
-
-        return jwtAuthenticationConverter;
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        // Chuyển đổi các quyền hạn từ JWT thành các quyền hạn của Spring Security
+        converter.setJwtGrantedAuthoritiesConverter(new CustomAuthoritiesConverter());
+        return converter;
     }
 }

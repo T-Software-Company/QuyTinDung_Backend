@@ -2,16 +2,16 @@
 
 package com.tsoftware.qtd.configuration;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public class CustomAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
@@ -38,9 +38,9 @@ public class CustomAuthoritiesConverter implements Converter<Jwt, Collection<Gra
         if (roles instanceof List stringRoles) {
             return ((List<String>) stringRoles)
                     .stream()
-                    // Thêm tiền tố "ROLE_" vào mỗi quyền và chuyển đổi thành SimpleGrantedAuthority.
-                    .map(s -> new SimpleGrantedAuthority(String.format("%s%s", ROLE_PREFIX, s)))
-                    .collect(Collectors.toList());
+                            // Thêm tiền tố "ROLE_" vào mỗi quyền và chuyển đổi thành SimpleGrantedAuthority.
+                            .map(s -> new SimpleGrantedAuthority(String.format("%s%s", ROLE_PREFIX, s)))
+                            .collect(Collectors.toList());
         }
 
         // Nếu "roles" không phải là một danh sách, trả về một danh sách trống.

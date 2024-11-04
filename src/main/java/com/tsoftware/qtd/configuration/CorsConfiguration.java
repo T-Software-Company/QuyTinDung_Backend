@@ -10,7 +10,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfiguration {
 
-    @Bean  // Đánh dấu phương thức này để Spring quản lý và tạo một CorsFilter bean cho toàn bộ ứng dụng
+    @Bean // Đánh dấu phương thức này để Spring quản lý và tạo một CorsFilter bean cho toàn bộ ứng dụng
     public CorsFilter corsFilter() {
         // Tạo một cấu hình CORS (Cross-Origin Resource Sharing)
         org.springframework.web.cors.CorsConfiguration corsConfiguration =

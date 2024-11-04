@@ -1,17 +1,16 @@
 services:
-  mysql:
-    image: mysql:8.0
+  postgres:
+    image: postgres:16.2  # Chọn phiên bản PostgreSQL
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      MYSQL_DATABASE: qtd_tsoftware           # Tên database
-      MYSQL_USER: myuser                      # Tên người dùng
-      MYSQL_PASSWORD: mypassword              # Mật khẩu người dùng
-      MYSQL_ROOT_PASSWORD: myrootpassword     # Mật khẩu root
+      POSTGRES_DB: qtd_tsoftware          # Tên database
+      POSTGRES_USER: myuser               # Tên người dùng
+      POSTGRES_PASSWORD: mypassword       # Mật khẩu người dùng
     networks:
       - keycloak_network
     ports:
-      - "3306:3306"
+      - "5432:5432"                       # Mở cổng PostgreSQL
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.0
@@ -23,37 +22,38 @@ services:
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT_HTTPS: false
       KC_HEALTH_ENABLED: true
-      KEYCLOAK_ADMIN: admin                   # Tài khoản quản trị Keycloak
-      KEYCLOAK_ADMIN_PASSWORD: admin          # Mật khẩu tài khoản quản trị
-      KC_DB: mysql
-      KC_DB_URL: jdbc:mysql://mysql/qtd_tsoftware       # Đường dẫn kết nối MySQL
-      KC_DB_USERNAME: myuser                  # Người dùng khớp với MySQL
-      KC_DB_PASSWORD: mypassword              # Mật khẩu khớp với MySQL
-      QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true # Bật phục hồi giao dịch
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/keycloak.json # Đường dẫn import cụ thể
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/qtd_tsoftware  # Đường dẫn kết nối PostgreSQL
+      KC_DB_USERNAME: myuser
+      KC_DB_PASSWORD: mypassword
+      QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/keycloak.json
     ports:
       - 8180:8080
     restart: always
     volumes:
-      - ./keycloak:/opt/keycloak/data/import  # Thư mục chứa file import Keycloak
+      - ./keycloak:/opt/keycloak/data/import
     depends_on:
-      - mysql
+      - postgres
     networks:
       - keycloak_network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.2.1
+  pgadmin:
+    image: dpage/pgadmin4
     environment:
-      PMA_HOST: mysql                         # MySQL host
-      PMA_PORT: 3306                          # MySQL port
-      PMA_ARBITRARY: 1                        # Cho phép kết nối với server tùy ý
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com  # Email đăng nhập mặc định
+      PGADMIN_DEFAULT_PASSWORD: admin           # Mật khẩu đăng nhập mặc định
     ports:
-      - 8181:80                               # Mở cổng phpMyAdmin trên 8180
+      - "8081:80"                               # Mở cổng pgAdmin trên 8081
+    depends_on:
+      - postgres
     networks:
       - keycloak_network
 
 volumes:
-  mysql_data:
+  postgres_data:
     driver: local
 
 networks:

@@ -26,20 +26,20 @@ public class GlobalExceptionHandler {
     // Xử lý ngoại lệ chung (Exception), để ghi log và trả về phản hồi chuẩn với mã lỗi chung
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
-        log.error("Exception: ", exception);  // Ghi lại lỗi chi tiết vào log
+        log.error("Exception: ", exception); // Ghi lại lỗi chi tiết vào log
         ApiResponse apiResponse = new ApiResponse();
 
         // Thiết lập mã và thông báo lỗi cho các ngoại lệ không xác định
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
 
-        return ResponseEntity.badRequest().body(apiResponse);  // Trả về phản hồi HTTP 400
+        return ResponseEntity.badRequest().body(apiResponse); // Trả về phản hồi HTTP 400
     }
 
     // Xử lý ngoại lệ tùy chỉnh (AppException) khi gặp các lỗi trong ứng dụng
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse> handlingAppException(AppException exception) {
-        ErrorCode errorCode = exception.getErrorCode();  // Lấy mã lỗi từ AppException
+        ErrorCode errorCode = exception.getErrorCode(); // Lấy mã lỗi từ AppException
         ApiResponse apiResponse = new ApiResponse();
 
         // Gán mã và thông báo lỗi dựa trên AppException
@@ -68,16 +68,16 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
         String enumKey = exception.getFieldError().getDefaultMessage();
 
-        ErrorCode errorCode = ErrorCode.INVALID_KEY;  // Mặc định mã lỗi khi tham số không hợp lệ
+        ErrorCode errorCode = ErrorCode.INVALID_KEY; // Mặc định mã lỗi khi tham số không hợp lệ
         Map<String, Object> attributes = null;
         try {
-            errorCode = ErrorCode.valueOf(enumKey);  // Tìm mã lỗi tương ứng trong ErrorCode enum
+            errorCode = ErrorCode.valueOf(enumKey); // Tìm mã lỗi tương ứng trong ErrorCode enum
 
             // Lấy thông tin chi tiết về lỗi từ ConstraintViolation
             var constraintViolation =
                     exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
 
-            attributes = constraintViolation.getConstraintDescriptor().getAttributes();  // Lấy các thuộc tính ràng buộc
+            attributes = constraintViolation.getConstraintDescriptor().getAttributes(); // Lấy các thuộc tính ràng buộc
             log.info(attributes.toString());
 
         } catch (IllegalArgumentException e) {
@@ -90,15 +90,16 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(
                 Objects.nonNull(attributes)
-                        ? mapAttribute(errorCode.getMessage(), attributes)  // Thay thế thuộc tính "min" vào thông báo lỗi
+                        ? mapAttribute(
+                                errorCode.getMessage(), attributes) // Thay thế thuộc tính "min" vào thông báo lỗi
                         : errorCode.getMessage());
 
-        return ResponseEntity.badRequest().body(apiResponse);  // Trả về phản hồi HTTP 400
+        return ResponseEntity.badRequest().body(apiResponse); // Trả về phản hồi HTTP 400
     }
 
     // Thay thế {min} trong thông báo lỗi với giá trị tối thiểu từ thuộc tính ràng buộc
     private String mapAttribute(String message, Map<String, Object> attributes) {
         String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));
-        return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);  // Thay thế giá trị vào thông báo
+        return message.replace("{" + MIN_ATTRIBUTE + "}", minValue); // Thay thế giá trị vào thông báo
     }
 }
