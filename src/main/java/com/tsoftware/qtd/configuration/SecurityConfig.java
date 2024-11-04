@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.configuration;
 
+import com.tsoftware.qtd.constants.EnumType.Roles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -13,28 +14,44 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // Kích hoạt bảo mật web cho ứng dụng
 @EnableMethodSecurity // Kích hoạt bảo mật ở mức phương thức với các annotation như @PreAuthorize
 public class SecurityConfig {
+  final String[] protectedAdminPaths = {
+    "/profiles",
+    "/profiles/register",
+    "/profiles/*",
+    "/profiles/*/reset-password",
+    "/profiles/*/active",
+    "/profiles/deactivate",
+  };
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity
-                .authorizeHttpRequests(
-                        auth -> auth.anyRequest().authenticated() // Yêu cầu xác thực cho tất cả các endpoint
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(
-                                jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
-                // Cấu hình máy chủ tài nguyên để sử dụng OAuth2 với xác thực JWT
-                .csrf(AbstractHttpConfigurer::disable); // Tắt CSRF cho các API
+    httpSecurity
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(protectedAdminPaths)
+                    .hasAnyRole(Roles.ADMIN.name())
+                    .anyRequest()
+                    .authenticated() // Yêu cầu xác thực cho tất cả các endpoint
+            )
+        .oauth2ResourceServer(
+            oauth2 ->
+                oauth2
+                    .jwt(
+                        jwtConfigurer ->
+                            jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                    .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
+        // Cấu hình máy chủ tài nguyên để sử dụng OAuth2 với xác thực JWT
+        .csrf(AbstractHttpConfigurer::disable); // Tắt CSRF cho các API
 
-        return httpSecurity.build();
-    }
+    return httpSecurity.build();
+  }
 
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        // Chuyển đổi các quyền hạn từ JWT thành các quyền hạn của Spring Security
-        converter.setJwtGrantedAuthoritiesConverter(new CustomAuthoritiesConverter());
-        return converter;
-    }
+  @Bean
+  public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+    // Chuyển đổi các quyền hạn từ JWT thành các quyền hạn của Spring Security
+    converter.setJwtGrantedAuthoritiesConverter(new CustomAuthoritiesConverter());
+    return converter;
+  }
 }

@@ -1,25 +1,24 @@
 package com.tsoftware.qtd.service;
 
-import java.util.List;
-
 import com.tsoftware.qtd.dto.request.ProfileUpdateRequest;
 import com.tsoftware.qtd.dto.request.RegistrationRequest;
 import com.tsoftware.qtd.dto.response.ProfileResponse;
+import java.util.List;
 
 public interface ProfileService {
-    List<ProfileResponse> getAllProfiles();
+  List<ProfileResponse> getAllProfiles();
 
-    ProfileResponse getMyProfile();
+  ProfileResponse getMyProfile();
 
-    ProfileResponse registerProfile(RegistrationRequest request);
+  ProfileResponse registerProfile(RegistrationRequest request);
 
-    void updateProfile(ProfileUpdateRequest request);
+  void updateProfile(ProfileUpdateRequest request);
 
-    void updateProfileByAdmin(String userId, ProfileUpdateRequest request);
+  void updateProfileByAdmin(String userId, ProfileUpdateRequest request);
 
-    void resetPassword(String userId, String newPassword);
+  void resetPassword(String userId, String newPassword);
 
-    void activateUser(String userId);
+  void activateUser(String userId);
 
-    void deactivateUser(String userId);
+  void deactivateUser(String userId);
 }
