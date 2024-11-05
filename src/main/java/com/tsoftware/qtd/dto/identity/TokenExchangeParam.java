@@ -13,8 +13,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TokenExchangeParam {
-    String grant_type; // Loại grant (cấp quyền) yêu cầu, ví dụ: "client_credentials"
-    String client_id; // ID của client, cần thiết để xác thực ứng dụng với máy chủ
-    String client_secret; // Mật khẩu bí mật của client, kết hợp với client_id để xác thực
-    String scope; // Phạm vi quyền truy cập yêu cầu, ví dụ: "openid profile"
+  String grant_type;
+  String client_id;
+  String client_secret;
+  String scope;
 }

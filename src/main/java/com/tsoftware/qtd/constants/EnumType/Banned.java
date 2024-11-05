@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum Banned {
-    ACTIVE("Đang hoạt động"),
-    LOCKED("Bị khoá");
+  ACTIVE("Đang hoạt động"),
+  LOCKED("Bị khoá");
 
-    private final String description;
+  private final String description;
 
-    Banned(String description) {
-        this.description = description;
-    }
+  Banned(String description) {
+    this.description = description;
+  }
 }

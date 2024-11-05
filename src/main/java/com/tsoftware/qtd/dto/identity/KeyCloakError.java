@@ -13,5 +13,5 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class KeyCloakError {
-    String errorMessage; // Chuỗi chứa thông báo lỗi trả về từ Keycloak
+  String errorMessage;
 }

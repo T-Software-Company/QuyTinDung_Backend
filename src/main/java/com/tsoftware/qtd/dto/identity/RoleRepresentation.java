@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class RoleRepresentation {
-    private String id; // ID của vai trò
-    private String name; // Tên của vai trò
-    private String description; // Mô tả của vai trò
+  private String id;
+  private String name;
+  private String description;
 }

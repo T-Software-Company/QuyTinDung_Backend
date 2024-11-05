@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class UserUpdateParam {
-    private String firstName; // Tên riêng của người dùng
-    private String lastName; // Họ của người dùng
+  private String firstName;
+  private String lastName;
 }

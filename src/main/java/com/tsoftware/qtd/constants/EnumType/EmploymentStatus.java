@@ -4,13 +4,13 @@ import lombok.Getter;
 
 @Getter
 public enum EmploymentStatus {
-    WORKING("Đang làm việc"),
-    ON_LEAVE("Đang nghỉ phép"),
-    RESIGNED("Đã nghỉ việc");
+  WORKING("Đang làm việc"),
+  ON_LEAVE("Đang nghỉ phép"),
+  RESIGNED("Đã nghỉ việc");
 
-    private final String description;
+  private final String description;
 
-    EmploymentStatus(String description) {
-        this.description = description;
-    }
+  EmploymentStatus(String description) {
+    this.description = description;
+  }
 }
