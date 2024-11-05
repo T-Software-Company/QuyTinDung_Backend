@@ -1,5 +1,3 @@
-//  Cho phép tất cả các nguồn từ bất kỳ địa chỉ nào truy cập vào ứng dụng
-
 package com.tsoftware.qtd.configuration;
 
 import org.springframework.context.annotation.Bean;

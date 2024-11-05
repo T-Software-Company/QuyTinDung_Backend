@@ -3,7 +3,3 @@ docker-compose down -v
 
 format code
 mvn spotless:apply
-
-nguyenhauwe2b22
-
-12324567892

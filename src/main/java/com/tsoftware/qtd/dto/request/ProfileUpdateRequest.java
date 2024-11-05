@@ -23,7 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegistrationRequest {
+public class ProfileUpdateRequest {
 
   @NotBlank(message = "USERNAME_REQUIRED")
   @Size(min = 4, message = "INVALID_USERNAME")
@@ -36,6 +36,14 @@ public class RegistrationRequest {
   @NotBlank(message = "EMAIL_REQUIRED")
   @Email(message = "INVALID_EMAIL_FORMAT")
   String email;
+
+  @NotBlank(message = "ADDRESS_REQUIRED")
+  @Size(max = 100, message = "ADDRESS_TOO_LONG")
+  String address;
+
+  @NotBlank(message = "EMPLOYEE_CODE_REQUIRED")
+  @Size(max = 20, message = "EMPLOYEE_CODE_TOO_LONG")
+  String employee_code;
 
   @NotBlank(message = "FIRST_NAME_REQUIRED")
   String firstName;
@@ -67,12 +75,4 @@ public class RegistrationRequest {
   @Size(max = 15, message = "PHONE_TOO_LONG")
   @Pattern(regexp = "^[0-9\\-\\+]{9,15}$", message = "INVALID_PHONE_FORMAT")
   String phone;
-
-  @NotBlank(message = "ADDRESS_REQUIRED")
-  @Size(max = 100, message = "ADDRESS_TOO_LONG")
-  String address;
-
-  @NotBlank(message = "EMPLOYEE_CODE_REQUIRED")
-  @Size(max = 20, message = "EMPLOYEE_CODE_TOO_LONG")
-  String employee_code;
 }

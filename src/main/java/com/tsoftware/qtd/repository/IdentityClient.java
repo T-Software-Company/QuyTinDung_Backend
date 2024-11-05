@@ -13,89 +13,62 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(
-    name = "identity-client",
-    url =
-        "${idp.url}") // Định nghĩa Feign Client với tên "identity-client" và URL cơ sở lấy từ biến
-// cấu hình idp.url
+@FeignClient(name = "identity-client", url = "${idp.url}")
 public interface IdentityClient {
 
-  // Gọi API để lấy access token từ IDP sử dụng phương thức client_credentials
   @PostMapping(
-      value = "/realms/{realm}/protocol/openid-connect/token", // Đường dẫn đến endpoint lấy token
-      consumes =
-          MediaType.APPLICATION_FORM_URLENCODED_VALUE) // Dữ liệu truyền vào yêu cầu dưới dạng
-  // application/x-www-form-urlencoded
+      value = "/realms/{realm}/protocol/openid-connect/token",
+      consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   TokenExchangeResponse exchangeToken(
       @PathVariable("realm") String realm, @RequestBody TokenExchangeParam param);
 
-  // Tham số: realm (realm của IDP) và param (thông tin client ID, client secret và grant type)
-  // Trả về: TokenExchangeResponse chứa access token và các thông tin liên quan
-
-  // Tạo người dùng mới trong IDP
-  @PostMapping(
-      value = "/admin/realms/{realm}/users",
-      consumes =
-          MediaType.APPLICATION_JSON_VALUE) // Endpoint để tạo người dùng trong realm nhất định
+  @PostMapping(value = "/admin/realms/{realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE)
   ResponseEntity<?> createUser(
-      @RequestHeader("authorization") String token, // Access token dùng để xác thực
-      @PathVariable("realm") String realm, // Realm của IDP
-      @RequestBody UserCreationParam param); // UserCreationParam chứa thông tin người dùng cần tạo
+      @RequestHeader("authorization") String token,
+      @PathVariable("realm") String realm,
+      @RequestBody UserCreationParam param);
 
-  // Cập nhật thông tin người dùng hiện có trong IDP
   @PutMapping(
       value = "/admin/realms/{realm}/users/{userId}",
       consumes = MediaType.APPLICATION_JSON_VALUE)
   void updateUser(
-      @RequestHeader("authorization") String token, // Access token cho phép truy cập endpoint
-      @PathVariable("realm") String realm, // Realm của IDP
-      @PathVariable("userId") String userId, // ID của người dùng cần cập nhật
-      @RequestBody UserUpdateParam param); // Thông tin cập nhật của người dùng
+      @RequestHeader("authorization") String token,
+      @PathVariable("realm") String realm,
+      @PathVariable("userId") String userId,
+      @RequestBody UserUpdateParam param);
 
-  // Lấy tất cả các vai trò (roles) có trong realm
   @GetMapping(value = "/admin/realms/{realm}/roles")
   List<RoleRepresentation> getAllRoles(
-      @RequestHeader("authorization") String token, // Access token để xác thực
-      @PathVariable("realm") String realm); // Realm của IDP
+      @RequestHeader("authorization") String token, @PathVariable("realm") String realm);
 
-  // Gán các vai trò cho một người dùng trong realm
   @PostMapping(
-      value =
-          "/admin/realms/{realm}/users/{userId}/role-mappings/realm", // Endpoint để gán role cho
-      // người dùng
+      value = "/admin/realms/{realm}/users/{userId}/role-mappings/realm",
       consumes = MediaType.APPLICATION_JSON_VALUE)
   void assignUserRoles(
-      @RequestHeader("authorization") String token, // Access token để xác thực
-      @PathVariable("realm") String realm, // Realm của IDP
-      @PathVariable("userId") String userId, // ID của người dùng
-      @RequestBody List<RoleRepresentation> roles); // Danh sách vai trò để gán cho người dùng
+      @RequestHeader("authorization") String token,
+      @PathVariable("realm") String realm,
+      @PathVariable("userId") String userId,
+      @RequestBody List<RoleRepresentation> roles);
 
-  // Đặt lại mật khẩu cho người dùng
   @PutMapping(
-      value = "/admin/realms/{realm}/users/{userId}/reset-password", // Endpoint để đặt lại mật khẩu
-      // người dùng
+      value = "/admin/realms/{realm}/users/{userId}/reset-password",
       consumes = MediaType.APPLICATION_JSON_VALUE)
   void updatePassword(
-      @RequestHeader("authorization") String token, // Access token để xác thực
-      @PathVariable("realm") String realm, // Realm của IDP
-      @PathVariable("userId") String userId, // ID của người dùng
-      @RequestBody Credential credential); // Credential chứa thông tin mật khẩu mới
+      @RequestHeader("authorization") String token,
+      @PathVariable("realm") String realm,
+      @PathVariable("userId") String userId,
+      @RequestBody Credential credential);
 
-  // Lấy các vai trò hiện tại của một người dùng trong realm
   @GetMapping(value = "/admin/realms/{realm}/users/{userId}/role-mappings/realm")
   List<RoleRepresentation> getUserRoles(
-      @RequestHeader("authorization") String token, // Access token để xác thực
-      @PathVariable("realm") String realm, // Realm của IDP
-      @PathVariable("userId") String userId); // ID của người dùng
+      @RequestHeader("authorization") String token,
+      @PathVariable("realm") String realm,
+      @PathVariable("userId") String userId);
 
-  // Cập nhật trạng thái kích hoạt của người dùng
-  @PutMapping("/admin/realms/{realm}/users/{userId}") // Endpoint để cập nhật trạng thái người dùng
+  @PutMapping("/admin/realms/{realm}/users/{userId}")
   void updateUserStatus(
-      @RequestHeader("Authorization") String token, // Access token để xác thực
-      @PathVariable String realm, // Realm của IDP
-      @PathVariable String userId, // ID của người dùng
-      @RequestBody
-          Map<String, Object>
-              userUpdate); // Map chứa các cập nhật trạng thái cho người dùng, ví dụ "enabled":
-  // true/false
+      @RequestHeader("Authorization") String token,
+      @PathVariable String realm,
+      @PathVariable String userId,
+      @RequestBody Map<String, Object> userUpdate);
 }

@@ -1,6 +1,3 @@
-// Lớp này triển khai Converter để chuyển đổi một đối tượng JWT thành một tập hợp các quyền hạn
-// (authorities).
-
 package com.tsoftware.qtd.configuration;
 
 import java.util.Collection;

@@ -14,6 +14,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileUpdateClientRequest {
 
-  String firstName; // Tên mới của người dùng
-  String lastName; // Họ mới của người dùng
+  String firstName;
+  String lastName;
 }

@@ -26,45 +26,40 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-@Service // Đánh dấu lớp này là một service của Spring
-@Slf4j // Bổ sung khả năng ghi log
-@RequiredArgsConstructor // Tự động tạo constructor cho các trường final
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) // Đặt các trường là private và final
+@Service
+@Slf4j
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProfileServiceImpl implements ProfileService {
 
-  ProfileRepository profileRepository; // Repository xử lý lưu trữ hồ sơ
-  ProfileMapper profileMapper; // Mapper chuyển đổi giữa entity và DTO
-  IdentityClient identityClient; // Client để gọi API tới hệ thống Identity Provider
-  ErrorNormalizer errorNormalizer; // Bộ xử lý lỗi để chuẩn hóa các lỗi trả về từ Identity Provider
-  IdpProperties idpProperties; // Cấu hình thông tin của Identity Provider (IDP)
+  ProfileRepository profileRepository;
+  ProfileMapper profileMapper;
+  IdentityClient identityClient;
+  ErrorNormalizer errorNormalizer;
+  IdpProperties idpProperties;
 
-  // Lấy token để xác thực yêu cầu tới Identity Provider
   private String getToken() {
     return identityClient
         .exchangeToken(
             idpProperties.getRealm(),
             new TokenExchangeParam(
-                "client_credentials", // Dùng phương thức client_credentials để lấy token
+                "client_credentials",
                 idpProperties.getClientId(),
                 idpProperties.getClientSecret(),
                 "openid"))
-        .getAccessToken(); // Trả về access token
+        .getAccessToken();
   }
 
-  // Trích xuất userId từ phản hồi HTTP
   private String extractUserId(ResponseEntity<?> response) {
     String locationHeader = response.getHeaders().get("Location").get(0);
     String[] locationParts = locationHeader.split("/");
-    return locationParts[locationParts.length - 1]; // Trả về userId từ URL cuối cùng của Location
+    return locationParts[locationParts.length - 1];
   }
 
-  // Lấy danh sách tất cả hồ sơ với vai trò ADMIN
   @Override
-  @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép ADMIN truy cập
   public List<ProfileResponse> getAllProfiles() {
     String token = getToken();
     List<RoleRepresentation> allRoles =
@@ -72,17 +67,13 @@ public class ProfileServiceImpl implements ProfileService {
 
     return profileRepository.findAll().stream()
         .map(profile -> mapProfileWithRoles(profile, allRoles, token))
-        .collect(
-            Collectors
-                .toList()); // Chuyển đổi danh sách profile sang profile response và kèm theo vai
-    // trò
+        .collect(Collectors.toList());
   }
 
-  // Map một profile với các vai trò của nó
   private ProfileResponse mapProfileWithRoles(
       Profile profile, List<RoleRepresentation> allRoles, String token) {
     List<String> userRoles;
-    ProfileResponse response = profileMapper.toProfileResponse(profile); // Chuyển entity sang DTO
+    ProfileResponse response = profileMapper.toProfileResponse(profile);
 
     try {
       userRoles =
@@ -94,25 +85,26 @@ public class ProfileServiceImpl implements ProfileService {
 
       List<RoleResponse> roles =
           allRoles.stream()
-              .filter(
-                  role -> userRoles.contains(role.getName())) // Chỉ lấy những vai trò người dùng có
+              .filter(role -> userRoles.contains(role.getName()))
               .map(role -> new RoleResponse(role.getId(), role.getName(), role.getDescription()))
               .collect(Collectors.toList());
 
-      response.setRoles(roles); // Gắn vai trò vào response
+      response.setRoles(roles);
     } catch (FeignException e) {
       log.error("Failed to fetch roles for user {}: {}", profile.getUserId(), e.getMessage());
-      response.setRoles(List.of()); // Trong trường hợp lỗi, vai trò sẽ để trống
+      response.setRoles(List.of());
     }
     return response;
   }
 
-  // Lấy hồ sơ của người dùng hiện tại
   @Override
-  @PreAuthorize("isAuthenticated()") // Đảm bảo người dùng đã xác thực
   public ProfileResponse getMyProfile() {
-    String userId =
-        SecurityContextHolder.getContext().getAuthentication().getName(); // Lấy userId từ token
+    String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+    log.info("User ID from SecurityContext: {}", userId);
+
+    var authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+    log.info("User Authorities: {}", authorities);
+
     var profile = findProfileByUserId(userId);
     return mapProfileWithRoles(
         profile,
@@ -120,9 +112,7 @@ public class ProfileServiceImpl implements ProfileService {
         getToken());
   }
 
-  // Đăng ký một hồ sơ mới (ADMIN)
   @Override
-  @PreAuthorize("hasRole('ADMIN')") // Chỉ ADMIN mới có quyền
   public ProfileResponse registerProfile(RegistrationRequest request) {
     try {
       String token = getToken();
@@ -131,8 +121,8 @@ public class ProfileServiceImpl implements ProfileService {
               identityClient.createUser(
                   "Bearer " + token, idpProperties.getRealm(), buildUserCreationParam(request)));
 
-      Profile profile = profileMapper.toProfile(request); // Map từ DTO sang entity
-      profile.setUserId(userId); // Gán userId lấy từ IDP
+      Profile profile = profileMapper.toProfile(request);
+      profile.setUserId(userId);
       profileRepository.save(profile);
 
       assignRoleToUserInKeycloak(userId, request.getRoleId(), request.getRoleName());
@@ -144,11 +134,10 @@ public class ProfileServiceImpl implements ProfileService {
       return mapProfileWithRoles(
           profile, identityClient.getAllRoles("Bearer " + token, idpProperties.getRealm()), token);
     } catch (FeignException e) {
-      throw handleFeignException(e, "Failed to create user"); // Xử lý lỗi khi tạo user
+      throw handleFeignException(e, "Failed to create user");
     }
   }
 
-  // Xây dựng tham số tạo user từ RegistrationRequest
   private UserCreationParam buildUserCreationParam(RegistrationRequest request) {
     return UserCreationParam.builder()
         .username(request.getUsername())
@@ -158,18 +147,15 @@ public class ProfileServiceImpl implements ProfileService {
         .enabled(true)
         .emailVerified(false)
         .credentials(List.of(new Credential("password", request.getPassword(), false)))
-        .build(); // Tạo user với mật khẩu không cần đổi
+        .build();
   }
 
-  // Cập nhật thông tin cá nhân cơ bản của người dùng hiện tại
   @Override
-  @PreAuthorize("isAuthenticated()")
   public void updateProfile(ProfileUpdateClientRequest request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
     updateBasicPersonalInfo(userId, request.getFirstName(), request.getLastName());
   }
 
-  // Cập nhật tên và họ của người dùng, giữ lại các thông tin khác
   private void updateBasicPersonalInfo(String userId, String firstName, String lastName) {
     var profile = findProfileByUserId(userId);
 
@@ -185,9 +171,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  // Cập nhật hồ sơ bất kỳ user nào bởi admin
   @Override
-  @PreAuthorize("hasRole('ADMIN')")
   public void updateProfileByAdmin(String userId, ProfileAdminUpdateRequest request) {
     var profile = findProfileByUserId(userId);
 
@@ -206,14 +190,12 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  // Tìm hồ sơ theo userId
   private Profile findProfileByUserId(String userId) {
     return profileRepository
         .findByUserId(userId)
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
   }
 
-  // Xử lý cập nhật trạng thái khóa của người dùng
   private void handleBannedStatusUpdate(String userId, Banned currentStatus, Banned newStatus) {
     if (newStatus != null && newStatus != currentStatus) {
       if (newStatus == Banned.LOCKED) {
@@ -224,7 +206,6 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  // Cập nhật tên trong Keycloak
   private void updateUserInKeycloak(String userId, ProfileAdminUpdateRequest request) {
     UserUpdateParam updateParam =
         UserUpdateParam.builder()
@@ -235,14 +216,12 @@ public class ProfileServiceImpl implements ProfileService {
         "Bearer " + getToken(), idpProperties.getRealm(), userId, updateParam);
   }
 
-  // Cập nhật mật khẩu trong Keycloak
   private void updatePasswordInKeycloak(String userId, String newPassword) {
     Credential credential = new Credential("password", newPassword, false);
     identityClient.updatePassword(
         "Bearer " + getToken(), idpProperties.getRealm(), userId, credential);
   }
 
-  // Gán vai trò cho user trong Keycloak
   private void assignRoleToUserInKeycloak(String userId, String roleId, String roleName) {
     var role = RoleRepresentation.builder().id(roleId).name(roleName).build();
     try {
@@ -259,21 +238,17 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  // Kích hoạt user
   @Override
-  @PreAuthorize("hasRole('ADMIN')")
   public void activateUser(String userId) {
     changeUserStatus(userId, true, Banned.ACTIVE);
   }
 
   // Vô hiệu hóa user
   @Override
-  @PreAuthorize("hasRole('ADMIN')")
   public void deactivateUser(String userId) {
     changeUserStatus(userId, false, Banned.LOCKED);
   }
 
-  // Thay đổi trạng thái user (kích hoạt/vô hiệu hóa) trong Keycloak
   private void changeUserStatus(String userId, boolean enabled, Banned bannedStatus) {
     Map<String, Object> userUpdate = new HashMap<>();
     userUpdate.put("enabled", enabled);
@@ -285,12 +260,10 @@ public class ProfileServiceImpl implements ProfileService {
     profileRepository.save(profile);
   }
 
-  // Đặt lại mật khẩu người dùng
   public void resetPassword(String userId, String newPassword) {
     updatePasswordInKeycloak(userId, newPassword);
   }
 
-  // Xử lý lỗi từ FeignException
   private AppException handleFeignException(FeignException e, String errorMessage) {
     log.error("{}: {}", errorMessage, e.getMessage());
     return errorNormalizer.handleKeyCloakException(e);

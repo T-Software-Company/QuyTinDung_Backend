@@ -17,24 +17,24 @@ import lombok.*;
 public class Profile {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long profileId; // ID tự động tăng của hồ sơ
+  private Long profileId;
 
-  private String userId; // ID người dùng từ Keycloak
-  private String username; // Tên đăng nhập của người dùng
-  private String employee_code; // Mã nhân viên của người dùng
-  private String email; // Địa chỉ email của người dùng
-  private String firstName; // Tên riêng của người dùng
-  private String lastName; // Họ của người dùng
-  private LocalDate dob; // Ngày sinh của người dùng
-  private String phone; // Số điện thoại của người dùng
-  private String address; // Địa chỉ của người dùng
-
-  @Enumerated(EnumType.STRING)
-  private Gender gender; // Giới tính của người dùng (Nam/Nữ)
+  private String userId;
+  private String username;
+  private String employee_code;
+  private String email;
+  private String firstName;
+  private String lastName;
+  private LocalDate dob;
+  private String phone;
+  private String address;
 
   @Enumerated(EnumType.STRING)
-  private Banned banned; // Trạng thái khóa (Đã khóa/Chưa khóa)
+  private Gender gender;
 
   @Enumerated(EnumType.STRING)
-  private EmploymentStatus employmentStatus; // Trạng thái làm việc (Đang làm việc/Đã xin nghỉ)
+  private Banned banned;
+
+  @Enumerated(EnumType.STRING)
+  private EmploymentStatus employmentStatus;
 }

@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.configuration;
 
+import com.tsoftware.qtd.constants.EnumType.Roles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,11 +15,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+  final String[] protectedClientPaths = {
+    "/profiles/client/my-profile", "/profiles/client/reset-password",
+  };
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-
     httpSecurity
-        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(protectedClientPaths)
+                    .authenticated()
+                    .anyRequest()
+                    .hasRole(Roles.ADMIN.name()))
         .oauth2ResourceServer(
             oauth2 ->
                 oauth2

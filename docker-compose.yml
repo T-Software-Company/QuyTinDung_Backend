@@ -25,7 +25,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres/qtd_tsoftware  # Đường dẫn kết nối PostgreSQL
+      KC_DB_URL: jdbc:postgresql://postgres/qtd_tsoftware
       KC_DB_USERNAME: myuser
       KC_DB_PASSWORD: mypassword
       QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
@@ -43,10 +43,10 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com  # Email đăng nhập mặc định
-      PGADMIN_DEFAULT_PASSWORD: admin           # Mật khẩu đăng nhập mặc định
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "8081:80"                               # Mở cổng pgAdmin trên 8081
+      - "8081:80"
     depends_on:
       - postgres
     networks:
