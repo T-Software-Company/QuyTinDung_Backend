@@ -1,8 +1,9 @@
-package com.tsoftware.qtd.dto.response;
+package com.tsoftware.qtd.dto.profile;
 
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
+import com.tsoftware.qtd.dto.address.AddressVm;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AccessLevel;
@@ -31,7 +32,7 @@ public class ProfileResponse {
   LocalDate dob;
 
   String phone;
-  String address;
+  AddressVm address;
   String employee_code;
 
   Gender gender;

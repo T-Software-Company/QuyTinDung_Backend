@@ -3,11 +3,7 @@ package com.tsoftware.qtd.service.Impl;
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.dto.identity.*;
-import com.tsoftware.qtd.dto.request.ProfileAdminUpdateRequest;
-import com.tsoftware.qtd.dto.request.ProfileUpdateClientRequest;
-import com.tsoftware.qtd.dto.request.RegistrationRequest;
-import com.tsoftware.qtd.dto.response.ProfileResponse;
-import com.tsoftware.qtd.dto.response.RoleResponse;
+import com.tsoftware.qtd.dto.profile.*;
 import com.tsoftware.qtd.entity.Profile;
 import com.tsoftware.qtd.exception.AppException;
 import com.tsoftware.qtd.exception.ErrorCode;
@@ -113,7 +109,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public ProfileResponse registerProfile(RegistrationRequest request) {
+  public ProfileResponse registerProfile(ProfileRequestForAdmin request) {
     try {
       String token = getToken();
       String userId =
@@ -138,7 +134,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  private UserCreationParam buildUserCreationParam(RegistrationRequest request) {
+  private UserCreationParam buildUserCreationParam(ProfileRequestForAdmin request) {
     return UserCreationParam.builder()
         .username(request.getUsername())
         .firstName(request.getFirstName())
@@ -151,7 +147,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public void updateProfile(ProfileUpdateClientRequest request) {
+  public void updateProfile(ProfileRequest request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
     updateBasicPersonalInfo(userId, request.getFirstName(), request.getLastName());
   }
@@ -172,7 +168,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public void updateProfileByAdmin(String userId, ProfileAdminUpdateRequest request) {
+  public void updateProfileByAdmin(String userId, ProfileRequestForAdmin request) {
     var profile = findProfileByUserId(userId);
 
     handleBannedStatusUpdate(userId, profile.getBanned(), request.getBanned());
@@ -206,7 +202,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  private void updateUserInKeycloak(String userId, ProfileAdminUpdateRequest request) {
+  private void updateUserInKeycloak(String userId, ProfileRequestForAdmin request) {
     UserUpdateParam updateParam =
         UserUpdateParam.builder()
             .firstName(request.getFirstName())

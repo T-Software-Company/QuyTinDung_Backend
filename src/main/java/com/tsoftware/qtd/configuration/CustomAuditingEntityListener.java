@@ -9,25 +9,26 @@ import org.springframework.lang.NonNull;
 @Configuration
 public class CustomAuditingEntityListener extends AuditingEntityListener {
 
-	@Override
-	public void touchForCreate (@NonNull Object target){
-		AbstractAuditEntity entity = (AbstractAuditEntity) target;
-		if(entity.getCreatedBy() == null){
-			super.touchForCreate(target);
-		}else {
-			if(entity.getLastModifiedBy() == null){
-				entity.setLastModifiedBy(entity.getCreatedBy());
-			}else {
-				entity.setLastModifiedBy(entity.getCreatedBy());
-			}
-		}
-	}
-	@Override
-	@PrePersist
-	public void touchForUpdate (@NonNull Object target){
-		AbstractAuditEntity entity = (AbstractAuditEntity) 	target;
-		if(entity.getLastModifiedBy() == null){
-			super.touchForUpdate(target);
-		}
-	}
+  @Override
+  public void touchForCreate(@NonNull Object target) {
+    AbstractAuditEntity entity = (AbstractAuditEntity) target;
+    if (entity.getCreatedBy() == null) {
+      super.touchForCreate(target);
+    } else {
+      if (entity.getLastModifiedBy() == null) {
+        entity.setLastModifiedBy(entity.getCreatedBy());
+      } else {
+        entity.setLastModifiedBy(entity.getCreatedBy());
+      }
+    }
+  }
+
+  @Override
+  @PrePersist
+  public void touchForUpdate(@NonNull Object target) {
+    AbstractAuditEntity entity = (AbstractAuditEntity) target;
+    if (entity.getLastModifiedBy() == null) {
+      super.touchForUpdate(target);
+    }
+  }
 }

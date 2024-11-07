@@ -1,10 +1,9 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
-import com.tsoftware.qtd.dto.request.ProfileAdminUpdateRequest;
-import com.tsoftware.qtd.dto.request.ProfileUpdateClientRequest;
-import com.tsoftware.qtd.dto.request.RegistrationRequest;
-import com.tsoftware.qtd.dto.response.ProfileResponse;
+import com.tsoftware.qtd.dto.profile.ProfileRequest;
+import com.tsoftware.qtd.dto.profile.ProfileRequestForAdmin;
+import com.tsoftware.qtd.dto.profile.ProfileResponse;
 import com.tsoftware.qtd.service.ProfileService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -26,7 +25,7 @@ public class ProfileController {
   ProfileService profileService;
 
   @PostMapping("/register")
-  ApiResponse<ProfileResponse> register(@RequestBody @Valid RegistrationRequest request) {
+  ApiResponse<ProfileResponse> register(@RequestBody @Valid ProfileRequestForAdmin request) {
     return ApiResponse.<ProfileResponse>builder()
         .result(profileService.registerProfile(request))
         .build();
@@ -45,14 +44,14 @@ public class ProfileController {
   }
 
   @PutMapping("client/my-profile")
-  public ApiResponse<Void> updateMyProfile(@RequestBody @Valid ProfileUpdateClientRequest request) {
+  public ApiResponse<Void> updateMyProfile(@RequestBody @Valid ProfileRequest request) {
     profileService.updateProfile(request);
     return ApiResponse.<Void>builder().build();
   }
 
   @PutMapping("/{userId}")
   public ApiResponse<Void> updateProfileByUserId(
-      @PathVariable String userId, @RequestBody @Valid ProfileAdminUpdateRequest request) {
+      @PathVariable String userId, @RequestBody @Valid ProfileRequestForAdmin request) {
     profileService.updateProfileByAdmin(userId, request); //
     return ApiResponse.<Void>builder().build();
   }

@@ -1,8 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.request.ProfileAdminUpdateRequest;
-import com.tsoftware.qtd.dto.request.RegistrationRequest;
-import com.tsoftware.qtd.dto.response.ProfileResponse;
+import com.tsoftware.qtd.dto.profile.ProfileRequestForAdmin;
+import com.tsoftware.qtd.dto.profile.ProfileResponse;
 import com.tsoftware.qtd.entity.Profile;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -10,22 +9,19 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = AddressMapper.class)
 public interface ProfileMapper {
-
-  // Chuyển đổi RegistrationRequest thành Profile, bỏ qua các trường profileId và userId (do chúng
-  // là auto-generated)
-  @Mapping(target = "profileId", ignore = true)
   @Mapping(target = "userId", ignore = true)
-  Profile toProfile(RegistrationRequest request);
+  @Mapping(source = "address", target = "address")
+  Profile toProfile(ProfileRequestForAdmin request);
 
-  // Chuyển đổi Profile entity sang ProfileResponse DTO, bao gồm ánh xạ trường roles
   @Mapping(target = "roles", ignore = true)
+  @Mapping(source = "address", target = "address")
   ProfileResponse toProfileResponse(Profile profile);
 
-  // Cập nhật Profile entity từ ProfileUpdateRequest DTO mà không ghi đè các trường có giá trị null
   @Mapping(target = "userId", ignore = true)
-  @Mapping(target = "profileId", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(source = "address", target = "address")
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateProfileFromRequest(ProfileAdminUpdateRequest request, @MappingTarget Profile profile);
+  void updateProfileFromRequest(ProfileRequestForAdmin request, @MappingTarget Profile profile);
 }

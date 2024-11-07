@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.response;
+package com.tsoftware.qtd.dto.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
