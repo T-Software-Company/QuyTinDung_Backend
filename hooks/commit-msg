@@ -3,8 +3,13 @@ echo "*********************************************************"
 echo "Running git commit-msg hook. Checking commit message style"
 echo "*********************************************************"
 
-
-error_msg="Your commit message is invalid. Please ensure it follows the format:
+RED="\e[1;31m"       # Red bold
+YELLOW="\e[1;33m"    # Yellow bold
+RESET="\e[0m"        # Reset color
+GREEN="\e[1;32m"     # Green bold
+# Error message for invalid commit message style
+style_error_msg="${YELLOW}Your commit message is invalid.${RESET}"
+goi_y="${GREEN}Please ensure it follows the format:
 
 <type>[optional scope]: <description>
 
@@ -35,12 +40,25 @@ Examples with optional parts:
 
    - Fixed alignment for primary buttons in the header.
 
-...
-"
+...${RESET}"
 
-commit_message=$(cat "$1")
-if ! [[ $commit_message =~ ^[A-Z][a-zA-Z0-9]+(\(.+\))?:\ [A-Z].*$ ]]; then
-  echo "$error_msg"
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [[ "$current_branch" == "main" ]]; then
+  echo -e "${RED}Direct commits to the 'main' branch are not allowed.
+  Please switch to another branch.${RESET}"
+  echo -e "${RED}Commit failed.${RESET}"
   exit 1
 fi
+
+commit_message=$(cat "$1")
+
+if ! [[ $commit_message =~ ^[A-Z][a-zA-Z0-9]+(\(.+\))?:\ [A-Z].*$ ]]; then
+  echo -e "$style_error_msg"
+  echo -e "$goi_y"
+  echo -e "${RED}Commit failed.${RESET}"
+  exit 1
+fi
+
+echo "Commit message style check passed."
 exit 0

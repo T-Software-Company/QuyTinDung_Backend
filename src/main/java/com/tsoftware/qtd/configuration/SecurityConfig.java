@@ -20,6 +20,7 @@ public class SecurityConfig {
   final String[] protectedClientPaths = {
     "/profiles/client/my-profile", "/profiles/client/reset-password",
   };
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity

@@ -5,7 +5,6 @@ import com.tsoftware.qtd.dto.profile.ProfileRequest;
 import com.tsoftware.qtd.dto.profile.ProfileRequestForAdmin;
 import com.tsoftware.qtd.dto.profile.ProfileResponse;
 import com.tsoftware.qtd.service.ProfileService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
