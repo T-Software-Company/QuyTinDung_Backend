@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.configuration;
 
 import com.tsoftware.qtd.constants.EnumType.Roles;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -13,12 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
   final String[] protectedClientPaths = {
     "/profiles/client/my-profile", "/profiles/client/reset-password",
   };
-
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
@@ -38,7 +39,6 @@ public class SecurityConfig {
                             jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
                     .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
         .csrf(AbstractHttpConfigurer::disable);
-
     return httpSecurity.build();
   }
 
