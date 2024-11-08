@@ -24,7 +24,9 @@ public class SecurityConfig {
     httpSecurity
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers(protectedClientPaths)
+                auth.requestMatchers("/api-docs", "/api-docs/**", "/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers(protectedClientPaths)
                     .authenticated()
                     .anyRequest()
                     .hasRole(Roles.ADMIN.name()))
