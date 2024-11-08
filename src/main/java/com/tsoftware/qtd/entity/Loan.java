@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,17 +17,19 @@ public class Loan {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer; // Trỏ vào đối tượng Customer
+  private Customer customer;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "loan_plan_id", nullable = false)
-  private LoanPlan loanPlan; // Trỏ vào đối tượng LoanPlan
+  private LoanPlan loanPlan;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "loan_request_id", nullable = false)
   private LoanRequest loanRequest;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "appraisal_plan_id")
-  private AppraisalPlan appraisalPlan; // Trỏ vào đối tượng AppraisalPlan
-}
+  @OneToOne(mappedBy = "loan")
+  private AppraisalPlan appraisalPlan;
+
+  @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  private List<DebtNotification> debtNotification;
+ }

@@ -25,4 +25,5 @@ public class LoanPlan {
 
   @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private PurposeLoanRelated purposeLoanRelated;
+
 }

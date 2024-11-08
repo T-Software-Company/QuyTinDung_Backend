@@ -18,9 +18,6 @@ public class AppraisalReport {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long appraisalReportId;
 
-  //    @OneToMany(mappedBy = "appraisal_report", fetch = FetchType.EAGER, cascade =
-  // CascadeType.ALL)
-  //    private Approve approve;
 
   @OneToOne(mappedBy = "appraisalReport", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private AppraisalPlan appraisalPlan;

@@ -16,21 +16,21 @@ public class AppraisalPlan {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long appraisalPlanId;
 
-  //    @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  //    private Customer customer;
-  //
-  //    @OneToOne(mappedBy = "appraisalPlan" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  //    private PurposeLoanRelated purposeLoanRelated;
-  //
-  //    @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  //    private Loan loan;
-  //
-  //    @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  //    private Employee employee;
-  //
-  //    @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  //    private IncomeProof incomeProof;
-  //
+      @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+      private Customer customer;
+
+      @OneToMany(mappedBy = "appraisalPlan" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+      private PurposeLoanRelated purposeLoanRelated;
+
+      @OneToOne
+      private Loan loan;
+
+      @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+      private Employee employee;
+
+      @OneToOne
+      private IncomeProof incomeProof;
+
   @OneToOne private AppraisalReport appraisalReport;
 
   private String addressAppraisal;

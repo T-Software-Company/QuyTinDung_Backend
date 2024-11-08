@@ -16,19 +16,19 @@ public class LoanRequest {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "loan_id", nullable = false)
-  private Loan loan; // Trỏ vào đối tượng Loan
+  private Loan loan;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "customer_id", nullable = false) // Khóa ngoại trỏ đến Customer
+  @JoinColumn(name = "customer_id", nullable = false)
   private Customer customer;
 
   @OneToOne
   @JoinColumn(name = "loan_plan_id", referencedColumnName = "loanPlanId")
-  private LoanPlan loanPlan; // Trỏ vào đối tượng LoanPlan
+  private LoanPlan loanPlan;
 
   @OneToMany(mappedBy = "loanRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<PurposeLoanRelated>
-      purposeLoanRelated; // Trỏ vào danh sách đối tượng PurposeLoanRelated
+      purposeLoanRelated;
 
   @Column(nullable = false)
   private BigDecimal amount;
@@ -44,5 +44,4 @@ public class LoanRequest {
   @Enumerated(EnumType.STRING)
   private LoanCollateralType loanCollateralType;
 
-  // Getters và Setters
 }

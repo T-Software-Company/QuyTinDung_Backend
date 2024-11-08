@@ -1,9 +1,8 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.request.ProfileAdminUpdateRequest;
-import com.tsoftware.qtd.dto.request.ProfileUpdateClientRequest;
-import com.tsoftware.qtd.dto.request.RegistrationRequest;
-import com.tsoftware.qtd.dto.response.ProfileResponse;
+import com.tsoftware.qtd.dto.profile.ProfileRequest;
+import com.tsoftware.qtd.dto.profile.ProfileRequestForAdmin;
+import com.tsoftware.qtd.dto.profile.ProfileResponse;
 import java.util.List;
 
 public interface ProfileService {
@@ -11,11 +10,11 @@ public interface ProfileService {
 
   ProfileResponse getMyProfile();
 
-  ProfileResponse registerProfile(RegistrationRequest request);
+  ProfileResponse registerProfile(ProfileRequestForAdmin request);
 
-  void updateProfile(ProfileUpdateClientRequest request);
+  void updateProfile(ProfileRequest request);
 
-  void updateProfileByAdmin(String userId, ProfileAdminUpdateRequest request);
+  void updateProfileByAdmin(String userId, ProfileRequestForAdmin request);
 
   void resetPassword(String userId, String newPassword);
 

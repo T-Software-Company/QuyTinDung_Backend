@@ -33,30 +33,28 @@ public class Customer {
   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<LoanRequest> loanRequests;
 
-  //    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  //    private List<DebtNotification> debtNotifications;
-  //
-  //    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  //    private List<AssetRepossesionzNotices> assetRepossesionzNotices;
-  //
-  //    @OneToOne
-  //    private PassPort passPort;
-  //
-  //    @OneToOne
-  //    private CCCD cccd;
-  //
-  //    @OneToOne
-  //    private CMND cmnd;
-  //
-  //    @OneToMany
-  //    private IncomeProof incomeProof;
-  //
-  @OneToOne private AppraisalReport appraisalReport;
-  //
-  //    @OneToOne
-  //    private AppraisalPlan appraisalPlan;
-  //
-  //    @OneToMany
-  //    private Asset asset;
+  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<DebtNotification> debtNotifications;
+
+//
+//      @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//      private List<AssetRepossesionzNotices> assetRepossesionzNotices;
+
+      @OneToOne private PassPort passPort;
+
+      @OneToOne private CCCD cccd;
+
+      @OneToOne private CMND cmnd;
+
+      @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+      private List<IncomeProof> incomeProof;
+
+      @OneToOne private AppraisalReport appraisalReport;
+
+      @OneToOne
+      private AppraisalPlan appraisalPlan;
+
+      @OneToMany
+      private List<Asset> asset;
 
 }

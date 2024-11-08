@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.request;
+package com.tsoftware.qtd.dto.profile;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,8 +12,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfileUpdateClientRequest {
-
+public class ProfileRequest {
   String firstName;
   String lastName;
 }

@@ -14,20 +14,16 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "profile")
-public class Profile {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long profileId;
+public class Profile extends AbstractAuditEntity {
 
   private String userId;
   private String username;
-  private String employee_code;
+  private String employeeCode;
   private String email;
   private String firstName;
   private String lastName;
-  private LocalDate dob;
+  private LocalDate dayOfBirth;
   private String phone;
-  private String address;
 
   @Enumerated(EnumType.STRING)
   private Gender gender;
@@ -36,5 +32,7 @@ public class Profile {
   private Banned banned;
 
   @Enumerated(EnumType.STRING)
-  private EmploymentStatus employmentStatus;
+  private EmploymentStatus status;
+
+  @OneToOne private Address address;
 }

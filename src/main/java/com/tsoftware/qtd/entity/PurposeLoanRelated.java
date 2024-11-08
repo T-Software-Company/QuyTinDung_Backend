@@ -15,10 +15,14 @@ public class PurposeLoanRelated {
   private Long purposeLoanRelatedId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "loan_request_id") // Cột tham chiếu đến LoanRequest
+  @JoinColumn(name = "loanRequestId")
   private LoanRequest loanRequest;
 
-  @OneToOne private Loan loan;
+  @ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn(name = "loanID")
+  private Loan loan;
 
-  @OneToOne private AppraisalPlan appraisalPlan;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "appraisalPlanId")
+  private AppraisalPlan appraisalPlan;
 }

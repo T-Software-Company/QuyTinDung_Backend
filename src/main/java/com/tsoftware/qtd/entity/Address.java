@@ -3,26 +3,21 @@ package com.tsoftware.qtd.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
 @Getter
 @Setter
 @Builder
-
-// Done
-@Entity
-@Table(name = "address")
-public class Address {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long addressId;
+@AllArgsConstructor
+@NoArgsConstructor
+@Table
+public class Address extends AbstractAuditEntity {
 
   private String streetAddress;
-  private String wardOfCommune;
+  private String wardOrCommune;
   private String district;
   private String cityProvince;
   private String country;
 
   @OneToOne(mappedBy = "address")
-  private Customer customer;
+  private Profile profile;
 }
