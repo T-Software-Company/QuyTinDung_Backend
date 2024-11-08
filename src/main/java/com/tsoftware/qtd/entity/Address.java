@@ -23,6 +23,6 @@ public class Address {
   private String cityProvince;
   private String country;
 
-  @OneToOne(mappedBy = "address", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToOne(mappedBy = "address")
   private Customer customer;
 }
