@@ -27,8 +27,7 @@ public class LoanRequest {
   private LoanPlan loanPlan;
 
   @OneToMany(mappedBy = "loanRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<PurposeLoanRelated>
-      purposeLoanRelated;
+  private List<PurposeLoanRelated> purposeLoanRelated;
 
   @Column(nullable = false)
   private BigDecimal amount;
@@ -43,5 +42,4 @@ public class LoanRequest {
 
   @Enumerated(EnumType.STRING)
   private LoanCollateralType loanCollateralType;
-
 }

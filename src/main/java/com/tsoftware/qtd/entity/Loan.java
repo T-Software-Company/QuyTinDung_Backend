@@ -1,10 +1,9 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -27,9 +26,12 @@ public class Loan {
   @JoinColumn(name = "loan_request_id", nullable = false)
   private LoanRequest loanRequest;
 
+  @OneToMany(mappedBy = "loan")
+  private List<Asset> assets;
+
   @OneToOne(mappedBy = "loan")
   private AppraisalPlan appraisalPlan;
 
-  @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<DebtNotification> debtNotification;
- }
+}

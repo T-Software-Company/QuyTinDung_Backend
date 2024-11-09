@@ -18,7 +18,6 @@ public class AppraisalReport {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long appraisalReportId;
 
-
   @OneToOne(mappedBy = "appraisalReport", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private AppraisalPlan appraisalPlan;
 

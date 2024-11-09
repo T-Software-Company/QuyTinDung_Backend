@@ -1,4 +1,3 @@
 package com.tsoftware.qtd.constants.EnumType;
 
-public enum NotificationType {
-}
+public enum NotificationType {}

@@ -3,6 +3,8 @@ package com.tsoftware.qtd.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,4 +18,13 @@ public class Asset {
   private Long assetId;
 
   @OneToOne private AppraisalReport appraisalReport;
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<AssetType> assetType;
+
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private Loan loan;
+
+
+
 }

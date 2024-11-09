@@ -18,7 +18,7 @@ public class PurposeLoanRelated {
   @JoinColumn(name = "loanRequestId")
   private LoanRequest loanRequest;
 
-  @ManyToOne (fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "loanID")
   private Loan loan;
 
