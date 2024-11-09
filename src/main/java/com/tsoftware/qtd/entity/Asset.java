@@ -1,9 +1,8 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +23,4 @@ public class Asset {
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Loan loan;
-
-
-
 }

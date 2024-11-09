@@ -1,4 +1,5 @@
 package com.tsoftware.qtd.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,5 @@ import lombok.*;
 @NoArgsConstructor
 @Table
 public class LandAssetInfo extends AbstractAuditEntity {
-    @OneToOne
-    private Asset asset;
+  @OneToOne private Asset asset;
 }

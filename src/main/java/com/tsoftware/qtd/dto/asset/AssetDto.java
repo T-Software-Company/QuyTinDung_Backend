@@ -21,17 +21,17 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AssetDto {
 
-    @NotNull(message = "ASSET_ID_REQUIRED")
-    Long assetId;
+  @NotNull(message = "ASSET_ID_REQUIRED")
+  Long assetId;
 
-    @NotNull(message = "APPRAISAL_REPORT_REQUIRED")
-    @Valid
-    AppraisalReport appraisalReport;
+  @NotNull(message = "APPRAISAL_REPORT_REQUIRED")
+  @Valid
+  AppraisalReport appraisalReport;
 
-    @NotNull(message = "ASSET_TYPE_REQUIRED")
-    @Size(min = 1, message = "ASSET_TYPE_LIST_EMPTY")
-    List<AssetType> assetType;
+  @NotNull(message = "ASSET_TYPE_REQUIRED")
+  @Size(min = 1, message = "ASSET_TYPE_LIST_EMPTY")
+  List<AssetType> assetType;
 
-    @NotNull(message = "LOAN_REQUIRED")
-    Loan loan;
+  @NotNull(message = "LOAN_REQUIRED")
+  Loan loan;
 }

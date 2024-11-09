@@ -1,4 +1,5 @@
 package com.tsoftware.qtd.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,9 +9,9 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="apartment_info")
-public class ApartmentInfo extends AbstractAuditEntity{
+@Table(name = "apartment_info")
+public class ApartmentInfo extends AbstractAuditEntity {
 
-    @OneToOne(mappedBy = "apartmentInfo")
-    private AssetType accessType;
+  @OneToOne(mappedBy = "apartmentInfo")
+  private AssetType accessType;
 }

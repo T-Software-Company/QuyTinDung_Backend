@@ -10,22 +10,18 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "asset_type")
-public class AssetType extends AbstractAuditEntity{
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "assetId")
-    private Asset asset;
+public class AssetType extends AbstractAuditEntity {
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "assetId")
+  private Asset asset;
 
-    @OneToOne
-    private LandAssetInfo landAssetInfo;
+  @OneToOne private LandAssetInfo landAssetInfo;
 
-    @OneToOne
-    private VehicleInfo vehicleInfo;
+  @OneToOne private VehicleInfo vehicleInfo;
 
-    @OneToOne
-    @JoinColumn(name = "apartment_info_id")
-    private ApartmentInfo apartmentInfo;
+  @OneToOne
+  @JoinColumn(name = "apartment_info_id")
+  private ApartmentInfo apartmentInfo;
 
-    private String nameAsset;
-
-
+  private String nameAsset;
 }

@@ -34,3 +34,9 @@ idp:
   client-id: ${CLIENT_ID}
   client-secret: ${CLIENT_SECRET}
   realm: tsoftware
+
+springdoc: ### https://springdoc.org/#springdoc-applications-demos
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /index.html

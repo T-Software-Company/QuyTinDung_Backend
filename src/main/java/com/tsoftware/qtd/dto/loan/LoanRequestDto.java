@@ -8,48 +8,47 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class LoanRequestDto {
 
-    @NotNull(message = "LOAN_REQUEST_ID_REQUIRED")
-    Long loanRequestId;
+  @NotNull(message = "LOAN_REQUEST_ID_REQUIRED")
+  Long loanRequestId;
 
-    @NotNull(message = "LOAN_REQUIRED")
-    @Valid
-    LoanDto loan;
+  @NotNull(message = "LOAN_REQUIRED")
+  @Valid
+  LoanDto loan;
 
-    @NotNull(message = "CUSTOMER_REQUIRED")
-    @Valid
-    CustomerDto customer;
+  @NotNull(message = "CUSTOMER_REQUIRED")
+  @Valid
+  CustomerDto customer;
 
-    @NotNull(message = "LOAN_PLAN_REQUIRED")
-    @Valid
-    LoanPlanDto loanPlan;
+  @NotNull(message = "LOAN_PLAN_REQUIRED")
+  @Valid
+  LoanPlanDto loanPlan;
 
-    @NotNull(message = "PURPOSE_LOAN_REQUIRED")
-    @Valid
-    List<PurposeLoanRelated> purposeLoanRelated;
+  @NotNull(message = "PURPOSE_LOAN_REQUIRED")
+  @Valid
+  List<PurposeLoanRelated> purposeLoanRelated;
 
-    @NotNull(message = "AMOUNT_REQUIRED")
-    @Positive(message = "AMOUNT_MUST_BE_POSITIVE")
-    BigDecimal amount;
+  @NotNull(message = "AMOUNT_REQUIRED")
+  @Positive(message = "AMOUNT_MUST_BE_POSITIVE")
+  BigDecimal amount;
 
-    @NotNull(message = "PURPOSE_REQUIRED")
-    @Size(min = 10, max = 200, message = "PURPOSE_LENGTH_INVALID")
-    String purpose;
+  @NotNull(message = "PURPOSE_REQUIRED")
+  @Size(min = 10, max = 200, message = "PURPOSE_LENGTH_INVALID")
+  String purpose;
 
-    @NotNull(message = "BORROWER_TYPE_REQUIRED")
-    BorrowerType borrowerType;
+  @NotNull(message = "BORROWER_TYPE_REQUIRED")
+  BorrowerType borrowerType;
 
-    @NotNull(message = "LOAN_TERM_REQUIRED")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date loanTerm;
+  @NotNull(message = "LOAN_TERM_REQUIRED")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  Date loanTerm;
 
-    @NotNull(message = "LOAN_COLLATERAL_TYPE_REQUIRED")
-    LoanCollateralType loanCollateralType;
+  @NotNull(message = "LOAN_COLLATERAL_TYPE_REQUIRED")
+  LoanCollateralType loanCollateralType;
 }
