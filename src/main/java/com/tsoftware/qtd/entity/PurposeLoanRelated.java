@@ -25,4 +25,7 @@ public class PurposeLoanRelated {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "appraisalPlanId")
   private AppraisalPlan appraisalPlan;
+
+  @OneToOne
+  private LoanPlan loanPlan;
 }

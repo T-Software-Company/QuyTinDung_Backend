@@ -23,6 +23,6 @@ public class LoanPlan {
 
   @OneToOne private LoanRequest loanRequest;
 
-  @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToOne(mappedBy = "loanPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private PurposeLoanRelated purposeLoanRelated;
 }

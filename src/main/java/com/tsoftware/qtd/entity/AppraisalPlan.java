@@ -2,6 +2,8 @@ package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
+
 import lombok.*;
 
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class AppraisalPlan {
   private Customer customer;
 
   @OneToMany(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private PurposeLoanRelated purposeLoanRelated;
+  private List<PurposeLoanRelated> purposeLoanRelated;
 
   @OneToOne private Loan loan;
 

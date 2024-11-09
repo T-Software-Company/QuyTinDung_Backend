@@ -20,10 +20,12 @@ public class Employee extends AbstractAuditEntity {
   //    private Disbursement disbursement;
   //      @OneToOne(mappedBy = "employee")
   //      private Approve approve;
+  @OneToOne
+  private AppraisalPlan appraisalPlan;
 
   private Long employeeCode;
   private String employeeEmail;
-  private String fistName;
+  private String firstName;
   private String lastName;
   private String address;
 

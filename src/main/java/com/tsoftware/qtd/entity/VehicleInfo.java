@@ -10,4 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @Table
 public class VehicleInfo extends AbstractAuditEntity{
+    @OneToOne
+    private Asset asset;
 }
