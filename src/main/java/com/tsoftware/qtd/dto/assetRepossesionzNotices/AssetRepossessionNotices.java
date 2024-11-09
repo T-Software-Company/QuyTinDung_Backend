@@ -1,3 +1,3 @@
 package com.tsoftware.qtd.dto.assetRepossesionzNotices;
 
-public class AssetRepossesionzNotices {}
+public class AssetRepossessionNotices {}

@@ -6,9 +6,10 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,24 +17,12 @@ import lombok.*;
 public class DebtNotification extends AbstractAuditEntity {
 
   @ManyToOne
-  @JoinColumn(name = "customerId")
   private Customer customer;
 
   @ManyToOne
-  @JoinColumn(name = "loanId")
   private Loan loan;
 
-  private ZonedDateTime notificationDate;
-  private ZonedDateTime dueDate;
-  private BigDecimal amountDue;
+  private Long amount;
 
-  @Enumerated(EnumType.STRING)
-  private NotificationType notificationType;
-
-  @Enumerated(EnumType.STRING)
-  private NotificationStatus notificationStatus;
-
-  private String description;
-  private ZonedDateTime createAt;
-  private ZonedDateTime updateAt;
+  private String message;
 }

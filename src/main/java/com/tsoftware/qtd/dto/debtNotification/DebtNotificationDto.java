@@ -53,6 +53,5 @@ public class DebtNotificationDto {
   NotificationStatus notificationStatus;
 
   @NotBlank(message = "DESCRIPTION_REQUIRED")
-  @Size(max = 255, message = "DESCRIPTION_TOO_LONG")
   String description;
 }

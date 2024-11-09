@@ -5,18 +5,16 @@ import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "cccd")
-public class CCCD {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long cccdID;
+@Table
+public class CCCD extends AbstractAuditEntity {
 
   @OneToOne(mappedBy = "cccd")
   private Customer customer;

@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.assetType;
+package com.tsoftware.qtd.dto.asset;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

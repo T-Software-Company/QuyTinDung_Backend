@@ -2,56 +2,71 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import jakarta.persistence.*;
+
 import java.util.List;
+
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "customer")
-public class Customer {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long customerId;
+@Table
+@Getter
+@Setter
+public class Customer extends AbstractAuditEntity {
 
-  private String fullName;
-  private String email;
-  private Integer phone;
-  private String note;
-  private String signaturePhoto;
-  private Gender gender;
-  private String status;
-
-  @OneToOne private Address address;
-
-  @ManyToOne private LoanPlan loanPlan;
-
-  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private List<Loan> loan;
-
-  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<LoanRequest> loanRequests;
-
-  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<DebtNotification> debtNotifications;
-
-  //
-  //      @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  //      private List<AssetRepossesionzNotices> assetRepossesionzNotices;
-
-  @OneToOne private PassPort passPort;
-
-  @OneToOne private CCCD cccd;
-
-  @OneToOne private CMND cmnd;
-
-  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<IncomeProof> incomeProof;
-
-  @OneToOne private AppraisalReport appraisalReport;
-
-  @OneToOne private AppraisalPlan appraisalPlan;
-
-  @OneToMany private List<Asset> asset;
+	
+	private String fullName;
+	private String email;
+	private Integer phone;
+	private String note;
+	private String signaturePhoto;
+	private Gender gender;
+	private String status;
+	
+	@OneToOne
+	private Address address;
+	
+	@OneToMany(mappedBy = "customer")
+	private  List<LoanPlan> loanPlans;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<Loan> loans;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<LoanRequest> loanRequests;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<DebtNotification> debtNotifications;
+	
+	
+	@OneToMany(mappedBy = "customer")
+	private List<AssetRepossessionNotice> assetRepossessionNotices;
+	
+	@OneToOne
+	private PassPort passPort;
+	
+	@OneToOne
+	private CCCD cccd;
+	
+	@OneToOne
+	private CMND cmnd;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<IncomeProof> incomeProofs;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<AppraisalReport> appraisalReports;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<AppraisalPlan> appraisalPlans;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<Asset> asset;
+	
+	@OneToMany
+	private  List<Disbursement> disbursements;
 }

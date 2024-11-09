@@ -1,8 +1,7 @@
-package com.tsoftware.qtd.dto.assetType;
+package com.tsoftware.qtd.dto.asset;
 
-import com.tsoftware.qtd.dto.asset.AssetDto;
-import com.tsoftware.qtd.entity.LandAssetInfo;
-import com.tsoftware.qtd.entity.VehicleInfo;
+import com.tsoftware.qtd.entity.LandAsset;
+import com.tsoftware.qtd.entity.Vehicle;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -46,11 +45,11 @@ public class AssetTypeDto {
   @NotNull(message = "ASSET_REQUIRED")
   AssetDto asset;
 
-  @Valid LandAssetInfo landAssetInfo;
+  @Valid LandAsset landAsset;
 
-  @Valid VehicleInfo vehicleInfo;
+  @Valid Vehicle vehicle;
 
-  @Valid ApartmentInfoDto apartmentInfo;
+  @Valid ApartmentDto apartmentInfo;
 
   @NotBlank(message = "NAME_ASSET_REQUIRED")
   @Size(min = 1, message = "NAME_ASSET_INVALID")

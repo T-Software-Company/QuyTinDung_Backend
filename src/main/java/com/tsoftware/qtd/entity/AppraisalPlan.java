@@ -1,43 +1,46 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
+
 import java.util.Date;
 import java.util.List;
+
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @Entity
-@Table(name = "appraisal_plan")
-public class AppraisalPlan {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long appraisalPlanId;
-
-  @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private Customer customer;
-
-  @OneToMany(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private List<PurposeLoanRelated> purposeLoanRelated;
-
-  @OneToOne private Loan loan;
-
-  @OneToOne(mappedBy = "appraisalPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private Employee employee;
-
-  @OneToOne private IncomeProof incomeProof;
-
-  @OneToOne private AppraisalReport appraisalReport;
-
-  private String addressAppraisal;
-  private String participants;
-
-  @Temporal(TemporalType.DATE)
-  private Date startDateAppraisal;
-
-  @Temporal(TemporalType.DATE)
-  private Date endDateAppraisal;
+@Table
+public class AppraisalPlan extends AbstractAuditEntity {
+	private String address;
+	
+	@ManyToMany(mappedBy = "appraisalPlan")
+	private List<Profile> participants;
+	
+	@OneToMany(mappedBy = "appraisalPlan")
+	private List<IncomeProof> incomeProof;
+	
+	@OneToOne
+	private AppraisalReport appraisalReport;
+	
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date startDateAppraisal;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date endDateAppraisal;
+	
+	@OneToOne
+	private Loan loan;
+	
+	@ManyToOne
+	private Customer customer;
+	
+	@OneToMany(mappedBy = "appraisalPlan")
+	private List<PurposeLoanRelated> purposeLoanRelated;
+	
 }

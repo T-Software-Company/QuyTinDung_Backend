@@ -1,11 +1,10 @@
 package com.tsoftware.qtd.constants.EnumType;
 
-public enum ApproveStatus {
-  APPROVED("Chấp thuận"), // Chấp thuận
-  REJECTED("Không chấp thuận"); // Không chấp thuận
-  private final String description;
+import lombok.AllArgsConstructor;
 
-  ApproveStatus(String description) {
-    this.description = description;
-  }
+@AllArgsConstructor
+public enum ApproveStatus {
+  APPROVED("Chấp thuận"),
+  REJECTED("Không chấp thuận");
+  private final String description;
 }

@@ -13,8 +13,7 @@ public class LoanPlan {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long loanPlanId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "customerId", nullable = false)
+  @ManyToOne
   private Customer customer;
 
   @ManyToOne(fetch = FetchType.LAZY)

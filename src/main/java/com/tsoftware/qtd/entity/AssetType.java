@@ -2,26 +2,30 @@ package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @Entity
-@Table(name = "asset_type")
-public class AssetType extends AbstractAuditEntity {
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "assetId")
-  private Asset asset;
+@Table
+public class AssetType extends AbstractAuditEntity{
+    @OneToMany(mappedBy = "assetType")
+    private List<Asset> assets;
 
-  @OneToOne private LandAssetInfo landAssetInfo;
+    @OneToMany(mappedBy = "assetType")
+    private List<LandAsset> landAssets;
 
-  @OneToOne private VehicleInfo vehicleInfo;
+    @OneToMany(mappedBy = "assetType")
+    private List<Vehicle> vehicles;
 
-  @OneToOne
-  @JoinColumn(name = "apartment_info_id")
-  private ApartmentInfo apartmentInfo;
+    @OneToMany(mappedBy = "assetType")
+    private List<Apartment> apartments;
 
-  private String nameAsset;
+    private String name;
+
 }

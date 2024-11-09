@@ -35,4 +35,5 @@ public class CustomerDto {
   @NotBlank(message = "STATUS_REQUIRED")
   @Size(min = 3, max = 20, message = "STATUS_SIZE")
   String status;
+  
 }

@@ -2,14 +2,18 @@ package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table
-public class VehicleInfo extends AbstractAuditEntity {
-  @OneToOne private Asset asset;
+public class LandAsset extends AbstractAuditEntity {
+  
+  
+  
+  @ManyToOne private Asset asset;
 }

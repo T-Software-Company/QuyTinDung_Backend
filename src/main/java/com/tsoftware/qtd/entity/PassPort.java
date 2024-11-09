@@ -5,9 +5,10 @@ import com.tsoftware.qtd.constants.EnumType.PassPortType;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor

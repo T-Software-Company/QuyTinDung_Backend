@@ -1,11 +1,23 @@
-package com.tsoftware.qtd.dto.assetType;
+package com.tsoftware.qtd.dto.asset;
 
+import com.tsoftware.qtd.entity.AssetType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class VehicleInfoDto {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ApartmentDto {
 
   @NotNull(message = "ID_REQUIRED")
   Long id;
@@ -25,4 +37,7 @@ public class VehicleInfoDto {
   @NotNull(message = "CREATED_BY_REQUIRED")
   @Size(min = 1, message = "CREATED_BY_INVALID")
   String createdBy;
+
+  @NotNull(message = "ACCESS_TYPE_REQUIRED")
+  AssetType accessType;
 }

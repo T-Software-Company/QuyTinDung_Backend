@@ -1,0 +1,29 @@
+package com.tsoftware.qtd.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.ZonedDateTime;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+@Entity
+@Table
+public class OwnerInfo extends AbstractAuditEntity {
+	
+	private String fullName;
+	private ZonedDateTime dayOfBirth;
+	private String idCardNumber;
+	private  String permanentAddress;
+	
+	@OneToOne(mappedBy = "ownerInfo")
+	private Apartment apartment;
+	
+
+}
