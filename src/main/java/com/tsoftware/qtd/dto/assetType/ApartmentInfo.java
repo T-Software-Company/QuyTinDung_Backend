@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ApartmentInfoDto {
+public class ApartmentInfo {
 
   @NotNull(message = "ID_REQUIRED")
   Long id;

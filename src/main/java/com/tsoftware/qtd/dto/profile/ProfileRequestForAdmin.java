@@ -27,5 +27,48 @@ import org.springframework.format.annotation.DateTimeFormat;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileRequestForAdmin {
 
+  @NotBlank(message = "USERNAME_REQUIRED")
+  @Size(min = 4, message = "INVALID_USERNAME")
+  String username;
 
+  @NotBlank(message = "PASSWORD_REQUIRED")
+  @Size(min = 6, message = "INVALID_PASSWORD")
+  String password;
+
+  @NotBlank(message = "EMAIL_REQUIRED")
+  @Email(message = "INVALID_EMAIL_FORMAT")
+  String email;
+
+  @Valid AddressVm address;
+
+  @NotBlank(message = "FIRST_NAME_REQUIRED")
+  String firstName;
+
+  @NotBlank(message = "LAST_NAME_REQUIRED")
+  String lastName;
+
+  @NotBlank(message = "ROLE_NAME_REQUIRED")
+  String roleName;
+
+  @NotBlank(message = "ROLE_ID_REQUIRED")
+  String roleId;
+
+  @NotNull(message = "DOB_REQUIRED")
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  @Past(message = "DOB_MUST_BE_IN_PAST")
+  LocalDate dob;
+
+  @NotNull(message = "GENDER_REQUIRED")
+  Gender gender;
+
+  @NotNull(message = "EMPLOYMENT_STATUS_REQUIRED")
+  EmploymentStatus employmentStatus;
+
+  @NotNull(message = "BANNED_STATUS_REQUIRED")
+  Banned banned;
+
+  @NotBlank(message = "PHONE_REQUIRED")
+  @Size(max = 15, message = "PHONE_TOO_LONG")
+  @Pattern(regexp = "^[0-9\\-\\+]{9,15}$", message = "INVALID_PHONE_FORMAT")
+  String phone;
 }

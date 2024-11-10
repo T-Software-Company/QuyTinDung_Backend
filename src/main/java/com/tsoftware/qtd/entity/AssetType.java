@@ -21,7 +21,7 @@ public class AssetType extends AbstractAuditEntity {
 
   @OneToOne
   @JoinColumn(name = "apartment_info_id")
-  private ApartmentInfo apartmentInfo;
+  private Apartment apartmentInfo;
 
   private String nameAsset;
 }

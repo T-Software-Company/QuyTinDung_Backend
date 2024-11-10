@@ -50,7 +50,7 @@ public class AssetTypeDto {
 
   @Valid VehicleInfo vehicleInfo;
 
-  @Valid ApartmentInfoDto apartmentInfo;
+  @Valid ApartmentInfo apartmentInfo;
 
   @NotBlank(message = "NAME_ASSET_REQUIRED")
   @Size(min = 1, message = "NAME_ASSET_INVALID")

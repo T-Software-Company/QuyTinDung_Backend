@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "apartment_info")
-public class ApartmentInfo extends AbstractAuditEntity {
+public class Apartment extends AbstractAuditEntity {
 
   @OneToOne(mappedBy = "apartmentInfo")
   private AssetType accessType;
