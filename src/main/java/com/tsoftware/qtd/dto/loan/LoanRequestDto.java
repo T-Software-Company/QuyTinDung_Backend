@@ -3,7 +3,7 @@ package com.tsoftware.qtd.dto.loan;
 import com.tsoftware.qtd.constants.EnumType.BorrowerType;
 import com.tsoftware.qtd.constants.EnumType.LoanCollateralType;
 import com.tsoftware.qtd.dto.customer.CustomerDto;
-import com.tsoftware.qtd.entity.PurposeLoanRelated;
+import com.tsoftware.qtd.entity.LoanPurposeDocument;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -32,7 +32,7 @@ public class LoanRequestDto {
 
   @NotNull(message = "PURPOSE_LOAN_REQUIRED")
   @Valid
-  List<PurposeLoanRelated> purposeLoanRelated;
+  List<LoanPurposeDocument> loanPurposeDocument;
 
   @NotNull(message = "AMOUNT_REQUIRED")
   @Positive(message = "AMOUNT_MUST_BE_POSITIVE")

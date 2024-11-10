@@ -1,27 +1,26 @@
 package com.tsoftware.qtd.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@AllArgsConstructor
+@SuperBuilder
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table
-public class Group extends AbstractAuditEntity {
+public class LoanPurposeDocument {
 
+  private String link;
   private String name;
 
-  @ManyToMany private List<Employee> employees;
+  @ManyToOne private Credit credit;
 
-  @ManyToMany private List<Role> roles;
+  @ManyToOne private AppraisalPlan appraisalPlan;
 }

@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   final String[] protectedClientPaths = {
-    "/profiles/client/my-profile", "/profiles/client/reset-password",
+    "/employees/client/my-employee", "/employees/client/reset-password",
   };
 
   @Bean

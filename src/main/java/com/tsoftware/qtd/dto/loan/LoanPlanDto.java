@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.loan;
 
 import com.tsoftware.qtd.dto.customer.CustomerDto;
-import com.tsoftware.qtd.entity.PurposeLoanRelated;
+import com.tsoftware.qtd.entity.LoanPurposeDocument;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,5 +24,5 @@ public class LoanPlanDto {
 
   @NotNull(message = "PURPOSE_LOAN_REQUIRED")
   @Valid
-  PurposeLoanRelated purposeLoanRelated;
+  LoanPurposeDocument loanPurposeDocument;
 }

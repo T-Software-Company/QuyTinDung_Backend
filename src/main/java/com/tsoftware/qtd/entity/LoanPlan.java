@@ -1,26 +1,30 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@Entity
 @AllArgsConstructor
+@SuperBuilder
+@Getter
+@Setter
 @NoArgsConstructor
-@Table(name = "loan_plan")
-public class LoanPlan {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long loanPlanId;
+@Entity
+@Table
+public class LoanPlan extends AbstractAuditEntity {
+
+  private BigDecimal totalCapitalRequirement;
+  private BigDecimal ownCapital;
+  private BigDecimal proposedLoanAmount;
+  private BigDecimal income;
+  private String repaymentPlan;
+  private String note;
 
   @ManyToOne private Customer customer;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "loanId", nullable = false)
-  private Loan loan;
-
-  @OneToOne private LoanRequest loanRequest;
-
-  @OneToOne(mappedBy = "loanPlan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private PurposeLoanRelated purposeLoanRelated;
+  @ManyToOne private Credit credit;
 }

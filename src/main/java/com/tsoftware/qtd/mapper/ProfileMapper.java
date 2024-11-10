@@ -2,7 +2,7 @@ package com.tsoftware.qtd.mapper;
 
 import com.tsoftware.qtd.dto.profile.ProfileRequestForAdmin;
 import com.tsoftware.qtd.dto.profile.ProfileResponse;
-import com.tsoftware.qtd.entity.Profile;
+import com.tsoftware.qtd.entity.Employee;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,15 +13,15 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface ProfileMapper {
   @Mapping(target = "userId", ignore = true)
   @Mapping(source = "address", target = "address")
-  Profile toProfile(ProfileRequestForAdmin request);
+  Employee toProfile(ProfileRequestForAdmin request);
 
   @Mapping(target = "roles", ignore = true)
   @Mapping(source = "address", target = "address")
-  ProfileResponse toProfileResponse(Profile profile);
+  ProfileResponse toProfileResponse(Employee employee);
 
   @Mapping(target = "userId", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(source = "address", target = "address")
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateProfileFromRequest(ProfileRequestForAdmin request, @MappingTarget Profile profile);
+  void updateProfileFromRequest(ProfileRequestForAdmin request, @MappingTarget Employee employee);
 }

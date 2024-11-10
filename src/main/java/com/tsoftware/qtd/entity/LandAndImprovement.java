@@ -2,6 +2,7 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +21,12 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private String plotNumber;
   private String mapNumber;
   private String address;
-  private String area;
+  private BigDecimal area;
   private String purpose;
   private ZonedDateTime expirationDate;
   private String originOfUsage;
   private String typeOfHousing;
-  private String floorArea;
+  private BigDecimal floorArea;
   private String ancillaryFloorArea;
   private String structureType;
   private Integer numberOfFloors;

@@ -1,9 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +16,9 @@ public class ValuationMeeting extends AbstractAuditEntity {
 
   @OneToMany(mappedBy = "valuationMeeting")
   private List<Asset> assets;
+
+  @ManyToMany(mappedBy = "valuationMeetings")
+  private List<Employee> participants;
 
   @OneToOne private ValuationMinutes valuationMinutes;
 }

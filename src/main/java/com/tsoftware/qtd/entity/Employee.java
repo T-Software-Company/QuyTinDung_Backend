@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
-public class Profile extends AbstractAuditEntity {
+public class Employee extends AbstractAuditEntity {
 
   private String userId;
   private String username;
@@ -40,9 +40,13 @@ public class Profile extends AbstractAuditEntity {
 
   @ManyToMany private List<AppraisalPlan> appraisalPlans;
 
-  @ManyToMany private List<Approve> approves;
+  @OneToMany(mappedBy = "employee")
+  private List<Approve> approves;
 
-  @ManyToMany private ValuationMeeting valuationMeeting;
+  @ManyToMany private List<ValuationMeeting> valuationMeetings;
 
-  @ManyToMany private Group group;
+  @ManyToMany(mappedBy = "employees")
+  private Group group;
+
+  @ManyToMany private List<Role> roles;
 }

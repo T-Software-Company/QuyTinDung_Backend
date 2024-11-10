@@ -2,6 +2,7 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -17,7 +18,7 @@ public class LandAsset extends AbstractAuditEntity {
   private String plotNumber;
   private String mapNumber;
   private String address;
-  private String area;
+  private BigDecimal area;
   private String purpose;
   private ZonedDateTime expirationDate;
   private String originOfUsage;

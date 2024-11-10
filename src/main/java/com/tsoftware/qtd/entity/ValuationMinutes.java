@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,10 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table
 public class ValuationMinutes extends AbstractAuditEntity {
+  private BigDecimal totalValuationAmount;
+
+  @OneToMany(mappedBy = "valuationMinutes")
+  private List<Asset> assets;
 
   @OneToOne(mappedBy = "valuationMinutes")
   private ValuationMeeting valuationMeeting;

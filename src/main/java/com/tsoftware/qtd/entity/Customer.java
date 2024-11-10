@@ -30,7 +30,7 @@ public class Customer extends AbstractAuditEntity {
   private List<LoanPlan> loanPlans;
 
   @OneToMany(mappedBy = "customer")
-  private List<Loan> loans;
+  private List<Credit> credits;
 
   @OneToMany(mappedBy = "customer")
   private List<LoanRequest> loanRequests;
@@ -57,7 +57,8 @@ public class Customer extends AbstractAuditEntity {
   private List<AppraisalPlan> appraisalPlans;
 
   @OneToMany(mappedBy = "customer")
-  private List<Asset> asset;
+  private List<Asset> assets;
 
-  @OneToMany private List<Disbursement> disbursements;
+  @OneToMany(mappedBy = "customer")
+  private List<Disbursement> disbursements;
 }

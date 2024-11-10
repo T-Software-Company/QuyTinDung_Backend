@@ -1,29 +1,25 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@AllArgsConstructor
+@SuperBuilder
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table
-public class Role extends AbstractAuditEntity {
+public class LoanRecordRelate extends AbstractAuditEntity {
 
+  private String link;
   private String name;
 
-  @ManyToMany(mappedBy = "roles")
-  private List<Group> groups;
-
-  @ManyToMany(mappedBy = "roles")
-  private List<Employee> employees;
+  @ManyToOne private Credit credit;
 }

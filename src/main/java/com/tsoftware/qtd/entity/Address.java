@@ -21,7 +21,7 @@ public class Address extends AbstractAuditEntity {
   private String detail;
 
   @OneToOne(mappedBy = "address")
-  private Profile profile;
+  private Employee employee;
 
   @OneToOne(mappedBy = "address")
   private Customer customer;

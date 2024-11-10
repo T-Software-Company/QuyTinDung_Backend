@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class AppraisalReport extends AbstractAuditEntity {
 
   private String title;
-  private String description;
+  private String note;
 
   @Enumerated(EnumType.STRING)
   private ApproveStatus approveStatus;
@@ -30,10 +30,9 @@ public class AppraisalReport extends AbstractAuditEntity {
   private ValuationMinutes valuationMinutes;
 
   @OneToMany(mappedBy = "appraisalReport")
-  private List<Asset> asset;
-
-  @OneToMany(mappedBy = "appraisalReport")
   private List<Approve> approves;
 
   @OneToOne private CreditRating creditRating;
+
+  @OneToMany private List<IncomeProof> incomeProofs;
 }

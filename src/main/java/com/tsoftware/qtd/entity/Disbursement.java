@@ -3,6 +3,7 @@ package com.tsoftware.qtd.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -16,15 +17,15 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Disbursement extends AbstractAuditEntity {
 
-  private Long loanLimit;
-  private Long amountReceived;
-  private Long currentOutstandingDebt;
+  private BigDecimal loanLimit;
+  private BigDecimal amountReceived;
+  private BigDecimal currentOutstandingDebt;
   private ZonedDateTime dateOfLoanReceipt;
   private ZonedDateTime loanTerm;
-  private Float interestRate;
+  private BigDecimal interestRate;
   private String repaymentSchedule;
 
   @ManyToOne private Customer customer;
 
-  @ManyToOne private Loan loan;
+  @ManyToOne private Credit credit;
 }

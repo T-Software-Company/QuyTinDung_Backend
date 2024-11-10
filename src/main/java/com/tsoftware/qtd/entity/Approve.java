@@ -2,7 +2,6 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class Approve extends AbstractAuditEntity {
 
-  @ManyToMany private List<Profile> approvers;
+  @ManyToOne private Employee approver;
 
   @ManyToOne private AppraisalReport appraisalReport;
 

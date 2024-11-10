@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -17,25 +17,26 @@ public class AppraisalPlan extends AbstractAuditEntity {
   private String address;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private Date startDateAppraisal;
+  private ZonedDateTime startDate;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private Date endDateAppraisal;
+  private ZonedDateTime endDate;
 
-  @ManyToMany(mappedBy = "appraisalPlan")
-  private List<Profile> participants;
+  @ManyToMany(mappedBy = "appraisalPlans")
+  private List<Employee> participants;
 
   @OneToMany(mappedBy = "appraisalPlan")
   private List<IncomeProof> incomeProof;
 
   @OneToOne private AppraisalReport appraisalReport;
 
-  @OneToOne private Loan loan;
+  @OneToOne private Credit credit;
 
   @ManyToOne private Customer customer;
 
   @OneToMany(mappedBy = "appraisalPlan")
-  private List<PurposeLoanRelated> purposeLoanRelated;
+  private List<LoanPurposeDocument> loanPurposeDocuments;
 
-  @OneToOne private ValuationMinutes valuationMinutes;
+  @OneToOne(mappedBy = "appraisalPlan")
+  private ValuationMinutes valuationMinutes;
 }
