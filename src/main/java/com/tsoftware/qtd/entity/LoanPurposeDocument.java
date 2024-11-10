@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Entity
 @Table
-public class LoanPurposeDocument {
+public class LoanPurposeDocument extends AbstractAuditEntity {
 
   private String link;
   private String name;

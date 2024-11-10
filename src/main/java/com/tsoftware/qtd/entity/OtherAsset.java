@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +22,9 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class OtherAsset extends AbstractAuditEntity {
 
+  @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
-  private Map<String, Object> info;
+  private Map<String, Object> properties;
 
   @OneToOne private Asset asset;
 }

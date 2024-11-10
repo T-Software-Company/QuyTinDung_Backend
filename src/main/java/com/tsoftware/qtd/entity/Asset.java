@@ -3,6 +3,7 @@ package com.tsoftware.qtd.entity;
 import com.tsoftware.qtd.constants.EnumType.AssetType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -22,7 +23,7 @@ public class Asset extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private AssetType assetType;
 
-  @OneToMany private LegalDocument legalDocument;
+  @OneToMany private List<LegalDocument> legalDocuments;
 
   @ManyToOne private Credit credit;
 

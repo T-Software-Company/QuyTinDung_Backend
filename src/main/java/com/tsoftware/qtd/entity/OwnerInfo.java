@@ -21,12 +21,12 @@ public class OwnerInfo extends AbstractAuditEntity {
   private String idCardNumber;
   private String permanentAddress;
 
-  @OneToOne(mappedBy = "transferInfo")
+  @OneToOne(mappedBy = "ownerInfo")
   private LandAsset landAsset;
 
-  @OneToOne(mappedBy = "transferInfo")
+  @OneToOne(mappedBy = "ownerInfo")
   private LandAndImprovement landAndImprovement;
 
-  @OneToOne(mappedBy = "transferInfo")
+  @OneToOne(mappedBy = "ownerInfo")
   private Apartment apartment;
 }

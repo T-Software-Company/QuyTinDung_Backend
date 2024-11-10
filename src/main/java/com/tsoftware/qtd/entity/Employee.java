@@ -40,13 +40,13 @@ public class Employee extends AbstractAuditEntity {
 
   @ManyToMany private List<AppraisalPlan> appraisalPlans;
 
-  @OneToMany(mappedBy = "employee")
+  @OneToMany(mappedBy = "approver")
   private List<Approve> approves;
 
   @ManyToMany private List<ValuationMeeting> valuationMeetings;
 
   @ManyToMany(mappedBy = "employees")
-  private Group group;
+  private List<Group> groups;
 
   @ManyToMany private List<Role> roles;
 }
