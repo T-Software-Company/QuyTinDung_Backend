@@ -1,10 +1,7 @@
 package com.tsoftware.qtd.dto.appraisalPlan;
 
 import com.tsoftware.qtd.dto.customer.CustomerDto;
-import com.tsoftware.qtd.entity.AppraisalReport;
-import com.tsoftware.qtd.entity.IncomeProof;
-import com.tsoftware.qtd.entity.Loan;
-import com.tsoftware.qtd.entity.PurposeLoanRelated;
+import com.tsoftware.qtd.entity.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,10 +30,10 @@ public class AppraisalPlanDto {
   CustomerDto customer;
 
   @NotNull(message = "PURPOSE_LOAN_RELATED_REQUIRED")
-  PurposeLoanRelated purposeLoanRelated;
+  LoanPurposeDocument loanPurposeDocument;
 
   @NotNull(message = "LOAN_REQUIRED")
-  Loan loan;
+  Credit credit;
 
   @NotNull(message = "EMPLOYEE_REQUIRED")
   Employee employee;

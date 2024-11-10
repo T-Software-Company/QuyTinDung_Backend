@@ -12,12 +12,11 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "cmnd")
+@Table
 public class CMND extends AbstractAuditEntity {
 
   private String ethnicity;
   private String religion;
-  private Gender gender;
   private ZonedDateTime dateOfBirth;
   private String nationality;
   private String placeOfBirth;
@@ -27,6 +26,9 @@ public class CMND extends AbstractAuditEntity {
   private String issuingAuthority;
   private String frontPhotoURL;
   private String backPhotoURL;
+
+  @Enumerated(EnumType.STRING)
+  private Gender gender;
 
   @OneToOne(mappedBy = "cmnd")
   private Customer customer;

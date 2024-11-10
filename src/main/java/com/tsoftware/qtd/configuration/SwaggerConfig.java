@@ -30,7 +30,7 @@ public class SwaggerConfig {
     Scopes scopes =
         new Scopes()
             .addString("openid", "Access user data")
-            .addString("profile", "Access user profile information")
+            .addString("employee", "Access user employee information")
             .addString("email", "Access user email information");
 
     OAuthFlow oauthFlow =

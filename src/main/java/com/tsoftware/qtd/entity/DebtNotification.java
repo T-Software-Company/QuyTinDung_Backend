@@ -12,11 +12,10 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class DebtNotification extends AbstractAuditEntity {
 
+  private Long amount;
+  private String message;
+
   @ManyToOne private Customer customer;
 
-  @ManyToOne private Loan loan;
-
-  private Long amount;
-
-  private String message;
+  @ManyToOne private Credit credit;
 }

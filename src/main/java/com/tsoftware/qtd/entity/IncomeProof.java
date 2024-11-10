@@ -18,8 +18,10 @@ public class IncomeProof extends AbstractAuditEntity {
 
   @ManyToOne private Customer customer;
 
-  @ManyToOne private AppraisalPlan appraisalPlan;
-
   @Enumerated(EnumType.STRING)
   private IncomeProofType incomeProofType;
+
+  @ManyToOne private AppraisalPlan appraisalPlan;
+
+  @ManyToOne private AppraisalReport appraisalReport;
 }

@@ -1,45 +1,41 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.BorrowerType;
-import com.tsoftware.qtd.constants.EnumType.LoanCollateralType;
+import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.time.ZonedDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@AllArgsConstructor
+@SuperBuilder
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
-@Table(name = "loan_request")
-public class LoanRequest {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long loanRequestId;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "loan_id", nullable = false)
-  private Loan loan;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer;
-
-  @OneToOne
-  @JoinColumn(name = "loan_plan_id", referencedColumnName = "loanPlanId")
-  private LoanPlan loanPlan;
-
-  @OneToMany(mappedBy = "loanRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<PurposeLoanRelated> purposeLoanRelated;
-
-  @Column(nullable = false)
-  private BigDecimal amount;
+@Table
+public class LoanRequest extends AbstractAuditEntity {
 
   private String purpose;
+  private ZonedDateTime startDate;
+  private ZonedDateTime endDate;
+  private BigDecimal amount;
 
   @Enumerated(EnumType.STRING)
   private BorrowerType borrowerType;
 
-  @Temporal(TemporalType.DATE)
-  private Date loanTerm;
+  @Enumerated(EnumType.STRING)
+  private LoanSecurityType loanSecurityType;
+
+  @ManyToOne private Credit credit;
+
+  @ManyToOne private Customer customer;
 
   @Enumerated(EnumType.STRING)
-  private LoanCollateralType loanCollateralType;
+  private AssetType loanCollateralType;
 }

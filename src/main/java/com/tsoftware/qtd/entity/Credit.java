@@ -1,0 +1,68 @@
+package com.tsoftware.qtd.entity;
+
+import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
+import com.tsoftware.qtd.constants.EnumType.LoanStatus;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@AllArgsConstructor
+@SuperBuilder
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table
+public class Credit extends AbstractAuditEntity {
+
+  private BigDecimal amount;
+  private ZonedDateTime startDate;
+  private ZonedDateTime dueDate;
+  private BigDecimal interestRate;
+  private BigDecimal amountPaid;
+  private BigDecimal currentOutstandingDebt;
+
+  @Enumerated(EnumType.STRING)
+  private LoanStatus status;
+
+  @Enumerated(EnumType.STRING)
+  private LoanSecurityType loanSecurityType;
+
+  @ManyToOne private Customer customer;
+
+  @OneToOne(mappedBy = "credit")
+  private LoanPlan loanPlan;
+
+  @OneToOne(mappedBy = "credit")
+  private LoanRequest loanRequest;
+
+  @OneToMany(mappedBy = "credit")
+  private List<Asset> assets;
+
+  @OneToOne(mappedBy = "credit")
+  private AppraisalPlan appraisalPlan;
+
+  @OneToMany(mappedBy = "credit")
+  private List<DebtNotification> debtNotification;
+
+  @OneToMany(mappedBy = "credit")
+  private List<AssetRepossessionNotice> assetRepossessionNotices;
+
+  @OneToMany(mappedBy = "credit")
+  private List<Disbursement> disbursements;
+
+  @OneToMany(mappedBy = "credit")
+  private List<LoanRecordRelate> loanRecordRelates;
+
+  @OneToMany(mappedBy = "credit")
+  private List<LoanPurposeDocument> loanPurposeDocuments;
+
+  @OneToMany(mappedBy = "credit")
+  private List<LoanCollection> loanCollections;
+}

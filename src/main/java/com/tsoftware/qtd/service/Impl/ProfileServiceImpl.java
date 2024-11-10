@@ -4,7 +4,7 @@ import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.dto.identity.*;
 import com.tsoftware.qtd.dto.profile.*;
-import com.tsoftware.qtd.entity.Profile;
+import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.exception.AppException;
 import com.tsoftware.qtd.exception.ErrorCode;
 import com.tsoftware.qtd.exception.ErrorNormalizer;
@@ -67,14 +67,14 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   private ProfileResponse mapProfileWithRoles(
-      Profile profile, List<RoleRepresentation> allRoles, String token) {
+      Employee employee, List<RoleRepresentation> allRoles, String token) {
     List<String> userRoles;
-    ProfileResponse response = profileMapper.toProfileResponse(profile);
+    ProfileResponse response = profileMapper.toProfileResponse(employee);
 
     try {
       userRoles =
           identityClient
-              .getUserRoles("Bearer " + token, idpProperties.getRealm(), profile.getUserId())
+              .getUserRoles("Bearer " + token, idpProperties.getRealm(), employee.getUserId())
               .stream()
               .map(RoleRepresentation::getName)
               .toList();
@@ -87,7 +87,7 @@ public class ProfileServiceImpl implements ProfileService {
 
       response.setRoles(roles);
     } catch (FeignException e) {
-      log.error("Failed to fetch roles for user {}: {}", profile.getUserId(), e.getMessage());
+      log.error("Failed to fetch roles for user {}: {}", employee.getUserId(), e.getMessage());
       response.setRoles(List.of());
     }
     return response;
@@ -117,18 +117,18 @@ public class ProfileServiceImpl implements ProfileService {
               identityClient.createUser(
                   "Bearer " + token, idpProperties.getRealm(), buildUserCreationParam(request)));
 
-      Profile profile = profileMapper.toProfile(request);
-      profile.setUserId(userId);
-      profileRepository.save(profile);
+      Employee employee = profileMapper.toProfile(request);
+      employee.setUserId(userId);
+      profileRepository.save(employee);
 
       assignRoleToUserInKeycloak(userId, request.getRoleId(), request.getRoleName());
 
-      if (profile.getBanned() == Banned.LOCKED) {
+      if (employee.getBanned() == Banned.LOCKED) {
         deactivateUser(userId);
       }
 
       return mapProfileWithRoles(
-          profile, identityClient.getAllRoles("Bearer " + token, idpProperties.getRealm()), token);
+          employee, identityClient.getAllRoles("Bearer " + token, idpProperties.getRealm()), token);
     } catch (FeignException e) {
       throw handleFeignException(e, "Failed to create user");
     }
@@ -186,7 +186,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  private Profile findProfileByUserId(String userId) {
+  private Employee findProfileByUserId(String userId) {
     return profileRepository
         .findByUserId(userId)
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

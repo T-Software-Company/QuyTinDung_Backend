@@ -14,14 +14,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Entity
 public class PassPort extends AbstractAuditEntity {
-  @OneToOne(mappedBy = "passPort")
-  private Customer customer;
 
   private String fullName;
-
-  @Enumerated(EnumType.STRING)
-  private Gender gender;
-
   private ZonedDateTime dateOfBirth;
   private String nationality;
   private String placeOfBirth;
@@ -34,4 +28,10 @@ public class PassPort extends AbstractAuditEntity {
 
   @Enumerated(EnumType.STRING)
   private PassPortType passPortType;
+
+  @Enumerated(EnumType.STRING)
+  private Gender gender;
+
+  @OneToOne(mappedBy = "passPort")
+  private Customer customer;
 }

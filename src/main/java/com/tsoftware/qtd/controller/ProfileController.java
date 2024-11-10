@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-@RequestMapping("/profiles")
+@RequestMapping("/employees")
 public class ProfileController {
 
   ProfileService profileService;
@@ -38,12 +38,12 @@ public class ProfileController {
         .build();
   }
 
-  @GetMapping("client/my-profile")
+  @GetMapping("client/my-employee")
   ApiResponse<ProfileResponse> getMyProfiles() {
     return ApiResponse.<ProfileResponse>builder().result(profileService.getMyProfile()).build();
   }
 
-  @PutMapping("client/my-profile")
+  @PutMapping("client/my-employee")
   public ApiResponse<Void> updateMyProfile(@RequestBody @Valid ProfileRequest request) {
     profileService.updateProfile(request);
     return ApiResponse.<Void>builder().build();

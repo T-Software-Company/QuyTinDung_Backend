@@ -3,7 +3,7 @@ package com.tsoftware.qtd.dto.debtNotification;
 import com.tsoftware.qtd.constants.EnumType.NotificationStatus;
 import com.tsoftware.qtd.constants.EnumType.NotificationType;
 import com.tsoftware.qtd.dto.customer.CustomerDto;
-import com.tsoftware.qtd.entity.Loan;
+import com.tsoftware.qtd.entity.Credit;
 import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
@@ -30,7 +30,7 @@ public class DebtNotificationDto {
   CustomerDto customer;
 
   @NotNull(message = "LOAN_REQUIRED")
-  Loan loan;
+  Credit credit;
 
   @NotNull(message = "NOTIFICATION_DATE_REQUIRED")
   @Past(message = "NOTIFICATION_DATE_MUST_BE_IN_PAST")

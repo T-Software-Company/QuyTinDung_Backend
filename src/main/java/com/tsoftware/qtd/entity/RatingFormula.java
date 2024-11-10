@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,20 +10,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table
-public class Role extends AbstractAuditEntity {
-
+public class RatingFormula extends AbstractAuditEntity {
   private String name;
 
-  @ManyToMany(mappedBy = "roles")
-  private List<Group> groups;
-
-  @ManyToMany(mappedBy = "roles")
-  private List<Employee> employees;
+  @OneToMany(mappedBy = "ratingFormula")
+  private List<RatingCriterion> ratingCriteria;
 }

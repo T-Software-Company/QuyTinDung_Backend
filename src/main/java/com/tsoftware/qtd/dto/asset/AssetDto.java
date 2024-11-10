@@ -1,11 +1,9 @@
 package com.tsoftware.qtd.dto.asset;
 
 import com.tsoftware.qtd.entity.AppraisalReport;
-import com.tsoftware.qtd.entity.Loan;
+import com.tsoftware.qtd.entity.Credit;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +25,9 @@ public class AssetDto {
   @Valid
   AppraisalReport appraisalReport;
 
-  @NotNull(message = "ASSET_TYPE_REQUIRED")
-  @Size(min = 1, message = "ASSET_TYPE_LIST_EMPTY")
-  List<AssetType> assetType;
+  //  @NotNull(message = "ASSET_TYPE_REQUIRED")
+  //  AssetType assetType;
 
   @NotNull(message = "LOAN_REQUIRED")
-  Loan loan;
+  Credit credit;
 }
