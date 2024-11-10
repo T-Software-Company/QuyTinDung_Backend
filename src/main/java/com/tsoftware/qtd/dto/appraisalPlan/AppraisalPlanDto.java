@@ -2,7 +2,6 @@ package com.tsoftware.qtd.dto.appraisalPlan;
 
 import com.tsoftware.qtd.dto.customer.CustomerDto;
 import com.tsoftware.qtd.entity.AppraisalReport;
-import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.IncomeProof;
 import com.tsoftware.qtd.entity.Loan;
 import com.tsoftware.qtd.entity.PurposeLoanRelated;

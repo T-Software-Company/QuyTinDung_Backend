@@ -18,6 +18,12 @@ import lombok.experimental.SuperBuilder;
 public class AppraisalPlan extends AbstractAuditEntity {
 	private String address;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date startDateAppraisal;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date endDateAppraisal;
+	
 	@ManyToMany(mappedBy = "appraisalPlan")
 	private List<Profile> participants;
 	
@@ -27,13 +33,6 @@ public class AppraisalPlan extends AbstractAuditEntity {
 	@OneToOne
 	private AppraisalReport appraisalReport;
 	
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date startDateAppraisal;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date endDateAppraisal;
-	
 	@OneToOne
 	private Loan loan;
 	
@@ -42,5 +41,8 @@ public class AppraisalPlan extends AbstractAuditEntity {
 	
 	@OneToMany(mappedBy = "appraisalPlan")
 	private List<PurposeLoanRelated> purposeLoanRelated;
+	
+	@OneToOne
+	private ValuationMinutes valuationMinutes;
 	
 }

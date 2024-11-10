@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.asset;
 
 import com.tsoftware.qtd.entity.AppraisalReport;
-import com.tsoftware.qtd.entity.AssetType;
 import com.tsoftware.qtd.entity.Loan;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

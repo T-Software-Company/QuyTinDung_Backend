@@ -24,8 +24,10 @@ public class Disbursement extends AbstractAuditEntity{
 	private ZonedDateTime loanTerm;
 	private Float interestRate;
 	private String repaymentSchedule;
+	
 	@ManyToOne
 	private Customer customer;
+	
 	@ManyToOne
 	private  Loan loan;
 

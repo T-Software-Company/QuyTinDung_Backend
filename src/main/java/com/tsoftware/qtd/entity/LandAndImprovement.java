@@ -2,21 +2,22 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.ZonedDateTime;
 
-@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
 @Table
-public class Apartment extends AbstractAuditEntity {
-	
-	
+public class LandAndImprovement  extends  AbstractAuditEntity{
 	private String plotNumber;
 	private String mapNumber;
 	private String address;
@@ -25,8 +26,11 @@ public class Apartment extends AbstractAuditEntity {
 	private ZonedDateTime expirationDate;
 	private String originOfUsage;
 	private String typeOfHousing;
-	private String Name;
 	private String floorArea;
+	private String ancillaryFloorArea;
+	private String structureType;
+	private Integer numberOfFloors;
+	private Integer constructionYear;
 	private String typeOfOwnership;
 	private ZonedDateTime ownershipTerm;
 	private String notes;

@@ -1,10 +1,9 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.constants.EnumType.AssetType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,31 +12,53 @@ import java.util.List;
 @SuperBuilder
 @Entity
 @Table
-public class Asset {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long assetId;
+public class Asset extends AbstractAuditEntity {
 	
-	@ManyToOne
-	private AppraisalReport appraisalReport;
+	private String assessedValue;
 	
-	@ManyToOne
+	@Enumerated(EnumType.STRING)
 	private AssetType assetType;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany
+	private LegalDocument legalDocument;
+	
+	
+	@ManyToOne
 	private Loan loan;
 	
 	@OneToOne(mappedBy = "asset")
 	private Apartment apartment;
 	
+	@OneToOne(mappedBy = "asset")
+	private LandAndImprovement landAndImprovement;
+	
+	@OneToOne(mappedBy = "asset")
+	private Vehicle vehicle;
+	
+	@OneToOne(mappedBy = "asset")
+	private MarketStalls marketStalls;
+	
+	@OneToOne(mappedBy = "asset")
+	private Machinery machinery;
+	
+	
+	@OneToOne(mappedBy = "asset")
+	private OtherAsset otherAsset;
+	
+	@OneToOne(mappedBy = "asset")
+	private LandAsset landAsset;
+	
 	@ManyToOne
 	private AppraisalPlan appraisalPlan;
- 
+	
 	@ManyToOne
 	private AssetRepossessionNotice assetRepossessionNotice;
 	
 	@ManyToOne
-	private  Customer customer;
+	private Customer customer;
 	
-	@ManyToOne private ValuationMeeting valuationMeeting;
+	@ManyToOne
+	private ValuationMeeting valuationMeeting;
+	@ManyToOne
+	private ValuationMinutes valuationMinutes;
 }

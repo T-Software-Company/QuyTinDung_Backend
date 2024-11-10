@@ -21,7 +21,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class AbstractAuditEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  protected Long id;
 
   @CreatedDate protected ZonedDateTime createdAt;
   @LastModifiedDate protected ZonedDateTime updatedAt;

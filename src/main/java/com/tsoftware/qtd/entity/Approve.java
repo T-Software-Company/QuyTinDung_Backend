@@ -28,5 +28,4 @@ public class Approve extends AbstractAuditEntity {
 	@Enumerated(EnumType.STRING)
 	private ApproveStatus status;
 	
-	
 }

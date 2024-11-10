@@ -16,14 +16,6 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class CCCD extends AbstractAuditEntity {
 
-  @OneToOne(mappedBy = "cccd")
-  private Customer customer;
-
-  private String fullName;
-
-  @Enumerated(EnumType.STRING)
-  private Gender gender;
-
   private ZonedDateTime dateOfBirth;
   private String nationality;
   private String placeOfBirth;
@@ -33,4 +25,11 @@ public class CCCD extends AbstractAuditEntity {
   private String issuingAuthority;
   private String frontPhotoURL;
   private String backPhotoURL;
+  private String fullName;
+  
+  @Enumerated(EnumType.STRING)
+  private Gender gender;
+  
+  @OneToOne(mappedBy = "cccd")
+  private Customer customer;
 }
