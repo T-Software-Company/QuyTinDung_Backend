@@ -22,8 +22,7 @@ public class PurposeLoanRelated {
   @JoinColumn(name = "loanID")
   private Loan loan;
 
-  @ManyToOne
-  private AppraisalPlan appraisalPlan;
+  @ManyToOne private AppraisalPlan appraisalPlan;
 
   @OneToOne private LoanPlan loanPlan;
 }

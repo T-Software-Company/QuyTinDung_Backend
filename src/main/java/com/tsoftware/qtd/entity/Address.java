@@ -19,11 +19,10 @@ public class Address extends AbstractAuditEntity {
   private String cityProvince;
   private String country;
   private String detail;
-  
+
   @OneToOne(mappedBy = "address")
   private Profile profile;
-  
+
   @OneToOne(mappedBy = "address")
   private Customer customer;
-  
 }

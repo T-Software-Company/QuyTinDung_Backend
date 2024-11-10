@@ -16,13 +16,11 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table
 public class CreditRating extends AbstractAuditEntity {
-	
-	private Double score;
-	
-	@Enumerated(EnumType.STRING)
-	private RatingLevel ratingLevel ;
-	
-	@OneToOne
-	private AppraisalReport appraisalReport;
-	
+
+  private Double score;
+
+  @Enumerated(EnumType.STRING)
+  private RatingLevel ratingLevel;
+
+  @OneToOne private AppraisalReport appraisalReport;
 }

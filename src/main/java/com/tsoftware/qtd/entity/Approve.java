@@ -2,10 +2,9 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,16 +15,12 @@ import java.util.List;
 @Table
 public class Approve extends AbstractAuditEntity {
 
-	@ManyToMany
-	private List<Profile> approvers;
-	
-	@ManyToOne
-	private AppraisalReport appraisalReport;
-	
-	@ManyToOne
-	private ValuationMinutes valuationMinutes;
-	
-	@Enumerated(EnumType.STRING)
-	private ApproveStatus status;
-	
+  @ManyToMany private List<Profile> approvers;
+
+  @ManyToOne private AppraisalReport appraisalReport;
+
+  @ManyToOne private ValuationMinutes valuationMinutes;
+
+  @Enumerated(EnumType.STRING)
+  private ApproveStatus status;
 }

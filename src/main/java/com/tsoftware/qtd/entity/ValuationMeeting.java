@@ -4,10 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -16,10 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table
-public class ValuationMeeting extends AbstractAuditEntity{
-	
-	@OneToMany(mappedBy = "valuationMeeting")
-	private List<Asset>	 assets;
-	@OneToOne
-	private ValuationMinutes valuationMinutes;
+public class ValuationMeeting extends AbstractAuditEntity {
+
+  @OneToMany(mappedBy = "valuationMeeting")
+  private List<Asset> assets;
+
+  @OneToOne private ValuationMinutes valuationMinutes;
 }

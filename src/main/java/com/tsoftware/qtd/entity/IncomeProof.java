@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.ZonedDateTime;
-
 @Entity
 @Getter
 @Setter
@@ -15,14 +13,12 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @Table
 public class IncomeProof extends AbstractAuditEntity {
-  
-  private String link;
-  
-  @ManyToOne
-  private Customer customer;
 
-  @ManyToOne
-  private AppraisalPlan appraisalPlan;
+  private String link;
+
+  @ManyToOne private Customer customer;
+
+  @ManyToOne private AppraisalPlan appraisalPlan;
 
   @Enumerated(EnumType.STRING)
   private IncomeProofType incomeProofType;

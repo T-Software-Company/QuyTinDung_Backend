@@ -14,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Table
 public class TransferInfo extends AbstractAuditEntity {
-	@OneToOne(mappedBy = "transferInfo")
-	private Apartment apartment;
-	
+  @OneToOne(mappedBy = "transferInfo")
+  private Apartment apartment;
 }

@@ -3,10 +3,9 @@ package com.tsoftware.qtd.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.ZonedDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -16,14 +15,12 @@ import java.time.ZonedDateTime;
 @Entity
 @Table
 public class OwnerInfo extends AbstractAuditEntity {
-	
-	private String fullName;
-	private ZonedDateTime dayOfBirth;
-	private String idCardNumber;
-	private  String permanentAddress;
-	
-	@OneToOne(mappedBy = "ownerInfo")
-	private Apartment apartment;
-	
 
+  private String fullName;
+  private ZonedDateTime dayOfBirth;
+  private String idCardNumber;
+  private String permanentAddress;
+
+  @OneToOne(mappedBy = "ownerInfo")
+  private Apartment apartment;
 }

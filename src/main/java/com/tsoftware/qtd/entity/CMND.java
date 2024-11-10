@@ -15,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "cmnd")
 public class CMND extends AbstractAuditEntity {
 
-
   private String ethnicity;
   private String religion;
   private Gender gender;
@@ -28,7 +27,7 @@ public class CMND extends AbstractAuditEntity {
   private String issuingAuthority;
   private String frontPhotoURL;
   private String backPhotoURL;
-  
+
   @OneToOne(mappedBy = "cmnd")
   private Customer customer;
 }

@@ -26,10 +26,10 @@ public class CCCD extends AbstractAuditEntity {
   private String frontPhotoURL;
   private String backPhotoURL;
   private String fullName;
-  
+
   @Enumerated(EnumType.STRING)
   private Gender gender;
-  
+
   @OneToOne(mappedBy = "cccd")
   private Customer customer;
 }

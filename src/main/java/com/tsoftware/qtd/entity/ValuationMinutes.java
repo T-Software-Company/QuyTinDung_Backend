@@ -1,13 +1,12 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -16,18 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table
-public class ValuationMinutes  extends AbstractAuditEntity{
+public class ValuationMinutes extends AbstractAuditEntity {
 
-	@OneToOne(mappedBy = "valuationMinutes")
-	private ValuationMeeting valuationMeeting;
-	
-	@OneToOne(mappedBy = "valuationMinutes")
-	private AppraisalReport appraisalReport;
-	
-	@OneToOne
-	private AppraisalPlan appraisalPlan;
-	
-	@OneToMany(mappedBy = "valuationMinutes")
-	private List<Approve> approves;
-	
+  @OneToOne(mappedBy = "valuationMinutes")
+  private ValuationMeeting valuationMeeting;
+
+  @OneToOne(mappedBy = "valuationMinutes")
+  private AppraisalReport appraisalReport;
+
+  @OneToOne private AppraisalPlan appraisalPlan;
+
+  @OneToMany(mappedBy = "valuationMinutes")
+  private List<Approve> approves;
 }

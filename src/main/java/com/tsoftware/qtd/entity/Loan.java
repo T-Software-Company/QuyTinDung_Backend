@@ -14,8 +14,7 @@ public class Loan {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long loanId;
 
-  @ManyToOne
-  private Customer customer;
+  @ManyToOne private Customer customer;
 
   @OneToMany private List<LoanPlan> loanPlan;
 
@@ -31,10 +30,10 @@ public class Loan {
 
   @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<DebtNotification> debtNotification;
-  
+
   @OneToMany(mappedBy = "loan")
   private List<AssetRepossessionNotice> assetRepossessionNotices;
-  
+
   @OneToMany(mappedBy = "loan")
   private List<Disbursement> disbursements;
 }

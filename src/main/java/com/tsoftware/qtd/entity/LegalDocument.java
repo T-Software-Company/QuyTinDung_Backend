@@ -16,12 +16,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table
-public class LegalDocument extends AbstractAuditEntity{
-	
-	private String name;
-	private String link;
-	
-	@ManyToOne
-	private Asset asset;
-	
+public class LegalDocument extends AbstractAuditEntity {
+
+  private String name;
+  private String link;
+
+  @ManyToOne private Asset asset;
 }

@@ -1,10 +1,9 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.*;
+import java.time.ZonedDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -33,8 +32,6 @@ public class Vehicle extends AbstractAuditEntity {
   private String note;
   private Integer kilometersDriven;
   private String inspectionCertificateNumber;
-  
+
   @OneToOne private Asset asset;
-  
-  
 }

@@ -6,10 +6,8 @@ import com.tsoftware.qtd.constants.EnumType.Gender;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
 
 @Getter
 @Setter
@@ -19,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table
 public class Profile extends AbstractAuditEntity {
-  
+
   private String userId;
   private String username;
   private String employeeCode;
@@ -28,29 +26,23 @@ public class Profile extends AbstractAuditEntity {
   private String lastName;
   private LocalDate dayOfBirth;
   private String phone;
-  
+
   @Enumerated(EnumType.STRING)
   private Gender gender;
-  
+
   @Enumerated(EnumType.STRING)
   private Banned banned;
-  
+
   @Enumerated(EnumType.STRING)
   private EmploymentStatus status;
-  
-  @OneToOne private Address address;
-  
-  @ManyToMany
-  private List<AppraisalPlan> appraisalPlans;
-  
-  @ManyToMany
-  private List<Approve> approves;
-  
-  @ManyToMany
-  private ValuationMeeting valuationMeeting;
-  
-  @ManyToMany
-  private Group group;
-  
-}
 
+  @OneToOne private Address address;
+
+  @ManyToMany private List<AppraisalPlan> appraisalPlans;
+
+  @ManyToMany private List<Approve> approves;
+
+  @ManyToMany private ValuationMeeting valuationMeeting;
+
+  @ManyToMany private Group group;
+}

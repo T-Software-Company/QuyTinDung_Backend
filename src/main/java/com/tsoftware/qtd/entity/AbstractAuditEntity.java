@@ -3,7 +3,6 @@ package com.tsoftware.qtd.entity;
 import com.tsoftware.qtd.configuration.CustomAuditingEntityListener;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;

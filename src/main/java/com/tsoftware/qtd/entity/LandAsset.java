@@ -2,10 +2,9 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
 import jakarta.persistence.*;
+import java.time.ZonedDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -22,18 +21,13 @@ public class LandAsset extends AbstractAuditEntity {
   private String purpose;
   private ZonedDateTime expirationDate;
   private String originOfUsage;
-  
-  
+
   @Enumerated(EnumType.STRING)
   private TypeOfUse typeOfUse;
-  
-  
-  @OneToOne
-  private Asset asset;
-  
-  @OneToOne
-  private OwnerInfo ownerInfo;
-  
-  @OneToOne
-  private TransferInfo transferInfo;
+
+  @OneToOne private Asset asset;
+
+  @OneToOne private OwnerInfo ownerInfo;
+
+  @OneToOne private TransferInfo transferInfo;
 }
