@@ -1,10 +1,10 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
-import com.tsoftware.qtd.dto.profile.ProfileRequest;
-import com.tsoftware.qtd.dto.profile.ProfileRequestForAdmin;
-import com.tsoftware.qtd.dto.profile.ProfileResponse;
-import com.tsoftware.qtd.service.ProfileService;
+import com.tsoftware.qtd.dto.employee.AdminRequest;
+import com.tsoftware.qtd.dto.employee.EmployeeRequest;
+import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import com.tsoftware.qtd.service.EmployeeService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -22,37 +22,37 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/employees")
 public class ProfileController {
 
-  ProfileService profileService;
+  EmployeeService employeeService;
 
   @PostMapping("/register")
-  ApiResponse<ProfileResponse> register(@RequestBody @Valid ProfileRequestForAdmin request) {
-    return ApiResponse.<ProfileResponse>builder()
-        .result(profileService.registerProfile(request))
+  ApiResponse<EmployeeResponse> register(@RequestBody @Valid AdminRequest request) {
+    return ApiResponse.<EmployeeResponse>builder()
+        .result(employeeService.registerProfile(request))
         .build();
   }
 
   @GetMapping
-  ApiResponse<List<ProfileResponse>> getAllProfiles() {
-    return ApiResponse.<List<ProfileResponse>>builder()
-        .result(profileService.getAllProfiles())
+  ApiResponse<List<EmployeeResponse>> getAllProfiles() {
+    return ApiResponse.<List<EmployeeResponse>>builder()
+        .result(employeeService.getAllProfiles())
         .build();
   }
 
   @GetMapping("client/my-employee")
-  ApiResponse<ProfileResponse> getMyProfiles() {
-    return ApiResponse.<ProfileResponse>builder().result(profileService.getMyProfile()).build();
+  ApiResponse<EmployeeResponse> getMyProfiles() {
+    return ApiResponse.<EmployeeResponse>builder().result(employeeService.getMyProfile()).build();
   }
 
   @PutMapping("client/my-employee")
-  public ApiResponse<Void> updateMyProfile(@RequestBody @Valid ProfileRequest request) {
-    profileService.updateProfile(request);
+  public ApiResponse<Void> updateMyProfile(@RequestBody @Valid EmployeeRequest request) {
+    employeeService.updateProfile(request);
     return ApiResponse.<Void>builder().build();
   }
 
   @PutMapping("/{userId}")
   public ApiResponse<Void> updateProfileByUserId(
-      @PathVariable String userId, @RequestBody @Valid ProfileRequestForAdmin request) {
-    profileService.updateProfileByAdmin(userId, request); //
+      @PathVariable String userId, @RequestBody @Valid AdminRequest request) {
+    employeeService.updateProfileByAdmin(userId, request); //
     return ApiResponse.<Void>builder().build();
   }
 
@@ -60,7 +60,7 @@ public class ProfileController {
   public ApiResponse<Void> resetPasswordForCurrentUser(@RequestBody Map<String, Object> request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
     String newPassword = (String) request.get("newPassword");
-    profileService.resetPassword(userId, newPassword);
+    employeeService.resetPassword(userId, newPassword);
     return ApiResponse.<Void>builder().build();
   }
 
@@ -68,19 +68,19 @@ public class ProfileController {
   public ApiResponse<Void> resetPasswordForUserByAdmin(
       @PathVariable String userId, @RequestBody Map<String, Object> request) {
     String newPassword = (String) request.get("newPassword");
-    profileService.resetPassword(userId, newPassword);
+    employeeService.resetPassword(userId, newPassword);
     return ApiResponse.<Void>builder().build();
   }
 
   @PutMapping("/{userId}/activate")
   public ApiResponse<Void> activateUser(@PathVariable String userId) {
-    profileService.activateUser(userId);
+    employeeService.activateUser(userId);
     return ApiResponse.<Void>builder().build();
   }
 
   @PutMapping("/{userId}/deactivate")
   public ApiResponse<Void> deactivateUser(@PathVariable String userId) {
-    profileService.deactivateUser(userId);
+    employeeService.deactivateUser(userId);
     return ApiResponse.<Void>builder().build();
   }
 }

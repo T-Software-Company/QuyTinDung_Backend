@@ -2,16 +2,16 @@ package com.tsoftware.qtd.service.Impl;
 
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Banned;
+import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.dto.identity.*;
-import com.tsoftware.qtd.dto.profile.*;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.exception.AppException;
 import com.tsoftware.qtd.exception.ErrorCode;
 import com.tsoftware.qtd.exception.ErrorNormalizer;
-import com.tsoftware.qtd.mapper.ProfileMapper;
+import com.tsoftware.qtd.mapper.EmployeeMapper;
+import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.IdentityClient;
-import com.tsoftware.qtd.repository.ProfileRepository;
-import com.tsoftware.qtd.service.ProfileService;
+import com.tsoftware.qtd.service.EmployeeService;
 import feign.FeignException;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +29,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ProfileServiceImpl implements ProfileService {
+public class EmployeeServiceImpl implements EmployeeService {
 
-  ProfileRepository profileRepository;
-  ProfileMapper profileMapper;
+  EmployeeRepository employeeRepository;
+  EmployeeMapper employeeMapper;
   IdentityClient identityClient;
   ErrorNormalizer errorNormalizer;
   IdpProperties idpProperties;
@@ -56,20 +56,20 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public List<ProfileResponse> getAllProfiles() {
+  public List<EmployeeResponse> getAllProfiles() {
     String token = getToken();
     List<RoleRepresentation> allRoles =
         identityClient.getAllRoles("Bearer " + token, idpProperties.getRealm());
 
-    return profileRepository.findAll().stream()
+    return employeeRepository.findAll().stream()
         .map(profile -> mapProfileWithRoles(profile, allRoles, token))
         .collect(Collectors.toList());
   }
 
-  private ProfileResponse mapProfileWithRoles(
+  private EmployeeResponse mapProfileWithRoles(
       Employee employee, List<RoleRepresentation> allRoles, String token) {
     List<String> userRoles;
-    ProfileResponse response = profileMapper.toProfileResponse(employee);
+    EmployeeResponse response = employeeMapper.toProfileResponse(employee);
 
     try {
       userRoles =
@@ -94,7 +94,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public ProfileResponse getMyProfile() {
+  public EmployeeResponse getMyProfile() {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
     log.info("User ID from SecurityContext: {}", userId);
 
@@ -109,7 +109,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public ProfileResponse registerProfile(ProfileRequestForAdmin request) {
+  public EmployeeResponse registerProfile(AdminRequest request) {
     try {
       String token = getToken();
       String userId =
@@ -117,9 +117,9 @@ public class ProfileServiceImpl implements ProfileService {
               identityClient.createUser(
                   "Bearer " + token, idpProperties.getRealm(), buildUserCreationParam(request)));
 
-      Employee employee = profileMapper.toProfile(request);
+      Employee employee = employeeMapper.toProfile(request);
       employee.setUserId(userId);
-      profileRepository.save(employee);
+      employeeRepository.save(employee);
 
       assignRoleToUserInKeycloak(userId, request.getRoleId(), request.getRoleName());
 
@@ -134,7 +134,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  private UserCreationParam buildUserCreationParam(ProfileRequestForAdmin request) {
+  private UserCreationParam buildUserCreationParam(AdminRequest request) {
     return UserCreationParam.builder()
         .username(request.getUsername())
         .firstName(request.getFirstName())
@@ -147,7 +147,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public void updateProfile(ProfileRequest request) {
+  public void updateProfile(EmployeeRequest request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
     updateBasicPersonalInfo(userId, request.getFirstName(), request.getLastName());
   }
@@ -158,7 +158,7 @@ public class ProfileServiceImpl implements ProfileService {
     if (firstName != null) profile.setFirstName(firstName);
     if (lastName != null) profile.setLastName(lastName);
 
-    profileRepository.save(profile);
+    employeeRepository.save(profile);
 
     if (firstName != null || lastName != null) {
       var updateParam = UserUpdateParam.builder().firstName(firstName).lastName(lastName).build();
@@ -168,12 +168,12 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public void updateProfileByAdmin(String userId, ProfileRequestForAdmin request) {
+  public void updateProfileByAdmin(String userId, AdminRequest request) {
     var profile = findProfileByUserId(userId);
 
     handleBannedStatusUpdate(userId, profile.getBanned(), request.getBanned());
-    profileMapper.updateProfileFromRequest(request, profile); // Map từ DTO sang entity
-    profileRepository.save(profile);
+    employeeMapper.updateProfileFromRequest(request, profile); // Map từ DTO sang entity
+    employeeRepository.save(profile);
 
     if (request.getFirstName() != null || request.getLastName() != null) {
       updateUserInKeycloak(userId, request);
@@ -187,7 +187,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   private Employee findProfileByUserId(String userId) {
-    return profileRepository
+    return employeeRepository
         .findByUserId(userId)
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
   }
@@ -202,7 +202,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
   }
 
-  private void updateUserInKeycloak(String userId, ProfileRequestForAdmin request) {
+  private void updateUserInKeycloak(String userId, AdminRequest request) {
     UserUpdateParam updateParam =
         UserUpdateParam.builder()
             .firstName(request.getFirstName())
@@ -253,7 +253,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     var profile = findProfileByUserId(userId);
     profile.setBanned(bannedStatus);
-    profileRepository.save(profile);
+    employeeRepository.save(profile);
   }
 
   public void resetPassword(String userId, String newPassword) {

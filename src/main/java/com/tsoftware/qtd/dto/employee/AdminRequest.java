@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.profile;
+package com.tsoftware.qtd.dto.employee;
 
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
@@ -25,7 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfileRequestForAdmin {
+public class AdminRequest {
 
   @NotBlank(message = "USERNAME_REQUIRED")
   @Size(min = 4, message = "INVALID_USERNAME")

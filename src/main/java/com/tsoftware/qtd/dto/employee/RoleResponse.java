@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.profile;
+package com.tsoftware.qtd.dto.employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
