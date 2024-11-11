@@ -3,12 +3,20 @@ echo "*********************************************************"
 echo "Running git pre-commit hook. Running spotlessApply  "
 echo "*********************************************************"
 
+stagedFiles=$(git diff --staged --name-only)
 
 ./mvnw spotless:apply
-
 status=$?
 
-if ! [ "$status" -eq 0 ]; then
+if  [ "$status" -eq 0 ]; then
+ # Add staged file changes to git
+  for file in $stagedFiles; do
+    if test -f "$file"; then
+        git add "$file"
+    fi
+  done
+  exit 0
+else
   echo "*********************************************************"
   echo "       ********************************************      "
   echo "Spotless Apply found violations it could not fix."
