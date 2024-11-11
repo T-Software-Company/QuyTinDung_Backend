@@ -13,10 +13,10 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
-@SuperBuilder
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
+@SuperBuilder
 @Entity
 @Table
 public class Credit extends AbstractAuditEntity {
