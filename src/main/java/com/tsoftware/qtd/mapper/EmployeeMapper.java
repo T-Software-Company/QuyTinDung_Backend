@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.employee.AdminRequest;
+import com.tsoftware.qtd.dto.employee.EmployeeCreateRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.entity.Employee;
 import org.mapstruct.BeanMapping;
@@ -13,15 +13,15 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface EmployeeMapper {
   @Mapping(target = "userId", ignore = true)
   @Mapping(source = "address", target = "address")
-  Employee toProfile(AdminRequest request);
+  Employee toEmployee(EmployeeCreateRequest request);
 
   @Mapping(target = "roles", ignore = true)
   @Mapping(source = "address", target = "address")
-  EmployeeResponse toProfileResponse(Employee employee);
+  EmployeeResponse toEmployeeResponse(Employee employee);
 
   @Mapping(target = "userId", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(source = "address", target = "address")
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateProfileFromRequest(AdminRequest request, @MappingTarget Employee employee);
+  void updateProfileFromRequest(EmployeeCreateRequest request, @MappingTarget Employee employee);
 }

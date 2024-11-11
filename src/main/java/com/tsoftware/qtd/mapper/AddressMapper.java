@@ -1,12 +1,12 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.address.AddressVm;
+import com.tsoftware.qtd.dto.address.AddressDto;
 import com.tsoftware.qtd.entity.Address;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
-  Address toAddress(AddressVm address);
+  Address toAddress(AddressDto address);
 
-  AddressVm toAddressVm(Address address);
+  AddressDto toAddressVm(Address address);
 }

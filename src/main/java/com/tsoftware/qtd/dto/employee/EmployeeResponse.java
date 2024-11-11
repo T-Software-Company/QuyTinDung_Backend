@@ -3,7 +3,7 @@ package com.tsoftware.qtd.dto.employee;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.dto.address.AddressVm;
+import com.tsoftware.qtd.dto.address.AddressDto;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AccessLevel;
@@ -26,13 +26,13 @@ public class EmployeeResponse {
   String username;
   String firstName;
   String lastName;
-  List<RoleResponse> roles;
+  List<String> roles;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   LocalDate dob;
 
   String phone;
-  AddressVm address;
+  AddressDto address;
   String employee_code;
 
   Gender gender;

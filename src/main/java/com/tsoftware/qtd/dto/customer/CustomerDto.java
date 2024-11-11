@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.dto.address.AddressVm;
+import com.tsoftware.qtd.dto.address.AddressDto;
 import com.tsoftware.qtd.dto.appraisalPlan.AppraisalPlanDto;
 import com.tsoftware.qtd.dto.asset.AssetDto;
 import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
@@ -31,8 +31,8 @@ public class CustomerDto {
   @Email(message = "INVALID_EMAIL_FORMAT")
   String email;
 
-  @Valid // Ensures validation on AddressVm
-  private AddressVm address;
+  @Valid // Ensures validation on AddressDto
+  private AddressDto address;
 
   @Valid // Ensures validation on LoanPlanDto
   private LoanPlanDto loanPlan;

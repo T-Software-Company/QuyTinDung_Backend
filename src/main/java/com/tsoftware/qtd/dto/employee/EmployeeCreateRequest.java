@@ -3,7 +3,7 @@ package com.tsoftware.qtd.dto.employee;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.dto.address.AddressVm;
+import com.tsoftware.qtd.dto.address.AddressDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AdminRequest {
+public class EmployeeCreateRequest {
 
   @NotBlank(message = "USERNAME_REQUIRED")
   @Size(min = 4, message = "INVALID_USERNAME")
@@ -39,7 +40,7 @@ public class AdminRequest {
   @Email(message = "INVALID_EMAIL_FORMAT")
   String email;
 
-  @Valid AddressVm address;
+  @Valid AddressDto address;
 
   @NotBlank(message = "FIRST_NAME_REQUIRED")
   String firstName;
@@ -47,16 +48,13 @@ public class AdminRequest {
   @NotBlank(message = "LAST_NAME_REQUIRED")
   String lastName;
 
-  @NotBlank(message = "ROLE_NAME_REQUIRED")
-  String roleName;
-
   @NotBlank(message = "ROLE_ID_REQUIRED")
-  String roleId;
+  List<String> roles;
 
   @NotNull(message = "DOB_REQUIRED")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   @Past(message = "DOB_MUST_BE_IN_PAST")
-  LocalDate dob;
+  LocalDate setDayOfBirth;
 
   @NotNull(message = "GENDER_REQUIRED")
   Gender gender;

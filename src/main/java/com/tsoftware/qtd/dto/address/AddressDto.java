@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class AddressVm {
+public class AddressDto {
   private String streetAddress;
   private String wardOrCommune;
   private String district;

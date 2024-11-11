@@ -12,4 +12,5 @@ public class IdpProperties {
   private String clientId;
   private String clientSecret;
   private String realm;
+  private String serverUrl;
 }

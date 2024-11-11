@@ -1,20 +1,20 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.employee.AdminRequest;
-import com.tsoftware.qtd.dto.employee.EmployeeRequest;
+import com.tsoftware.qtd.dto.employee.EmployeeCreateRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import java.util.List;
 
 public interface EmployeeService {
-  List<EmployeeResponse> getAllProfiles();
+  List<EmployeeResponse> getEmployees();
 
-  EmployeeResponse getMyProfile();
+  EmployeeResponse getProfile();
 
-  EmployeeResponse registerProfile(AdminRequest request);
+  void createEmployee(EmployeeCreateRequest request);
 
-  void updateProfile(EmployeeRequest request);
+  void updateProfile(ProfileRequest request);
 
-  void updateProfileByAdmin(String userId, AdminRequest request);
+  void updateEmployee(String userId, EmployeeCreateRequest request);
 
   void resetPassword(String userId, String newPassword);
 
