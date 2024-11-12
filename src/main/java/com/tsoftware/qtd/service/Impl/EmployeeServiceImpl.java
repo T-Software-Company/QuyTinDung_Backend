@@ -1,13 +1,12 @@
 package com.tsoftware.qtd.service.Impl;
 
+import com.tsoftware.qtd.constants.EnumType.Banned;
+import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.*;
-import com.tsoftware.qtd.dto.identity.*;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.AddressMapper;
 import com.tsoftware.qtd.mapper.EmployeeMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
-import com.tsoftware.qtd.repository.IdentityClient;
-import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.util.List;
@@ -24,15 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Transactional
+@Transactional()
 public class EmployeeServiceImpl implements EmployeeService {
 
   EmployeeRepository employeeRepository;
   EmployeeMapper employeeMapper;
   AddressMapper addressMapper;
-  IdentityClient identityClient;
   KeycloakService keycloakService;
-  RoleRepository roleRepository;
 
   @Override
   public List<EmployeeResponse> getEmployees() {
@@ -53,8 +50,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Override
   public void createEmployee(EmployeeCreateRequest request) {
-    keycloakService.createUser(request);
-    employeeRepository.save(employeeMapper.toEmployee(request));
+    var userId = keycloakService.createUser(request);
+    var employee = employeeMapper.toEmployee(request);
+    employee.setUserId(userId);
+    employeeRepository.save(employee);
   }
 
   @Override
@@ -75,32 +74,67 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Override
   public void updateEmployee(String userId, EmployeeCreateRequest request) {
-    keycloakService.updateUser(request, userId);
     var employee =
         employeeRepository
             .findByUserId(userId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
-    employee.setAddress(addressMapper.toAddress(request.getAddress()));
-    employee.setUsername(request.getUsername());
-    employee.setPhone(request.getPhone());
-    employee.setFirstName(request.getFirstName());
-    employee.setLastName(request.getLastName());
-    employee.setDayOfBirth(request.getSetDayOfBirth());
-    employee.setGender(request.getGender());
-    employee.setBanned(request.getBanned());
-    employee.setRoles(
-        request.getRoles().stream()
-            .map(r -> roleRepository.findByName(r).orElse(null))
-            .collect(Collectors.toList()));
+    keycloakService.updateUser(request, userId);
+
+    if (request.getAddress() != null) {
+      employee.setAddress(addressMapper.toAddress(request.getAddress()));
+    }
+    if (request.getUsername() != null) {
+      employee.setUsername(request.getUsername());
+    }
+    if (request.getEmail() != null) {
+      employee.setEmail(request.getEmail());
+    }
+    if (request.getPhone() != null) {
+      employee.setPhone(request.getPhone());
+    }
+    if (request.getFirstName() != null) {
+      employee.setFirstName(request.getFirstName());
+    }
+    if (request.getLastName() != null) {
+      employee.setLastName(request.getLastName());
+    }
+    if (request.getDayOfBirth() != null) {
+      employee.setDayOfBirth(request.getDayOfBirth());
+    }
+    if (request.getGender() != null) {
+      employee.setGender(request.getGender());
+    }
+    if (request.getRoles() != null) {
+      employee.setRoles(
+          request.getRoles().stream().map(Role::valueOf).collect(Collectors.toList()));
+    }
     employeeRepository.save(employee);
   }
 
   @Override
-  public void resetPassword(String userId, String newPassword) {}
+  public void resetPassword(String userId, String newPassword) {
+    keycloakService.resetPassword(userId, newPassword);
+  }
 
   @Override
-  public void activateUser(String userId) {}
+  public void activeEmployee(String userId) {
+    var employee =
+        employeeRepository
+            .findByUserId(userId)
+            .orElseThrow(() -> new NotFoundException("Employee not found"));
+    employee.setBanned(Banned.ACTIVE);
+    keycloakService.activeUser(userId);
+    employeeRepository.save(employee);
+  }
 
   @Override
-  public void deactivateUser(String userId) {}
+  public void deactivateEmployee(String userId) {
+    var employee =
+        employeeRepository
+            .findByUserId(userId)
+            .orElseThrow(() -> new NotFoundException("Employee not found"));
+    employee.setBanned(Banned.LOCKED);
+    keycloakService.deactivateUser(userId);
+    employeeRepository.save(employee);
+  }
 }

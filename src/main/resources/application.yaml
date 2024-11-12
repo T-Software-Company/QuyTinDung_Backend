@@ -30,13 +30,15 @@ spring:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
 
 idp:
-  url: ${IDP_URL}
+  server-url: ${IDP_URL}
   client-id: ${CLIENT_ID}
   client-secret: ${CLIENT_SECRET}
   realm: tsoftware
 
-springdoc: ### https://springdoc.org/#springdoc-applications-demos
+springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
     path: /index.html
+    oauth:
+      client-id: web

@@ -48,13 +48,13 @@ public class EmployeeCreateRequest {
   @NotBlank(message = "LAST_NAME_REQUIRED")
   String lastName;
 
-  @NotBlank(message = "ROLE_ID_REQUIRED")
+  //  @NotBlank(message = "ROLE_ID_REQUIRED")
   List<String> roles;
 
   @NotNull(message = "DOB_REQUIRED")
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   @Past(message = "DOB_MUST_BE_IN_PAST")
-  LocalDate setDayOfBirth;
+  LocalDate dayOfBirth;
 
   @NotNull(message = "GENDER_REQUIRED")
   Gender gender;

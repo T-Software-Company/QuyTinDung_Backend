@@ -18,7 +18,7 @@ public interface EmployeeService {
 
   void resetPassword(String userId, String newPassword);
 
-  void activateUser(String userId);
+  void activeEmployee(String userId);
 
-  void deactivateUser(String userId);
+  void deactivateEmployee(String userId);
 }

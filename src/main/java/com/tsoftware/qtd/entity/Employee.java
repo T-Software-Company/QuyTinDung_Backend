@@ -3,6 +3,7 @@ package com.tsoftware.qtd.entity;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
+import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -36,7 +37,8 @@ public class Employee extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private EmploymentStatus status;
 
-  @OneToOne private Address address;
+  @OneToOne(cascade = CascadeType.ALL)
+  private Address address;
 
   @ManyToMany private List<AppraisalPlan> appraisalPlans;
 
@@ -48,5 +50,6 @@ public class Employee extends AbstractAuditEntity {
   @ManyToMany(mappedBy = "employees")
   private List<Group> groups;
 
-  @ManyToMany private List<Role> roles;
+  @Enumerated(EnumType.STRING)
+  private List<Role> roles;
 }

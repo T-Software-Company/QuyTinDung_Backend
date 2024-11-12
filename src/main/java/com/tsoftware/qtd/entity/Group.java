@@ -1,8 +1,7 @@
 package com.tsoftware.qtd.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import com.tsoftware.qtd.constants.EnumType.Role;
+import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,5 +22,6 @@ public class Group extends AbstractAuditEntity {
 
   @ManyToMany private List<Employee> employees;
 
-  @ManyToMany private List<Role> roles;
+  @Enumerated(EnumType.STRING)
+  private List<Role> roles;
 }

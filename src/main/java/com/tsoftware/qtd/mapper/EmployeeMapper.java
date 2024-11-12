@@ -11,11 +11,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", uses = AddressMapper.class)
 public interface EmployeeMapper {
-  @Mapping(target = "userId", ignore = true)
   @Mapping(source = "address", target = "address")
   Employee toEmployee(EmployeeCreateRequest request);
 
-  @Mapping(target = "roles", ignore = true)
   @Mapping(source = "address", target = "address")
   EmployeeResponse toEmployeeResponse(Employee employee);
 

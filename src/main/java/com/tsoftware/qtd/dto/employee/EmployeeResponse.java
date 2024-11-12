@@ -20,7 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeResponse {
-  String profileId;
+  String id;
   String userId;
   String email;
   String username;
@@ -29,12 +29,11 @@ public class EmployeeResponse {
   List<String> roles;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  LocalDate dob;
+  LocalDate dayOfBirth;
 
   String phone;
   AddressDto address;
-  String employee_code;
-
+  String employeeCode;
   Gender gender;
   EmploymentStatus employmentStatus;
   Banned banned;

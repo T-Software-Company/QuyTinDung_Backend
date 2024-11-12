@@ -31,7 +31,8 @@ public class EmployeeController {
       @RequestBody @Valid EmployeeCreateRequest request) {
     employeeService.createEmployee(request);
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(ApiResponse.builder().message("successfully").build());
+        .body(
+            ApiResponse.builder().code(HttpStatus.CREATED.value()).message("successfully").build());
   }
 
   @GetMapping
@@ -39,61 +40,83 @@ public class EmployeeController {
     return ResponseEntity.ok(
         ApiResponse.<List<EmployeeResponse>>builder()
             .result(employeeService.getEmployees())
+            .code(HttpStatus.OK.value())
             .build());
   }
 
   @GetMapping("/profile")
   public ResponseEntity<ApiResponse<EmployeeResponse>> getProfile() {
     return ResponseEntity.ok(
-        ApiResponse.<EmployeeResponse>builder().result(employeeService.getProfile()).build());
+        ApiResponse.<EmployeeResponse>builder()
+            .code(HttpStatus.OK.value())
+            .result(employeeService.getProfile())
+            .build());
   }
 
-  @PutMapping("client/my-employee")
+  @PutMapping("/profile")
   public ResponseEntity<ApiResponse<Void>> updateMyProfile(
       @RequestBody @Valid ProfileRequest request) {
     employeeService.updateProfile(request);
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder().message("Profile updated successfully").build());
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("Profile updated successfully")
+            .build());
   }
 
-  @PutMapping("/{userId}")
-  public ResponseEntity<ApiResponse<Void>> updateProfileByUserId(
-      @PathVariable String userId, @RequestBody @Valid EmployeeCreateRequest request) {
-    employeeService.updateEmployee(userId, request);
+  @PutMapping("/{employeeId}")
+  public ResponseEntity<ApiResponse<Void>> updateEmployee(
+      @PathVariable String employeeId, @RequestBody @Valid EmployeeCreateRequest request) {
+    employeeService.updateEmployee(employeeId, request);
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder().message("Profile updated successfully").build());
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("Profile updated successfully")
+            .build());
   }
 
-  @PutMapping("client/reset-password")
-  public ResponseEntity<ApiResponse<Void>> resetPasswordForCurrentUser(
+  @PutMapping("/reset-password")
+  public ResponseEntity<ApiResponse<Void>> employeeResetPassword(
       @RequestBody Map<String, Object> request) {
-    String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+    String employeeId = SecurityContextHolder.getContext().getAuthentication().getName();
     String newPassword = (String) request.get("newPassword");
-    employeeService.resetPassword(userId, newPassword);
+    employeeService.resetPassword(employeeId, newPassword);
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder().message("Password reset successfully").build());
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("Password reset successfully")
+            .build());
   }
 
-  @PutMapping("/{userId}/reset-password")
+  @PutMapping("/{employeeId}/reset-password")
   public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(
-      @PathVariable String userId, @RequestBody Map<String, Object> request) {
+      @PathVariable String employeeId, @RequestBody Map<String, Object> request) {
     String newPassword = (String) request.get("newPassword");
-    employeeService.resetPassword(userId, newPassword);
+    employeeService.resetPassword(employeeId, newPassword);
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder().message("Password reset successfully").build());
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("Password reset successfully")
+            .build());
   }
 
-  @PutMapping("/{userId}/activate")
-  public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable String userId) {
-    employeeService.activateUser(userId);
+  @PutMapping("/{employeeId}/activate")
+  public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable String employeeId) {
+    employeeService.activeEmployee(employeeId);
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder().message("User activated successfully").build());
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("User activated successfully")
+            .build());
   }
 
-  @PutMapping("/{userId}/deactivate")
-  public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable String userId) {
-    employeeService.deactivateUser(userId);
+  @PutMapping("/{employeeId}/deactivate")
+  public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable String employeeId) {
+    employeeService.deactivateEmployee(employeeId);
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder().message("User deactivated successfully").build());
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("User deactivated successfully")
+            .build());
   }
 }

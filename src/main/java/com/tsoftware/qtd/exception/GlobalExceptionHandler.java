@@ -21,10 +21,20 @@ public class GlobalExceptionHandler {
     log.error("Exception: ", exception);
     ApiResponse<Void> apiResponse = new ApiResponse<Void>();
 
-    apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-    apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+    apiResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    apiResponse.setMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 
     return ResponseEntity.internalServerError().body(apiResponse);
+  }
+
+  @ExceptionHandler(value = NotFoundException.class)
+  ResponseEntity<ApiResponse<Void>> handlingRuntimeException(NotFoundException exception) {
+    ApiResponse<Void> apiResponse = new ApiResponse<Void>();
+
+    apiResponse.setCode(HttpStatus.NOT_FOUND.value());
+    apiResponse.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
   }
 
   @ExceptionHandler(value = AccessDeniedException.class)

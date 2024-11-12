@@ -6,7 +6,7 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
@@ -15,26 +15,22 @@ import org.springframework.web.bind.annotation.*;
 @OpenAPIDefinition(info = @Info(title = "API document", version = "1.0"))
 @Slf4j
 public class SwaggerConfig {
-  @Value("${idp.url}")
-  private String identityProviderURL;
-
-  @Value("${idp.realm}")
-  private String identityProviderRealm;
+  @Autowired IdpProperties idpProperties;
 
   @Bean
   public OpenAPI customerOpenAPI() {
     String tokenUrl =
-        identityProviderURL + "/realms/" + identityProviderRealm + "/protocol/openid-connect/token";
+        idpProperties.getServerUrl()
+            + "/realms/"
+            + idpProperties.getRealm()
+            + "/protocol/openid-connect/token";
     String authorizationUrl =
-        identityProviderURL + "/realms/" + identityProviderRealm + "/protocol/openid-connect/auth";
-    Scopes scopes =
-        new Scopes()
-            .addString("openid", "Access user data")
-            .addString("employee", "Access user employee information")
-            .addString("email", "Access user email information");
+        idpProperties.getServerUrl()
+            + "/realms/"
+            + idpProperties.getRealm()
+            + "/protocol/openid-connect/auth";
 
-    OAuthFlow oauthFlow =
-        new OAuthFlow().authorizationUrl(authorizationUrl).tokenUrl(tokenUrl).scopes(scopes);
+    OAuthFlow oauthFlow = new OAuthFlow().authorizationUrl(authorizationUrl).tokenUrl(tokenUrl);
     OAuthFlows oauthFlows = new OAuthFlows().authorizationCode(oauthFlow);
     SecurityScheme securityScheme =
         new SecurityScheme()

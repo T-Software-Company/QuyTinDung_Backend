@@ -21,7 +21,7 @@
 		<spotless.version>2.43.0</spotless.version>
 		<spring-cloud.version>2023.0.1</spring-cloud.version>
 		<hypersistence-utils.version>3.8.3</hypersistence-utils.version>
-		<keycloak.version>25.0.0</keycloak.version>
+		<keycloak.version>26.0.2</keycloak.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -108,7 +108,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-					<jvmArguments>-Xmx3g -Xms512m</jvmArguments>
+					<jvmArguments>-Xmx4g -Xms512m</jvmArguments>
 				</configuration>
 			</plugin>
 			<plugin>
