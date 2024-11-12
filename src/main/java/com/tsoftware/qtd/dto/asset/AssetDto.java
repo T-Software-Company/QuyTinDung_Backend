@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.dto.asset;
 
+import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.entity.AppraisalReport;
 import com.tsoftware.qtd.entity.Credit;
 import jakarta.validation.Valid;
@@ -11,6 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,16 +22,14 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AssetDto {
 
-  @NotNull(message = "ASSET_ID_REQUIRED")
-  Long assetId;
 
-  @NotNull(message = "APPRAISAL_REPORT_REQUIRED")
-  @Valid
-  AppraisalReport appraisalReport;
-
-  //  @NotNull(message = "ASSET_TYPE_REQUIRED")
-  //  AssetType assetType;
-
-  @NotNull(message = "LOAN_REQUIRED")
-  Credit credit;
+  Long id;
+  private ZonedDateTime createdAt;
+  private ZonedDateTime updatedAt;
+  private String lastModifiedBy;
+  private String createdBy;
+  private BigDecimal assessedValue;
+  private String liquidity;
+  private String risk;
+  private AssetType assetType;
 }
