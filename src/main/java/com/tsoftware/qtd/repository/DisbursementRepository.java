@@ -1,0 +1,8 @@
+package com.tsoftware.qtd.repository;
+
+import com.tsoftware.qtd.entity.Disbursement;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface DisbursementRepository extends JpaRepository<Disbursement, Long> {}

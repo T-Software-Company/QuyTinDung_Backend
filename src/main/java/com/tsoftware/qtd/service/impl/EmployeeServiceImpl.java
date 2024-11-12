@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.service.Impl;
+package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.Role;
