@@ -7,8 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import java.time.ZonedDateTime;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Builder
+@Getter
+@Setter
 public class CMNDDto {
 
   @NotNull(message = "ID_REQUIRED")

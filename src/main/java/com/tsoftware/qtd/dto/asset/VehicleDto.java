@@ -1,12 +1,12 @@
 package com.tsoftware.qtd.dto.asset;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.time.ZonedDateTime;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
 public class VehicleDto {
-
 
   Long id;
   ZonedDateTime createdAt;

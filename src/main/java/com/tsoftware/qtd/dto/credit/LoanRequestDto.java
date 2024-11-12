@@ -1,23 +1,18 @@
-package com.tsoftware.qtd.dto.loan;
+package com.tsoftware.qtd.dto.credit;
 
 import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.BorrowerType;
-import com.tsoftware.qtd.constants.EnumType.LoanCollateralType;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
-import com.tsoftware.qtd.dto.customer.CustomerDto;
-import com.tsoftware.qtd.entity.LoanPurposeDocument;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.List;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Builder
+@Setter
 public class LoanRequestDto {
-
 
   Long id;
   ZonedDateTime createdAt;

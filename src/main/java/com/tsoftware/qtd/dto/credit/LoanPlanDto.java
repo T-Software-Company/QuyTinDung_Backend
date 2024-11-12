@@ -1,15 +1,15 @@
-package com.tsoftware.qtd.dto.loan;
-
-import com.tsoftware.qtd.dto.customer.CustomerDto;
-import com.tsoftware.qtd.entity.LoanPurposeDocument;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+package com.tsoftware.qtd.dto.credit;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
+@Builder
 public class LoanPlanDto {
-
 
   Long id;
   ZonedDateTime createdAt;

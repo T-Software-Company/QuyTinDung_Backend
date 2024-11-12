@@ -1,21 +1,20 @@
-package com.tsoftware.qtd.dto.debtNotification;
+package com.tsoftware.qtd.dto.assetRepossessionNotice;
 
-import jakarta.validation.constraints.*;
 import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
-public class DebtNotificationDto {
+@Builder
+public class AssetRepossessionNoticeDto {
 
   Long id;
   ZonedDateTime createdAt;
   ZonedDateTime updatedAt;
   String lastModifiedBy;
   String createdBy;
-  Long amount;
   String message;
+  ZonedDateTime repossessionDate;
 }

@@ -8,8 +8,14 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Builder
+@Getter
+@Setter
 public class CCCDDto {
 
   @NotNull(message = "CCCD_ID_REQUIRED")

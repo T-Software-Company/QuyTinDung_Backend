@@ -1,18 +1,14 @@
 package com.tsoftware.qtd.dto.asset;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.*;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
+@Builder
 public class LandAssetDto {
-
 
   Long id;
   private ZonedDateTime createdAt;

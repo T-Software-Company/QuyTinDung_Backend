@@ -1,6 +1,6 @@
-package com.tsoftware.qtd.dto.debtNotification;
+package com.tsoftware.qtd.dto.credit;
 
-import jakarta.validation.constraints.*;
+import com.tsoftware.qtd.constants.EnumType.IncomeProofType;
 import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,13 +9,13 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class DebtNotificationDto {
+public class IncomeProofDto {
 
   Long id;
   ZonedDateTime createdAt;
   ZonedDateTime updatedAt;
   String lastModifiedBy;
   String createdBy;
-  Long amount;
-  String message;
+  String link;
+  IncomeProofType incomeProofType;
 }
