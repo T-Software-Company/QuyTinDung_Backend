@@ -38,7 +38,8 @@ public class Apartment extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private TypeOfUse typeOfUse;
 
-  @OneToOne private Asset asset;
+  @OneToOne(fetch = FetchType.LAZY)
+  private Asset asset;
 
   @OneToOne(cascade = CascadeType.ALL)
   private OwnerInfo ownerInfo;

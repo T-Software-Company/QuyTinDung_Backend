@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
+import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,7 +19,7 @@ public interface CustomerMapper {
   @Mapping(source = "cmnd", target = "cmnd")
   @Mapping(source = "cccd", target = "cccd")
   @Mapping(source = "passPort", target = "passPort")
-  CustomerRequest toDto(Customer entity);
+  CustomerResponse toResponse(Customer entity);
 
   void updateEntity(CustomerRequest dto, @MappingTarget Customer entity);
 }

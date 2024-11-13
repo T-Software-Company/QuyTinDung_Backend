@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingDto;
+import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
+import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.dto.asset.AssetDto;
 import com.tsoftware.qtd.dto.credit.CreditRequest;
 import com.tsoftware.qtd.dto.credit.CreditResponse;
@@ -61,16 +62,16 @@ public class CreditController {
   @Autowired private ValuationMeetingService valuationmeetingService;
 
   @PostMapping("/{id}/valuation-meeting")
-  public ResponseEntity<ApiResponse<ValuationMeetingDto>> create(
-      @RequestBody ValuationMeetingDto valuationmeetingDto, @PathVariable Long id) {
+  public ResponseEntity<ApiResponse<ValuationMeetingResponse>> create(
+      @RequestBody ValuationMeetingRequest valuationmeetingRequest, @PathVariable Long id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            1000, "Created", valuationmeetingService.create(valuationmeetingDto, id)));
+            1000, "Created", valuationmeetingService.create(valuationmeetingRequest, id)));
   }
 
   //  @PutMapping("/{id}/valuation-meeting")
-  //  public ResponseEntity<ApiResponse<ValuationMeetingDto>> update(@PathVariable Long id,
-  // @RequestBody ValuationMeetingDto valuationmeetingDto) {
+  //  public ResponseEntity<ApiResponse<ValuationMeetingRequest>> update(@PathVariable Long id,
+  // @RequestBody ValuationMeetingRequest valuationmeetingDto) {
   //    return ResponseEntity.ok(new ApiResponse<>(1000, "Updated",
   // valuationmeetingService.update(id, valuationmeetingDto)));
   //  }
@@ -82,13 +83,13 @@ public class CreditController {
   //  }
   //
   //  @GetMapping("/{id}")
-  //  public ResponseEntity<ApiResponse<ValuationMeetingDto>> getById(@PathVariable Long id) {
+  //  public ResponseEntity<ApiResponse<ValuationMeetingRequest>> getById(@PathVariable Long id) {
   //    return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched",
   // valuationmeetingService.getById(id)));
   //  }
   //
   //  @GetMapping
-  //  public ResponseEntity<ApiResponse<List<ValuationMeetingDto>>> getAll() {
+  //  public ResponseEntity<ApiResponse<List<ValuationMeetingRequest>>> getAll() {
   //    return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All",
   // valuationmeetingService.getAll()));
   //  }

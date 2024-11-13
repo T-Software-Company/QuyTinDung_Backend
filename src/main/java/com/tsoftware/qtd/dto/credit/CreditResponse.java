@@ -25,6 +25,6 @@ public class CreditResponse {
   private BigDecimal currentOutstandingDebt;
   private LoanStatus status;
   private LoanSecurityType loanSecurityType;
-  private LoanPlanRequest loanPlan;
-  private LoanRequestRequest loanRequest;
+  private LoanPlanResponse loanPlan;
+  private LoanRequestResponse loanRequest;
 }

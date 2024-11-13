@@ -1,16 +1,21 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingDto;
+import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
+import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import java.util.List;
 
 public interface ValuationMeetingService {
-  ValuationMeetingDto create(ValuationMeetingDto valuationmeetingDto, Long creditId);
+  ValuationMeetingResponse create(ValuationMeetingRequest valuationmeetingRequest, Long creditId);
 
-  ValuationMeetingDto update(Long id, ValuationMeetingDto valuationmeetingDto);
+  ValuationMeetingResponse update(Long id, ValuationMeetingRequest valuationmeetingRequest);
 
   void delete(Long id);
 
-  ValuationMeetingDto getById(Long id);
+  ValuationMeetingResponse getById(Long id);
 
-  List<ValuationMeetingDto> getAll();
+  List<ValuationMeetingResponse> getAll();
+
+  void addParticipants(Long id, List<Long> participantIds);
+
+  void removeParticipants(Long id, List<Long> participantIds);
 }

@@ -1,15 +1,16 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingDto;
+import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
+import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.entity.ValuationMeeting;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ValuationMeetingMapper {
-  ValuationMeeting toEntity(ValuationMeetingDto dto);
+  ValuationMeeting toEntity(ValuationMeetingRequest dto);
 
-  ValuationMeetingDto toDto(ValuationMeeting entity);
+  ValuationMeetingResponse toResponse(ValuationMeeting entity);
 
-  void updateEntity(ValuationMeetingDto dto, @MappingTarget ValuationMeeting entity);
+  void updateEntity(ValuationMeetingRequest dto, @MappingTarget ValuationMeeting entity);
 }

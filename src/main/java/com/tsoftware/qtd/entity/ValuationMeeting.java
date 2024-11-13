@@ -25,7 +25,8 @@ public class ValuationMeeting extends AbstractAuditEntity {
   @OneToMany(mappedBy = "valuationMeeting")
   private List<Asset> assets;
 
-  @OneToOne private Credit credit;
+  @OneToOne(fetch = FetchType.LAZY)
+  private Credit credit;
 
   @ManyToMany(mappedBy = "valuationMeetings")
   private List<Employee> participants;

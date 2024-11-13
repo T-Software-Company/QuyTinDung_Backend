@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
+import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.CustomerMapper;
@@ -19,19 +20,19 @@ public class CustomerServiceImpl implements CustomerService {
   @Autowired private CustomerMapper customerMapper;
 
   @Override
-  public CustomerRequest create(CustomerRequest customerRequest) {
+  public CustomerResponse create(CustomerRequest customerRequest) {
     Customer customer = customerMapper.toEntity(customerRequest);
-    return customerMapper.toDto(customerRepository.save(customer));
+    return customerMapper.toResponse(customerRepository.save(customer));
   }
 
   @Override
-  public CustomerRequest update(Long id, CustomerRequest customerRequest) {
+  public CustomerResponse update(Long id, CustomerRequest customerRequest) {
     Customer customer =
         customerRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Customer not found"));
     customerMapper.updateEntity(customerRequest, customer);
-    return customerMapper.toDto(customerRepository.save(customer));
+    return customerMapper.toResponse(customerRepository.save(customer));
   }
 
   @Override
@@ -40,18 +41,18 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerRequest getById(Long id) {
+  public CustomerResponse getById(Long id) {
     Customer customer =
         customerRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Customer not found"));
-    return customerMapper.toDto(customer);
+    return customerMapper.toResponse(customer);
   }
 
   @Override
-  public List<CustomerRequest> getAll() {
+  public List<CustomerResponse> getAll() {
     return customerRepository.findAll().stream()
-        .map(customerMapper::toDto)
+        .map(customerMapper::toResponse)
         .collect(Collectors.toList());
   }
 }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.3</version>
-		<relativePath/>
+		<relativePath />
 	</parent>
 	<groupId>com.tsoftware</groupId>
 	<artifactId>qtd-service</artifactId>
@@ -108,7 +109,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-					<jvmArguments>-Xmx4g -Xms512m</jvmArguments>
+					<jvmArguments>-Xmx8g -Xms1g</jvmArguments>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -175,7 +176,7 @@
 				<version>${spotless.version}</version>
 				<configuration>
 					<java>
-						<googleJavaFormat/>
+						<googleJavaFormat />
 					</java>
 				</configuration>
 			</plugin>
@@ -190,12 +191,12 @@
 						<configuration>
 							<target>
 								<copy file="hooks/pre-commit"
-									  tofile="${basedir}/.git/hooks/pre-commit"
-									  overwrite="true" />
+									tofile="${basedir}/.git/hooks/pre-commit"
+									overwrite="true" />
 								<chmod file="${basedir}/.git/hooks/pre-commit" perm="755" />
 								<copy file="hooks/commit-msg"
-									  tofile="${basedir}/.git/hooks/commit-msg"
-									  overwrite="true" />
+									tofile="${basedir}/.git/hooks/commit-msg"
+									overwrite="true" />
 								<chmod file="${basedir}/.git/hooks/commit-msg" perm="755" />
 							</target>
 						</configuration>

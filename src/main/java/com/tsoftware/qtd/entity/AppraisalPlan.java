@@ -28,9 +28,11 @@ public class AppraisalPlan extends AbstractAuditEntity {
   @OneToMany(mappedBy = "appraisalPlan")
   private List<IncomeProof> incomeProof;
 
-  @OneToOne private AppraisalReport appraisalReport;
+  @OneToOne(fetch = FetchType.LAZY)
+  private AppraisalReport appraisalReport;
 
-  @OneToOne private Credit credit;
+  @OneToOne(fetch = FetchType.LAZY)
+  private Credit credit;
 
   @ManyToOne private Customer customer;
 

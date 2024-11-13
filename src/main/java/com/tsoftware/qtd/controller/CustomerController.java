@@ -2,6 +2,7 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
+import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.service.CustomerService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,14 @@ public class CustomerController {
   @Autowired private CustomerService customerService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<CustomerRequest>> create(
+  public ResponseEntity<ApiResponse<CustomerResponse>> create(
       @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Created", customerService.create(customerRequest)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerRequest>> update(
+  public ResponseEntity<ApiResponse<CustomerResponse>> update(
       @PathVariable Long id, @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Updated", customerService.update(id, customerRequest)));
@@ -35,12 +36,12 @@ public class CustomerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerRequest>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable Long id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", customerService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<CustomerRequest>>> getAll() {
+  public ResponseEntity<ApiResponse<List<CustomerResponse>>> getAll() {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", customerService.getAll()));
   }
 }

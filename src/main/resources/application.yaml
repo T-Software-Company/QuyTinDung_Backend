@@ -8,6 +8,9 @@ server:
       force: true
 
 spring:
+  threads:
+    virtual:
+      enabled: true
   application:
     name: qtd-service
   datasource:

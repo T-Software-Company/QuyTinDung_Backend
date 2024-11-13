@@ -5,6 +5,7 @@ import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeResponse {
-  String id;
+  private Long id;
+  private ZonedDateTime createdAt;
+  private ZonedDateTime updatedAt;
+  private String lastModifiedBy;
+  private String createdBy;
   String userId;
   String email;
   String username;
