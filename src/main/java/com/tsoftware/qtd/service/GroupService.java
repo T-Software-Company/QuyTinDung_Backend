@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.GroupDto;
+import com.tsoftware.qtd.dto.employee.GroupDto;
 import java.util.List;
 
 public interface GroupService {

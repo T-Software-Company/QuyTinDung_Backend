@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.LegalDocumentDto;
+import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
 import java.util.List;
 
 public interface LegalDocumentService {

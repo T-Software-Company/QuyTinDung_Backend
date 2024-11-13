@@ -38,5 +38,5 @@ public class AppraisalPlan extends AbstractAuditEntity {
   private List<LoanPurposeDocument> loanPurposeDocuments;
 
   @OneToOne(mappedBy = "appraisalPlan")
-  private ValuationMinutes valuationMinutes;
+  private ValuationReport valuationReport;
 }

@@ -8,7 +8,11 @@ import lombok.*;
 @Setter
 @Builder
 public class LoanCollectionDto {
-
+  private Long id;
+  private ZonedDateTime createdAt;
+  private ZonedDateTime updatedAt;
+  private String lastModifiedBy;
+  private String createdBy;
   private BigDecimal amountDue;
   private BigDecimal amountPaid;
   private BigDecimal remainingAmount;

@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.GroupDto;
+import com.tsoftware.qtd.dto.employee.GroupDto;
 import com.tsoftware.qtd.entity.Group;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.GroupMapper;
 import com.tsoftware.qtd.repository.GroupRepository;
 import com.tsoftware.qtd.service.GroupService;
@@ -26,7 +27,7 @@ public class GroupServiceImpl implements GroupService {
   @Override
   public GroupDto update(Long id, GroupDto groupDto) {
     Group group =
-        groupRepository.findById(id).orElseThrow(() -> new RuntimeException("Group not found"));
+        groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     groupMapper.updateEntity(groupDto, group);
     return groupMapper.toDto(groupRepository.save(group));
   }
@@ -39,7 +40,7 @@ public class GroupServiceImpl implements GroupService {
   @Override
   public GroupDto getById(Long id) {
     Group group =
-        groupRepository.findById(id).orElseThrow(() -> new RuntimeException("Group not found"));
+        groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     return groupMapper.toDto(group);
   }
 

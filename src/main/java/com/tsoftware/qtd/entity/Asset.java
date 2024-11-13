@@ -27,25 +27,25 @@ public class Asset extends AbstractAuditEntity {
 
   @ManyToOne private Credit credit;
 
-  @OneToOne(mappedBy = "asset")
+  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private Apartment apartment;
 
-  @OneToOne(mappedBy = "asset")
+  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private LandAndImprovement landAndImprovement;
 
-  @OneToOne(mappedBy = "asset")
+  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private Vehicle vehicle;
 
-  @OneToOne(mappedBy = "asset")
+  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private MarketStalls marketStalls;
 
-  @OneToOne(mappedBy = "asset")
+  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private Machinery machinery;
 
-  @OneToOne(mappedBy = "asset")
+  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private OtherAsset otherAsset;
 
-  @OneToOne(mappedBy = "asset")
+  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private LandAsset landAsset;
 
   @ManyToOne private AppraisalPlan appraisalPlan;
@@ -55,5 +55,5 @@ public class Asset extends AbstractAuditEntity {
   @ManyToOne private Customer customer;
 
   @ManyToOne private ValuationMeeting valuationMeeting;
-  @ManyToOne private ValuationMinutes valuationMinutes;
+  @ManyToOne private ValuationReport valuationReport;
 }

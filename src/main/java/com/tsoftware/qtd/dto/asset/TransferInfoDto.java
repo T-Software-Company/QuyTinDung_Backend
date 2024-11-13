@@ -7,7 +7,11 @@ import lombok.*;
 @Setter
 @Builder
 public class TransferInfoDto {
-
+  private Long id;
+  private ZonedDateTime createdAt;
+  private ZonedDateTime updatedAt;
+  private String lastModifiedBy;
+  private String createdBy;
   private String fullName;
   private ZonedDateTime dayOfBirth;
   private String idCardNumber;

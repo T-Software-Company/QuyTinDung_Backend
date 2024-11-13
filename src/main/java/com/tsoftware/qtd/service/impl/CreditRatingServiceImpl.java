@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.CreditRatingDto;
+import com.tsoftware.qtd.dto.credit.CreditRatingDto;
 import com.tsoftware.qtd.entity.CreditRating;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.CreditRatingMapper;
 import com.tsoftware.qtd.repository.CreditRatingRepository;
 import com.tsoftware.qtd.service.CreditRatingService;
@@ -28,7 +29,7 @@ public class CreditRatingServiceImpl implements CreditRatingService {
     CreditRating creditrating =
         creditratingRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("CreditRating not found"));
+            .orElseThrow(() -> new NotFoundException("CreditRating not found"));
     creditratingMapper.updateEntity(creditratingDto, creditrating);
     return creditratingMapper.toDto(creditratingRepository.save(creditrating));
   }
@@ -43,7 +44,7 @@ public class CreditRatingServiceImpl implements CreditRatingService {
     CreditRating creditrating =
         creditratingRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("CreditRating not found"));
+            .orElseThrow(() -> new NotFoundException("CreditRating not found"));
     return creditratingMapper.toDto(creditrating);
   }
 

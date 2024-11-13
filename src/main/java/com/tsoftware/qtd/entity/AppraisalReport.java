@@ -26,7 +26,7 @@ public class AppraisalReport extends AbstractAuditEntity {
   @OneToOne(mappedBy = "appraisalReport")
   private AppraisalPlan appraisalPlan;
 
-  @OneToOne private ValuationMinutes valuationMinutes;
+  @OneToOne private ValuationReport valuationReport;
 
   @OneToMany(mappedBy = "appraisalReport")
   private List<Approve> approves;

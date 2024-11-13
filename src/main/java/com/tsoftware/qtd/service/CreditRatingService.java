@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.CreditRatingDto;
+import com.tsoftware.qtd.dto.credit.CreditRatingDto;
 import java.util.List;
 
 public interface CreditRatingService {

@@ -40,7 +40,9 @@ public class Apartment extends AbstractAuditEntity {
 
   @OneToOne private Asset asset;
 
-  @OneToOne private OwnerInfo ownerInfo;
+  @OneToOne(cascade = CascadeType.ALL)
+  private OwnerInfo ownerInfo;
 
-  @OneToOne private TransferInfo transferInfo;
+  @OneToOne(cascade = CascadeType.ALL)
+  private TransferInfo transferInfo;
 }

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import java.time.ZonedDateTime;
+import com.tsoftware.qtd.dto.address.AddressDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,13 +9,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class CustomerDto {
-
-  Long id;
-  ZonedDateTime createdAt;
-  ZonedDateTime updatedAt;
-  String lastModifiedBy;
-  String createdBy;
+public class CustomerRequest {
   String fullName;
   String email;
   Integer phone;
@@ -23,4 +17,8 @@ public class CustomerDto {
   String signaturePhoto;
   Gender gender;
   String status;
+  CMNDDto cmnd;
+  CCCDDto cccd;
+  PassPortDto passPort;
+  AddressDto address;
 }

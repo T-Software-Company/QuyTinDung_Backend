@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.DebtNotificationDto;
-import com.tsoftware.qtd.response.ApiResponse;
+import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
 import com.tsoftware.qtd.service.DebtNotificationService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/debtnotifications")
+@RequestMapping("/debt-notifications")
 public class DebtNotificationController {
 
   @Autowired private DebtNotificationService debtnotificationService;

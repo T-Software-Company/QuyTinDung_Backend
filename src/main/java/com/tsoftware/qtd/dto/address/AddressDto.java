@@ -8,9 +8,11 @@ import lombok.Setter;
 @Setter
 @Builder
 public class AddressDto {
+
   private String streetAddress;
   private String wardOrCommune;
   private String district;
   private String cityProvince;
   private String country;
+  private String detail;
 }

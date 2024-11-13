@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.CustomerDto;
-import com.tsoftware.qtd.response.ApiResponse;
+import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.service.CustomerService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +15,17 @@ public class CustomerController {
   @Autowired private CustomerService customerService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<CustomerDto>> create(@RequestBody CustomerDto customerDto) {
+  public ResponseEntity<ApiResponse<CustomerRequest>> create(
+      @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", customerService.create(customerDto)));
+        new ApiResponse<>(1000, "Created", customerService.create(customerRequest)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerDto>> update(
-      @PathVariable Long id, @RequestBody CustomerDto customerDto) {
+  public ResponseEntity<ApiResponse<CustomerRequest>> update(
+      @PathVariable Long id, @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", customerService.update(id, customerDto)));
+        new ApiResponse<>(1000, "Updated", customerService.update(id, customerRequest)));
   }
 
   @DeleteMapping("/{id}")
@@ -34,12 +35,12 @@ public class CustomerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerDto>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<CustomerRequest>> getById(@PathVariable Long id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", customerService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<CustomerDto>>> getAll() {
+  public ResponseEntity<ApiResponse<List<CustomerRequest>>> getAll() {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", customerService.getAll()));
   }
 }

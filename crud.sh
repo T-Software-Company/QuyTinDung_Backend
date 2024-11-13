@@ -80,7 +80,7 @@ public class ${ENTITY_NAME}ServiceImpl implements ${ENTITY_NAME}Service {
 
     @Override
     public ${ENTITY_NAME}Dto update(Long id, ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto) {
-        $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new RuntimeException("${ENTITY_NAME} not found"));
+        $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new NotFoundException("${ENTITY_NAME} not found"));
         ${ENTITY_LOWER}Mapper.updateEntity(${ENTITY_LOWER}Dto, ${ENTITY_LOWER});
         return ${ENTITY_LOWER}Mapper.toDto(${ENTITY_LOWER}Repository.save(${ENTITY_LOWER}));
     }
@@ -92,7 +92,7 @@ public class ${ENTITY_NAME}ServiceImpl implements ${ENTITY_NAME}Service {
 
     @Override
     public ${ENTITY_NAME}Dto getById(Long id) {
-        $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new RuntimeException("${ENTITY_NAME} not found"));
+        $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new NotFoundException("${ENTITY_NAME} not found"));
         return ${ENTITY_LOWER}Mapper.toDto(${ENTITY_LOWER});
     }
 

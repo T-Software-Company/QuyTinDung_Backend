@@ -1,15 +1,18 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.credit.CreditDto;
+import com.tsoftware.qtd.dto.credit.CreditRequest;
+import com.tsoftware.qtd.dto.credit.CreditResponse;
 import com.tsoftware.qtd.entity.Credit;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {LoanPlanMapper.class, LoanRequestMapper.class})
 public interface CreditMapper {
-  Credit toEntity(CreditDto dto);
+  Credit toEntity(CreditRequest dto);
 
-  CreditDto toDto(Credit entity);
+  CreditResponse toResponse(Credit entity);
 
-  void updateEntity(CreditDto dto, @MappingTarget Credit entity);
+  void updateEntity(CreditRequest dto, @MappingTarget Credit entity);
 }

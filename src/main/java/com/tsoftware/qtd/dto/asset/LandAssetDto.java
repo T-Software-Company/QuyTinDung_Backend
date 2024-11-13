@@ -10,11 +10,6 @@ import lombok.*;
 @Builder
 public class LandAssetDto {
 
-  Long id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
   private String plotNumber;
   private String mapNumber;
   private String address;

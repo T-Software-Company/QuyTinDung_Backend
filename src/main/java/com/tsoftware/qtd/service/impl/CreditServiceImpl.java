@@ -1,7 +1,9 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.credit.CreditDto;
+import com.tsoftware.qtd.dto.credit.CreditRequest;
+import com.tsoftware.qtd.dto.credit.CreditResponse;
 import com.tsoftware.qtd.entity.Credit;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.CreditMapper;
 import com.tsoftware.qtd.repository.CreditRepository;
 import com.tsoftware.qtd.service.CreditService;
@@ -18,17 +20,17 @@ public class CreditServiceImpl implements CreditService {
   @Autowired private CreditMapper creditMapper;
 
   @Override
-  public CreditDto create(CreditDto creditDto) {
-    Credit credit = creditMapper.toEntity(creditDto);
-    return creditMapper.toDto(creditRepository.save(credit));
+  public CreditResponse create(CreditRequest creditRequest) {
+    Credit credit = creditMapper.toEntity(creditRequest);
+    return creditMapper.toResponse(creditRepository.save(credit));
   }
 
   @Override
-  public CreditDto update(Long id, CreditDto creditDto) {
+  public CreditResponse update(Long id, CreditRequest creditRequest) {
     Credit credit =
-        creditRepository.findById(id).orElseThrow(() -> new RuntimeException("Credit not found"));
-    creditMapper.updateEntity(creditDto, credit);
-    return creditMapper.toDto(creditRepository.save(credit));
+        creditRepository.findById(id).orElseThrow(() -> new NotFoundException("Credit not found"));
+    creditMapper.updateEntity(creditRequest, credit);
+    return creditMapper.toResponse(creditRepository.save(credit));
   }
 
   @Override
@@ -37,16 +39,16 @@ public class CreditServiceImpl implements CreditService {
   }
 
   @Override
-  public CreditDto getById(Long id) {
+  public CreditResponse getById(Long id) {
     Credit credit =
-        creditRepository.findById(id).orElseThrow(() -> new RuntimeException("Credit not found"));
-    return creditMapper.toDto(credit);
+        creditRepository.findById(id).orElseThrow(() -> new NotFoundException("Credit not found"));
+    return creditMapper.toResponse(credit);
   }
 
   @Override
-  public List<CreditDto> getAll() {
+  public List<CreditResponse> getAll() {
     return creditRepository.findAll().stream()
-        .map(creditMapper::toDto)
+        .map(creditMapper::toResponse)
         .collect(Collectors.toList());
   }
 }

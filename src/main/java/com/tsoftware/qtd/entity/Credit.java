@@ -40,6 +40,9 @@ public class Credit extends AbstractAuditEntity {
   private LoanPlan loanPlan;
 
   @OneToOne(mappedBy = "credit")
+  private ValuationMeeting valuationMeeting;
+
+  @OneToOne(mappedBy = "credit")
   private LoanRequest loanRequest;
 
   @OneToMany(mappedBy = "credit")
