@@ -55,5 +55,5 @@ public class Asset extends AbstractAuditEntity {
   @ManyToOne private Customer customer;
 
   @ManyToOne private ValuationMeeting valuationMeeting;
-  @ManyToOne private ValuationMinutes valuationMinutes;
+  @ManyToOne private ValuationReport valuationReport;
 }

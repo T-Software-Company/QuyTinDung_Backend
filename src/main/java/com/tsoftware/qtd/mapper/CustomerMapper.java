@@ -1,15 +1,24 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.CustomerDto;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.entity.Customer;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {CMNDMapper.class, CCCDMapper.class, PassPortMapper.class})
 public interface CustomerMapper {
-  Customer toEntity(CustomerDto dto);
+  @Mapping(source = "cmnd", target = "cmnd")
+  @Mapping(source = "cccd", target = "cccd")
+  @Mapping(source = "passPort", target = "passPort")
+  Customer toEntity(CustomerRequest dto);
 
-  CustomerDto toDto(Customer entity);
+  @Mapping(source = "cmnd", target = "cmnd")
+  @Mapping(source = "cccd", target = "cccd")
+  @Mapping(source = "passPort", target = "passPort")
+  CustomerRequest toDto(Customer entity);
 
-  void updateEntity(CustomerDto dto, @MappingTarget Customer entity);
+  void updateEntity(CustomerRequest dto, @MappingTarget Customer entity);
 }

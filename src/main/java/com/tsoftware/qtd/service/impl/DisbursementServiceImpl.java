@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.DisbursementDto;
+import com.tsoftware.qtd.dto.credit.DisbursementDto;
 import com.tsoftware.qtd.entity.Disbursement;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.DisbursementMapper;
 import com.tsoftware.qtd.repository.DisbursementRepository;
 import com.tsoftware.qtd.service.DisbursementService;
@@ -28,7 +29,7 @@ public class DisbursementServiceImpl implements DisbursementService {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("Disbursement not found"));
+            .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
     disbursementMapper.updateEntity(disbursementDto, disbursement);
     return disbursementMapper.toDto(disbursementRepository.save(disbursement));
   }
@@ -43,7 +44,7 @@ public class DisbursementServiceImpl implements DisbursementService {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("Disbursement not found"));
+            .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
     return disbursementMapper.toDto(disbursement);
   }
 

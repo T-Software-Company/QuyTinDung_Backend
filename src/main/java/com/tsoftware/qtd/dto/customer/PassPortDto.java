@@ -2,8 +2,6 @@ package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
-import com.tsoftware.qtd.entity.Customer;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -18,22 +16,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 public class PassPortDto {
-
-  @NotNull(message = "ID_REQUIRED")
-  Long id;
-
-  @NotNull(message = "CREATED_AT_REQUIRED")
-  ZonedDateTime createdAt;
-
-  @NotNull(message = "UPDATED_AT_REQUIRED")
-  ZonedDateTime updatedAt;
-
-  String lastModifiedBy;
-  String createdBy;
-
-  @Valid
-  @NotNull(message = "CUSTOMER_REQUIRED")
-  Customer customer;
 
   @NotBlank(message = "FULL_NAME_REQUIRED")
   @Size(min = 3, max = 100, message = "FULL_NAME_SIZE")

@@ -12,13 +12,12 @@ import lombok.Setter;
 @Getter
 @Builder
 @Setter
-public class LoanRequestDto {
-
-  Long id;
-  ZonedDateTime createdAt;
-  ZonedDateTime updatedAt;
-  String lastModifiedBy;
-  String createdBy;
+public class LoanRequestResponse {
+  private Long id;
+  private ZonedDateTime createdAt;
+  private ZonedDateTime updatedAt;
+  private String lastModifiedBy;
+  private String createdBy;
   String purpose;
   ZonedDateTime startDate;
   ZonedDateTime endDate;
@@ -26,4 +25,5 @@ public class LoanRequestDto {
   BorrowerType borrowerType;
   LoanSecurityType loanSecurityType;
   AssetType loanCollateralType;
+  String note;
 }

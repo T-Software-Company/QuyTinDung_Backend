@@ -10,6 +10,7 @@ import lombok.*;
 @Setter
 @Builder
 public class LandAndImprovementDto {
+
   private String plotNumber;
   private String mapNumber;
   private String address;

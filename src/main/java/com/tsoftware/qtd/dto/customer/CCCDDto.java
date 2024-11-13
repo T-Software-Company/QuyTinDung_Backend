@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.entity.Customer;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -18,11 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 public class CCCDDto {
 
-  @NotNull(message = "CCCD_ID_REQUIRED")
-  Long cccdID;
-
-  @NotNull(message = "CUSTOMER_REQUIRED")
-  Customer customer;
+  @NotBlank private String identifyId;
 
   @NotBlank(message = "FULL_NAME_REQUIRED")
   @Size(min = 1, message = "INVALID_FULL_NAME")

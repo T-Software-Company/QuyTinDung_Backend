@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class CMND extends AbstractAuditEntity {
 
+  private String identifyId;
   private String ethnicity;
   private String religion;
   private ZonedDateTime dateOfBirth;

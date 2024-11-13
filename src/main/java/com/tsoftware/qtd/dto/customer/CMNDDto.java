@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.entity.Customer;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -17,23 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 public class CMNDDto {
 
-  @NotNull(message = "ID_REQUIRED")
-  Long id;
-
-  @NotNull(message = "CREATED_AT_REQUIRED")
-  ZonedDateTime createdAt;
-
-  @NotNull(message = "UPDATED_AT_REQUIRED")
-  ZonedDateTime updatedAt;
-
-  @NotBlank(message = "LAST_MODIFIED_BY_REQUIRED")
-  String lastModifiedBy;
-
-  @NotBlank(message = "CREATED_BY_REQUIRED")
-  String createdBy;
-
-  @NotNull(message = "CUSTOMER_REQUIRED")
-  Customer customer;
+  @NotBlank private String identifyId;
 
   @NotBlank(message = "ETHNICITY_REQUIRED")
   String ethnicity;

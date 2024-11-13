@@ -16,20 +16,20 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
-public class ValuationMinutes extends AbstractAuditEntity {
+public class ValuationReport extends AbstractAuditEntity {
   private BigDecimal totalValuationAmount;
 
-  @OneToMany(mappedBy = "valuationMinutes")
+  @OneToMany(mappedBy = "valuationReport")
   private List<Asset> assets;
 
-  @OneToOne(mappedBy = "valuationMinutes")
+  @OneToOne(mappedBy = "valuationReport")
   private ValuationMeeting valuationMeeting;
 
-  @OneToOne(mappedBy = "valuationMinutes")
+  @OneToOne(mappedBy = "valuationReport")
   private AppraisalReport appraisalReport;
 
   @OneToOne private AppraisalPlan appraisalPlan;
 
-  @OneToMany(mappedBy = "valuationMinutes")
+  @OneToMany(mappedBy = "valuationReport")
   private List<Approve> approves;
 }

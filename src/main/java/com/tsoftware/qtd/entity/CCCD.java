@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class CCCD extends AbstractAuditEntity {
 
+  private String identifyId;
   private ZonedDateTime dateOfBirth;
   private String nationality;
   private String placeOfBirth;

@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.LegalDocumentDto;
+import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
 import com.tsoftware.qtd.entity.LegalDocument;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LegalDocumentMapper;
 import com.tsoftware.qtd.repository.LegalDocumentRepository;
 import com.tsoftware.qtd.service.LegalDocumentService;
@@ -28,7 +29,7 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
     LegalDocument legaldocument =
         legaldocumentRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("LegalDocument not found"));
+            .orElseThrow(() -> new NotFoundException("LegalDocument not found"));
     legaldocumentMapper.updateEntity(legaldocumentDto, legaldocument);
     return legaldocumentMapper.toDto(legaldocumentRepository.save(legaldocument));
   }
@@ -43,7 +44,7 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
     LegalDocument legaldocument =
         legaldocumentRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("LegalDocument not found"));
+            .orElseThrow(() -> new NotFoundException("LegalDocument not found"));
     return legaldocumentMapper.toDto(legaldocument);
   }
 

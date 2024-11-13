@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.CreditRatingDto;
+import com.tsoftware.qtd.dto.credit.CreditRatingDto;
 import com.tsoftware.qtd.entity.CreditRating;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

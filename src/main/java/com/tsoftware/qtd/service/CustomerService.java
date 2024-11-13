@@ -1,16 +1,16 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.CustomerDto;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import java.util.List;
 
 public interface CustomerService {
-  CustomerDto create(CustomerDto customerDto);
+  CustomerRequest create(CustomerRequest customerRequest);
 
-  CustomerDto update(Long id, CustomerDto customerDto);
+  CustomerRequest update(Long id, CustomerRequest customerRequest);
 
   void delete(Long id);
 
-  CustomerDto getById(Long id);
+  CustomerRequest getById(Long id);
 
-  List<CustomerDto> getAll();
+  List<CustomerRequest> getAll();
 }

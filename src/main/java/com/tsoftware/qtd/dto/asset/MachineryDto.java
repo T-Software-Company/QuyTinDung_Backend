@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @Builder
 public class MachineryDto {
+
   private String name;
   private String model;
   private String manufacturer;

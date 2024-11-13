@@ -25,6 +25,7 @@ public class LoanRequest extends AbstractAuditEntity {
   private ZonedDateTime startDate;
   private ZonedDateTime endDate;
   private BigDecimal amount;
+  private String note;
 
   @Enumerated(EnumType.STRING)
   private BorrowerType borrowerType;

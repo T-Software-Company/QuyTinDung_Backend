@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.LegalDocumentDto;
-import com.tsoftware.qtd.response.ApiResponse;
+import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
 import com.tsoftware.qtd.service.LegalDocumentService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/legaldocuments")
+@RequestMapping("/legal-documents")
 public class LegalDocumentController {
 
   @Autowired private LegalDocumentService legaldocumentService;

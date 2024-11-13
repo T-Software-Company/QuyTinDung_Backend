@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.DisbursementDto;
-import com.tsoftware.qtd.response.ApiResponse;
+import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.qtd.dto.credit.DisbursementDto;
 import com.tsoftware.qtd.service.DisbursementService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

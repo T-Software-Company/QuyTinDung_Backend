@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.DisbursementDto;
+import com.tsoftware.qtd.dto.credit.DisbursementDto;
 import java.util.List;
 
 public interface DisbursementService {

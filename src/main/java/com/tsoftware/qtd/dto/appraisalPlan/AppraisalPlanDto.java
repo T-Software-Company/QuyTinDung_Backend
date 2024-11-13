@@ -15,12 +15,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppraisalPlanDto {
-
-  Long id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
   private String address;
   private ZonedDateTime startDate;
   private ZonedDateTime endDate;

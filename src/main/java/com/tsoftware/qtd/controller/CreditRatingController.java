@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.CreditRatingDto;
-import com.tsoftware.qtd.response.ApiResponse;
+import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.qtd.dto.credit.CreditRatingDto;
 import com.tsoftware.qtd.service.CreditRatingService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/creditratings")
+@RequestMapping("/credit-ratings")
 public class CreditRatingController {
 
   @Autowired private CreditRatingService creditratingService;

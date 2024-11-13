@@ -18,7 +18,7 @@ public class Approve extends AbstractAuditEntity {
 
   @ManyToOne private AppraisalReport appraisalReport;
 
-  @ManyToOne private ValuationMinutes valuationMinutes;
+  @ManyToOne private ValuationReport valuationReport;
 
   @Enumerated(EnumType.STRING)
   private ApproveStatus status;

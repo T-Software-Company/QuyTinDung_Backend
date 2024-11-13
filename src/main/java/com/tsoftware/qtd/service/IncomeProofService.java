@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.IncomeProofDto;
+import com.tsoftware.qtd.dto.credit.IncomeProofDto;
 import java.util.List;
 
 public interface IncomeProofService {

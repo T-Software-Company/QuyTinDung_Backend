@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.IncomeProofDto;
-import com.tsoftware.qtd.response.ApiResponse;
+import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.qtd.dto.credit.IncomeProofDto;
 import com.tsoftware.qtd.service.IncomeProofService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/incomeproofs")
+@RequestMapping("/income-proofs")
 public class IncomeProofController {
 
   @Autowired private IncomeProofService incomeproofService;

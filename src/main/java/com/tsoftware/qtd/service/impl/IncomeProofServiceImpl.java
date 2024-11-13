@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.IncomeProofDto;
+import com.tsoftware.qtd.dto.credit.IncomeProofDto;
 import com.tsoftware.qtd.entity.IncomeProof;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.IncomeProofMapper;
 import com.tsoftware.qtd.repository.IncomeProofRepository;
 import com.tsoftware.qtd.service.IncomeProofService;
@@ -28,7 +29,7 @@ public class IncomeProofServiceImpl implements IncomeProofService {
     IncomeProof incomeproof =
         incomeproofRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("IncomeProof not found"));
+            .orElseThrow(() -> new NotFoundException("IncomeProof not found"));
     incomeproofMapper.updateEntity(incomeproofDto, incomeproof);
     return incomeproofMapper.toDto(incomeproofRepository.save(incomeproof));
   }
@@ -43,7 +44,7 @@ public class IncomeProofServiceImpl implements IncomeProofService {
     IncomeProof incomeproof =
         incomeproofRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("IncomeProof not found"));
+            .orElseThrow(() -> new NotFoundException("IncomeProof not found"));
     return incomeproofMapper.toDto(incomeproof);
   }
 

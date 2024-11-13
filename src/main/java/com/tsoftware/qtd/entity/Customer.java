@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @AllArgsConstructor
@@ -14,11 +15,17 @@ import lombok.Setter;
 @Table
 @Getter
 @Setter
+@SuperBuilder
 public class Customer extends AbstractAuditEntity {
 
   private String fullName;
+
+  @Column(unique = true)
   private String email;
+
+  @Column(unique = true)
   private Integer phone;
+
   private String note;
   private String signaturePhoto;
   private Gender gender;
@@ -41,11 +48,14 @@ public class Customer extends AbstractAuditEntity {
   @OneToMany(mappedBy = "customer")
   private List<AssetRepossessionNotice> assetRepossessionNotices;
 
-  @OneToOne private PassPort passPort;
+  @OneToOne(cascade = CascadeType.ALL)
+  private PassPort passPort;
 
-  @OneToOne private CCCD cccd;
+  @OneToOne(cascade = CascadeType.ALL)
+  private CCCD cccd;
 
-  @OneToOne private CMND cmnd;
+  @OneToOne(cascade = CascadeType.ALL)
+  private CMND cmnd;
 
   @OneToMany(mappedBy = "customer")
   private List<IncomeProof> incomeProofs;

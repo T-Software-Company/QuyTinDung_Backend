@@ -11,13 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CreditDto {
+public class CreditRequest {
 
-  Long id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
   private BigDecimal amount;
   private ZonedDateTime startDate;
   private ZonedDateTime dueDate;
@@ -26,4 +21,6 @@ public class CreditDto {
   private BigDecimal currentOutstandingDebt;
   private LoanStatus status;
   private LoanSecurityType loanSecurityType;
+  private LoanPlanRequest loanPlan;
+  private LoanRequestRequest loanRequest;
 }

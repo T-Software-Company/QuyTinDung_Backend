@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.DebtNotificationDto;
+import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
 import com.tsoftware.qtd.entity.DebtNotification;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

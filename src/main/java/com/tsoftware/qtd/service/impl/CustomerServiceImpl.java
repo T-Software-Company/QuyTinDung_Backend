@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.CustomerDto;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.entity.Customer;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.CustomerMapper;
 import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.service.CustomerService;
@@ -18,18 +19,18 @@ public class CustomerServiceImpl implements CustomerService {
   @Autowired private CustomerMapper customerMapper;
 
   @Override
-  public CustomerDto create(CustomerDto customerDto) {
-    Customer customer = customerMapper.toEntity(customerDto);
+  public CustomerRequest create(CustomerRequest customerRequest) {
+    Customer customer = customerMapper.toEntity(customerRequest);
     return customerMapper.toDto(customerRepository.save(customer));
   }
 
   @Override
-  public CustomerDto update(Long id, CustomerDto customerDto) {
+  public CustomerRequest update(Long id, CustomerRequest customerRequest) {
     Customer customer =
         customerRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
-    customerMapper.updateEntity(customerDto, customer);
+            .orElseThrow(() -> new NotFoundException("Customer not found"));
+    customerMapper.updateEntity(customerRequest, customer);
     return customerMapper.toDto(customerRepository.save(customer));
   }
 
@@ -39,16 +40,16 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerDto getById(Long id) {
+  public CustomerRequest getById(Long id) {
     Customer customer =
         customerRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
+            .orElseThrow(() -> new NotFoundException("Customer not found"));
     return customerMapper.toDto(customer);
   }
 
   @Override
-  public List<CustomerDto> getAll() {
+  public List<CustomerRequest> getAll() {
     return customerRepository.findAll().stream()
         .map(customerMapper::toDto)
         .collect(Collectors.toList());

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.GroupDto;
-import com.tsoftware.qtd.response.ApiResponse;
+import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.qtd.dto.employee.GroupDto;
 import com.tsoftware.qtd.service.GroupService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

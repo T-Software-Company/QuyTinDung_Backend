@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.DebtNotificationDto;
+import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
 import java.util.List;
 
 public interface DebtNotificationService {

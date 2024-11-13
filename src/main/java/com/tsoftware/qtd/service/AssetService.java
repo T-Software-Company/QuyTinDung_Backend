@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.AssetDto;
+import com.tsoftware.qtd.dto.asset.AssetDto;
 import java.util.List;
 
 public interface AssetService {
@@ -13,4 +13,6 @@ public interface AssetService {
   AssetDto getById(Long id);
 
   List<AssetDto> getAll();
+
+  List<AssetDto> getAssetsByCreditId(Long id);
 }

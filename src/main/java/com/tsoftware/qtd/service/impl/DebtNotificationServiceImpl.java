@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.DebtNotificationDto;
+import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
 import com.tsoftware.qtd.entity.DebtNotification;
+import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.DebtNotificationMapper;
 import com.tsoftware.qtd.repository.DebtNotificationRepository;
 import com.tsoftware.qtd.service.DebtNotificationService;
@@ -28,7 +29,7 @@ public class DebtNotificationServiceImpl implements DebtNotificationService {
     DebtNotification debtnotification =
         debtnotificationRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("DebtNotification not found"));
+            .orElseThrow(() -> new NotFoundException("DebtNotification not found"));
     debtnotificationMapper.updateEntity(debtnotificationDto, debtnotification);
     return debtnotificationMapper.toDto(debtnotificationRepository.save(debtnotification));
   }
@@ -43,7 +44,7 @@ public class DebtNotificationServiceImpl implements DebtNotificationService {
     DebtNotification debtnotification =
         debtnotificationRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("DebtNotification not found"));
+            .orElseThrow(() -> new NotFoundException("DebtNotification not found"));
     return debtnotificationMapper.toDto(debtnotification);
   }
 

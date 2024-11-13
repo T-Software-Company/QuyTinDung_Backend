@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.LegalDocumentDto;
+import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
 import com.tsoftware.qtd.entity.LegalDocument;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

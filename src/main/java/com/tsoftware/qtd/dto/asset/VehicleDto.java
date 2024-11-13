@@ -8,11 +8,6 @@ import lombok.*;
 @Builder
 public class VehicleDto {
 
-  Long id;
-  ZonedDateTime createdAt;
-  ZonedDateTime updatedAt;
-  String lastModifiedBy;
-  String createdBy;
   String ownerName;
   String address;
   String engineNumber;

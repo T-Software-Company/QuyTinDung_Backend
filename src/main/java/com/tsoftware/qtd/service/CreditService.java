@@ -1,16 +1,17 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.credit.CreditDto;
+import com.tsoftware.qtd.dto.credit.CreditRequest;
+import com.tsoftware.qtd.dto.credit.CreditResponse;
 import java.util.List;
 
 public interface CreditService {
-  CreditDto create(CreditDto creditDto);
+  CreditResponse create(CreditRequest creditRequest);
 
-  CreditDto update(Long id, CreditDto creditDto);
+  CreditResponse update(Long id, CreditRequest creditRequest);
 
   void delete(Long id);
 
-  CreditDto getById(Long id);
+  CreditResponse getById(Long id);
 
-  List<CreditDto> getAll();
+  List<CreditResponse> getAll();
 }
