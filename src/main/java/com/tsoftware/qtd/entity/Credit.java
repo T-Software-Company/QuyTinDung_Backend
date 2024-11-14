@@ -36,13 +36,13 @@ public class Credit extends AbstractAuditEntity {
 
   @ManyToOne private Customer customer;
 
-  @OneToOne(mappedBy = "credit")
+  @OneToOne(mappedBy = "credit", cascade = CascadeType.ALL)
   private LoanPlan loanPlan;
 
   @OneToOne(mappedBy = "credit")
   private ValuationMeeting valuationMeeting;
 
-  @OneToOne(mappedBy = "credit")
+  @OneToOne(mappedBy = "credit", cascade = CascadeType.ALL)
   private LoanRequest loanRequest;
 
   @OneToMany(mappedBy = "credit")

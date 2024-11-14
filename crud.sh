@@ -21,7 +21,9 @@ DTO_DIR="src/main/java/$FILE_PATH/dto"
 mkdir -p "$REPO_DIR" "$SERVICE_DIR" "$IMPL_DIR" "$MAPPER_DIR" "$CONTROLLER_DIR" "$DTO_DIR"
 
 # Create Repository
-cat <<EOF > "$REPO_DIR/${ENTITY_NAME}Repository.java"
+REPO_FILE="$REPO_DIR/${ENTITY_NAME}Repository.java"
+if [ ! -f "$REPO_FILE" ]; then
+cat <<EOF > "$REPO_FILE"
 package $PACKAGE_PATH.repository;
 
 import $PACKAGE_PATH.entity.$ENTITY_NAME;
@@ -32,9 +34,12 @@ import org.springframework.stereotype.Repository;
 public interface ${ENTITY_NAME}Repository extends JpaRepository<$ENTITY_NAME, Long> {
 }
 EOF
+fi
 
 # Create Service Interface
-cat <<EOF > "$SERVICE_DIR/${ENTITY_NAME}Service.java"
+SERVICE_FILE="$SERVICE_DIR/${ENTITY_NAME}Service.java"
+if [ ! -f "$SERVICE_FILE" ]; then
+cat <<EOF > "$SERVICE_FILE"
 package $PACKAGE_PATH.service;
 
 import $PACKAGE_PATH.dto.${ENTITY_NAME}Dto;
@@ -48,9 +53,12 @@ public interface ${ENTITY_NAME}Service {
     List<${ENTITY_NAME}Dto> getAll();
 }
 EOF
+fi
 
 # Create Service Implementation
-cat <<EOF > "$IMPL_DIR/${ENTITY_NAME}ServiceImpl.java"
+IMPL_FILE="$IMPL_DIR/${ENTITY_NAME}ServiceImpl.java"
+if [ ! -f "$IMPL_FILE" ]; then
+cat <<EOF > "$IMPL_FILE"
 package $PACKAGE_PATH.service.impl;
 
 import $PACKAGE_PATH.repository.${ENTITY_NAME}Repository;
@@ -104,9 +112,12 @@ public class ${ENTITY_NAME}ServiceImpl implements ${ENTITY_NAME}Service {
     }
 }
 EOF
+fi
 
 # Create Mapper Interface
-cat <<EOF > "$MAPPER_DIR/${ENTITY_NAME}Mapper.java"
+MAPPER_FILE="$MAPPER_DIR/${ENTITY_NAME}Mapper.java"
+if [ ! -f "$MAPPER_FILE" ]; then
+cat <<EOF > "$MAPPER_FILE"
 package $PACKAGE_PATH.mapper;
 
 import org.mapstruct.Mapper;
@@ -121,9 +132,12 @@ public interface ${ENTITY_NAME}Mapper {
     void updateEntity(${ENTITY_NAME}Dto dto, @MappingTarget ${ENTITY_NAME} entity);
 }
 EOF
+fi
 
 # Create Controller
-cat <<EOF > "$CONTROLLER_DIR/${ENTITY_NAME}Controller.java"
+CONTROLLER_FILE="$CONTROLLER_DIR/${ENTITY_NAME}Controller.java"
+if [ ! -f "$CONTROLLER_FILE" ]; then
+cat <<EOF > "$CONTROLLER_FILE"
 package $PACKAGE_PATH.controller;
 
 import $PACKAGE_PATH.dto.${ENTITY_NAME}Dto;
@@ -169,7 +183,7 @@ public class ${ENTITY_NAME}Controller {
     }
 }
 EOF
-
+fi
 ## Create DTO
 #cat <<EOF > "$DTO_DIR/${ENTITY_NAME}Dto.java"
 #package $PACKAGE_PATH.dto;

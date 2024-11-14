@@ -45,3 +45,10 @@ springdoc:
     path: /index.html
     oauth:
       client-id: web
+
+
+google:
+  cloud:
+    storage:
+      bucket-name: ${GG_STORAGE_BUCKET}
+      service-account: ${GG_STORAGE_SERVICE_ACCOUNT}

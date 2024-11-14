@@ -8,6 +8,7 @@ import com.tsoftware.qtd.dto.credit.CreditRequest;
 import com.tsoftware.qtd.dto.credit.CreditResponse;
 import com.tsoftware.qtd.service.AssetService;
 import com.tsoftware.qtd.service.CreditService;
+import com.tsoftware.qtd.service.LoanPlanService;
 import com.tsoftware.qtd.service.ValuationMeetingService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,13 @@ public class CreditController {
 
   @Autowired private CreditService creditService;
   @Autowired private AssetService assetService;
+  @Autowired private LoanPlanService loanplanService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<CreditResponse>> create(
-      @RequestBody CreditRequest creditRequest) {
+      @RequestBody CreditRequest creditRequest, @RequestParam Long customerId) throws Exception {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", creditService.create(creditRequest)));
+        new ApiResponse<>(1000, "Created", creditService.create(creditRequest, customerId)));
   }
 
   @PutMapping("/{id}")
@@ -51,6 +53,13 @@ public class CreditController {
   public ResponseEntity<ApiResponse<List<CreditResponse>>> getAll() {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", creditService.getAll()));
   }
+
+  //	@PostMapping("/{id}/loan-plan")
+  //	public ResponseEntity<ApiResponse<LoanPlanResponse>> create(@RequestBody LoanPlanRequest
+  // loanPlanRequest, @PathVariable Long creditId) throws Exception {
+  //		return ResponseEntity.ok(new ApiResponse<>(1000, "Created",
+  // loanplanService.create(loanPlanRequest, creditId)));
+  //	}
 
   @GetMapping("/{id}/assets")
   public ResponseEntity<ApiResponse<List<AssetResponse>>> getAssets(@PathVariable Long id) {

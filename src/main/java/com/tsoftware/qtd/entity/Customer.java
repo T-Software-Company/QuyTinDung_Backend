@@ -31,7 +31,8 @@ public class Customer extends AbstractAuditEntity {
   private Gender gender;
   private String status;
 
-  @OneToOne private Address address;
+  @OneToOne(cascade = CascadeType.ALL)
+  private Address address;
 
   @OneToMany(mappedBy = "customer")
   private List<LoanPlan> loanPlans;

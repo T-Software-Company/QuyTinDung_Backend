@@ -6,11 +6,15 @@ import com.tsoftware.qtd.entity.Credit;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.CreditMapper;
 import com.tsoftware.qtd.repository.CreditRepository;
+import com.tsoftware.qtd.repository.CustomerRepository;
+import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.service.CreditService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreditServiceImpl implements CreditService {
@@ -19,10 +23,30 @@ public class CreditServiceImpl implements CreditService {
 
   @Autowired private CreditMapper creditMapper;
 
+  @Autowired private DocumentService documentService;
+
+  @Autowired private LoanPlanRepository loanPlanRepository;
+  @Autowired private CustomerRepository customerRepository;
+
   @Override
-  public CreditResponse create(CreditRequest creditRequest) {
+  @Transactional
+  public CreditResponse create(CreditRequest creditRequest, Long customerId) throws Exception {
     Credit credit = creditMapper.toEntity(creditRequest);
-    return creditMapper.toResponse(creditRepository.save(credit));
+    var customer =
+        customerRepository
+            .findById(customerId)
+            .orElseThrow(() -> new NotFoundException("Customer not found"));
+    credit.setCustomer(customer);
+    var creditSaved = creditRepository.save(credit);
+    var loanPlan = creditSaved.getLoanPlan();
+    loanPlan.setCustomer(customer);
+    var url =
+        documentService.uploadDocument(loanPlan, "", "loan-plan" + UUID.randomUUID() + ".doc", 3);
+    loanPlan.setDocumentUrl(url);
+
+    var loanPlanSaved = loanPlanRepository.save(loanPlan);
+    creditSaved.setLoanPlan(loanPlanSaved);
+    return creditMapper.toResponse(creditSaved);
   }
 
   @Override

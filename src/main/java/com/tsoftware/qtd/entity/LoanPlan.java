@@ -23,6 +23,7 @@ public class LoanPlan extends AbstractAuditEntity {
   private BigDecimal income;
   private String repaymentPlan;
   private String note;
+  private String documentUrl;
 
   @ManyToOne private Customer customer;
 

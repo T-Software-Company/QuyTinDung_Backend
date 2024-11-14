@@ -22,4 +22,5 @@ public class LoanPlanResponse {
   BigDecimal income;
   String repaymentPlan;
   String note;
+  private String documentUrl;
 }

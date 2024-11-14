@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.credit.CreditResponse;
 import java.util.List;
 
 public interface CreditService {
-  CreditResponse create(CreditRequest creditRequest);
+  CreditResponse create(CreditRequest creditRequest, Long customerId) throws Exception;
 
   CreditResponse update(Long id, CreditRequest creditRequest);
 
