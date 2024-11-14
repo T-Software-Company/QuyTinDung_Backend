@@ -1,9 +1,11 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
-import com.tsoftware.qtd.dto.employee.EmployeeCreateRequest;
+import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
+import com.tsoftware.qtd.service.ApproveService;
 import com.tsoftware.qtd.service.EmployeeService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -12,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +30,7 @@ public class EmployeeController {
   EmployeeService employeeService;
 
   @PostMapping("/create")
-  public ResponseEntity<ApiResponse<Object>> create(
-      @RequestBody @Valid EmployeeCreateRequest request) {
+  public ResponseEntity<ApiResponse<Object>> create(@RequestBody @Valid EmployeeRequest request) {
     employeeService.createEmployee(request);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
@@ -64,10 +66,10 @@ public class EmployeeController {
             .build());
   }
 
-  @PutMapping("/{employeeId}")
+  @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<Void>> updateEmployee(
-      @PathVariable String employeeId, @RequestBody @Valid EmployeeCreateRequest request) {
-    employeeService.updateEmployee(employeeId, request);
+      @PathVariable String id, @RequestBody @Valid EmployeeRequest request) {
+    employeeService.updateEmployee(id, request);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -78,9 +80,9 @@ public class EmployeeController {
   @PutMapping("/reset-password")
   public ResponseEntity<ApiResponse<Void>> employeeResetPassword(
       @RequestBody Map<String, Object> request) {
-    String employeeId = SecurityContextHolder.getContext().getAuthentication().getName();
+    String id = SecurityContextHolder.getContext().getAuthentication().getName();
     String newPassword = (String) request.get("newPassword");
-    employeeService.resetPassword(employeeId, newPassword);
+    employeeService.resetPassword(id, newPassword);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -88,11 +90,11 @@ public class EmployeeController {
             .build());
   }
 
-  @PutMapping("/{employeeId}/reset-password")
+  @PutMapping("/{id}/reset-password")
   public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(
-      @PathVariable String employeeId, @RequestBody Map<String, Object> request) {
+      @PathVariable String id, @RequestBody Map<String, Object> request) {
     String newPassword = (String) request.get("newPassword");
-    employeeService.resetPassword(employeeId, newPassword);
+    employeeService.resetPassword(id, newPassword);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -100,9 +102,9 @@ public class EmployeeController {
             .build());
   }
 
-  @PutMapping("/{employeeId}/activate")
-  public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable String employeeId) {
-    employeeService.activeEmployee(employeeId);
+  @PutMapping("/{id}/activate")
+  public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable String id) {
+    employeeService.activeEmployee(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -110,13 +112,21 @@ public class EmployeeController {
             .build());
   }
 
-  @PutMapping("/{employeeId}/deactivate")
-  public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable String employeeId) {
-    employeeService.deactivateEmployee(employeeId);
+  @PutMapping("/{id}/deactivate")
+  public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable String id) {
+    employeeService.deactivateEmployee(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
             .message("User deactivated successfully")
             .build());
+  }
+
+  @Autowired private ApproveService approveService;
+
+  @GetMapping("/{id}/approves")
+  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable Long id) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(1000, "Fetched All", approveService.getByApproverId(id)));
   }
 }

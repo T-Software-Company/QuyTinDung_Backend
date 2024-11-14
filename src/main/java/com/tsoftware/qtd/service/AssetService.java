@@ -1,18 +1,19 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.AssetDto;
+import com.tsoftware.qtd.dto.asset.AssetRequest;
+import com.tsoftware.qtd.dto.asset.AssetResponse;
 import java.util.List;
 
 public interface AssetService {
-  AssetDto create(AssetDto assetDto);
+  AssetResponse create(AssetRequest assetRequest);
 
-  AssetDto update(Long id, AssetDto assetDto);
+  AssetResponse update(Long id, AssetRequest assetRequest);
 
   void delete(Long id);
 
-  AssetDto getById(Long id);
+  AssetResponse getById(Long id);
 
-  List<AssetDto> getAll();
+  List<AssetResponse> getAll();
 
-  List<AssetDto> getAssetsByCreditId(Long id);
+  List<AssetResponse> getAssetsByCreditId(Long id);
 }

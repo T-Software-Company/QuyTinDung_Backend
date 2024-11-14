@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void createEmployee(EmployeeCreateRequest request) {
+  public void createEmployee(EmployeeRequest request) {
     var userId = keycloakService.createUser(request);
     var employee = employeeMapper.toEmployee(request);
     employee.setUserId(userId);
@@ -73,7 +73,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void updateEmployee(String userId, EmployeeCreateRequest request) {
+  public void updateEmployee(String userId, EmployeeRequest request) {
     var employee =
         employeeRepository
             .findByUserId(userId)

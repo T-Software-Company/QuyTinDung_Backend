@@ -1,16 +1,22 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.Valuation.ValuationReportDto;
+import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
+import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
 import java.util.List;
 
 public interface ValuationReportService {
-  ValuationReportDto create(ValuationReportDto valuationreportDto);
+  ValuationReportResponse create(ValuationReportRequest valuationreportRequest);
 
-  ValuationReportDto update(Long id, ValuationReportDto valuationreportDto);
+  ValuationReportResponse update(Long id, ValuationReportRequest valuationreportRequest);
 
   void delete(Long id);
 
-  ValuationReportDto getById(Long id);
+  ValuationReportResponse getById(Long id);
 
-  List<ValuationReportDto> getAll();
+  List<ValuationReportResponse> getAll();
+
+  List<ApproveResponse> addApprove(Long id, List<Long> approverIds);
+
+  void removeApprove(Long id, List<Long> approverIds);
 }

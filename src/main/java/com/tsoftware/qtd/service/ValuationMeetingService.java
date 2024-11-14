@@ -18,4 +18,6 @@ public interface ValuationMeetingService {
   void addParticipants(Long id, List<Long> participantIds);
 
   void removeParticipants(Long id, List<Long> participantIds);
+
+  ValuationMeetingResponse getByCreditId(Long creditId);
 }

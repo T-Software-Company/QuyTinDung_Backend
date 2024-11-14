@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.asset.AssetDto;
+import com.tsoftware.qtd.dto.asset.AssetRequest;
+import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.entity.Asset;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -13,12 +14,13 @@ import org.mapstruct.MappingTarget;
       MachineryMapper.class,
       MarketStallsMapper.class,
       OtherAssetMapper.class,
-      VehicleMapper.class
+      VehicleMapper.class,
+      ApartmentMapper.class
     })
 public interface AssetMapper {
-  Asset toEntity(AssetDto dto);
+  Asset toEntity(AssetRequest dto);
 
-  AssetDto toDto(Asset entity);
+  AssetResponse toResponse(Asset entity);
 
-  void updateEntity(AssetDto dto, @MappingTarget Asset entity);
+  void updateEntity(AssetRequest dto, @MappingTarget Asset entity);
 }

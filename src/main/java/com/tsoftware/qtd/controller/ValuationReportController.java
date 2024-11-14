@@ -1,31 +1,35 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
-import com.tsoftware.qtd.dto.Valuation.ValuationReportDto;
+import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
+import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
 import com.tsoftware.qtd.service.ValuationReportService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/valuationreports")
+@RequestMapping("/valuation-reports")
 public class ValuationReportController {
 
   @Autowired private ValuationReportService valuationreportService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<ValuationReportDto>> create(
-      @RequestBody ValuationReportDto valuationreportDto) {
+  public ResponseEntity<ApiResponse<ValuationReportResponse>> create(
+      @RequestBody ValuationReportRequest valuationreportRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", valuationreportService.create(valuationreportDto)));
+        new ApiResponse<>(1000, "Created", valuationreportService.create(valuationreportRequest)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<ValuationReportDto>> update(
-      @PathVariable Long id, @RequestBody ValuationReportDto valuationreportDto) {
+  public ResponseEntity<ApiResponse<ValuationReportResponse>> update(
+      @PathVariable Long id, @RequestBody ValuationReportRequest valuationreportRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", valuationreportService.update(id, valuationreportDto)));
+        new ApiResponse<>(
+            1000, "Updated", valuationreportService.update(id, valuationreportRequest)));
   }
 
   @DeleteMapping("/{id}")
@@ -35,14 +39,29 @@ public class ValuationReportController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<ValuationReportDto>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<ValuationReportResponse>> getById(@PathVariable Long id) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Fetched", valuationreportService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<ValuationReportDto>>> getAll() {
+  public ResponseEntity<ApiResponse<List<ValuationReportResponse>>> getAll() {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Fetched All", valuationreportService.getAll()));
+  }
+
+  @PostMapping("/{id}/add-approve")
+  public ResponseEntity<ApiResponse<List<ApproveResponse>>> addApprove(
+      @RequestBody List<Long> approverIds, @PathVariable Long id) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(
+            HttpStatus.OK.value(), "Added", valuationreportService.addApprove(id, approverIds)));
+  }
+
+  @PostMapping("/{id}/remove-approve")
+  public ResponseEntity<ApiResponse<Void>> removeApprove(
+      @RequestBody List<Long> approverIds, @PathVariable Long id) {
+    valuationreportService.removeApprove(id, approverIds);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
 }

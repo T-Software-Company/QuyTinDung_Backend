@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.asset.AssetDto;
+import com.tsoftware.qtd.dto.asset.AssetRequest;
+import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.entity.Asset;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.AssetMapper;
@@ -19,17 +20,17 @@ public class AssetServiceImpl implements AssetService {
   @Autowired private AssetMapper assetMapper;
 
   @Override
-  public AssetDto create(AssetDto assetDto) {
-    Asset asset = assetMapper.toEntity(assetDto);
-    return assetMapper.toDto(assetRepository.save(asset));
+  public AssetResponse create(AssetRequest assetRequest) {
+    Asset asset = assetMapper.toEntity(assetRequest);
+    return assetMapper.toResponse(assetRepository.save(asset));
   }
 
   @Override
-  public AssetDto update(Long id, AssetDto assetDto) {
+  public AssetResponse update(Long id, AssetRequest assetRequest) {
     Asset asset =
         assetRepository.findById(id).orElseThrow(() -> new NotFoundException("Asset not found"));
-    assetMapper.updateEntity(assetDto, asset);
-    return assetMapper.toDto(assetRepository.save(asset));
+    assetMapper.updateEntity(assetRequest, asset);
+    return assetMapper.toResponse(assetRepository.save(asset));
   }
 
   @Override
@@ -38,21 +39,23 @@ public class AssetServiceImpl implements AssetService {
   }
 
   @Override
-  public AssetDto getById(Long id) {
+  public AssetResponse getById(Long id) {
     Asset asset =
         assetRepository.findById(id).orElseThrow(() -> new NotFoundException("Asset not found"));
-    return assetMapper.toDto(asset);
+    return assetMapper.toResponse(asset);
   }
 
   @Override
-  public List<AssetDto> getAll() {
-    return assetRepository.findAll().stream().map(assetMapper::toDto).collect(Collectors.toList());
+  public List<AssetResponse> getAll() {
+    return assetRepository.findAll().stream()
+        .map(assetMapper::toResponse)
+        .collect(Collectors.toList());
   }
 
   @Override
-  public List<AssetDto> getAssetsByCreditId(Long id) {
+  public List<AssetResponse> getAssetsByCreditId(Long id) {
     return assetRepository.findByCreditId(id).stream()
-        .map(assetMapper::toDto)
+        .map(assetMapper::toResponse)
         .collect(Collectors.toList());
   }
 }

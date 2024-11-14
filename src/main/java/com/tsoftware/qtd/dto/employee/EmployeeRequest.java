@@ -26,7 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EmployeeCreateRequest {
+public class EmployeeRequest {
 
   @NotBlank(message = "USERNAME_REQUIRED")
   @Size(min = 4, message = "INVALID_USERNAME")

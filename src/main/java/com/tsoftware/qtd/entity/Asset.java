@@ -19,6 +19,7 @@ public class Asset extends AbstractAuditEntity {
   private BigDecimal assessedValue;
   private String liquidity;
   private String risk;
+  private Boolean valuationStatus;
 
   @Enumerated(EnumType.STRING)
   private AssetType assetType;

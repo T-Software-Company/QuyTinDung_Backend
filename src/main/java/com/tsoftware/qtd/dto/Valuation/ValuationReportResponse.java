@@ -1,6 +1,8 @@
 package com.tsoftware.qtd.dto.Valuation;
 
-import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.asset.AssetRequest;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.Builder;
@@ -10,15 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ValuationMeetingResponse {
+public class ValuationReportResponse {
   private Long id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;
   private String createdBy;
-  private String address;
-  private String note;
-  private ZonedDateTime startDate;
-  private ZonedDateTime endDate;
-  private List<EmployeeResponse> participants;
+  private BigDecimal totalValuationAmount;
+  private List<AssetRequest> assets;
+  private List<ApproveResponse> approves;
 }

@@ -10,4 +10,5 @@ public class ValuationMeetingRequest {
   private String address;
   private ZonedDateTime startDate;
   private ZonedDateTime endDate;
+  private String note;
 }

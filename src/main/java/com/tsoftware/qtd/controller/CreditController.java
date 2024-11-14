@@ -3,7 +3,7 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.dto.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
-import com.tsoftware.qtd.dto.asset.AssetDto;
+import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.dto.credit.CreditRequest;
 import com.tsoftware.qtd.dto.credit.CreditResponse;
 import com.tsoftware.qtd.service.AssetService;
@@ -53,44 +53,26 @@ public class CreditController {
   }
 
   @GetMapping("/{id}/assets")
-  public ResponseEntity<ApiResponse<List<AssetDto>>> getAssets(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<List<AssetResponse>>> getAssets(@PathVariable Long id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             HttpStatus.OK.value(), "Fetched All", assetService.getAssetsByCreditId(id)));
   }
 
-  @Autowired private ValuationMeetingService valuationmeetingService;
+  @Autowired private ValuationMeetingService valuationMeetingService;
 
   @PostMapping("/{id}/valuation-meeting")
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> create(
-      @RequestBody ValuationMeetingRequest valuationmeetingRequest, @PathVariable Long id) {
+      @RequestBody ValuationMeetingRequest valuationMeetingRequest, @PathVariable Long id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            1000, "Created", valuationmeetingService.create(valuationmeetingRequest, id)));
+            1000, "Created", valuationMeetingService.create(valuationMeetingRequest, id)));
   }
 
-  //  @PutMapping("/{id}/valuation-meeting")
-  //  public ResponseEntity<ApiResponse<ValuationMeetingRequest>> update(@PathVariable Long id,
-  // @RequestBody ValuationMeetingRequest valuationmeetingDto) {
-  //    return ResponseEntity.ok(new ApiResponse<>(1000, "Updated",
-  // valuationmeetingService.update(id, valuationmeetingDto)));
-  //  }
-  //
-  //  @DeleteMapping("/{id}")
-  //  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
-  //    valuationmeetingService.delete(id);
-  //    return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
-  //  }
-  //
-  //  @GetMapping("/{id}")
-  //  public ResponseEntity<ApiResponse<ValuationMeetingRequest>> getById(@PathVariable Long id) {
-  //    return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched",
-  // valuationmeetingService.getById(id)));
-  //  }
-  //
-  //  @GetMapping
-  //  public ResponseEntity<ApiResponse<List<ValuationMeetingRequest>>> getAll() {
-  //    return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All",
-  // valuationmeetingService.getAll()));
-  //  }
+  @GetMapping("/{id}/valuation-meeting")
+  public ResponseEntity<ApiResponse<ValuationMeetingResponse>> getByCreditId(
+      @RequestBody ValuationMeetingRequest valuationMeetingRequest, @PathVariable Long creditId) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(1000, "Created", valuationMeetingService.getByCreditId(creditId)));
+  }
 }

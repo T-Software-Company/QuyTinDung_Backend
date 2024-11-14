@@ -18,50 +18,50 @@ import org.springframework.stereotype.Service;
 @Service
 public class ValuationMeetingServiceImpl implements ValuationMeetingService {
 
-  @Autowired private ValuationMeetingRepository valuationmeetingRepository;
+  @Autowired private ValuationMeetingRepository valuationMeetingRepository;
   @Autowired private CreditRepository creditRepository;
-  @Autowired private ValuationMeetingMapper valuationmeetingMapper;
+  @Autowired private ValuationMeetingMapper valuationMeetingMapper;
 
   @Override
   public ValuationMeetingResponse create(
-      ValuationMeetingRequest valuationmeetingRequest, Long creditId) {
-    ValuationMeeting valuationmeeting = valuationmeetingMapper.toEntity(valuationmeetingRequest);
+      ValuationMeetingRequest valuationMeetingRequest, Long creditId) {
+    ValuationMeeting valuationMeeting = valuationMeetingMapper.toEntity(valuationMeetingRequest);
     Credit credit =
         creditRepository
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
-    valuationmeeting.setCredit(credit);
-    return valuationmeetingMapper.toResponse(valuationmeetingRepository.save(valuationmeeting));
+    valuationMeeting.setCredit(credit);
+    return valuationMeetingMapper.toResponse(valuationMeetingRepository.save(valuationMeeting));
   }
 
   @Override
-  public ValuationMeetingResponse update(Long id, ValuationMeetingRequest valuationmeetingRequest) {
-    ValuationMeeting valuationmeeting =
-        valuationmeetingRepository
+  public ValuationMeetingResponse update(Long id, ValuationMeetingRequest valuationMeetingRequest) {
+    ValuationMeeting valuationMeeting =
+        valuationMeetingRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("ValuationMeeting not found"));
-    valuationmeetingMapper.updateEntity(valuationmeetingRequest, valuationmeeting);
-    return valuationmeetingMapper.toResponse(valuationmeetingRepository.save(valuationmeeting));
+    valuationMeetingMapper.updateEntity(valuationMeetingRequest, valuationMeeting);
+    return valuationMeetingMapper.toResponse(valuationMeetingRepository.save(valuationMeeting));
   }
 
   @Override
   public void delete(Long id) {
-    valuationmeetingRepository.deleteById(id);
+    valuationMeetingRepository.deleteById(id);
   }
 
   @Override
   public ValuationMeetingResponse getById(Long id) {
-    ValuationMeeting valuationmeeting =
-        valuationmeetingRepository
+    ValuationMeeting valuationMeeting =
+        valuationMeetingRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("ValuationMeeting not found"));
-    return valuationmeetingMapper.toResponse(valuationmeeting);
+    return valuationMeetingMapper.toResponse(valuationMeeting);
   }
 
   @Override
   public List<ValuationMeetingResponse> getAll() {
-    return valuationmeetingRepository.findAll().stream()
-        .map(valuationmeetingMapper::toResponse)
+    return valuationMeetingRepository.findAll().stream()
+        .map(valuationMeetingMapper::toResponse)
         .collect(Collectors.toList());
   }
 
@@ -72,17 +72,17 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
             .map(participantId -> Employee.builder().id(id).build())
             .collect(Collectors.toList());
     ValuationMeeting valuationMeeting =
-        valuationmeetingRepository
+        valuationMeetingRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("ValuationMeeting not found"));
     valuationMeeting.getParticipants().addAll(participants);
-    valuationmeetingRepository.save(valuationMeeting);
+    valuationMeetingRepository.save(valuationMeeting);
   }
 
   @Override
   public void removeParticipants(Long id, List<Long> participantIds) {
     ValuationMeeting valuationMeeting =
-        valuationmeetingRepository
+        valuationMeetingRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("ValuationMeeting not found"));
     var newParticipants =
@@ -90,6 +90,15 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
             .filter(v -> !participantIds.contains(v.getId()))
             .collect(Collectors.toList());
     valuationMeeting.setParticipants(newParticipants);
-    valuationmeetingRepository.save(valuationMeeting);
+    valuationMeetingRepository.save(valuationMeeting);
+  }
+
+  @Override
+  public ValuationMeetingResponse getByCreditId(Long creditId) {
+    var valuationMeeting =
+        valuationMeetingRepository
+            .findByCreditId(creditId)
+            .orElseThrow(() -> new NotFoundException("ValuationMeeting not found"));
+    return valuationMeetingMapper.toResponse(valuationMeeting);
   }
 }

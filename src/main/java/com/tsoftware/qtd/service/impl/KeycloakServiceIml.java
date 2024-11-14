@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.configuration.IdpProperties;
-import com.tsoftware.qtd.dto.employee.EmployeeCreateRequest;
+import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.exception.KeycloakException;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -22,17 +22,17 @@ public class KeycloakServiceIml implements KeycloakService {
   private final IdpProperties idpProperties;
 
   @Override
-  public String createUser(EmployeeCreateRequest employeeCreateRequest) {
+  public String createUser(EmployeeRequest employeeRequest) {
     var realmResource = keycloak.realm(idpProperties.getRealm());
     String userId = null;
-    var user = getUserRepresentation(employeeCreateRequest);
+    var user = getUserRepresentation(employeeRequest);
     var res = realmResource.users().create(user);
     if (res.getStatus() != 201) {
       throw new KeycloakException(res.getStatus());
     }
     try {
       userId = res.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-      var roles = employeeCreateRequest.getRoles();
+      var roles = employeeRequest.getRoles();
       var clientRepresentations =
           realmResource.clients().findByClientId(idpProperties.getClientId());
       var clientResource = realmResource.clients().get(clientRepresentations.get(0).getId());
@@ -74,7 +74,7 @@ public class KeycloakServiceIml implements KeycloakService {
 
   // chưa rollback nếu error
   @Override
-  public void updateUser(EmployeeCreateRequest request, String userId) {
+  public void updateUser(EmployeeRequest request, String userId) {
     var realmResource = keycloak.realm(idpProperties.getRealm());
 
     var userResource = realmResource.users().get(userId);
@@ -150,19 +150,18 @@ public class KeycloakServiceIml implements KeycloakService {
     userResource.resetPassword(credential);
   }
 
-  private static UserRepresentation getUserRepresentation(
-      EmployeeCreateRequest employeeCreateRequest) {
+  private static UserRepresentation getUserRepresentation(EmployeeRequest employeeRequest) {
     var user = new UserRepresentation();
-    user.setUsername(employeeCreateRequest.getUsername());
-    user.setEmail(employeeCreateRequest.getEmail());
-    user.setFirstName(employeeCreateRequest.getFirstName());
-    user.setLastName(employeeCreateRequest.getLastName());
+    user.setUsername(employeeRequest.getUsername());
+    user.setEmail(employeeRequest.getEmail());
+    user.setFirstName(employeeRequest.getFirstName());
+    user.setLastName(employeeRequest.getLastName());
     user.setEnabled(true);
     user.setEmailVerified(false);
     var credential = new CredentialRepresentation();
     credential.setType(CredentialRepresentation.PASSWORD);
     credential.setTemporary(false);
-    credential.setValue(employeeCreateRequest.getPassword());
+    credential.setValue(employeeRequest.getPassword());
     user.setCredentials(List.of(credential));
     return user;
   }

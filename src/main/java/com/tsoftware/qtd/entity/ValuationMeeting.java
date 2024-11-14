@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class ValuationMeeting extends AbstractAuditEntity {
   private String address;
+  private String note;
 
   @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime startDate;
