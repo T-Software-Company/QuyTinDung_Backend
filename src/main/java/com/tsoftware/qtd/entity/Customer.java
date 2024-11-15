@@ -24,7 +24,7 @@ public class Customer extends AbstractAuditEntity {
   private String email;
 
   @Column(unique = true)
-  private Integer phone;
+  private String phone;
 
   private String note;
   private String signaturePhoto;

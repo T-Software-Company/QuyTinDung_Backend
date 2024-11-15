@@ -1,0 +1,54 @@
+server:
+  port: ${APP_PORT}
+  servlet:
+    context-path: /api/v1
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: qtd-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
+
+idp:
+  server-url: ${IDP_URL}
+  client-id: ${CLIENT_ID}
+  client-secret: ${CLIENT_SECRET}
+  realm: tsoftware
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /index.html
+    oauth:
+      client-id: web
+
+
+google:
+  cloud:
+    storage:
+      bucket-name: ${GG_STORAGE_BUCKET}
+      service-account: ${GG_STORAGE_SERVICE_ACCOUNT}

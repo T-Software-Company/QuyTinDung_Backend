@@ -18,7 +18,7 @@ public class CustomerResponse {
   private String createdBy;
   String fullName;
   String email;
-  Integer phone;
+  String phone;
   String note;
   String signaturePhoto;
   Gender gender;

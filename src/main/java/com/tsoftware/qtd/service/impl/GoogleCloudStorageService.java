@@ -31,8 +31,10 @@ public class GoogleCloudStorageService {
   }
 
   public String uploadFile(String fileName, InputStream fileInputStream) throws Exception {
+
     Bucket bucket = storage.get(bucketName);
     Blob blob = bucket.create(fileName, fileInputStream, "application/octet-stream");
+
     return blob.getMediaLink();
   }
 
