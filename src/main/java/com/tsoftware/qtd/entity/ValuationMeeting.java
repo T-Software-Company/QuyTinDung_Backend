@@ -1,10 +1,13 @@
 package com.tsoftware.qtd.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -16,6 +19,10 @@ import lombok.experimental.SuperBuilder;
 public class ValuationMeeting extends AbstractAuditEntity {
   private String address;
   private String note;
+
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
 
   @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime startDate;

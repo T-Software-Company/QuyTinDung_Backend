@@ -3,26 +3,47 @@ package com.tsoftware.qtd.service.impl;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.entity.Asset;
+import com.tsoftware.qtd.entity.LegalDocument;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.AssetMapper;
 import com.tsoftware.qtd.repository.AssetRepository;
+import com.tsoftware.qtd.repository.CreditRepository;
+import com.tsoftware.qtd.repository.LegalDocumentRepository;
 import com.tsoftware.qtd.service.AssetService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class AssetServiceImpl implements AssetService {
 
   @Autowired private AssetRepository assetRepository;
 
   @Autowired private AssetMapper assetMapper;
+  @Autowired private CreditRepository creditRepository;
+  @Autowired private LegalDocumentRepository legalDocumentRepository;
 
   @Override
-  public AssetResponse create(AssetRequest assetRequest) {
+  public AssetResponse create(AssetRequest assetRequest, Long creditId) {
     Asset asset = assetMapper.toEntity(assetRequest);
-    return assetMapper.toResponse(assetRepository.save(asset));
+    List<LegalDocument> legalDocuments = asset.getLegalDocuments();
+    var credit =
+        creditRepository
+            .findById(creditId)
+            .orElseThrow(() -> new NotFoundException("Credit not found"));
+    asset.setCredit(credit);
+    asset.setCustomer(credit.getCustomer());
+    var assetSaved = assetRepository.save(asset);
+    legalDocuments.forEach(
+        l -> {
+          l.setAsset(assetSaved);
+          legalDocumentRepository.save(l);
+        });
+
+    return assetMapper.toResponse(assetSaved);
   }
 
   @Override

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
-import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
+import com.tsoftware.qtd.dto.asset.LegalDocumentResponse;
 import com.tsoftware.qtd.service.LegalDocumentService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +16,18 @@ public class LegalDocumentController {
   @Autowired private LegalDocumentService legaldocumentService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<LegalDocumentDto>> create(
-      @RequestBody LegalDocumentDto legaldocumentDto) {
+  public ResponseEntity<ApiResponse<LegalDocumentResponse>> create(
+      @RequestBody LegalDocumentResponse legaldocumentResponse) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(new ApiResponse<>(1000, "Created", legaldocumentService.create(legaldocumentDto)));
+        .body(
+            new ApiResponse<>(1000, "Created", legaldocumentService.create(legaldocumentResponse)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<LegalDocumentDto>> update(
-      @PathVariable Long id, @RequestBody LegalDocumentDto legaldocumentDto) {
+  public ResponseEntity<ApiResponse<LegalDocumentResponse>> update(
+      @PathVariable Long id, @RequestBody LegalDocumentResponse legaldocumentResponse) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", legaldocumentService.update(id, legaldocumentDto)));
+        new ApiResponse<>(1000, "Updated", legaldocumentService.update(id, legaldocumentResponse)));
   }
 
   @DeleteMapping("/{id}")
@@ -36,12 +37,12 @@ public class LegalDocumentController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<LegalDocumentDto>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<LegalDocumentResponse>> getById(@PathVariable Long id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", legaldocumentService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<LegalDocumentDto>>> getAll() {
+  public ResponseEntity<ApiResponse<List<LegalDocumentResponse>>> getAll() {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", legaldocumentService.getAll()));
   }
 }

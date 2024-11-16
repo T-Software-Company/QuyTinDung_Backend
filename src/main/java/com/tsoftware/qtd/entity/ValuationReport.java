@@ -1,13 +1,16 @@
 package com.tsoftware.qtd.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -18,6 +21,10 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class ValuationReport extends AbstractAuditEntity {
   private BigDecimal totalValuationAmount;
+
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
 
   @OneToMany(mappedBy = "valuationReport")
   private List<Asset> assets;

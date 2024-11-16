@@ -20,7 +20,8 @@ public class Group extends AbstractAuditEntity {
 
   private String name;
 
-  @ManyToMany private List<Employee> employees;
+  @ManyToMany(fetch = FetchType.LAZY)
+  private List<Employee> employees;
 
   @Enumerated(EnumType.STRING)
   private List<Role> roles;

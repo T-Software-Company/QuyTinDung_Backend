@@ -26,19 +26,22 @@ public class LoanPlanServiceImpl implements LoanPlanService {
   @Autowired private CustomerRepository customerRepository;
 
   @Autowired private CreditRepository creditRepository;
+  @Autowired private GoogleCloudStorageService googleCloudStorageService;
 
   @Override
   public LoanPlanResponse create(LoanPlanRequest loanplanRequest, Long creditId) throws Exception {
 
     LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
-
     var credit =
         creditRepository
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     loanplan.setCustomer(credit.getCustomer());
     loanplan.setCredit(credit);
-    var url = documentService.uploadDocument(loanplan, "", "loan-plan" + UUID.randomUUID(), 3);
+    var templateFile = googleCloudStorageService.downloadFile("tempaltefile");
+    var file = documentService.replace(loanplan, templateFile, 3);
+    var url =
+        googleCloudStorageService.uploadFile("loan-plan/" + UUID.randomUUID() + ".docx", file);
     loanplan.setDocumentUrl(url);
     return loanplanMapper.toDto(loanplanRepository.save(loanplan));
   }

@@ -1,46 +1,71 @@
 package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.entity.AbstractAuditEntity;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.*;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DocumentService {
-  @Autowired private GoogleCloudStorageService googleCloudStorageService;
 
-  public String uploadDocument(Object object, String templateUrl, String fileName, int depth)
-      throws Exception {
-
+  public InputStream replace(Object object, InputStream templateFile, int depth) throws Exception {
+    // Convert object to map for replacement
     Map<String, String> map = objectToMapStructForReplace(object, depth);
-    throw new Exception("osjdf");
 
-    //		var templateFile = googleCloudStorageService.downloadFile(templateUrl);
-    //
-    //		WordprocessingMLPackage template = WordprocessingMLPackage.load(templateFile);
-    //		MainDocumentPart documentPart = template.getMainDocumentPart();
-    //		documentPart.getContent().forEach(element -> {
-    //			if (element instanceof Text textElement) {
-    //				String text = textElement.getValue();
-    //
-    //				for (Map.Entry<String, String> entry : map.entrySet()) {
-    //					text = text.replace("${{" + entry.getKey() + "}}", entry.getValue());
-    //				}
-    //				textElement.setValue(text);
-    //			}
-    //		});
-    //
-    //		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    //		template.save(outputStream);
-    //		InputStream updatedDocInputStream = new ByteArrayInputStream(outputStream.toByteArray());
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    //		return googleCloudStorageService.uploadFile(fileName.endsWith(".doc") ||
-    // fileName.endsWith(".docx") ? fileName : fileName + ".docx", updatedDocInputStream);
+    // Determine if the file is .doc or .docx
+    try (BufferedInputStream bis = new BufferedInputStream(templateFile)) {
+      bis.mark(4); // Mark the stream for reset
+      byte[] header = new byte[4];
+      bis.read(header);
+      bis.reset();
 
+      if (isDocFile(header)) {
+        // Process .doc file
+        try (HWPFDocument doc = new HWPFDocument(bis)) {
+          var range = doc.getRange();
+          for (Map.Entry<String, String> entry : map.entrySet()) {
+            range.replaceText("${{" + entry.getKey() + "}}", entry.getValue());
+          }
+          doc.write(outputStream);
+        }
+      } else {
+        // Process .docx file
+        try (XWPFDocument docx = new XWPFDocument(bis)) {
+          for (XWPFParagraph paragraph : docx.getParagraphs()) {
+            for (XWPFRun run : paragraph.getRuns()) {
+              String text = run.getText(0);
+              if (text != null) {
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                  text = text.replace("${{" + entry.getKey() + "}}", entry.getValue());
+                }
+                run.setText(text, 0);
+              }
+            }
+          }
+          docx.write(outputStream);
+        }
+      }
+    }
+
+    return new ByteArrayInputStream(outputStream.toByteArray());
+  }
+
+  public boolean isDocFile(byte[] header) {
+    return header[0] == (byte) 0xD0
+        && header[1] == (byte) 0xCF
+        && header[2] == (byte) 0x11
+        && header[3] == (byte) 0xE0;
   }
 
   public static <T> Map<String, String> objectToMapStructForReplace(T object, int depth)
@@ -50,6 +75,23 @@ public class DocumentService {
     return resultMap;
   }
 
+  private static Field[] getAllFields(Object object) {
+    if (object == null) {
+      return new Field[0];
+    }
+    Field[] fieldsOfClass = object.getClass().getDeclaredFields();
+    Field[] fieldsOfSuperClass = new Field[0];
+    Class<?> superClass = object.getClass().getSuperclass();
+    if (superClass != null) {
+      fieldsOfSuperClass = superClass.getDeclaredFields();
+    }
+    List<Field> allFields = new ArrayList<>();
+    allFields.addAll(Arrays.asList(fieldsOfClass));
+    allFields.addAll(Arrays.asList(fieldsOfSuperClass));
+
+    return allFields.toArray(new Field[0]);
+  }
+
   private static <T> void convertObjectToMap(
       T object, String parentKey, Map<String, String> resultMap, int maxDepth, int currentDepth)
       throws IllegalAccessException {
@@ -57,7 +99,7 @@ public class DocumentService {
       return;
     }
 
-    for (Field field : object.getClass().getDeclaredFields()) {
+    for (Field field : getAllFields(object)) {
       field.setAccessible(true);
       Object value = field.get(object);
 

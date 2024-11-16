@@ -1,9 +1,12 @@
 package com.tsoftware.qtd.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Getter
@@ -24,14 +27,27 @@ public class Vehicle extends AbstractAuditEntity {
   private String color;
   private String loadCapacity;
   private Integer seatCapacity;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime registrationExpiryDate;
+
   private String licensePlateNumber;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime firstRegistrationDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime issueDate;
+
   private String registrationCertificateNumber;
   private String note;
   private Integer kilometersDriven;
   private String inspectionCertificateNumber;
 
-  @OneToOne private Asset asset;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  private Asset asset;
 }

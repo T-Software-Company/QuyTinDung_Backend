@@ -31,6 +31,6 @@ public class CCCD extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private Gender gender;
 
-  @OneToOne(mappedBy = "cccd")
+  @OneToOne(mappedBy = "cccd", fetch = FetchType.LAZY)
   private Customer customer;
 }

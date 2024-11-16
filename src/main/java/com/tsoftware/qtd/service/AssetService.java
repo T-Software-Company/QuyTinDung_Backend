@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.asset.AssetResponse;
 import java.util.List;
 
 public interface AssetService {
-  AssetResponse create(AssetRequest assetRequest);
+  AssetResponse create(AssetRequest assetRequest, Long creditId);
 
   AssetResponse update(Long id, AssetRequest assetRequest);
 

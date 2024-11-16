@@ -21,6 +21,4 @@ public class CreditRequest {
   private BigDecimal currentOutstandingDebt;
   private LoanStatus status;
   private LoanSecurityType loanSecurityType;
-  private LoanPlanRequest loanPlan;
-  private LoanRequestRequest loanRequest;
 }

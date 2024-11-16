@@ -1,15 +1,15 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
+import com.tsoftware.qtd.dto.asset.LegalDocumentResponse;
 import com.tsoftware.qtd.entity.LegalDocument;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface LegalDocumentMapper {
-  LegalDocument toEntity(LegalDocumentDto dto);
+  LegalDocument toEntity(LegalDocumentResponse dto);
 
-  LegalDocumentDto toDto(LegalDocument entity);
+  LegalDocumentResponse toDto(LegalDocument entity);
 
-  void updateEntity(LegalDocumentDto dto, @MappingTarget LegalDocument entity);
+  void updateEntity(LegalDocumentResponse dto, @MappingTarget LegalDocument entity);
 }

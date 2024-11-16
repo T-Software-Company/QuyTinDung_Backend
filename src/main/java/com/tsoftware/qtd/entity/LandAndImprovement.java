@@ -1,14 +1,17 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,12 +43,19 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private String issuingAuthority;
   private String issueDate;
 
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
+
   @Enumerated(EnumType.STRING)
   private TypeOfUse typeOfUse;
 
-  @OneToOne private Asset asset;
+  @OneToOne(fetch = FetchType.LAZY)
+  private Asset asset;
 
-  @OneToOne private OwnerInfo ownerInfo;
+  @OneToOne(fetch = FetchType.EAGER)
+  private OwnerInfo ownerInfo;
 
-  @OneToOne private TransferInfo transferInfo;
+  @OneToOne(fetch = FetchType.EAGER)
+  private TransferInfo transferInfo;
 }

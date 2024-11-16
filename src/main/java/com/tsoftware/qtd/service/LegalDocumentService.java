@@ -1,16 +1,16 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
+import com.tsoftware.qtd.dto.asset.LegalDocumentResponse;
 import java.util.List;
 
 public interface LegalDocumentService {
-  LegalDocumentDto create(LegalDocumentDto legaldocumentDto);
+  LegalDocumentResponse create(LegalDocumentResponse legaldocumentResponse);
 
-  LegalDocumentDto update(Long id, LegalDocumentDto legaldocumentDto);
+  LegalDocumentResponse update(Long id, LegalDocumentResponse legaldocumentResponse);
 
   void delete(Long id);
 
-  LegalDocumentDto getById(Long id);
+  LegalDocumentResponse getById(Long id);
 
-  List<LegalDocumentDto> getAll();
+  List<LegalDocumentResponse> getAll();
 }

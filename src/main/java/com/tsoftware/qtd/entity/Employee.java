@@ -42,12 +42,12 @@ public class Employee extends AbstractAuditEntity {
 
   @ManyToMany private List<AppraisalPlan> appraisalPlans;
 
-  @OneToMany(mappedBy = "approver")
+  @OneToMany(mappedBy = "approver", fetch = FetchType.LAZY)
   private List<Approve> approves;
 
   @ManyToMany private List<ValuationMeeting> valuationMeetings;
 
-  @ManyToMany(mappedBy = "employees")
+  @ManyToMany(mappedBy = "employees", fetch = FetchType.LAZY)
   private List<Group> groups;
 
   @Enumerated(EnumType.STRING)

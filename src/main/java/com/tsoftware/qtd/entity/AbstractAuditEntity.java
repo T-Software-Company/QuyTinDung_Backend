@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @MappedSuperclass
 @Getter
@@ -17,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(CustomAuditingEntityListener.class)
+@EnableJpaAuditing
 public class AbstractAuditEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

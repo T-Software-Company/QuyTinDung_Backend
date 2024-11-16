@@ -1,10 +1,13 @@
 package com.tsoftware.qtd.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,10 +25,14 @@ public class AppraisalPlan extends AbstractAuditEntity {
   @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime endDate;
 
-  @ManyToMany(mappedBy = "appraisalPlans")
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
+
+  @ManyToMany(mappedBy = "appraisalPlans", fetch = FetchType.LAZY)
   private List<Employee> participants;
 
-  @OneToMany(mappedBy = "appraisalPlan")
+  @OneToMany(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
   private List<IncomeProof> incomeProof;
 
   @OneToOne(fetch = FetchType.LAZY)
@@ -34,11 +41,12 @@ public class AppraisalPlan extends AbstractAuditEntity {
   @OneToOne(fetch = FetchType.LAZY)
   private Credit credit;
 
-  @ManyToOne private Customer customer;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Customer customer;
 
-  @OneToMany(mappedBy = "appraisalPlan")
+  @OneToMany(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
   private List<LoanPurposeDocument> loanPurposeDocuments;
 
-  @OneToOne(mappedBy = "appraisalPlan")
+  @OneToOne(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
   private ValuationReport valuationReport;
 }

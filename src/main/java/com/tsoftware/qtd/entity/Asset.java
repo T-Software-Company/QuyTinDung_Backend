@@ -1,11 +1,14 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.AssetType;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,10 +24,15 @@ public class Asset extends AbstractAuditEntity {
   private String risk;
   private Boolean valuationStatus;
 
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
+
   @Enumerated(EnumType.STRING)
   private AssetType assetType;
 
-  @OneToMany private List<LegalDocument> legalDocuments;
+  @OneToMany(fetch = FetchType.EAGER)
+  private List<LegalDocument> legalDocuments;
 
   @ManyToOne private Credit credit;
 
@@ -49,12 +57,18 @@ public class Asset extends AbstractAuditEntity {
   @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private LandAsset landAsset;
 
-  @ManyToOne private AppraisalPlan appraisalPlan;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private AppraisalPlan appraisalPlan;
 
-  @ManyToOne private AssetRepossessionNotice assetRepossessionNotice;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private AssetRepossessionNotice assetRepossessionNotice;
 
-  @ManyToOne private Customer customer;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Customer customer;
 
-  @ManyToOne private ValuationMeeting valuationMeeting;
-  @ManyToOne private ValuationReport valuationReport;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private ValuationMeeting valuationMeeting;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private ValuationReport valuationReport;
 }

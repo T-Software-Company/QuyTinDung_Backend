@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class LegalDocumentDto {
+public class LegalDocumentResponse {
   private Long id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;

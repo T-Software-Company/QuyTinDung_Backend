@@ -1,14 +1,15 @@
 package com.tsoftware.qtd.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
+import jakarta.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,13 +22,23 @@ public class Machinery extends AbstractAuditEntity {
   private String name;
   private String model;
   private String manufacturer;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime manufactureDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime purchaseDate;
+
   private String purchasePrice;
   private String serialNumber;
   private String location;
   private String status;
   private String note;
 
-  @OneToOne private Asset asset;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  private Asset asset;
 }

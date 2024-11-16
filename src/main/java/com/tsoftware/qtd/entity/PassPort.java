@@ -32,6 +32,6 @@ public class PassPort extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private Gender gender;
 
-  @OneToOne(mappedBy = "passPort")
+  @OneToOne(mappedBy = "passPort", fetch = FetchType.LAZY)
   private Customer customer;
 }

@@ -19,6 +19,7 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class RatingFormula extends AbstractAuditEntity {
   private String name;
+  private String description;
 
   @OneToMany(mappedBy = "ratingFormula")
   private List<RatingCriterion> ratingCriteria;

@@ -34,19 +34,19 @@ public class Customer extends AbstractAuditEntity {
   @OneToOne(cascade = CascadeType.ALL)
   private Address address;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<LoanPlan> loanPlans;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<Credit> credits;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<LoanRequest> loanRequests;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<DebtNotification> debtNotifications;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<AssetRepossessionNotice> assetRepossessionNotices;
 
   @OneToOne(cascade = CascadeType.ALL)
@@ -58,18 +58,18 @@ public class Customer extends AbstractAuditEntity {
   @OneToOne(cascade = CascadeType.ALL)
   private CMND cmnd;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<IncomeProof> incomeProofs;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<AppraisalReport> appraisalReports;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<AppraisalPlan> appraisalPlans;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<Asset> assets;
 
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<Disbursement> disbursements;
 }

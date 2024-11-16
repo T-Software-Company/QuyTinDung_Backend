@@ -17,6 +17,7 @@ public class CreditResponse {
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;
   private String createdBy;
+
   private BigDecimal amount;
   private ZonedDateTime startDate;
   private ZonedDateTime dueDate;
@@ -25,6 +26,4 @@ public class CreditResponse {
   private BigDecimal currentOutstandingDebt;
   private LoanStatus status;
   private LoanSecurityType loanSecurityType;
-  private LoanPlanResponse loanPlan;
-  private LoanRequestResponse loanRequest;
 }

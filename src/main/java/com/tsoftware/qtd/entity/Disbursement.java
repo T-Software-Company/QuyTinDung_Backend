@@ -1,8 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
@@ -20,8 +18,13 @@ public class Disbursement extends AbstractAuditEntity {
   private BigDecimal loanLimit;
   private BigDecimal amountReceived;
   private BigDecimal currentOutstandingDebt;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime dateOfLoanReceipt;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime loanTerm;
+
   private BigDecimal interestRate;
   private String repaymentSchedule;
 

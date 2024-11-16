@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.asset.LegalDocumentDto;
+import com.tsoftware.qtd.dto.asset.LegalDocumentResponse;
 import com.tsoftware.qtd.entity.LegalDocument;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LegalDocumentMapper;
@@ -19,18 +19,18 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
   @Autowired private LegalDocumentMapper legaldocumentMapper;
 
   @Override
-  public LegalDocumentDto create(LegalDocumentDto legaldocumentDto) {
-    LegalDocument legaldocument = legaldocumentMapper.toEntity(legaldocumentDto);
+  public LegalDocumentResponse create(LegalDocumentResponse legaldocumentResponse) {
+    LegalDocument legaldocument = legaldocumentMapper.toEntity(legaldocumentResponse);
     return legaldocumentMapper.toDto(legaldocumentRepository.save(legaldocument));
   }
 
   @Override
-  public LegalDocumentDto update(Long id, LegalDocumentDto legaldocumentDto) {
+  public LegalDocumentResponse update(Long id, LegalDocumentResponse legaldocumentResponse) {
     LegalDocument legaldocument =
         legaldocumentRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LegalDocument not found"));
-    legaldocumentMapper.updateEntity(legaldocumentDto, legaldocument);
+    legaldocumentMapper.updateEntity(legaldocumentResponse, legaldocument);
     return legaldocumentMapper.toDto(legaldocumentRepository.save(legaldocument));
   }
 
@@ -40,7 +40,7 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
   }
 
   @Override
-  public LegalDocumentDto getById(Long id) {
+  public LegalDocumentResponse getById(Long id) {
     LegalDocument legaldocument =
         legaldocumentRepository
             .findById(id)
@@ -49,7 +49,7 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
   }
 
   @Override
-  public List<LegalDocumentDto> getAll() {
+  public List<LegalDocumentResponse> getAll() {
     return legaldocumentRepository.findAll().stream()
         .map(legaldocumentMapper::toDto)
         .collect(Collectors.toList());

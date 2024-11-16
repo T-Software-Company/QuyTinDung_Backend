@@ -23,5 +23,6 @@ public class CreditRating extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private RatingLevel ratingLevel;
 
-  @OneToOne private AppraisalReport appraisalReport;
+  @OneToOne(fetch = FetchType.LAZY)
+  private AppraisalReport appraisalReport;
 }

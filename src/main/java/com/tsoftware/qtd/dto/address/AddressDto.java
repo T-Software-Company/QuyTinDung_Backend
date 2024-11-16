@@ -9,10 +9,10 @@ import lombok.Setter;
 @Builder
 public class AddressDto {
 
-  private String streetAddress;
-  private String wardOrCommune;
-  private String district;
-  private String cityProvince;
   private String country;
+  private String cityProvince;
+  private String district;
+  private String wardOrCommune;
+  private String streetAddress;
   private String detail;
 }

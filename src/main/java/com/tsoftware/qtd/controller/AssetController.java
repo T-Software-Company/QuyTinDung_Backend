@@ -17,11 +17,14 @@ public class AssetController {
   @Autowired private AssetService assetService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<AssetResponse>> create(@RequestBody AssetRequest assetRequest) {
+  public ResponseEntity<ApiResponse<AssetResponse>> create(
+      @RequestBody AssetRequest assetRequest, @PathVariable Long creditId) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
             new ApiResponse<>(
-                HttpStatus.CREATED.value(), "Created", assetService.create(assetRequest)));
+                HttpStatus.CREATED.value(),
+                "Created",
+                assetService.create(assetRequest, creditId)));
   }
 
   @PutMapping("/{id}")

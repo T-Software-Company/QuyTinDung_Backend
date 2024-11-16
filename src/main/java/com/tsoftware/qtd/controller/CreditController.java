@@ -4,12 +4,8 @@ import com.tsoftware.qtd.dto.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
-import com.tsoftware.qtd.dto.credit.CreditRequest;
-import com.tsoftware.qtd.dto.credit.CreditResponse;
-import com.tsoftware.qtd.service.AssetService;
-import com.tsoftware.qtd.service.CreditService;
-import com.tsoftware.qtd.service.LoanPlanService;
-import com.tsoftware.qtd.service.ValuationMeetingService;
+import com.tsoftware.qtd.dto.credit.*;
+import com.tsoftware.qtd.service.*;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +20,12 @@ public class CreditController {
   @Autowired private AssetService assetService;
   @Autowired private LoanPlanService loanplanService;
 
+  @Autowired private LoanRequestService loanRequestService;
+
   @PostMapping
-  public ResponseEntity<ApiResponse<CreditResponse>> create(
-      @RequestBody CreditRequest creditRequest, @RequestParam Long customerId) throws Exception {
-    return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", creditService.create(creditRequest, customerId)));
+  public ResponseEntity<ApiResponse<CreditResponse>> create(@RequestParam Long customerId)
+      throws Exception {
+    return ResponseEntity.ok(new ApiResponse<>(1000, "Created", creditService.create(customerId)));
   }
 
   @PutMapping("/{id}")
@@ -54,12 +51,19 @@ public class CreditController {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", creditService.getAll()));
   }
 
-  //	@PostMapping("/{id}/loan-plan")
-  //	public ResponseEntity<ApiResponse<LoanPlanResponse>> create(@RequestBody LoanPlanRequest
-  // loanPlanRequest, @PathVariable Long creditId) throws Exception {
-  //		return ResponseEntity.ok(new ApiResponse<>(1000, "Created",
-  // loanplanService.create(loanPlanRequest, creditId)));
-  //	}
+  @PostMapping("/{id}/loan-plan")
+  public ResponseEntity<ApiResponse<LoanPlanResponse>> create(
+      @RequestBody LoanPlanRequest loanPlanRequest, @PathVariable Long creditId) throws Exception {
+    return ResponseEntity.ok(
+        new ApiResponse<>(1000, "Created", loanplanService.create(loanPlanRequest, creditId)));
+  }
+
+  @PostMapping("/{id}/loan-request")
+  public ResponseEntity<ApiResponse<LoanRequestResponse>> create(
+      @RequestBody LoanRequestRequest loanRequestRequest, @PathVariable Long id) throws Exception {
+    return ResponseEntity.ok(
+        new ApiResponse<>(1000, "Created", loanRequestService.create(loanRequestRequest, id)));
+  }
 
   @GetMapping("/{id}/assets")
   public ResponseEntity<ApiResponse<List<AssetResponse>>> getAssets(@PathVariable Long id) {
@@ -80,8 +84,8 @@ public class CreditController {
 
   @GetMapping("/{id}/valuation-meeting")
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> getByCreditId(
-      @RequestBody ValuationMeetingRequest valuationMeetingRequest, @PathVariable Long creditId) {
+      @RequestBody ValuationMeetingRequest valuationMeetingRequest, @PathVariable Long id) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", valuationMeetingService.getByCreditId(creditId)));
+        new ApiResponse<>(1000, "Created", valuationMeetingService.getByCreditId(id)));
   }
 }

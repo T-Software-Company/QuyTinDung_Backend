@@ -1,11 +1,14 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Getter
@@ -21,19 +24,31 @@ public class Apartment extends AbstractAuditEntity {
   private String address;
   private BigDecimal area;
   private String purpose;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime expirationDate;
+
   private String originOfUsage;
   private String typeOfHousing;
   private String Name;
   private BigDecimal floorArea;
   private String typeOfOwnership;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime ownershipTerm;
+
   private String notes;
   private String sharedFacilities;
   private String certificateNumber;
   private String certificateBookNumber;
   private String issuingAuthority;
+
+  @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime issueDate;
+
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
 
   @Enumerated(EnumType.STRING)
   private TypeOfUse typeOfUse;
@@ -41,9 +56,9 @@ public class Apartment extends AbstractAuditEntity {
   @OneToOne(fetch = FetchType.LAZY)
   private Asset asset;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private OwnerInfo ownerInfo;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private TransferInfo transferInfo;
 }

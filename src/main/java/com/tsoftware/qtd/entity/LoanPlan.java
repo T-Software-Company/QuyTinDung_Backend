@@ -1,12 +1,15 @@
 package com.tsoftware.qtd.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @AllArgsConstructor
 @SuperBuilder
@@ -17,15 +20,23 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class LoanPlan extends AbstractAuditEntity {
 
+  private String loanNeeds;
   private BigDecimal totalCapitalRequirement;
   private BigDecimal ownCapital;
   private BigDecimal proposedLoanAmount;
-  private BigDecimal income;
+  private BigDecimal monthlyIncome;
   private String repaymentPlan;
   private String note;
   private String documentUrl;
+  private String loanTerm;
 
-  @ManyToOne private Customer customer;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
 
-  @ManyToOne private Credit credit;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Customer customer;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Credit credit;
 }

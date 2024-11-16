@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = {GoogleCloudStorageService.class})
 public class GoogleCloudStorageServiceIntegrationTest {
 
   @Autowired GoogleCloudStorageService googleCloudStorageService;
@@ -30,7 +30,7 @@ public class GoogleCloudStorageServiceIntegrationTest {
 
   @Test
   public void testDownloadFile_FileExists() throws Exception {
-    String fileName = "testFile.txt";
+    String fileName = "named420d5a0-f2d6-459c-9b1b-3fb76ae56f52.jfif"; // file exists on bucket
     InputStream downloadedFile = googleCloudStorageService.downloadFile(fileName);
     assertNotNull(downloadedFile);
     System.out.println("File downloaded successfully.");

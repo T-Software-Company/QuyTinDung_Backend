@@ -3,14 +3,17 @@ package com.tsoftware.qtd.entity;
 import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.BorrowerType;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @AllArgsConstructor
 @SuperBuilder
@@ -27,15 +30,23 @@ public class LoanRequest extends AbstractAuditEntity {
   private BigDecimal amount;
   private String note;
 
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
+
+  private String documentUrl;
+
   @Enumerated(EnumType.STRING)
   private BorrowerType borrowerType;
 
   @Enumerated(EnumType.STRING)
   private LoanSecurityType loanSecurityType;
 
-  @ManyToOne private Credit credit;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Credit credit;
 
-  @ManyToOne private Customer customer;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Customer customer;
 
   @Enumerated(EnumType.STRING)
   private AssetType loanCollateralType;

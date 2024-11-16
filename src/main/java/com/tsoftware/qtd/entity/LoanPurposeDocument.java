@@ -1,12 +1,15 @@
 package com.tsoftware.qtd.entity;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @AllArgsConstructor
 @SuperBuilder
@@ -20,7 +23,13 @@ public class LoanPurposeDocument extends AbstractAuditEntity {
   private String link;
   private String name;
 
-  @ManyToOne private Credit credit;
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
 
-  @ManyToOne private AppraisalPlan appraisalPlan;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Credit credit;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private AppraisalPlan appraisalPlan;
 }

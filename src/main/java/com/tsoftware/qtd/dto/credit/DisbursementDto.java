@@ -13,6 +13,7 @@ public class DisbursementDto {
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;
   private String createdBy;
+
   private BigDecimal loanLimit;
   private BigDecimal amountReceived;
   private BigDecimal currentOutstandingDebt;

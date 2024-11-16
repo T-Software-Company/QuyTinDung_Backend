@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.dto.credit;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,10 +11,12 @@ import lombok.Setter;
 @Builder
 public class LoanPlanRequest {
 
-  BigDecimal totalCapitalRequirement;
-  BigDecimal ownCapital;
-  BigDecimal proposedLoanAmount;
-  BigDecimal income;
-  String repaymentPlan;
-  String note;
+  private BigDecimal totalCapitalRequirement;
+  private BigDecimal ownCapital;
+  private BigDecimal proposedLoanAmount;
+  private BigDecimal income;
+  private String repaymentPlan;
+  private String note;
+  private String documentUrl;
+  private Map<String, Object> metadata;
 }
