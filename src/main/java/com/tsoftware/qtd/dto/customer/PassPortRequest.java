@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @Getter
 @Setter
-public class PassPortDto {
+public class PassPortRequest {
 
   @NotBlank(message = "FULL_NAME_REQUIRED")
   @Size(min = 3, max = 100, message = "FULL_NAME_SIZE")

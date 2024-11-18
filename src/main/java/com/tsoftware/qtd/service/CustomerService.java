@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import java.util.List;
 
 public interface CustomerService {
-  CustomerResponse create(CustomerRequest customerRequest);
+  CustomerResponse create(CustomerRequest customerRequest) throws Exception;
 
   CustomerResponse update(Long id, CustomerRequest customerRequest);
 

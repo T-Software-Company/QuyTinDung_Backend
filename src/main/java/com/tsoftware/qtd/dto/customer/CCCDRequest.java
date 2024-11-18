@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.constants.EnumType.PassPortType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -16,10 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @Getter
 @Setter
-public class PassPortDto {
+public class CCCDRequest {
+
+  @NotBlank private String identifyId;
 
   @NotBlank(message = "FULL_NAME_REQUIRED")
-  @Size(min = 3, max = 100, message = "FULL_NAME_SIZE")
+  @Size(min = 1, message = "INVALID_FULL_NAME")
   String fullName;
 
   @NotNull(message = "GENDER_REQUIRED")
@@ -51,7 +52,4 @@ public class PassPortDto {
 
   @NotNull MultipartFile frontPhotoFile;
   @NotNull MultipartFile backPhotoFile;
-
-  @NotNull(message = "PASS_PORT_TYPE_REQUIRED")
-  PassPortType passPortType;
 }

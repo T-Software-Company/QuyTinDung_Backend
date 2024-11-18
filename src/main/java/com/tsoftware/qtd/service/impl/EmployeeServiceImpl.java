@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.AddressMapper;
@@ -49,15 +48,15 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void createEmployee(EmployeeRequest request) {
+  public EmployeeResponse createEmployee(EmployeeRequest request) {
     var userId = keycloakService.createUser(request);
     var employee = employeeMapper.toEmployee(request);
     employee.setUserId(userId);
-    employeeRepository.save(employee);
+    return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 
   @Override
-  public void updateProfile(ProfileRequest request) {
+  public EmployeeResponse updateProfile(ProfileRequest request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
     keycloakService.updateUser(request, userId);
     var employee =
@@ -69,46 +68,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     employee.setEmail(request.getEmail());
     employee.setPhone(request.getPhone());
     employee.setDayOfBirth(request.getSetDayOfBirth());
-    employeeRepository.save(employee);
+    return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 
   @Override
-  public void updateEmployee(String userId, EmployeeRequest request) {
+  public EmployeeResponse updateEmployee(String userId, EmployeeRequest request) {
     var employee =
         employeeRepository
             .findByUserId(userId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     keycloakService.updateUser(request, userId);
+    employeeMapper.updateEntity(request, employee);
 
-    if (request.getAddress() != null) {
-      employee.setAddress(addressMapper.toAddress(request.getAddress()));
-    }
-    if (request.getUsername() != null) {
-      employee.setUsername(request.getUsername());
-    }
-    if (request.getEmail() != null) {
-      employee.setEmail(request.getEmail());
-    }
-    if (request.getPhone() != null) {
-      employee.setPhone(request.getPhone());
-    }
-    if (request.getFirstName() != null) {
-      employee.setFirstName(request.getFirstName());
-    }
-    if (request.getLastName() != null) {
-      employee.setLastName(request.getLastName());
-    }
-    if (request.getDayOfBirth() != null) {
-      employee.setDayOfBirth(request.getDayOfBirth());
-    }
-    if (request.getGender() != null) {
-      employee.setGender(request.getGender());
-    }
-    if (request.getRoles() != null) {
-      employee.setRoles(
-          request.getRoles().stream().map(Role::valueOf).collect(Collectors.toList()));
-    }
-    employeeRepository.save(employee);
+    return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 
   @Override

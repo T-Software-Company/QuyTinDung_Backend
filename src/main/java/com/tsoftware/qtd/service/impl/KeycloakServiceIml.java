@@ -7,6 +7,7 @@ import com.tsoftware.qtd.exception.KeycloakException;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
@@ -24,12 +25,17 @@ public class KeycloakServiceIml implements KeycloakService {
   @Override
   public String createUser(EmployeeRequest employeeRequest) {
     var realmResource = keycloak.realm(idpProperties.getRealm());
+
     String userId = null;
     var user = getUserRepresentation(employeeRequest);
     var res = realmResource.users().create(user);
     if (res.getStatus() != 201) {
-      throw new KeycloakException(res.getStatus());
+      var map = res.readEntity(Map.class);
+      String message = (String) map.get("errorMessage");
+      log.info(message);
+      throw new KeycloakException(res.getStatus(), message);
     }
+
     try {
       userId = res.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
       var roles = employeeRequest.getRoles();
@@ -37,7 +43,16 @@ public class KeycloakServiceIml implements KeycloakService {
           realmResource.clients().findByClientId(idpProperties.getClientId());
       var clientResource = realmResource.clients().get(clientRepresentations.get(0).getId());
       var clientRoles =
-          roles.stream().map(role -> clientResource.roles().get(role).toRepresentation()).toList();
+          roles.stream()
+              .map(
+                  role -> {
+                    try {
+                      return clientResource.roles().get(role).toRepresentation();
+                    } catch (jakarta.ws.rs.NotFoundException e) {
+                      throw new NotFoundException("Role " + role + " not found");
+                    }
+                  })
+              .toList();
       realmResource
           .users()
           .get(userId)

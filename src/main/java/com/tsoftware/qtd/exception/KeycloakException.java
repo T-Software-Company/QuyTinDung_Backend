@@ -1,7 +1,17 @@
 package com.tsoftware.qtd.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class KeycloakException extends RuntimeException {
-  public KeycloakException(int status) {
-    super("KeycloakError: " + status);
+  private int status;
+  private String message;
+
+  public KeycloakException(int status, String message) {
+    super(message);
+    this.status = status;
+    this.message = message;
   }
 }

@@ -1,11 +1,9 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.constants.EnumType.PassPortType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,11 +14,15 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @Getter
 @Setter
-public class PassPortDto {
+public class CMNDRequest {
 
-  @NotBlank(message = "FULL_NAME_REQUIRED")
-  @Size(min = 3, max = 100, message = "FULL_NAME_SIZE")
-  String fullName;
+  @NotBlank private String identifyId;
+
+  @NotBlank(message = "ETHNICITY_REQUIRED")
+  String ethnicity;
+
+  @NotBlank(message = "RELIGION_REQUIRED")
+  String religion;
 
   @NotNull(message = "GENDER_REQUIRED")
   Gender gender;
@@ -51,7 +53,4 @@ public class PassPortDto {
 
   @NotNull MultipartFile frontPhotoFile;
   @NotNull MultipartFile backPhotoFile;
-
-  @NotNull(message = "PASS_PORT_TYPE_REQUIRED")
-  PassPortType passPortType;
 }

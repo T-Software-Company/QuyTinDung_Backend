@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.controller;
 
+import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.ApiResponse;
 import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
@@ -30,11 +31,16 @@ public class EmployeeController {
   EmployeeService employeeService;
 
   @PostMapping("/create")
-  public ResponseEntity<ApiResponse<Object>> create(@RequestBody @Valid EmployeeRequest request) {
-    employeeService.createEmployee(request);
+  public ResponseEntity<ApiResponse<EmployeeResponse>> create(
+      @RequestBody @Valid EmployeeRequest request) {
+    ;
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
-            ApiResponse.builder().code(HttpStatus.CREATED.value()).message("successfully").build());
+            ApiResponse.<EmployeeResponse>builder()
+                .code(HttpStatus.CREATED.value())
+                .message("successfully")
+                .result(employeeService.createEmployee(request))
+                .build());
   }
 
   @GetMapping
@@ -56,28 +62,35 @@ public class EmployeeController {
   }
 
   @PutMapping("/profile")
-  public ResponseEntity<ApiResponse<Void>> updateMyProfile(
+  public ResponseEntity<ApiResponse<EmployeeResponse>> updateMyProfile(
       @RequestBody @Valid ProfileRequest request) {
-    employeeService.updateProfile(request);
+    ;
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder()
+        ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())
             .message("Profile updated successfully")
+            .result(employeeService.updateProfile(request))
             .build());
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> updateEmployee(
+  public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(
       @PathVariable String id, @RequestBody @Valid EmployeeRequest request) {
-    employeeService.updateEmployee(id, request);
+
     return ResponseEntity.ok(
-        ApiResponse.<Void>builder()
+        ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())
             .message("Profile updated successfully")
+            .result(employeeService.updateEmployee(id, request))
             .build());
   }
 
-  @PutMapping("/reset-password")
+  @GetMapping("/roles")
+  public ResponseEntity<ApiResponse<Role[]>> getRoles() {
+    return ResponseEntity.ok(new ApiResponse<>(200, "Successfully", Role.values()));
+  }
+
+  @PostMapping("/reset-password")
   public ResponseEntity<ApiResponse<Void>> employeeResetPassword(
       @RequestBody Map<String, Object> request) {
     String id = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -90,7 +103,7 @@ public class EmployeeController {
             .build());
   }
 
-  @PutMapping("/{id}/reset-password")
+  @PostMapping("/{id}/reset-password")
   public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(
       @PathVariable String id, @RequestBody Map<String, Object> request) {
     String newPassword = (String) request.get("newPassword");
@@ -102,7 +115,7 @@ public class EmployeeController {
             .build());
   }
 
-  @PutMapping("/{id}/activate")
+  @PostMapping("/{id}/activate")
   public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable String id) {
     employeeService.activeEmployee(id);
     return ResponseEntity.ok(
@@ -112,7 +125,7 @@ public class EmployeeController {
             .build());
   }
 
-  @PutMapping("/{id}/deactivate")
+  @PostMapping("/{id}/deactivate")
   public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable String id) {
     employeeService.deactivateEmployee(id);
     return ResponseEntity.ok(

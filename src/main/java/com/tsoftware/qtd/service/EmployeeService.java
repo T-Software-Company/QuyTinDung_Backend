@@ -10,11 +10,11 @@ public interface EmployeeService {
 
   EmployeeResponse getProfile();
 
-  void createEmployee(EmployeeRequest request);
+  EmployeeResponse createEmployee(EmployeeRequest request);
 
-  void updateProfile(ProfileRequest request);
+  EmployeeResponse updateProfile(ProfileRequest request);
 
-  void updateEmployee(String userId, EmployeeRequest request);
+  EmployeeResponse updateEmployee(String userId, EmployeeRequest request);
 
   void resetPassword(String userId, String newPassword);
 

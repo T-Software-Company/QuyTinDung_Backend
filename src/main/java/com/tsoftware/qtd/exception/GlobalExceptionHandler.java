@@ -27,12 +27,23 @@ public class GlobalExceptionHandler {
     return ResponseEntity.internalServerError().body(apiResponse);
   }
 
+  @ExceptionHandler(value = KeycloakException.class)
+  ResponseEntity<ApiResponse<Void>> handleKeyCloak(KeycloakException exception) {
+    log.error("KeycloakException: ", exception);
+    ApiResponse<Void> apiResponse = new ApiResponse<Void>();
+
+    apiResponse.setCode(exception.getStatus());
+    apiResponse.setMessage(exception.getMessage());
+
+    return ResponseEntity.status(exception.getStatus()).body(apiResponse);
+  }
+
   @ExceptionHandler(value = NotFoundException.class)
   ResponseEntity<ApiResponse<Void>> handlingRuntimeException(NotFoundException exception) {
     ApiResponse<Void> apiResponse = new ApiResponse<Void>();
 
     apiResponse.setCode(HttpStatus.NOT_FOUND.value());
-    apiResponse.setMessage(HttpStatus.NOT_FOUND.getReasonPhrase());
+    apiResponse.setMessage(exception.getMessage());
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
   }

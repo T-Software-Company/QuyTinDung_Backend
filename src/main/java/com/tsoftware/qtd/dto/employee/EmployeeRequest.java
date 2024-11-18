@@ -1,7 +1,5 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import jakarta.validation.Valid;
@@ -48,7 +46,6 @@ public class EmployeeRequest {
   @NotBlank(message = "LAST_NAME_REQUIRED")
   String lastName;
 
-  //  @NotBlank(message = "ROLE_ID_REQUIRED")
   List<String> roles;
 
   @NotNull(message = "DOB_REQUIRED")
@@ -60,10 +57,14 @@ public class EmployeeRequest {
   Gender gender;
 
   @NotNull(message = "EMPLOYMENT_STATUS_REQUIRED")
-  EmploymentStatus employmentStatus;
+  @Pattern(
+      regexp = "WORKING|ON_LEAVE|RESIGNED",
+      message = "Invalid employmentStatus value should is (WORKING|ON_LEAVE|RESIGNED)")
+  String employmentStatus;
 
   @NotNull(message = "BANNED_STATUS_REQUIRED")
-  Banned banned;
+  @Pattern(regexp = "ACTIVE|LOCKED", message = "Invalid banned value should is (ACTIVE|LOCKED)")
+  String banned;
 
   @NotBlank(message = "PHONE_REQUIRED")
   @Size(max = 15, message = "PHONE_TOO_LONG")
