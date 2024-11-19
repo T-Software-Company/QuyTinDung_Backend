@@ -32,5 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 application-default.*
-.env
+deployment/.env
 service-account.json
+server.key
+keycloak.json

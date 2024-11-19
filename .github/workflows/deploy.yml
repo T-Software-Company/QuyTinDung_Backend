@@ -1,0 +1,56 @@
+name: Deploy app
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Write .env secrets
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > deployment/.env
+          echo "${{ secrets.SSL_KEY }}" > deployment/server.key
+
+      - name: Grant execute permission for the script
+        run: chmod +x deployment/decrypt-keycloak.sh
+
+      - name: Decrypt large secret
+        run: |
+          cd deployment
+          ./decrypt-keycloak.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+
+      - name: Copy secrets files to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          scp -o StrictHostKeyChecking=no -r deployment/* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment 
+          scp -o StrictHostKeyChecking=no -r deployment/.env ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment/.env
+
+      - name: Docker login to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            echo "${{ secrets.GH_TK }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          EOF
+
+      - name: Run Docker Compose on VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd ./tsoftware/qtd/deployment
+            docker compose pull 
+            docker compose up -d 
+          EOF
+
+

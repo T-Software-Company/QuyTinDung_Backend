@@ -18,7 +18,7 @@ public class AssetController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<AssetResponse>> create(
-      @RequestBody AssetRequest assetRequest, @PathVariable Long creditId) {
+      @RequestBody AssetRequest assetRequest, @RequestParam Long creditId) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
             new ApiResponse<>(

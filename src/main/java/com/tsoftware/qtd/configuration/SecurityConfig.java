@@ -23,14 +23,16 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
-        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-        //														auth.requestMatchers("/api-docs", "/api-docs/**", "/swagger-ui/**")
-        //																		.permitAll()
-        //																		.anyRequest().authenticated())
-        //																		.requestMatchers(protectedClientPaths)
-        //																		.authenticated()
-        //																		.anyRequest()
-        //																		.hasRole(Role.ADMIN.name()))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/api-docs", "/api-docs/**", "/swagger-ui/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        //        																		.requestMatchers(protectedClientPaths)
+        //        																		.authenticated()
+        //        																		.anyRequest()
+        //        																		.hasRole(Role.ADMIN.name()))
         .oauth2ResourceServer(
             oauth2 ->
                 oauth2.jwt(
