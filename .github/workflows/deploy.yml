@@ -3,7 +3,7 @@ name: Deploy app
 on:
   workflow_run:
     workflows:
-      - Build
+      - build
     types:
       - completed
 
