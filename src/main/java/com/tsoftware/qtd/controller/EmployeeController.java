@@ -15,9 +15,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +29,12 @@ import org.springframework.web.bind.annotation.*;
 public class EmployeeController {
 
   EmployeeService employeeService;
+  ApproveService approveService;
 
   @PostMapping("/create")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<EmployeeResponse>> create(
       @RequestBody @Valid EmployeeRequest request) {
-    ;
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
             ApiResponse.<EmployeeResponse>builder()
@@ -44,6 +45,7 @@ public class EmployeeController {
   }
 
   @GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getEmployees() {
     return ResponseEntity.ok(
         ApiResponse.<List<EmployeeResponse>>builder()
@@ -74,6 +76,7 @@ public class EmployeeController {
   }
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(
       @PathVariable String id, @RequestBody @Valid EmployeeRequest request) {
 
@@ -86,6 +89,7 @@ public class EmployeeController {
   }
 
   @GetMapping("/roles")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<Role[]>> getRoles() {
     return ResponseEntity.ok(new ApiResponse<>(200, "Successfully", Role.values()));
   }
@@ -104,6 +108,7 @@ public class EmployeeController {
   }
 
   @PostMapping("/{id}/reset-password")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(
       @PathVariable String id, @RequestBody Map<String, Object> request) {
     String newPassword = (String) request.get("newPassword");
@@ -116,6 +121,7 @@ public class EmployeeController {
   }
 
   @PostMapping("/{id}/activate")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable String id) {
     employeeService.activeEmployee(id);
     return ResponseEntity.ok(
@@ -126,6 +132,7 @@ public class EmployeeController {
   }
 
   @PostMapping("/{id}/deactivate")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable String id) {
     employeeService.deactivateEmployee(id);
     return ResponseEntity.ok(
@@ -134,8 +141,6 @@ public class EmployeeController {
             .message("User deactivated successfully")
             .build());
   }
-
-  @Autowired private ApproveService approveService;
 
   @GetMapping("/{id}/approves")
   public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable Long id) {

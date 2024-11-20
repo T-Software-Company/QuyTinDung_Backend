@@ -5,7 +5,7 @@ import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -25,7 +25,10 @@ public class Employee extends AbstractAuditEntity {
   private String email;
   private String firstName;
   private String lastName;
-  private LocalDate dayOfBirth;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  private ZonedDateTime dayOfBirth;
+
   private String phone;
 
   @Enumerated(EnumType.STRING)

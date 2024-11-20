@@ -1,5 +1,7 @@
 package com.tsoftware.qtd.dto.address;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,10 +11,10 @@ import lombok.Setter;
 @Builder
 public class AddressDto {
 
-  private String country;
+  @NotNull @NotBlank private String country;
   private String cityProvince;
-  private String district;
-  private String wardOrCommune;
-  private String streetAddress;
-  private String detail;
+  @NotNull @NotBlank private String district;
+  @NotNull @NotBlank private String wardOrCommune;
+  @NotNull @NotBlank private String streetAddress;
+  @NotNull @NotBlank private String detail;
 }

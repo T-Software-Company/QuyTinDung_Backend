@@ -3,8 +3,8 @@ package com.tsoftware.qtd.dto.employee;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
+import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -13,7 +13,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @NoArgsConstructor
@@ -31,11 +30,8 @@ public class EmployeeResponse {
   String username;
   String firstName;
   String lastName;
-  List<String> roles;
-
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  LocalDate dayOfBirth;
-
+  List<Role> roles;
+  ZonedDateTime dayOfBirth;
   String phone;
   AddressDto address;
   String employeeCode;

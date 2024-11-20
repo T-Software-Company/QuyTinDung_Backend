@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16.2
+    container_name: qtd-postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -14,6 +15,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.0
+    container_name: qtd-keycloak
     command: start-dev --import-realm
     environment:
       KC_HOSTNAME: localhost
@@ -25,7 +27,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres/qtd_tsoftware
+      KC_DB_URL: jdbc:postgresql://qtd-postgres/qtd_tsoftware
       KC_DB_USERNAME: myuser
       KC_DB_PASSWORD: mypassword
       QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
@@ -47,4 +49,5 @@ volumes:
 
 networks:
   keycloak_network:
+    name: keycloak_network
     driver: bridge

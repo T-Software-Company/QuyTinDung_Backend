@@ -12,23 +12,19 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 public class CustomAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
-  private final String REALM_ACCESS = "realm_access";
-  private final String ROLE_PREFIX = "ROLE_";
-  private final String ROLES = "roles";
-
   @Override
   public Collection<GrantedAuthority> convert(Jwt source) {
-    Map<String, Object> realmAccessMap = source.getClaimAsMap(REALM_ACCESS);
-
-    Object roles = realmAccessMap.get(ROLES);
-
-    if (roles instanceof List stringRoles) {
-      return ((List<String>) stringRoles)
-          .stream()
-              .map(s -> new SimpleGrantedAuthority(String.format("%s%s", ROLE_PREFIX, s)))
-              .collect(Collectors.toList());
+    Map<String, Object> realmAccessMap = source.getClaimAsMap("resource_access");
+    var clientAccess = realmAccessMap.get("server");
+    if (clientAccess instanceof Map<?, ?>) {
+      var roles = ((Map<?, ?>) clientAccess).get("roles");
+      if (roles instanceof List<?>) {
+        return ((List<?>) roles)
+            .stream()
+                .map(s -> new SimpleGrantedAuthority(String.format("%s%s", "ROLE_", s)))
+                .collect(Collectors.toList());
+      }
     }
-
     return Collections.emptyList();
   }
 }

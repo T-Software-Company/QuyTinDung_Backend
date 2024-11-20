@@ -47,7 +47,7 @@ public class KeycloakServiceIml implements KeycloakService {
               .map(
                   role -> {
                     try {
-                      return clientResource.roles().get(role).toRepresentation();
+                      return clientResource.roles().get(role.name()).toRepresentation();
                     } catch (jakarta.ws.rs.NotFoundException e) {
                       throw new NotFoundException("Role " + role + " not found");
                     }
@@ -124,7 +124,7 @@ public class KeycloakServiceIml implements KeycloakService {
 
     var clientRoles =
         request.getRoles().stream()
-            .map(role -> clientResource.roles().get(role).toRepresentation())
+            .map(role -> clientResource.roles().get(role.name()).toRepresentation())
             .toList();
     realmResource
         .users()
