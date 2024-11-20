@@ -44,7 +44,9 @@ Examples with optional parts:
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
-if [[ "$current_branch" == "main" ]]; then
+commit_author=$(git config user.name)
+
+if [[ "$current_branch" == "main" && "$commit_author" != "Duncan Nguyen" ]]; then
   echo -e "${RED}Direct commits to the 'main' branch are not allowed.
   Please switch to another branch.${RESET}"
   echo -e "${RED}Commit failed.${RESET}"
