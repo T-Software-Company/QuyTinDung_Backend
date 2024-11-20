@@ -29,12 +29,12 @@ services:
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/keycloak.json
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/tsoftware-realm.json
       KC_HTTPS_KEY_STORE_FILE: /etc/keycloak/server.p12
       KC_HTTPS_KEY_STORE_PASSWORD: ${STORE_PASSWORD}
     restart: always
     volumes:
-      - ./keycloak.json:/opt/keycloak/data/import/keycloak.json
+      - ./tsoftware-realm.json:/opt/keycloak/data/import/tsoftware-realm.json
       - ./server.p12:/etc/keycloak/server.p12
     depends_on:
       - postgres

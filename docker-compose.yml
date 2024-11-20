@@ -1,16 +1,16 @@
 services:
   postgres:
-    image: postgres:16.2  # Chọn phiên bản PostgreSQL
+    image: postgres:16.2
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: qtd_tsoftware          # Tên database
-      POSTGRES_USER: myuser               # Tên người dùng
-      POSTGRES_PASSWORD: mypassword       # Mật khẩu người dùng
+      POSTGRES_DB: qtd_tsoftware
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
     networks:
       - keycloak_network
     ports:
-      - "5432:5432"                       # Mở cổng PostgreSQL
+      - "5432:5432"
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.0
@@ -29,7 +29,7 @@ services:
       KC_DB_USERNAME: myuser
       KC_DB_PASSWORD: mypassword
       QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/keycloak.json
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/tsoftware-realm.json
     ports:
       - 8180:8080
     restart: always
@@ -40,17 +40,6 @@ services:
     networks:
       - keycloak_network
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8081:80"
-    depends_on:
-      - postgres
-    networks:
-      - keycloak_network
 
 volumes:
   postgres_data:

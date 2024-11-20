@@ -36,3 +36,4 @@ deployment/.env
 service-account.json
 deployment/server.key
 deployment/keycloak.json
+deployment/tsoftware-realm.json

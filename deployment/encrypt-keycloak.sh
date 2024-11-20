@@ -1,1 +1,1 @@
-gpg --symmetric --cipher-algo AES256 keycloak.json
+gpg --symmetric --cipher-algo AES256 tsoftware-realm.json
