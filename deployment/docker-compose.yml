@@ -55,9 +55,10 @@ services:
       IDP_REALM: ${IDP_REALM}
     networks:
       - qtd_network
-#  application:
-#    image: ${APPLICATION_IMAGE}
-#    container_name: qtd-application
+    restart: always
+    depends_on:
+      - keycloak
+      - postgres
 
   nginx:
     container_name: qtd-nginx
