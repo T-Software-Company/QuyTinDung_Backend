@@ -81,4 +81,5 @@ volumes:
 
 networks:
   qtd_network:
+    name: qtd_network
     driver: bridge

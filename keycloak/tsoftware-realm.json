@@ -111,6 +111,14 @@
         "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
         "attributes" : { }
       }, {
+        "id" : "1a3a710a-ba4d-4354-bd5c-f43f913c30d5",
+        "name" : "EMPLOYEE",
+        "description" : "",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      }, {
         "id" : "b994e70f-8b5e-4a81-a124-a2540bc0a50a",
         "name" : "REPORT_ACCESS",
         "description" : "",
@@ -441,7 +449,7 @@
     "attributes" : { },
     "realmRoles" : [ ],
     "clientRoles" : {
-      "server" : [ "ASSET_VALUATION_ACCESS", "REPORT_ACCESS", "ADMIN", "CREDIT_ACCESS" ]
+      "server" : [ "ASSET_VALUATION_ACCESS", "EMPLOYEE", "REPORT_ACCESS", "ADMIN", "CREDIT_ACCESS" ]
     }
   }, {
     "id" : "5caf3dc2-4c83-4489-98e7-bd78a07aa7cf",
@@ -646,7 +654,7 @@
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-tsoftware", "ADMIN", "STAFF", "offline_access", "USER", "uma_authorization" ],
     "clientRoles" : {
-      "realm-management" : [ "view-clients" ]
+      "realm-management" : [ "view-clients", "manage-users" ]
     },
     "notBefore" : 0,
     "groups" : [ ]
@@ -665,6 +673,31 @@
     "clientRoles" : {
       "realm-management" : [ "view-clients", "manage-users" ],
       "tsoftware_backend" : [ "uma_protection" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "cb88d208-f19b-4b2f-b256-06c25f3e5b6e",
+    "username" : "string",
+    "firstName" : "string",
+    "lastName" : "string",
+    "email" : "string@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732091890204,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "9b343675-a272-4ec4-bb2a-6dac044bb756",
+      "type" : "password",
+      "createdDate" : 1732091890641,
+      "secretData" : "{\"value\":\"GNR2sgr0te6iaGZrfaIcSCyGatNa5IpzCOjjuSk0r8Q=\",\"salt\":\"ctMJg7/8Fw8WfPo9GNqOfA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "ADMIN" ]
     },
     "notBefore" : 0,
     "groups" : [ ]
@@ -1181,7 +1214,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : true,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "http://localhost:8080/api/v1/swagger-ui/oauth2-redirect.html", "http://localhost:3000", "https://14.225.215.106/*" ],
+    "redirectUris" : [ "http://localhost:8080/api/v1/swagger-ui/oauth2-redirect.html", "https://oauth.pstmn.io/v1/browser-callback", "http://localhost:3000", "https://14.225.215.106/*" ],
     "webOrigins" : [ "http://localhost:8080", "https://14.225.215.106", "http://localhost:3000" ],
     "notBefore" : 0,
     "bearerOnly" : false,
