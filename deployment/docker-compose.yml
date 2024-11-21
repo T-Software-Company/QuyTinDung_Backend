@@ -44,6 +44,7 @@ services:
     image: ${SERVER_IMAGE}
     container_name: qtd-server
     environment:
+      KEY_ALIAS: ${KEY_ALIAS}
       APP_PORT: ${APP_PORT}
       DB_URL: ${DB_URL}
       DB_USERNAME: ${POSTGRES_USER}
