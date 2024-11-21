@@ -19,10 +19,18 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class Employee extends AbstractAuditEntity {
 
+  @Column(unique = true)
   private String userId;
+
+  @Column(unique = true)
   private String username;
+
+  @Column(unique = true)
   private String employeeCode;
+
+  @Column(unique = true)
   private String email;
+
   private String firstName;
   private String lastName;
 

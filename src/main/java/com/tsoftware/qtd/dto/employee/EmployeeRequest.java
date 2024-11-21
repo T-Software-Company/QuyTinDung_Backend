@@ -1,5 +1,7 @@
 package com.tsoftware.qtd.dto.employee;
 
+import com.tsoftware.qtd.constants.EnumType.Banned;
+import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
@@ -47,11 +49,11 @@ public class EmployeeRequest {
   @Pattern(
       regexp = "WORKING|ON_LEAVE|RESIGNED",
       message = "Invalid employmentStatus value should is (WORKING|ON_LEAVE|RESIGNED)")
-  String employmentStatus;
+  EmploymentStatus employmentStatus;
 
   @NotNull
   @Pattern(regexp = "ACTIVE|LOCKED", message = "Invalid banned value should is (ACTIVE|LOCKED)")
-  String banned;
+  Banned banned;
 
   @NotBlank
   @Size(max = 15)

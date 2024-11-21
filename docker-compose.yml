@@ -1,11 +1,14 @@
 services:
   postgres:
-    image: postgres:16.2
+    build:
+      context: .
+      dockerfile: Dockerfile-postgres
+    image: qtd-postgres
     container_name: qtd-postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: qtd_tsoftware
+      POSTGRES_INIT_DB: "qtd_tsoftware qtd_tsoftware_1"
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     networks:

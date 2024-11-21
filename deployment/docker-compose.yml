@@ -1,11 +1,12 @@
 services:
   postgres:
     container_name: qtd-postgres
-    image: postgres:17.1
+    image: ${DB_IMAGE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_INITDB}
+      POSTGRES_INIT_DB: "qtd_tsoftware qtd_tsoftware_1"
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
