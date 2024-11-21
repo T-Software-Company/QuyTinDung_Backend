@@ -8,7 +8,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_INIT_DB: "qtd_tsoftware qtd_tsoftware_1"
+      POSTGRES_INIT_DB: qtd_tsoftware,qtd_tsoftware_1
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     networks:

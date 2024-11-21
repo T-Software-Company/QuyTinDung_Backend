@@ -3,7 +3,7 @@ set -e
 
 if [ -n "$POSTGRES_INIT_DB" ]; then
   echo "Databases to create: $POSTGRES_INIT_DB"
-  IFS=' ' read -r -a db_array <<< "$POSTGRES_INIT_DB"
+  IFS=',' read -r -a db_array <<< "$POSTGRES_INIT_DB"
 
   for db in "${db_array[@]}"; do
     echo "Creating database: $db"
