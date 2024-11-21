@@ -3,6 +3,7 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.ApiResponse;
 import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
@@ -15,6 +16,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,10 +49,22 @@ public class EmployeeController {
 
   @GetMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getEmployees() {
+  public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getEmployees(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    size = size > 100 ? 100 : size;
+    Pageable pageable = PageRequest.of(page, size);
+    var employeesPage = employeeService.getEmployees(pageable);
+    var pageResponse =
+        new PageResponse<>(
+            employeesPage.getContent(),
+            employeesPage.getNumber(),
+            employeesPage.getSize(),
+            employeesPage.getTotalElements(),
+            employeesPage.getTotalPages());
+
     return ResponseEntity.ok(
-        ApiResponse.<List<EmployeeResponse>>builder()
-            .result(employeeService.getEmployees())
+        ApiResponse.<PageResponse<EmployeeResponse>>builder()
+            .result(pageResponse)
             .code(HttpStatus.OK.value())
             .build());
   }

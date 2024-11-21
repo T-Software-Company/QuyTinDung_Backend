@@ -3,10 +3,11 @@ package com.tsoftware.qtd.service;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface EmployeeService {
-  List<EmployeeResponse> getEmployees();
+  Page<EmployeeResponse> getEmployees(Pageable pageable);
 
   EmployeeResponse getProfile();
 

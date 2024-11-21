@@ -37,7 +37,7 @@ public class InitDatabase implements CommandLineRunner {
   private void createAdmin() {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
     if (!employeeRepository.existsByEmail("admin@gmail.com")
-        && !userResource.searchByEmail("", true).isEmpty()) {
+        && userResource.searchByEmail("", true).isEmpty()) {
       var employeeRequest =
           EmployeeRequest.builder()
               .email("admin@gmail.com")
@@ -77,7 +77,7 @@ public class InitDatabase implements CommandLineRunner {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
 
     if (!employeeRepository.existsByEmail(email)
-        && !userResource.searchByEmail("", true).isEmpty()) {
+        && userResource.searchByEmail("", true).isEmpty()) {
       var random = new Random();
       var employeeRequest =
           EmployeeRequest.builder()

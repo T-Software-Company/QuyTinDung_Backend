@@ -3,17 +3,16 @@ package com.tsoftware.qtd.service.impl;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.exception.NotFoundException;
-import com.tsoftware.qtd.mapper.AddressMapper;
 import com.tsoftware.qtd.mapper.EmployeeMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +26,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   EmployeeRepository employeeRepository;
   EmployeeMapper employeeMapper;
-  AddressMapper addressMapper;
   KeycloakService keycloakService;
 
   @Override
-  public List<EmployeeResponse> getEmployees() {
-    return employeeRepository.findAll().stream()
-        .map(employeeMapper::toEmployeeResponse)
-        .collect(Collectors.toList());
+  public Page<EmployeeResponse> getEmployees(Pageable pageable) {
+    return employeeRepository.findAll(pageable).map(employeeMapper::toEmployeeResponse);
   }
 
   @Override
