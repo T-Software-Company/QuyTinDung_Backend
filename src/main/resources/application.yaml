@@ -6,11 +6,26 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-  ssl.key-store: classpath:server.p12
-  ssl.key-store-password: ${STORE_PASSWORD}
-  ssl.key-store-type: PKCS12
+  ssl:
+    bundle: qtd-server
+    client-auth: want
 
 spring:
+  ssl:
+    bundle:
+      jks:
+        qtd-server:
+          key:
+            alias: ${KEY_ALIAS}
+            password: ${STORE_PASSWORD}
+          keystore:
+            location: classpath:server.p12
+            password: ${STORE_PASSWORD}
+            type: PKCS12
+#          truststore:
+#            location: classpath:server.p12
+#            password:  ${STORE_PASSWORD}
+#            type: PKCS12
   threads:
     virtual:
       enabled: true
@@ -35,16 +50,7 @@ spring:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
 
-#  ssl:
-#    bundle:
-#      jks:
-#        server:
-#          key:
-#            alias: "server"
-#          keystore:
-#            location: "classpath:server.p12"
-#            password: "secret"
-#            type: "PKCS12"
+
 
 idp:
   server-url: ${IDP_URL}
