@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -118,6 +119,13 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
   public ResponseEntity<ApiResponse<Object>> handleHHttpMediaTypeNotSupportedException(
       HttpMediaTypeNotSupportedException e) {
+    return ResponseEntity.badRequest()
+        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
+  }
+
+  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+  public ResponseEntity<ApiResponse<Object>> handleHttpRequestMethodNotSupportedException(
+      HttpRequestMethodNotSupportedException e) {
     return ResponseEntity.badRequest()
         .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
   }

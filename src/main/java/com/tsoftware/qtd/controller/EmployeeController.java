@@ -34,7 +34,7 @@ public class EmployeeController {
   EmployeeService employeeService;
   ApproveService approveService;
 
-  @PostMapping("/create")
+  @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<EmployeeResponse>> create(
       @RequestBody @Valid EmployeeRequest request) {
