@@ -109,4 +109,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     keycloakService.deactivateUser(userId);
     employeeRepository.save(employee);
   }
+
+  @Override
+  public EmployeeResponse getEmployee(Long id) {
+
+    return employeeMapper.toEmployeeResponse(
+        employeeRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("Employee not found")));
+  }
 }

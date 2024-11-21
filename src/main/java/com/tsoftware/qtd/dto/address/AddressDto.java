@@ -16,5 +16,5 @@ public class AddressDto {
   @NotNull @NotBlank private String district;
   @NotNull @NotBlank private String wardOrCommune;
   @NotNull @NotBlank private String streetAddress;
-  @NotNull @NotBlank private String detail;
+  private String detail;
 }

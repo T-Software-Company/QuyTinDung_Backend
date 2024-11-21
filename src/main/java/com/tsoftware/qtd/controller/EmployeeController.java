@@ -63,10 +63,18 @@ public class EmployeeController {
             .build());
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable Long id) {
+    return ResponseEntity.ok(
+        ApiResponse.<EmployeeResponse>builder()
+            .code(HttpStatus.OK.value())
+            .result(employeeService.getEmployee(id))
+            .build());
+  }
+
   @PutMapping("/profile")
   public ResponseEntity<ApiResponse<EmployeeResponse>> updateMyProfile(
       @RequestBody @Valid ProfileRequest request) {
-    ;
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())

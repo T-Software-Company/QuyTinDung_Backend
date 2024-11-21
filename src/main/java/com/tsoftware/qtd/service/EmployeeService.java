@@ -21,4 +21,6 @@ public interface EmployeeService {
   void activeEmployee(String userId);
 
   void deactivateEmployee(String userId);
+
+  EmployeeResponse getEmployee(Long id);
 }

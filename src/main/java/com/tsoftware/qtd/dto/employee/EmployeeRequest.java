@@ -55,6 +55,6 @@ public class EmployeeRequest {
 
   @NotBlank
   @Size(max = 15)
-  @Pattern(regexp = "^[0-9\\-\\+]{9,15}$", message = "INVALID_PHONE_FORMAT")
+  @Pattern(regexp = "^[0-9\\-\\+]{9,15}$")
   String phone;
 }
