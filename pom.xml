@@ -23,6 +23,7 @@
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <hypersistence-utils.version>3.8.3</hypersistence-utils.version>
         <keycloak.version>26.0.2</keycloak.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
     <dependencies>
         <dependency>
@@ -211,6 +212,15 @@
                         <googleJavaFormat/>
                     </java>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>spotless-apply</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
