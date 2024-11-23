@@ -6,22 +6,22 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-  ssl:
-    bundle: qtd-server
-    client-auth: want
+#  ssl:
+#    bundle: qtd-server
+#    client-auth: want
 
 spring:
-  ssl:
-    bundle:
-      jks:
-        qtd-server:
-          key:
-            alias: ${KEY_ALIAS}
-            password: ${STORE_PASSWORD}
-          keystore:
-            location: classpath:server.p12
-            password: ${STORE_PASSWORD}
-            type: PKCS12
+#  ssl:
+#    bundle:
+#      jks:
+#        qtd-server:
+#          key:
+#            alias: ${KEY_ALIAS}
+#            password: ${STORE_PASSWORD}
+#          keystore:
+#            location: classpath:server.p12
+#            password: ${STORE_PASSWORD}
+#            type: PKCS12
 #          truststore:
 #            location: classpath:server.p12
 #            password:  ${STORE_PASSWORD}
