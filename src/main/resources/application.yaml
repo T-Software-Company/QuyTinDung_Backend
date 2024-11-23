@@ -54,6 +54,7 @@ spring:
 
 idp:
   server-url: ${IDP_URL}
+  server-external-url: ${IDP_EXTERNAL_URL}
   client-id: ${CLIENT_ID}
   client-secret: ${CLIENT_SECRET}
   realm: ${IDP_REALM}

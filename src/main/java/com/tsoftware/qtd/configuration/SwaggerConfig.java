@@ -20,12 +20,12 @@ public class SwaggerConfig {
   @Bean
   public OpenAPI customerOpenAPI() {
     String tokenUrl =
-        idpProperties.getServerUrl()
+        idpProperties.getServerExternalUrl()
             + "/realms/"
             + idpProperties.getRealm()
             + "/protocol/openid-connect/token";
     String authorizationUrl =
-        idpProperties.getServerUrl()
+        idpProperties.getServerExternalUrl()
             + "/realms/"
             + idpProperties.getRealm()
             + "/protocol/openid-connect/auth";

@@ -25,8 +25,7 @@ jobs:
       - name: Decrypt large secret
         run: |
           ./decrypt-service-account.sh 
-          cat service-account.json
-          ls 
+          ls
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
