@@ -45,7 +45,6 @@ services:
     image: ${SERVER_IMAGE}
     container_name: qtd-server
     environment:
-      KEY_ALIAS: ${KEY_ALIAS}
       APP_PORT: ${APP_PORT}
       DB_URL: ${DB_URL}
       DB_USERNAME: ${POSTGRES_USER}
@@ -75,7 +74,6 @@ services:
       - ./server.crt:/etc/ssl/certs/server.crt
       - ./server.key:/etc/ssl/private/server.key
     depends_on:
-#      - application
       - server
       - keycloak
     restart: always
