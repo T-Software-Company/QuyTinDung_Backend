@@ -3,7 +3,7 @@ services:
     container_name: qtd-postgres
     image: ${DB_IMAGE}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - qtd_postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_INIT_DB: ${POSTGRES_INIT_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -20,7 +20,7 @@ services:
       KC_HOSTNAME_PORT: ${KC_HOSTNAME_PORT}
       KC_HTTP_RELATIVE_PATH: ${KC_HTTP_RELATIVE_PATH}
       KC_HOSTNAME_PATH: ${KC_HOSTNAME_PATH}
-      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HOSTNAME_STRICT_HTTPS: true
       KC_HTTP_ENABLED: true
       KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
@@ -82,8 +82,9 @@ services:
     networks:
       - qtd_network
 volumes:
-  postgres_data:
+  qtd_postgres:
     driver: local
+    name: qtd_postgres
 
 networks:
   qtd_network:
