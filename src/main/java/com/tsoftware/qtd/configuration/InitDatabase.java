@@ -29,10 +29,8 @@ public class InitDatabase implements CommandLineRunner {
   @Override
   @Transactional
   public void run(String... args) throws Exception {
-
     createAdmin();
     createEmployees();
-    keycloak.close();
   }
 
   private void createAdmin() {

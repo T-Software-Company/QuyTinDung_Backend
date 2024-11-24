@@ -120,6 +120,8 @@ if [ ! -f "$MAPPER_FILE" ]; then
 cat <<EOF > "$MAPPER_FILE"
 package $PACKAGE_PATH.mapper;
 
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import $PACKAGE_PATH.dto.${ENTITY_NAME}Dto;
@@ -129,6 +131,7 @@ import $PACKAGE_PATH.entity.$ENTITY_NAME;
 public interface ${ENTITY_NAME}Mapper {
     ${ENTITY_NAME} toEntity(${ENTITY_NAME}Dto dto);
     ${ENTITY_NAME}Dto toDto(${ENTITY_NAME} entity);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntity(${ENTITY_NAME}Dto dto, @MappingTarget ${ENTITY_NAME} entity);
 }
 EOF

@@ -1,16 +1,24 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.employee.GroupDto;
-import java.util.List;
+import com.tsoftware.qtd.dto.employee.GroupRequest;
+import com.tsoftware.qtd.dto.employee.GroupResponse;
+import com.tsoftware.qtd.entity.Group;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface GroupService {
-  GroupDto create(GroupDto groupDto);
+  GroupResponse create(GroupRequest groupRequest);
 
-  GroupDto update(Long id, GroupDto groupDto);
+  GroupResponse update(Long id, GroupRequest groupRequest);
 
   void delete(Long id);
 
-  GroupDto getById(Long id);
+  GroupResponse getById(Long id);
 
-  List<GroupDto> getAll();
+  Page<GroupResponse> getAll(Specification<Group> specification, Pageable pageable);
+
+  void join(Long groupId, Long employeeId);
+
+  void leave(Long groupId, Long employeeId);
 }

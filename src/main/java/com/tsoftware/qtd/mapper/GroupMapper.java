@@ -1,15 +1,19 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.employee.GroupDto;
+import com.tsoftware.qtd.dto.employee.GroupRequest;
+import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface GroupMapper {
-  Group toEntity(GroupDto dto);
+  Group toEntity(GroupRequest dto);
 
-  GroupDto toDto(Group entity);
+  GroupResponse toResponse(Group entity);
 
-  void updateEntity(GroupDto dto, @MappingTarget Group entity);
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  void updateEntity(GroupRequest dto, @MappingTarget Group entity);
 }

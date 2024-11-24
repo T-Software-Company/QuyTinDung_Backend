@@ -1,51 +1,105 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.employee.GroupDto;
+import com.tsoftware.qtd.dto.employee.GroupRequest;
+import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
 import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
 import com.tsoftware.qtd.mapper.GroupMapper;
+import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.GroupRepository;
 import com.tsoftware.qtd.service.GroupService;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tsoftware.qtd.service.KeycloakService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GroupServiceImpl implements GroupService {
 
-  @Autowired private GroupRepository groupRepository;
+  private GroupRepository groupRepository;
 
-  @Autowired private GroupMapper groupMapper;
+  private GroupMapper groupMapper;
+  private final EmployeeRepository employeeRepository;
+  private final KeycloakService keycloakService;
 
   @Override
-  public GroupDto create(GroupDto groupDto) {
-    Group group = groupMapper.toEntity(groupDto);
-    return groupMapper.toDto(groupRepository.save(group));
+  public GroupResponse create(GroupRequest groupRequest) {
+    Group group = groupMapper.toEntity(groupRequest);
+    var kcGroupId = keycloakService.createGroup(groupRequest);
+    group.setKcGroupId(kcGroupId);
+    return groupMapper.toResponse(groupRepository.save(group));
   }
 
   @Override
-  public GroupDto update(Long id, GroupDto groupDto) {
+  public GroupResponse update(Long id, GroupRequest groupRequest) {
     Group group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
-    groupMapper.updateEntity(groupDto, group);
-    return groupMapper.toDto(groupRepository.save(group));
+    keycloakService.updateGroup(groupRequest, group.getKcGroupId());
+    groupMapper.updateEntity(groupRequest, group);
+    return groupMapper.toResponse(groupRepository.save(group));
   }
 
   @Override
   public void delete(Long id) {
+    var group =
+        groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
+    keycloakService.deleteGroup(group.getKcGroupId());
     groupRepository.deleteById(id);
   }
 
   @Override
-  public GroupDto getById(Long id) {
+  public GroupResponse getById(Long id) {
     Group group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
-    return groupMapper.toDto(group);
+    return groupMapper.toResponse(group);
   }
 
   @Override
-  public List<GroupDto> getAll() {
-    return groupRepository.findAll().stream().map(groupMapper::toDto).collect(Collectors.toList());
+  public Page<GroupResponse> getAll(Specification<Group> specification, Pageable pageable) {
+    try {
+      return groupRepository.findAll(specification, pageable).map(groupMapper::toResponse);
+    } catch (DataIntegrityViolationException e) {
+      throw new SpringFilterBadRequestException(e.getMessage());
+    }
+  }
+
+  @Override
+  public void join(Long groupId, Long employeeId) {
+    var group =
+        groupRepository
+            .findById(groupId)
+            .orElseThrow(() -> new NotFoundException("Group not found"));
+    var employee =
+        employeeRepository
+            .findById(employeeId)
+            .orElseThrow(() -> new NotFoundException("Employee not found"));
+    var employees = group.getEmployees();
+    employees.add(employee);
+    groupRepository.save(group);
+  }
+
+  @Override
+  public void leave(Long groupId, Long employeeId) {
+    var group =
+        groupRepository
+            .findById(groupId)
+            .orElseThrow(() -> new NotFoundException("Group not found"));
+    var employees = group.getEmployees();
+    var employee =
+        employeeRepository
+            .findById(employeeId)
+            .orElseThrow(() -> new NotFoundException("Employee not found"));
+    employees.remove(employee);
+    groupRepository.save(group);
   }
 }
