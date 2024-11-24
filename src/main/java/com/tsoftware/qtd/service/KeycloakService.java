@@ -1,10 +1,11 @@
 package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
+import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 
 public interface KeycloakService {
-  public String createUser(EmployeeRequest employeeRequest);
+  String createUser(EmployeeRequest employeeRequest);
 
   void updateUser(ProfileRequest request, String userId);
 
@@ -15,4 +16,10 @@ public interface KeycloakService {
   void deactivateUser(String userId);
 
   void resetPassword(String userId, String newPassword);
+
+  String createGroup(GroupRequest group);
+
+  void updateGroup(GroupRequest group, String kcGroupId);
+
+  void deleteGroup(String kcGroupId);
 }

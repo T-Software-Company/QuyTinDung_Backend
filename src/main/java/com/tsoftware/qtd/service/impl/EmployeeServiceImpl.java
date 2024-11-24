@@ -2,7 +2,9 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.dto.employee.*;
+import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
 import com.tsoftware.qtd.mapper.EmployeeMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.service.EmployeeService;
@@ -11,8 +13,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,5 +117,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found")));
+  }
+
+  @Override
+  public Page<EmployeeResponse> getAll(Specification<Employee> spec, Pageable page) {
+    try {
+      return employeeRepository.findAll(spec, page).map(employeeMapper::toEmployeeResponse);
+    } catch (DataIntegrityViolationException e) {
+      throw new SpringFilterBadRequestException(e.getMessage());
+    }
   }
 }

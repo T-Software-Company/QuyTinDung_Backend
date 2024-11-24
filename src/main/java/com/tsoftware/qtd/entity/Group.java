@@ -18,7 +18,11 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "`group`")
 public class Group extends AbstractAuditEntity {
 
+  @Column(unique = true, nullable = false)
   private String name;
+
+  @Column(unique = true, nullable = false)
+  private String kcGroupId;
 
   @ManyToMany(fetch = FetchType.LAZY)
   private List<Employee> employees;

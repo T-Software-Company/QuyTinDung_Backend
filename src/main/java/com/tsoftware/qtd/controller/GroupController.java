@@ -1,43 +1,86 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.dto.ApiResponse;
-import com.tsoftware.qtd.dto.employee.GroupDto;
+import com.tsoftware.qtd.dto.PageResponse;
+import com.tsoftware.qtd.dto.employee.GroupRequest;
+import com.tsoftware.qtd.dto.employee.GroupResponse;
+import com.tsoftware.qtd.entity.Group;
+import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.GroupService;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.turkraft.springfilter.boot.Filter;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/groups")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class GroupController {
 
-  @Autowired private GroupService groupService;
+  GroupService groupService;
+  private final PageResponseMapper pageResponseMapper;
 
+  @PreAuthorize("hasAnyRole('ADMIN')")
   @PostMapping
-  public ResponseEntity<ApiResponse<GroupDto>> create(@RequestBody GroupDto groupDto) {
-    return ResponseEntity.ok(new ApiResponse<>(1000, "Created", groupService.create(groupDto)));
+  public ResponseEntity<ApiResponse<GroupResponse>> create(@RequestBody GroupRequest groupRequest) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(HttpStatus.OK.value(), "Created", groupService.create(groupRequest)));
   }
 
+  @PreAuthorize("hasAnyRole('ADMIN')")
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<GroupDto>> update(
-      @PathVariable Long id, @RequestBody GroupDto groupDto) {
-    return ResponseEntity.ok(new ApiResponse<>(1000, "Updated", groupService.update(id, groupDto)));
+  public ResponseEntity<ApiResponse<GroupResponse>> update(
+      @PathVariable Long id, @RequestBody GroupRequest groupRequest) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(HttpStatus.OK.value(), "Updated", groupService.update(id, groupRequest)));
   }
 
+  @PreAuthorize("hasAnyRole('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
     groupService.delete(id);
-    return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
   }
 
+  @PreAuthorize("hasAnyRole('ADMIN')")
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<GroupDto>> getById(@PathVariable Long id) {
-    return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", groupService.getById(id)));
+  public ResponseEntity<ApiResponse<GroupResponse>> getById(@PathVariable Long id) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(HttpStatus.OK.value(), "Fetched", groupService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<GroupDto>>> getAll() {
-    return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", groupService.getAll()));
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  public ResponseEntity<ApiResponse<PageResponse<GroupResponse>>> getAll(
+      @Filter Specification<Group> spec, Pageable page) {
+    Page<GroupResponse> groups = groupService.getAll(spec, page);
+
+    return ResponseEntity.ok(
+        new ApiResponse<>(
+            HttpStatus.OK.value(), "Fetched All", pageResponseMapper.toPageResponse(groups)));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/add-employee")
+  public ResponseEntity<ApiResponse<Void>> joinGroup(
+      @PathVariable Long id, @RequestParam Long employeeId) {
+    groupService.join(id, employeeId);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/remove-employee")
+  public ResponseEntity<ApiResponse<Void>> LeaveGroup(
+      @PathVariable Long id, @RequestParam Long employeeId) {
+    groupService.leave(id, employeeId);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }
 }

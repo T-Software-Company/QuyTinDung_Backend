@@ -7,8 +7,12 @@ import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
+import com.tsoftware.qtd.entity.Employee;
+import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.ApproveService;
 import com.tsoftware.qtd.service.EmployeeService;
+import com.tsoftware.qtd.service.GroupService;
+import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +20,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +38,8 @@ public class EmployeeController {
 
   EmployeeService employeeService;
   ApproveService approveService;
+  private final GroupService groupService;
+  private final PageResponseMapper pageResponseMapper;
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
@@ -47,20 +54,12 @@ public class EmployeeController {
                 .build());
   }
 
-  @GetMapping
+  @GetMapping()
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getEmployees(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-    size = size > 100 ? 100 : size;
-    Pageable pageable = PageRequest.of(page, size);
-    var employeesPage = employeeService.getEmployees(pageable);
-    var pageResponse =
-        new PageResponse<>(
-            employeesPage.getContent(),
-            employeesPage.getNumber(),
-            employeesPage.getSize(),
-            employeesPage.getTotalElements(),
-            employeesPage.getTotalPages());
+  public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAllEmployees(
+      @Filter Specification<Employee> spec, Pageable page) {
+    Page<EmployeeResponse> employeesPage = employeeService.getAll(spec, page);
+    var pageResponse = pageResponseMapper.toPageResponse(employeesPage);
 
     return ResponseEntity.ok(
         ApiResponse.<PageResponse<EmployeeResponse>>builder()
@@ -168,6 +167,15 @@ public class EmployeeController {
   @GetMapping("/{id}/approves")
   public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable Long id) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Fetched All", approveService.getByApproverId(id)));
+        new ApiResponse<>(
+            HttpStatus.OK.value(), "Fetched All", approveService.getByApproverId(id)));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/join-group")
+  public ResponseEntity<ApiResponse<Void>> joinGroup(
+      @PathVariable Long id, @RequestParam Long groupId) {
+    groupService.join(groupId, id);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Joined", null));
   }
 }

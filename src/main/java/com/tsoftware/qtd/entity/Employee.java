@@ -7,7 +7,10 @@ import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter

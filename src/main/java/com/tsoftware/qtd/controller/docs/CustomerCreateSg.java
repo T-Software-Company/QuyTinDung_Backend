@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.controller;
+package com.tsoftware.qtd.controller.docs;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import io.swagger.v3.oas.annotations.Operation;

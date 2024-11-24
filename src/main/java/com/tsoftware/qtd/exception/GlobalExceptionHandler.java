@@ -129,4 +129,11 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest()
         .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
   }
+
+  @ExceptionHandler(SpringFilterBadRequestException.class)
+  public ResponseEntity<ApiResponse<Object>> handleSpringFilterBadRequestException(
+      SpringFilterBadRequestException e) {
+    return ResponseEntity.badRequest()
+        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "String filter is bad", null));
+  }
 }

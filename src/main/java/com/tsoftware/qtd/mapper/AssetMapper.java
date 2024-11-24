@@ -3,8 +3,10 @@ package com.tsoftware.qtd.mapper;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.entity.Asset;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(
     componentModel = "spring",
@@ -22,5 +24,6 @@ public interface AssetMapper {
 
   AssetResponse toResponse(Asset entity);
 
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(AssetRequest dto, @MappingTarget Asset entity);
 }
