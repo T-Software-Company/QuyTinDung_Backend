@@ -3,7 +3,6 @@ package com.tsoftware.qtd.entity;
 import com.tsoftware.qtd.constants.EnumType.Banned;
 import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -64,6 +63,6 @@ public class Employee extends AbstractAuditEntity {
   @ManyToMany(mappedBy = "employees", fetch = FetchType.LAZY)
   private List<Group> groups;
 
-  @Enumerated(EnumType.STRING)
+  @ManyToMany(mappedBy = "employees")
   private List<Role> roles;
 }
