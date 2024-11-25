@@ -10,11 +10,13 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - qtd_network
+    ports:
+      - "5432:5432"
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.0
     container_name: qtd-keycloak
-    command: start  --import-realm
+    command: start-dev --import-realm
     environment:
       KC_HOSTNAME: ${KC_HOSTNAME}
       KC_HOSTNAME_PORT: ${KC_HOSTNAME_PORT}
@@ -31,14 +33,16 @@ services:
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
       KEYCLOAK_IMPORT: /opt/keycloak/data/import/tsoftware-realm.json
-      KC_HTTPS_KEY_STORE_FILE: /etc/keycloak/server.p12
-      KC_HTTPS_KEY_STORE_PASSWORD: ${STORE_PASSWORD}
+#      KC_HTTPS_KEY_STORE_FILE: /etc/keycloak/server.p12
+#      KC_HTTPS_KEY_STORE_PASSWORD: ${STORE_PASSWORD}
     restart: always
     volumes:
       - ./tsoftware-realm.json:/opt/keycloak/data/import/tsoftware-realm.json
       - ./server.p12:/etc/keycloak/server.p12
     depends_on:
       - postgres
+    ports:
+      - "8180:8080"
     networks:
       - qtd_network
   server:
@@ -59,26 +63,28 @@ services:
     networks:
       - qtd_network
     restart: always
+    ports:
+      - "8080:8080"
     depends_on:
       - keycloak
       - postgres
 
-  nginx:
-    container_name: qtd-nginx
-    image: nginx:latest
-    ports:
-      - "8080:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./server.crt:/etc/ssl/certs/server.crt
-      - ./server.key:/etc/ssl/private/server.key
-    depends_on:
-      - server
-      - keycloak
-    restart: always
-    networks:
-      - qtd_network
+#  nginx:
+#    container_name: qtd-nginx
+#    image: nginx:latest
+#    ports:
+#      - "8080:8080"
+#      - "443:443"
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+#      - ./server.crt:/etc/ssl/certs/server.crt
+#      - ./server.key:/etc/ssl/private/server.key
+#    depends_on:
+#      - server
+#      - keycloak
+#    restart: always
+#    networks:
+#      - qtd_network
 volumes:
   qtd_postgres:
     driver: local
