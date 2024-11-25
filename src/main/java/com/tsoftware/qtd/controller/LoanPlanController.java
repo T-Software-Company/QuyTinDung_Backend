@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.credit.LoanPlanRequest;
 import com.tsoftware.qtd.dto.credit.LoanPlanResponse;
 import com.tsoftware.qtd.service.LoanPlanService;

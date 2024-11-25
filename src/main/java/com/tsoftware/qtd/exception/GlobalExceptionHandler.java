@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.exception;
 
-import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.commonlib.model.ApiResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,5 +135,20 @@ public class GlobalExceptionHandler {
       SpringFilterBadRequestException e) {
     return ResponseEntity.badRequest()
         .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "String filter is bad", null));
+  }
+
+  @ExceptionHandler(CommonException.class)
+  public ResponseEntity<ApiResponse<?>> handleRuntimeException(CommonException ex) {
+    CommonError error = ex.getResponse();
+    String message = ex.getMessage();
+    var params = ex.getParameters().toArray();
+    String errorMessage = String.format(message.replace("{}", "%s"), params);
+    return getResponse(error, errorMessage);
+  }
+
+  private ResponseEntity<ApiResponse<?>> getResponse(CommonError error, String message) {
+    return new ResponseEntity<>(
+        ApiResponse.builder().code(error.getHttpStatus().value()).message(message).build(),
+        error.getHttpStatus());
   }
 }

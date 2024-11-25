@@ -1,21 +1,81 @@
 package com.tsoftware.qtd.service.impl;
 
+import com.tsoftware.qtd.constants.EnumType.DocumentType;
+import com.tsoftware.qtd.dto.document.DocumentDTO;
 import com.tsoftware.qtd.entity.AbstractAuditEntity;
+import com.tsoftware.qtd.entity.Customer;
+import com.tsoftware.qtd.entity.Document;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
+import com.tsoftware.qtd.mapper.DtoMapper;
+import com.tsoftware.qtd.repository.DocumentRepository;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class DocumentService {
+
+  private final GoogleCloudStorageService storageService;
+  private final DocumentRepository documentRepository;
+  private final DtoMapper dtoMapper;
+
+  public DocumentDTO upload(MultipartFile file, DocumentType type) {
+    validateFile(file);
+    var url = storageService.upload(file);
+    DocumentDTO documentDTO =
+        DocumentDTO.builder()
+            .url(url)
+            .title(file.getOriginalFilename())
+            .isUsed(false)
+            .type(type)
+            .build();
+    documentRepository.save(dtoMapper.toEntity(documentDTO));
+    return documentDTO;
+  }
+
+  private void validateFile(MultipartFile file) {
+    if (Objects.isNull(file)) {
+      throw new CommonException(ErrorType.REQUEST_BODY_NOT_VALID, "File is required.");
+    }
+    if (file.isEmpty()) {
+      throw new CommonException(ErrorType.REQUEST_BODY_NOT_VALID, "File is empty.");
+    }
+    if (Objects.isNull(file.getOriginalFilename())) {
+      throw new CommonException(ErrorType.REQUEST_BODY_NOT_VALID, "File name is required.");
+    }
+  }
+
+  public DocumentDTO getDocument(Long id) {
+    var document =
+        documentRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
+    return dtoMapper.toDto(document);
+  }
+
+  public List<DocumentDTO> getDocumentBelongToCustomer(Long customerId) {
+    return documentRepository.findByCustomerId(customerId).stream().map(dtoMapper::toDto).toList();
+  }
 
   public InputStream replace(Object object, InputStream templateFile, int depth) throws Exception {
     // Convert object to map for replacement
@@ -134,5 +194,21 @@ public class DocumentService {
         || value instanceof Number
         || value instanceof Boolean
         || value.getClass().isEnum();
+  }
+
+  public void signCustomerDocument(Customer customer, Set<String> urls) {
+    var documentList = documentRepository.findByUrlIn(urls);
+    documentList.forEach(
+        document -> {
+          document.setCustomerId(customer.getId());
+          document.setIsUsed(true);
+        });
+    documentRepository.saveAll(documentList);
+  }
+
+  public Set<String> findDocumentByUrls(Set<String> urls) {
+    return documentRepository.findByUrlIn(urls).stream()
+        .map(Document::getUrl)
+        .collect(Collectors.toSet());
   }
 }

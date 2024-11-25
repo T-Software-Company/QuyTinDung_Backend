@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Getter
@@ -51,6 +50,6 @@ public class CMNDRequest {
   @NotBlank(message = "ISSUING_AUTHORITY_REQUIRED")
   String issuingAuthority;
 
-  @NotNull MultipartFile frontPhotoFile;
-  @NotNull MultipartFile backPhotoFile;
+  @NotNull String frontPhotoURL;
+  @NotNull String backPhotoURL;
 }

@@ -2,9 +2,14 @@ package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import java.time.ZonedDateTime;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
@@ -31,7 +36,4 @@ public class PassPort extends AbstractAuditEntity {
 
   @Enumerated(EnumType.STRING)
   private Gender gender;
-
-  @OneToOne(mappedBy = "passPort", fetch = FetchType.LAZY)
-  private Customer customer;
 }

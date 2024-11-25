@@ -5,13 +5,19 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class GoogleCloudStorageService {
 
@@ -51,5 +57,27 @@ public class GoogleCloudStorageService {
     if (blob != null) {
       blob.delete();
     }
+  }
+
+  public String upload(MultipartFile file) {
+    try {
+      String fileName = getFileName(file.getOriginalFilename());
+      return uploadFile(fileName, file.getInputStream());
+    } catch (Exception e) {
+      log.error("Error uploading file ", e);
+      throw new CommonException(ErrorType.UNEXPECTED, "Error uploading file.");
+    }
+  }
+
+  private String getFileName(String fileName) {
+    return String.format("%s_%s.%s", fileName, UUID.randomUUID(), getFileExtension(fileName));
+  }
+
+  private String getFileExtension(String fileName) {
+    int lastIndexOfDot = fileName.lastIndexOf('.');
+    if (lastIndexOfDot == -1 || lastIndexOfDot == 0) {
+      return "";
+    }
+    return fileName.substring(lastIndexOfDot + 1);
   }
 }

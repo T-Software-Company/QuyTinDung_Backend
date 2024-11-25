@@ -128,7 +128,7 @@ import org.springframework.web.multipart.MultipartFile;
                                   implementation = MultipartFile.class,
                                   description = "Front photo of CMND")),
                       @SchemaProperty(
-                          name = "cmnd.backPhotoFile",
+                          name = "cmnd.backPhotoURL",
                           schema =
                               @Schema(
                                   implementation = MultipartFile.class,
@@ -186,7 +186,7 @@ import org.springframework.web.multipart.MultipartFile;
                                   implementation = MultipartFile.class,
                                   description = "Front photo of CCCD")),
                       @SchemaProperty(
-                          name = "cccd.backPhotoFile",
+                          name = "cccd.backPhotoURL",
                           schema =
                               @Schema(
                                   implementation = MultipartFile.class,
@@ -250,7 +250,7 @@ import org.springframework.web.multipart.MultipartFile;
                                   implementation = MultipartFile.class,
                                   description = "Front photo of passport")),
                       @SchemaProperty(
-                          name = "passPort.backPhotoFile",
+                          name = "passPort.backPhotoURL",
                           schema =
                               @Schema(
                                   implementation = MultipartFile.class,
