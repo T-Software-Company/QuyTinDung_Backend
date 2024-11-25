@@ -36,6 +36,6 @@ public class EmployeeResponse {
   AddressDto address;
   String employeeCode;
   Gender gender;
-  EmploymentStatus employmentStatus;
+  EmploymentStatus status;
   Banned banned;
 }

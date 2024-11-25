@@ -5,9 +5,9 @@
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
   "refreshTokenMaxReuse" : 0,
-  "accessTokenLifespan" : 300,
-  "accessTokenLifespanForImplicitFlow" : 900,
-  "ssoSessionIdleTimeout" : 1800,
+  "accessTokenLifespan" : 3600,
+  "accessTokenLifespanForImplicitFlow" : 3600,
+  "ssoSessionIdleTimeout" : 7200,
   "ssoSessionMaxLifespan" : 36000,
   "ssoSessionIdleTimeoutRememberMe" : 0,
   "ssoSessionMaxLifespanRememberMe" : 0,
@@ -33,7 +33,7 @@
   "verifyEmail" : false,
   "loginWithEmailAllowed" : true,
   "duplicateEmailsAllowed" : false,
-  "resetPasswordAllowed" : false,
+  "resetPasswordAllowed" : true,
   "editUsernameAllowed" : false,
   "bruteForceProtected" : false,
   "permanentLockout" : false,
@@ -467,6 +467,16 @@
     "realmRoles" : [ ],
     "clientRoles" : { }
   }, {
+    "id" : "52602819-0858-4464-be0e-6290170db2be",
+    "name" : "MANAGER",
+    "path" : "/MANAGER",
+    "subGroups" : [ ],
+    "attributes" : { },
+    "realmRoles" : [ ],
+    "clientRoles" : {
+      "server" : [ "ASSET_VALUATION_ACCESS", "REPORT_ACCESS", "ADMIN", "CREDIT_ACCESS" ]
+    }
+  }, {
     "id" : "1e3ed59c-0fce-4465-9e67-23e268eaa89b",
     "name" : "Valuation Committee",
     "path" : "/Valuation Committee",
@@ -516,6 +526,31 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
+    "id" : "bf615e1a-e5ce-4259-86ae-e7196a656e8c",
+    "username" : "admin",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Admin",
+    "email" : "admin@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335001014,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "56434010-7479-4ad4-bcda-5cbb4d1854e4",
+      "type" : "password",
+      "createdDate" : 1732335001348,
+      "secretData" : "{\"value\":\"WCIXd4sH0dgm8a+veXGrdVRUAef0SDZmrJMosHcKuQw=\",\"salt\":\"djEG1OSiKo/wEV68v+j2vg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE", "ADMIN" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "99b96288-3bee-45ff-9679-61270e73f3fe",
     "username" : "duncan",
     "firstName" : "Nguyen",
@@ -528,9 +563,8 @@
     "credentials" : [ {
       "id" : "4b78a5f5-c8d4-4598-bb55-df235eff0d0d",
       "type" : "password",
-      "userLabel" : "My password",
-      "createdDate" : 1731379305880,
-      "secretData" : "{\"value\":\"Xo2McMqbrNkJLQT7R3Xakufhz+aHPhKXLRJZ1uB3w6M=\",\"salt\":\"epYyKW5U7AjkLyzcafowsg==\",\"additionalParameters\":{}}",
+      "createdDate" : 1732357586904,
+      "secretData" : "{\"value\":\"SovAUd7HeodwX00b7uGzskZhzikP6MeVaRiK77iwLB8=\",\"salt\":\"ixdikHWkHYC7Vp5Fr/chcA==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
     } ],
     "disableableCredentialTypes" : [ ],
@@ -538,6 +572,1256 @@
     "realmRoles" : [ "default-roles-tsoftware" ],
     "notBefore" : 0,
     "groups" : [ "/ADMIN" ]
+  }, {
+    "id" : "5086bd88-abee-4a1b-8b97-065fcdf24c2e",
+    "username" : "employee1",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee1@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335001884,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "fc8a050d-efd1-4330-abed-28b6da34195f",
+      "type" : "password",
+      "createdDate" : 1732335002044,
+      "secretData" : "{\"value\":\"BN5bBCUGPjhsXrwQ05I0ZesuBVCJI4mewVpjBorjJwk=\",\"salt\":\"U/yKWN9o1Exp4Wl0HcWnAQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "02962a2b-bd09-4d3c-a5ee-c4716c16864f",
+    "username" : "employee10",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee10@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335004879,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "b1bddbb0-d2ae-4ec8-b3c7-50740722a796",
+      "type" : "password",
+      "createdDate" : 1732335004962,
+      "secretData" : "{\"value\":\"1gH5bBWhCa6CQawSsOyzXYZfSmuEjf8S3Eltt72BKqI=\",\"salt\":\"uYPZY2hlJ/5ZFxGkljnmQw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "3170c90c-e55c-4447-9f2c-41b2d2d48e0b",
+    "username" : "employee11",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee11@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335005087,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "163e2f29-1ee8-4827-8f75-f7bbcfe65b31",
+      "type" : "password",
+      "createdDate" : 1732335005147,
+      "secretData" : "{\"value\":\"env57w+qF6lOG0QD4bE7ZosXFJYPJ0uOT2hJ9uuSUu4=\",\"salt\":\"xt9KByfCXx+URmK/cyrgaw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "89ab25ee-4dfc-42f8-8adf-4147ceb0bcff",
+    "username" : "employee12",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee12@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335005338,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "299c5566-5a2a-40e6-9ce9-a75e221c11a6",
+      "type" : "password",
+      "createdDate" : 1732335005401,
+      "secretData" : "{\"value\":\"2okLkEBp6oxq71PoG1oRzt10sd6JBQfgQ2yxp9zSW8A=\",\"salt\":\"rBsl7B6HiOgMlB/ffvJxcg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "2b8f7093-bc9e-42fd-a19c-a0384e45b26a",
+    "username" : "employee13",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee13@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335005679,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "ff5e3824-4380-4154-80dd-0f3e09c9a3a8",
+      "type" : "password",
+      "createdDate" : 1732335005764,
+      "secretData" : "{\"value\":\"hfdHpkLZ5o1W0CXbRaz2VECsFPBYA9HcSSelZMzMyxM=\",\"salt\":\"caQhGrZCva4NoNj2lBzD6Q==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "a1d54c54-ea19-4486-8861-39bffeb581b6",
+    "username" : "employee14",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee14@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335005958,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "adb65ac3-55af-4cbe-bbda-3b95bd716758",
+      "type" : "password",
+      "createdDate" : 1732335006066,
+      "secretData" : "{\"value\":\"jMrHF9H0S1gFMUzVVLfNEAFWtG7waDO06l0o7hT8Vqk=\",\"salt\":\"QbABgCgcB8D9JPtmZlkXCA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "af3c7ce5-e3fc-44e8-b1b7-d41768bec42a",
+    "username" : "employee15",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee15@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335006274,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "78ea9d48-fa23-43d8-b6e3-d04312443d61",
+      "type" : "password",
+      "createdDate" : 1732335006385,
+      "secretData" : "{\"value\":\"AeM6gOrRtiqqjhFDlolcUSYXtUIgb3IyMbtLnGIFdQE=\",\"salt\":\"nuq0vfxzNYzSj/mdlzuVYA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "09f98a60-9bb7-4d3d-ae55-c9323ec148a5",
+    "username" : "employee16",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee16@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335006546,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "99ef34c8-65cd-448c-b12a-66609a872f0f",
+      "type" : "password",
+      "createdDate" : 1732335006623,
+      "secretData" : "{\"value\":\"JKQZTldof4WHpHZ0sPaXAjzWhZ2wddoCX6YF97KSvVw=\",\"salt\":\"rEAZ6mGwF+iHbuL936xwtQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "6c080c00-9d0f-43b9-8e80-9cbf7936ca74",
+    "username" : "employee17",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee17@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335006774,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "8ec70cac-fe35-4afd-9f54-2be007b47bb8",
+      "type" : "password",
+      "createdDate" : 1732335006849,
+      "secretData" : "{\"value\":\"oHKGARgDy0R7LSCn6ggPWA4uRBuEjeDSkDvKlhipYCw=\",\"salt\":\"9h2nWJjesOvNh2Lb0Mhw+g==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "0d7796b9-952c-4332-8056-c52449aff8be",
+    "username" : "employee18",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee18@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335007003,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "81100ecb-3ef5-4f8b-b915-8b5fc1bf4d43",
+      "type" : "password",
+      "createdDate" : 1732335007097,
+      "secretData" : "{\"value\":\"GkuCac29iDp8Ctgt5AVPzgyTFJk4G/M+COUM+79LHCU=\",\"salt\":\"myuRg7hklmqhiZ8jyzig9A==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "e1173e14-92a2-440e-b6c6-b942c1d1df80",
+    "username" : "employee19",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee19@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335007498,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "fce4cb7c-6eaa-42c0-a304-9e5de8eff16f",
+      "type" : "password",
+      "createdDate" : 1732335007659,
+      "secretData" : "{\"value\":\"HHQtc/neITcmaYy7yfPVUFUgfyeErzX7dJtO0rhAoVA=\",\"salt\":\"splAnPsU+8AdujrWxKXkUw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "2cddcd44-ceea-410c-9f05-25eb9c5825d4",
+    "username" : "employee2",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee2@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335002188,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "8ce6ccf1-e0a6-4b73-9cae-f2932e708b69",
+      "type" : "password",
+      "createdDate" : 1732335002338,
+      "secretData" : "{\"value\":\"EYz3aWD2RooHmzunzBzP8MARSRjlhpmmLk85UuTTYiM=\",\"salt\":\"hMkW+9XP4WdoRMIdYwRLtg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "8104dfc6-4a74-4000-a13a-1d05a0d84c0a",
+    "username" : "employee20",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee20@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335007815,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "8c7aad2c-1427-482c-a751-cec5e7081282",
+      "type" : "password",
+      "createdDate" : 1732335007994,
+      "secretData" : "{\"value\":\"iTf/KV6sZhmXp7m6VTNbepTN6UbUypZrld/UW/1SHq8=\",\"salt\":\"JAqgC9nfYSYTjOnODT02bw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "f0824c18-fbe8-4bd3-b422-82843ada4487",
+    "username" : "employee21",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee21@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335008184,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "250fea1d-a147-4a5d-abce-f7f9f480f207",
+      "type" : "password",
+      "createdDate" : 1732335008359,
+      "secretData" : "{\"value\":\"wr/7QtbXzHs/H6hfTWN4XsGY2pkPDOm3sXzSy4rALoM=\",\"salt\":\"f7+EkR+bs9ABBjfFj37JHw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "88c2f5f2-e672-41a1-8a24-3d6bc7a59d9b",
+    "username" : "employee22",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee22@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335008702,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "dac027bc-7542-4cca-8288-3986a8bceead",
+      "type" : "password",
+      "createdDate" : 1732335008869,
+      "secretData" : "{\"value\":\"9gDYCaXrezW8gfsQqQzTxdcszlrGZFczYeUMyVPMOxE=\",\"salt\":\"8IK2V4ec0A1ISUMOh9nSKQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "d61e3cbd-2057-463f-bafc-0b7b822aa7ff",
+    "username" : "employee23",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee23@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335009062,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "4d9c1915-1509-4b96-9175-496ef60d4744",
+      "type" : "password",
+      "createdDate" : 1732335009251,
+      "secretData" : "{\"value\":\"Rxq4WdA/88FFMD3rI3qkH15xIvAcENgrezhhkU4YO1I=\",\"salt\":\"/0dbLniffk4ez2KFih0p7Q==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "8472ccdd-6188-468c-8238-51e63a61baf9",
+    "username" : "employee24",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee24@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335009443,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "5b241af1-8aeb-4c2d-904f-8959594a29a8",
+      "type" : "password",
+      "createdDate" : 1732335009614,
+      "secretData" : "{\"value\":\"lj/pGNhBXY7jOPGE6eXQ7+6qNkYbioy8bHNqdkqEdds=\",\"salt\":\"/SB2zsxHGyPUk6/cTjH2qQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "54b1ecc9-5be1-48e8-a8e7-ddd9e7ebf94d",
+    "username" : "employee25",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee25@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335009779,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "1ba4223d-89e7-4b23-bdb6-572c109f31f9",
+      "type" : "password",
+      "createdDate" : 1732335009992,
+      "secretData" : "{\"value\":\"FwyJ/jatngC24IFgYmKTPV+wVtFJMo2KUE0RPPmiwAc=\",\"salt\":\"lEzkLD7aTWGyPhQp5mFeIA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "52b04cbb-a41f-4f78-b330-4f266f2a83e7",
+    "username" : "employee26",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee26@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335010131,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "fb1e22f0-b615-4e8d-8531-9265aeaf8559",
+      "type" : "password",
+      "createdDate" : 1732335010306,
+      "secretData" : "{\"value\":\"Ljtqh92R/1udw+qfJyC+fRTGeBxl4tpbTQqOr8xvq8o=\",\"salt\":\"lHEl/w5GFwQKQ6W6PcJPJA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "5f3d5ec5-cea6-468a-9bba-8671900227d1",
+    "username" : "employee27",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee27@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335010451,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "d6ebd807-6db1-4597-9011-3097bd7fee44",
+      "type" : "password",
+      "createdDate" : 1732335010590,
+      "secretData" : "{\"value\":\"ApAJilS+Yb5UsRee0Q4HFgTTL54POHkfMI33Y9/UUj8=\",\"salt\":\"4NqGZv/cROB7o5YMIUOG7w==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "c890ed82-3a37-49db-b276-20f3ddb4cc75",
+    "username" : "employee28",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee28@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335010753,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "a6c44a13-d276-4cdb-9436-54eb7a72ce3e",
+      "type" : "password",
+      "createdDate" : 1732335010836,
+      "secretData" : "{\"value\":\"Cq0+VdGnIOUQ8j/C8y7c2/wJMeKKLZP6hilSeHdnYyk=\",\"salt\":\"1JVx+ILxeodNwSobMb6UIA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "f6aafb57-89fe-4450-9083-283b9a88097c",
+    "username" : "employee29",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee29@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335010947,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "e83a80e2-7d07-4d7a-b847-8501ba7faf39",
+      "type" : "password",
+      "createdDate" : 1732335011076,
+      "secretData" : "{\"value\":\"PIwA5IlGH1BDt119vmHHI0WKUbaQpE3E+JxYsePjmsk=\",\"salt\":\"+fUoAbE9FABeTZvNQiIrSg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "58799296-1e8a-408e-a81f-9609a80c3cb1",
+    "username" : "employee3",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee3@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335002481,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "94319bcb-701e-4b3f-8a33-5bbda3983274",
+      "type" : "password",
+      "createdDate" : 1732335002609,
+      "secretData" : "{\"value\":\"hlm48PzdRWlRJFPCCTU3fA6ays71Gwu2N51fboFtv9c=\",\"salt\":\"wqczl7pMqxlQtiA1SwKhlw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "bd5f7761-f882-4574-ba5a-f93f06024fc2",
+    "username" : "employee30",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee30@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335011302,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "cdd1a2f2-610a-4150-9d2f-d3dbae4bec04",
+      "type" : "password",
+      "createdDate" : 1732335011396,
+      "secretData" : "{\"value\":\"RzT8sgmmArHCVF94gpXGNtpy4W+N2ImYOlQHj/hdegk=\",\"salt\":\"cZSJw6kMbF+hC56JGl9/WA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "d25dc1fa-4f22-4556-9586-ce16fd15c13a",
+    "username" : "employee31",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee31@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335012146,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "c32a72f5-937c-408d-9e1d-83274ba3d851",
+      "type" : "password",
+      "createdDate" : 1732335012284,
+      "secretData" : "{\"value\":\"YXU6MR2bKRbRpNrtYrYCdmPqLaDkQINvQdsC4GFEK1Q=\",\"salt\":\"7CGkGcHwinqjbRNj9ExDPg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "57974719-6403-49e4-afdf-d143c362de75",
+    "username" : "employee32",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee32@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335012458,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "9176e7ea-b8ff-4e6b-8014-efa746056d72",
+      "type" : "password",
+      "createdDate" : 1732335012566,
+      "secretData" : "{\"value\":\"jxM1CxiU7G8WkUUTB+/fTxtTiTI655cFgBiiAlGGfL0=\",\"salt\":\"LPcjXxofGsKkQAXyz3AauQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "bfd1bcf0-67d2-4b9a-8b90-c59807725525",
+    "username" : "employee33",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee33@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335012715,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "a998e09b-f412-4060-a8dd-19c026a25b64",
+      "type" : "password",
+      "createdDate" : 1732335012843,
+      "secretData" : "{\"value\":\"BwAZcLH5D/K39WbtBJ0a1mYZr+7cbAbKTnL51l/YjvQ=\",\"salt\":\"eYEFxPcB5ClC4xIJj+kiVQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "842d5a22-c34b-471b-bd02-b4b414e6031f",
+    "username" : "employee34",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee34@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335013220,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "d3ff6c50-51ea-474c-b826-4fe18b94479f",
+      "type" : "password",
+      "createdDate" : 1732335013302,
+      "secretData" : "{\"value\":\"XOYH/SGO2fDNYW+lgHhi04b/3XaV9VRt8kbkOkGDFKM=\",\"salt\":\"T0oK7WV5t36WWhA68pBY3A==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "4eaa2b93-9987-492d-9312-3e50682c946a",
+    "username" : "employee35",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee35@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335013402,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "f558a22b-0635-4940-9ba7-8b15ff77dcc3",
+      "type" : "password",
+      "createdDate" : 1732335013451,
+      "secretData" : "{\"value\":\"tWXckcJ4pV3jE2GQHDOEVsuDM92YWCKGNG5Fj5RIG7o=\",\"salt\":\"EqnxMe0EdDxd+XR9/kFYSA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "06609c7b-f7d7-4b91-9fbe-72b587e86bc0",
+    "username" : "employee36",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee36@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335013556,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "b944df67-8062-4016-86be-47f1a53b535c",
+      "type" : "password",
+      "createdDate" : 1732335013602,
+      "secretData" : "{\"value\":\"wZextNj1706UZ76zsGL1UOD+s3pjjlYZw+rKptwNefc=\",\"salt\":\"4glXRlZ6+OdGM/zCfV3cIg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "4cbc7382-fe2a-41db-b16d-463c6b11f885",
+    "username" : "employee37",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee37@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335013699,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "0531dd6b-2c00-4b37-bb5c-e0b94cd2fb76",
+      "type" : "password",
+      "createdDate" : 1732335013747,
+      "secretData" : "{\"value\":\"vzv08l/3DwO3GHwFG+6qywGmiYj83WDMExHCLQ9fhJk=\",\"salt\":\"xs5UDnSjrHh+66GV9Ia1Vg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "18887780-564f-4033-ac04-1bbee2827850",
+    "username" : "employee38",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee38@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335013849,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "58178707-dbdb-4f1f-8a12-8bc79dcf7fb5",
+      "type" : "password",
+      "createdDate" : 1732335013896,
+      "secretData" : "{\"value\":\"ArzngvfjtwFrilC3dC+i8hqjn7daIgCQHN0rsk8d0ok=\",\"salt\":\"D8a8Wua9YHh/hwaUlXgWgA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "a675893f-de5b-4090-92d0-3a2754f7fc6d",
+    "username" : "employee39",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee39@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335013985,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "0a5ac114-713f-40b7-909f-9a302635db99",
+      "type" : "password",
+      "createdDate" : 1732335014109,
+      "secretData" : "{\"value\":\"WsCLcTFV1lIHvb46Y/78QD3OPTapjXxA2/Imdiune0o=\",\"salt\":\"qN8FWp9PQhDkblpj8wVPdg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "a953413f-a217-478c-a632-7b8f3d8c3d9b",
+    "username" : "employee4",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee4@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335002760,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "d09500ab-cbda-4e9e-9294-5bfed14338a3",
+      "type" : "password",
+      "createdDate" : 1732335002899,
+      "secretData" : "{\"value\":\"qhBAixxLTwJ88B57LtmWpvpzg0lHE4vwI5OCQw9yzc4=\",\"salt\":\"JBjxkEVbUPn5cBWRtVolyg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "6789fdac-d199-43b5-a2d6-7286b684b1aa",
+    "username" : "employee40",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee40@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335014239,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "f14f97b7-a91a-43a8-a110-1f9e2ef1a998",
+      "type" : "password",
+      "createdDate" : 1732335014306,
+      "secretData" : "{\"value\":\"k05b+z7Y4oq09M2yPHmuMAbHgwW1e1C2v5exrQJ7hoE=\",\"salt\":\"uiI4fLJGhT0CWkNQkzwmJg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "192064a8-b07c-4d68-b2d0-35d7f0cb7915",
+    "username" : "employee41",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee41@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335014403,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "1dbbd608-56eb-4322-b726-8b0d1068cf30",
+      "type" : "password",
+      "createdDate" : 1732335014452,
+      "secretData" : "{\"value\":\"iHwjtki4XLmxO63+2vnVXtXDiiYZhCUjUtjkkWsg2SA=\",\"salt\":\"dxw8f+Ua8/6xL3NUdbjnIg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "2ede263a-3d5e-4aaa-be74-ee8ec07ccd10",
+    "username" : "employee42",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee42@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335014552,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "6235b730-797b-41d1-97b3-8d4b1376866f",
+      "type" : "password",
+      "createdDate" : 1732335014632,
+      "secretData" : "{\"value\":\"XWPNF99bXN2NxF3HgN3ORHnbH/u+6VRBiCrQuFsePPc=\",\"salt\":\"x7xhPXqEMl/s09/2AoJVhA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "708284da-d0ce-4ae9-92da-163e929015d3",
+    "username" : "employee43",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee43@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335014748,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "46f0ba73-05ba-4312-a4fb-a1c6e25865b9",
+      "type" : "password",
+      "createdDate" : 1732335014857,
+      "secretData" : "{\"value\":\"pNqOLkpXY4+LrLzPmA+V+xH6jAH5UhRUvsSBdgVSBDY=\",\"salt\":\"jikrt+pmp2C9Qh5XuJpigg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "091e82ec-012d-4dec-bb0a-2c0862a4ed43",
+    "username" : "employee44",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee44@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335014954,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "1d0603c8-157b-46cd-bd3a-647d4c8a8bb9",
+      "type" : "password",
+      "createdDate" : 1732335014998,
+      "secretData" : "{\"value\":\"PhRrzBifyIJDAAcmR29EtfY5+8Sf/PlKjmJ+xsiLv8M=\",\"salt\":\"ZT0HWGTB6ys67mOpT78sQQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "4fe1750c-973f-4281-9612-5d4bfdbe5d01",
+    "username" : "employee45",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee45@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335015105,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "dce035a6-f40e-4655-9323-02aef6e4f136",
+      "type" : "password",
+      "createdDate" : 1732335015164,
+      "secretData" : "{\"value\":\"OL9tjZAcfNyP2+9RX6Av6E46bYXLqH7VyjkDDQhdukc=\",\"salt\":\"Wgq44NRV8bNdLSwlDqjgdQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "1ba007db-a921-4621-8ea3-b1e1e22ac7c2",
+    "username" : "employee46",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee46@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335015273,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "9f5e5bd5-9a3d-404c-9a95-d5c0d233a69c",
+      "type" : "password",
+      "createdDate" : 1732335015407,
+      "secretData" : "{\"value\":\"6HI2D/J0Ejhv1SBGmG+aTz9VKKISnEZVlJRE7z+RlbI=\",\"salt\":\"L+Ald7d+LrDaFa+gJs6wFQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "1aae0545-9ff4-420b-84da-bf894374ae3c",
+    "username" : "employee47",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee47@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335015525,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "03d1105f-cd0c-41cc-8157-0bd336411905",
+      "type" : "password",
+      "createdDate" : 1732335015622,
+      "secretData" : "{\"value\":\"sQICk5QTzrx/2MLihZUGftcEJiMrIOohux5rHwymaOs=\",\"salt\":\"szKXqdgMD3eo9gjqCeouJQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "27b1013f-745a-40c6-8fd4-170cdd0fed9b",
+    "username" : "employee48",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee48@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335015749,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "23c5b9ef-9613-4b10-b0bd-0dd5cff8c0a2",
+      "type" : "password",
+      "createdDate" : 1732335015842,
+      "secretData" : "{\"value\":\"Zk2AapWuRoDU+Ab9QMOgci7CginIrrJ8R2vpX0m7Lao=\",\"salt\":\"oLGDRyRMGIRj+LU1Aee6sw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "794b87b6-de44-40c6-85d5-afddc8b90521",
+    "username" : "employee49",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee49@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335015981,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "15dde89f-72f0-47e1-92ad-4541ea3a2edf",
+      "type" : "password",
+      "createdDate" : 1732335016110,
+      "secretData" : "{\"value\":\"1TX+/6/piw62Btq0u35eu6Z5vrmborsxYnvTa83nlXo=\",\"salt\":\"UZRIzY4XOUb+C4x09LlA0A==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "386ba83a-7043-4d82-8c34-bb63ae531b1e",
+    "username" : "employee5",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee5@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335003041,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "f5074284-e42f-4b52-b6d3-025c6b3f1fe3",
+      "type" : "password",
+      "createdDate" : 1732335003382,
+      "secretData" : "{\"value\":\"y+XE50vkAtkCcsPPPG5Dpa0uc2P3dK/fyp6HF8M4/jI=\",\"salt\":\"/FT/AC1oC2LqDTWj1s8bRA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "1cd60179-46dc-4514-bb3c-1d7656c41da6",
+    "username" : "employee50",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee50@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335016234,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "7523bf12-4383-4f80-a108-dc5d9cbb405e",
+      "type" : "password",
+      "createdDate" : 1732335016316,
+      "secretData" : "{\"value\":\"CtDxbY9c2bDSlra4jIsIuFCuUFaQTlcSTWON5IDv+Cs=\",\"salt\":\"N0zJTQdcmZTEWu8qBgvd5w==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "b2369cb9-f127-4fe6-be3a-bd85ae8a9686",
+    "username" : "employee6",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee6@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335003520,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "7284ed72-14a4-486f-86e5-03345e22e498",
+      "type" : "password",
+      "createdDate" : 1732335003625,
+      "secretData" : "{\"value\":\"DzzUUWO1UpBFUGSH6O4kY1xS2ed9mND3skchzxOi53M=\",\"salt\":\"vbWH5U1VXXWbOLjtrma09Q==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "bcdc2152-0ea9-4187-a4e6-d9b5974d9357",
+    "username" : "employee7",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee7@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335003802,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "8f459168-5323-4465-9685-7f2b063b1fe9",
+      "type" : "password",
+      "createdDate" : 1732335003900,
+      "secretData" : "{\"value\":\"4vVLfysgO5dIPs2OY65FZ11KDkELeSeq4jvEdc5JIfk=\",\"salt\":\"R47BfxMqO1wsqpXmQ6s4pg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "73ded349-d7cb-4276-8001-7b5425b8ba06",
+    "username" : "employee8",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee8@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335004034,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "06f4ef60-0f32-4c98-aa0f-1618998be7f9",
+      "type" : "password",
+      "createdDate" : 1732335004155,
+      "secretData" : "{\"value\":\"IAqqeiSVTc69Znh7ApHZxSaHaBAQBfX3u6bTlxHmW24=\",\"salt\":\"vwNZo71lO2ZkyuMrwXj2aA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "573e8381-bed3-4dcf-98da-4e403368eb3a",
+    "username" : "employee9",
+    "firstName" : "Nguyễn Văn",
+    "lastName" : "Ngẫu Nhiên",
+    "email" : "employee9@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732335004319,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "70c512e6-431d-4ba3-b993-e79bdab35c8c",
+      "type" : "password",
+      "createdDate" : 1732335004729,
+      "secretData" : "{\"value\":\"aaOGI8joGN1LhQtMeQlhR60RU2AZo/PRJ3+lOKYFQ2c=\",\"salt\":\"/XFYIdRBRFnUmRPgt5C8jA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-tsoftware" ],
+    "clientRoles" : {
+      "server" : [ "EMPLOYEE" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
   }, {
     "id" : "2aa99568-d081-4798-9365-ea1e81fa51f8",
     "username" : "service-account-dev",
@@ -721,13 +2005,13 @@
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "PtffgCus6K25ZI5SUkFqyjRPcCiZ7txB",
-    "redirectUris" : [ "**" ],
-    "webOrigins" : [ "**" ],
+    "redirectUris" : [ "*" ],
+    "webOrigins" : [ "*" ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,
-    "standardFlowEnabled" : true,
-    "implicitFlowEnabled" : false,
+    "standardFlowEnabled" : false,
+    "implicitFlowEnabled" : true,
     "directAccessGrantsEnabled" : false,
     "serviceAccountsEnabled" : true,
     "authorizationServicesEnabled" : true,
@@ -738,6 +2022,8 @@
       "oidc.ciba.grant.enabled" : "false",
       "client.secret.creation.time" : "1732331389",
       "backchannel.logout.session.required" : "true",
+      "post.logout.redirect.uris" : "*",
+      "display.on.consent.screen" : "false",
       "oauth2.device.authorization.grant.enabled" : "false",
       "backchannel.logout.revoke.offline.tokens" : "false"
     },
@@ -1569,7 +2855,20 @@
     "xXSSProtection" : "1; mode=block",
     "strictTransportSecurity" : "max-age=31536000; includeSubDomains"
   },
-  "smtpServer" : { },
+  "smtpServer" : {
+    "password" : "ojkihbnactkynnyl",
+    "replyToDisplayName" : "",
+    "starttls" : "true",
+    "auth" : "true",
+    "port" : "587",
+    "host" : "smtp.gmail.com",
+    "replyTo" : "",
+    "from" : "duncan.nguyen.18@gmail.com",
+    "fromDisplayName" : "[Dong Sai Gon]",
+    "envelopeFrom" : "",
+    "ssl" : "false",
+    "user" : "duncan.nguyen.18@gmail.com"
+  },
   "eventsEnabled" : false,
   "eventsListeners" : [ "jboss-logging" ],
   "enabledEventTypes" : [ ],
@@ -2333,14 +3632,19 @@
     "clientOfflineSessionMaxLifespan" : "0",
     "oauth2DevicePollingInterval" : "5",
     "clientSessionIdleTimeout" : "0",
+    "actionTokenGeneratedByUserLifespan.verify-email" : "",
+    "actionTokenGeneratedByUserLifespan.idp-verify-account-via-email" : "",
     "clientOfflineSessionIdleTimeout" : "0",
+    "actionTokenGeneratedByUserLifespan.execute-actions" : "",
     "cibaInterval" : "5",
     "realmReusableOtpCode" : "false",
     "cibaExpiresIn" : "120",
     "oauth2DeviceCodeLifespan" : "600",
     "parRequestUriLifespan" : "60",
     "clientSessionMaxLifespan" : "0",
-    "organizationsEnabled" : "false"
+    "organizationsEnabled" : "false",
+    "shortVerificationUri" : "",
+    "actionTokenGeneratedByUserLifespan.reset-credentials" : ""
   },
   "keycloakVersion" : "25.0.0",
   "userManagedAccessAllowed" : false,

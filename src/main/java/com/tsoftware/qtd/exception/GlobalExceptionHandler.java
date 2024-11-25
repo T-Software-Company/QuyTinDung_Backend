@@ -36,7 +36,6 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(value = KeycloakException.class)
   ResponseEntity<ApiResponse<Void>> handleKeyCloak(KeycloakException exception) {
-    log.error("KeycloakException: ", exception);
     ApiResponse<Void> apiResponse = new ApiResponse<Void>();
 
     apiResponse.setCode(exception.getStatus());

@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
+import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
@@ -10,6 +11,8 @@ import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.GroupRepository;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
+import java.util.HashSet;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -100,6 +103,25 @@ public class GroupServiceImpl implements GroupService {
             .findById(employeeId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     employees.remove(employee);
+    groupRepository.save(group);
+  }
+
+  @Override
+  public void addRoles(Long id, List<Role> roles) {
+    var group =
+        groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
+    keycloakService.addRolesToGroup(group.getKcGroupId(), roles);
+    group.getRoles().addAll(roles);
+    group.setRoles(new HashSet<>(group.getRoles()).stream().toList());
+    groupRepository.save(group);
+  }
+
+  @Override
+  public void removeRoles(Long id, List<Role> roles) {
+    var group =
+        groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
+    keycloakService.removeRolesOnGroup(group.getKcGroupId(), roles);
+    group.getRoles().removeAll(roles);
     groupRepository.save(group);
   }
 }

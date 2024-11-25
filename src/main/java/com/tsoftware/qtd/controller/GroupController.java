@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.controller;
 
+import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.ApiResponse;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
@@ -8,6 +9,7 @@ import com.tsoftware.qtd.entity.Group;
 import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.GroupService;
 import com.turkraft.springfilter.boot.Filter;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -81,6 +83,22 @@ public class GroupController {
   public ResponseEntity<ApiResponse<Void>> LeaveGroup(
       @PathVariable Long id, @RequestParam Long employeeId) {
     groupService.leave(id, employeeId);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/add-roles")
+  public ResponseEntity<ApiResponse<Void>> addRoles(
+      @RequestBody List<Role> roles, @PathVariable Long id) {
+    groupService.addRoles(id, roles);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/remove-roles")
+  public ResponseEntity<ApiResponse<Void>> removeRoles(
+      @RequestBody List<Role> roles, @PathVariable Long id) {
+    groupService.removeRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }
 }

@@ -49,7 +49,7 @@ public class EmployeeRequest {
   @Pattern(
       regexp = "WORKING|ON_LEAVE|RESIGNED",
       message = "Invalid employmentStatus value should is (WORKING|ON_LEAVE|RESIGNED)")
-  EmploymentStatus employmentStatus;
+  EmploymentStatus status;
 
   @NotNull
   @Pattern(regexp = "ACTIVE|LOCKED", message = "Invalid banned value should is (ACTIVE|LOCKED)")

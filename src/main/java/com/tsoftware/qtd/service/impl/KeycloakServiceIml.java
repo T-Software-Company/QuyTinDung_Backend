@@ -176,7 +176,7 @@ public class KeycloakServiceIml implements KeycloakService {
     var groupRepresentation = groupResource.toRepresentation();
     groupRepresentation.setName(group.getName());
     groupResource.update(groupRepresentation);
-    removeRolesOnGroup(kcGroupId);
+    removeAllRolesOnGroup(kcGroupId);
     groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(group.getRoles()));
   }
 
@@ -184,6 +184,33 @@ public class KeycloakServiceIml implements KeycloakService {
   public void deleteGroup(String kcGroupId) {
     var groupResource = realmResource.groups().group(kcGroupId);
     groupResource.remove();
+  }
+
+  @Override
+  public void addRolesToGroup(String kcGroupId, List<Role> roles) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
+  }
+
+  @Override
+  public void removeRolesOnGroup(String kcGroupId, List<Role> roles) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    groupResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
+  }
+
+  @Override
+  public void createClientRoles(Role[] values) {
+    var clientResource = realmResource.clients().get(getClientIdOnDb());
+    var clientRolesResource = clientResource.roles();
+    for (Role role : values) {
+      RoleRepresentation roleRepresentation = new RoleRepresentation();
+      roleRepresentation.setName(role.name());
+      roleRepresentation.setDescription(role.getDescription());
+
+      if (clientRolesResource.get(role.name()).toRepresentation() == null) {
+        clientRolesResource.create(roleRepresentation);
+      }
+    }
   }
 
   private String extractErrorMessage(Response response) {
@@ -222,7 +249,7 @@ public class KeycloakServiceIml implements KeycloakService {
     }
   }
 
-  private void removeRolesOnGroup(String groupId) {
+  private void removeAllRolesOnGroup(String groupId) {
     var groupResource = realmResource.groups().group(groupId);
     var realmRoles = groupResource.roles().realmLevel().listAll();
     var clientRoles = groupResource.roles().clientLevel(getClientIdOnDb()).listAll();

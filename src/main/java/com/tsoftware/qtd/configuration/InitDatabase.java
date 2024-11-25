@@ -8,27 +8,33 @@ import com.tsoftware.qtd.dto.address.AddressDto;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.service.EmployeeService;
+import com.tsoftware.qtd.service.KeycloakService;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Random;
+import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
+@RequiredArgsConstructor
+@Transactional
 public class InitDatabase implements CommandLineRunner {
-  @Autowired private Keycloak keycloak;
-  @Autowired private EmployeeRepository employeeRepository;
+  private final Keycloak keycloak;
+  private final EmployeeRepository employeeRepository;
 
-  @Autowired private EmployeeService employeeService;
-  @Autowired private IdpProperties idpProperties;
+  private final EmployeeService employeeService;
+  private final IdpProperties idpProperties;
+
+  private final KeycloakService keycloakService;
 
   @Override
   @Transactional
   public void run(String... args) throws Exception {
+    createRoles();
     createAdmin();
     createEmployees();
   }
@@ -36,7 +42,7 @@ public class InitDatabase implements CommandLineRunner {
   private void createAdmin() {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
     if (!employeeRepository.existsByEmail("admin@gmail.com")
-        && userResource.searchByEmail("", true).isEmpty()) {
+        && userResource.searchByEmail("admin@gmail.com", true).isEmpty()) {
       var employeeRequest =
           EmployeeRequest.builder()
               .email("admin@gmail.com")
@@ -46,7 +52,7 @@ public class InitDatabase implements CommandLineRunner {
               .banned(Banned.ACTIVE)
               .dayOfBirth(ZonedDateTime.of(2000, 10, 12, 0, 0, 0, 0, ZoneId.systemDefault()))
               .gender(Gender.MALE)
-              .employmentStatus(EmploymentStatus.WORKING)
+              .status(EmploymentStatus.WORKING)
               .password("admin")
               .roles(List.of(Role.ADMIN, Role.EMPLOYEE))
               .username("admin")
@@ -54,10 +60,10 @@ public class InitDatabase implements CommandLineRunner {
                   AddressDto.builder()
                       .country("Việt Nam")
                       .cityProvince("Hồ Chí Minh")
-                      .wardOrCommune("P")
-                      .district("")
-                      .streetAddress("")
-                      .detail("")
+                      .district("Quận 1")
+                      .wardOrCommune("Phường Bến Nghé")
+                      .streetAddress("Đường Nguyễn Huệ")
+                      .detail("Số 1, Tầng 2, Tòa nhà ABC")
                       .build())
               .build();
       employeeService.createEmployee(employeeRequest);
@@ -72,7 +78,7 @@ public class InitDatabase implements CommandLineRunner {
     }
   }
 
-  public void createEmployee(String email, String username) {
+  private void createEmployee(String email, String username) {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
 
     if (!employeeRepository.existsByEmail(email)
@@ -96,7 +102,7 @@ public class InitDatabase implements CommandLineRunner {
                       0,
                       ZoneId.systemDefault()))
               .gender(random.nextBoolean() ? Gender.MALE : Gender.FEMALE)
-              .employmentStatus(EmploymentStatus.WORKING)
+              .status(EmploymentStatus.WORKING)
               .password(username)
               .roles(List.of(Role.EMPLOYEE))
               .username(username)
@@ -112,5 +118,9 @@ public class InitDatabase implements CommandLineRunner {
               .build();
       employeeService.createEmployee(employeeRequest);
     }
+  }
+
+  private void createRoles() {
+    keycloakService.createClientRoles(Role.values());
   }
 }

@@ -1,8 +1,10 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
+import java.util.List;
 
 public interface KeycloakService {
   String createUser(EmployeeRequest employeeRequest);
@@ -22,4 +24,10 @@ public interface KeycloakService {
   void updateGroup(GroupRequest group, String kcGroupId);
 
   void deleteGroup(String kcGroupId);
+
+  void addRolesToGroup(String kcGroupId, List<Role> roles);
+
+  void removeRolesOnGroup(String kcGroupId, List<Role> roles);
+
+  void createClientRoles(Role[] values);
 }
