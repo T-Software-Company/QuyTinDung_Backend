@@ -3,13 +3,13 @@ package com.tsoftware.qtd.mapper;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.entity.ValuationMeeting;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {EmployeeMapper.class})
 public interface ValuationMeetingMapper {
+
   ValuationMeeting toEntity(ValuationMeetingRequest dto);
 
   ValuationMeetingResponse toResponse(ValuationMeeting entity);

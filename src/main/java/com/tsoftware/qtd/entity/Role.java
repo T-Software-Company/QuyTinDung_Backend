@@ -23,9 +23,12 @@ public class Role extends AbstractAuditEntity {
   @Column(unique = true)
   private String name;
 
+  private String kcId;
   private String description;
 
-  @ManyToMany private List<Group> groups;
+  @ManyToMany(mappedBy = "roles")
+  private List<Group> groups;
 
-  @ManyToMany private List<Employee> employees;
+  @ManyToMany(mappedBy = "roles")
+  private List<Employee> employees;
 }

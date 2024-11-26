@@ -26,6 +26,6 @@ public class Group extends AbstractAuditEntity {
   @ManyToMany(fetch = FetchType.LAZY)
   private List<Employee> employees;
 
-  @ManyToMany(mappedBy = "groups")
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<Role> roles;
 }

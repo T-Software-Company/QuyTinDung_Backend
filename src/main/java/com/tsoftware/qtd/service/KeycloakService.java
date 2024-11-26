@@ -29,5 +29,7 @@ public interface KeycloakService {
 
   void removeRolesOnGroup(String kcGroupId, List<Role> roles);
 
-  void createClientRoles(Role[] values);
+  String[] createClientRoles(Role[] values);
+
+  String createClientRole(Role role);
 }

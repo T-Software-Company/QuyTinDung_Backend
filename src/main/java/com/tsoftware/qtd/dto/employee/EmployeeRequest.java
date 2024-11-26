@@ -45,15 +45,9 @@ public class EmployeeRequest {
 
   @NotNull Gender gender;
 
-  @NotNull
-  @Pattern(
-      regexp = "WORKING|ON_LEAVE|RESIGNED",
-      message = "Invalid employmentStatus value should is (WORKING|ON_LEAVE|RESIGNED)")
-  EmploymentStatus status;
+  @NotNull EmploymentStatus status;
 
-  @NotNull
-  @Pattern(regexp = "ACTIVE|LOCKED", message = "Invalid banned value should is (ACTIVE|LOCKED)")
-  Banned banned;
+  @NotNull Banned banned;
 
   @NotBlank
   @Size(max = 15)

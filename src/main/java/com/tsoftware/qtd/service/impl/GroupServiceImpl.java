@@ -9,6 +9,7 @@ import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
 import com.tsoftware.qtd.mapper.GroupMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.GroupRepository;
+import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ public class GroupServiceImpl implements GroupService {
   private GroupMapper groupMapper;
   private final EmployeeRepository employeeRepository;
   private final KeycloakService keycloakService;
+  private final RoleRepository roleRepository;
 
   @Override
   public GroupResponse create(GroupRequest groupRequest) {
@@ -111,7 +113,8 @@ public class GroupServiceImpl implements GroupService {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.addRolesToGroup(group.getKcGroupId(), roles);
-    group.getRoles().addAll(roles);
+    var rolesEntities = roleRepository.findAllByName(roles.stream().map(Enum::name).toList());
+    group.getRoles().addAll(rolesEntities);
     group.setRoles(new HashSet<>(group.getRoles()).stream().toList());
     groupRepository.save(group);
   }
@@ -121,7 +124,8 @@ public class GroupServiceImpl implements GroupService {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.removeRolesOnGroup(group.getKcGroupId(), roles);
-    group.getRoles().removeAll(roles);
+    var rolesEntities = roleRepository.findAllByName(roles.stream().map(Enum::name).toList());
+    group.getRoles().removeAll(rolesEntities);
     groupRepository.save(group);
   }
 }

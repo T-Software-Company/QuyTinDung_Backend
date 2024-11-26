@@ -7,10 +7,12 @@ import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.repository.EmployeeRepository;
+import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class InitDatabase implements CommandLineRunner {
   private final IdpProperties idpProperties;
 
   private final KeycloakService keycloakService;
+  private final RoleRepository roleRepository;
 
   @Override
   @Transactional
@@ -82,7 +85,7 @@ public class InitDatabase implements CommandLineRunner {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
 
     if (!employeeRepository.existsByEmail(email)
-        && userResource.searchByEmail("", true).isEmpty()) {
+        && userResource.searchByEmail(email, true).isEmpty()) {
       var random = new Random();
       var employeeRequest =
           EmployeeRequest.builder()
@@ -121,6 +124,18 @@ public class InitDatabase implements CommandLineRunner {
   }
 
   private void createRoles() {
-    keycloakService.createClientRoles(Role.values());
+    Arrays.stream(Role.values())
+        .forEach(
+            role -> {
+              if (!roleRepository.existsByName(role.name())) {
+                var kcId = keycloakService.createClientRole(role);
+                roleRepository.save(
+                    com.tsoftware.qtd.entity.Role.builder()
+                        .name(role.name())
+                        .description(role.getDescription())
+                        .kcId(kcId)
+                        .build());
+              }
+            });
   }
 }

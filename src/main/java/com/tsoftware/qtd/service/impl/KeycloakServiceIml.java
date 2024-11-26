@@ -9,6 +9,7 @@ import com.tsoftware.qtd.exception.KeycloakException;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.service.KeycloakService;
 import jakarta.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -199,17 +200,23 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
-  public void createClientRoles(Role[] values) {
+  public String[] createClientRoles(Role[] values) {
+    return Arrays.stream(values).map(this::createClientRole).toArray(String[]::new);
+  }
+
+  @Override
+  public String createClientRole(Role role) {
     var clientResource = realmResource.clients().get(getClientIdOnDb());
     var clientRolesResource = clientResource.roles();
-    for (Role role : values) {
+    try {
+      var roleRepresentationExists = clientRolesResource.get(role.name()).toRepresentation();
+      return roleRepresentationExists.getId();
+    } catch (jakarta.ws.rs.NotFoundException e) {
       RoleRepresentation roleRepresentation = new RoleRepresentation();
       roleRepresentation.setName(role.name());
       roleRepresentation.setDescription(role.getDescription());
-
-      if (clientRolesResource.get(role.name()).toRepresentation() == null) {
-        clientRolesResource.create(roleRepresentation);
-      }
+      clientRolesResource.create(roleRepresentation);
+      return clientRolesResource.get(role.name()).toRepresentation().getId();
     }
   }
 
