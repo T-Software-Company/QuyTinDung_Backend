@@ -54,8 +54,8 @@ public class InitDatabase implements CommandLineRunner {
               .lastName("Admin")
               .banned(Banned.ACTIVE)
               .dayOfBirth(ZonedDateTime.of(2000, 10, 12, 0, 0, 0, 0, ZoneId.systemDefault()))
-              .gender(Gender.MALE)
-              .status(EmploymentStatus.WORKING)
+              .gender(Gender.MALE.name())
+              .status(EmploymentStatus.WORKING.name())
               .password("admin")
               .roles(List.of(Role.ADMIN, Role.EMPLOYEE))
               .username("admin")
@@ -104,8 +104,8 @@ public class InitDatabase implements CommandLineRunner {
                       0,
                       0,
                       ZoneId.systemDefault()))
-              .gender(random.nextBoolean() ? Gender.MALE : Gender.FEMALE)
-              .status(EmploymentStatus.WORKING)
+              .gender(random.nextBoolean() ? Gender.MALE.name() : Gender.FEMALE.name())
+              .status(EmploymentStatus.WORKING.name())
               .password(username)
               .roles(List.of(Role.EMPLOYEE))
               .username(username)

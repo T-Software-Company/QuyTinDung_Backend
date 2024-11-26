@@ -5,6 +5,7 @@ import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.validation.IsEnum;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.ZonedDateTime;
@@ -43,9 +44,13 @@ public class EmployeeRequest {
 
   @NotNull @Past ZonedDateTime dayOfBirth;
 
-  @NotNull Gender gender;
+  @IsEnum(enumClass = Gender.class)
+  @NotNull
+  String gender;
 
-  @NotNull EmploymentStatus status;
+  @IsEnum(enumClass = EmploymentStatus.class)
+  @NotNull
+  String status;
 
   @NotNull Banned banned;
 
