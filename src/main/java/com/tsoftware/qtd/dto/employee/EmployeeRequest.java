@@ -40,7 +40,8 @@ public class EmployeeRequest {
 
   @NotBlank String lastName;
 
-  List<Role> roles;
+  @IsEnum(enumClass = Role.class)
+  List<String> roles;
 
   @NotNull @Past ZonedDateTime dayOfBirth;
 

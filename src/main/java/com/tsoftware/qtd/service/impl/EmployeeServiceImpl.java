@@ -54,8 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     var userId = keycloakService.createUser(request);
     var employee = employeeMapper.toEmployee(request);
     employee.setUserId(userId);
-    var rolesExists =
-        roleRepository.findAllByName(request.getRoles().stream().map(Enum::name).toList());
+    var rolesExists = roleRepository.findAllByName(request.getRoles());
     employee.setRoles(rolesExists);
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }

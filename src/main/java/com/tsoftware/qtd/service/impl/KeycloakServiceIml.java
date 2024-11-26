@@ -188,13 +188,13 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
-  public void addRolesToGroup(String kcGroupId, List<Role> roles) {
+  public void addRolesToGroup(String kcGroupId, List<String> roles) {
     var groupResource = realmResource.groups().group(kcGroupId);
     groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
   }
 
   @Override
-  public void removeRolesOnGroup(String kcGroupId, List<Role> roles) {
+  public void removeRolesOnGroup(String kcGroupId, List<String> roles) {
     var groupResource = realmResource.groups().group(kcGroupId);
     groupResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
   }
@@ -268,13 +268,13 @@ public class KeycloakServiceIml implements KeycloakService {
     }
   }
 
-  private List<RoleRepresentation> getClientRoles(List<Role> roles) {
+  private List<RoleRepresentation> getClientRoles(List<String> roles) {
     var clientResource = realmResource.clients().get(getClientIdOnDb());
     return roles.stream()
         .map(
             role -> {
               try {
-                return clientResource.roles().get(role.name()).toRepresentation();
+                return clientResource.roles().get(role).toRepresentation();
               } catch (jakarta.ws.rs.NotFoundException e) {
                 throw new NotFoundException("Role " + role + " not found");
               }

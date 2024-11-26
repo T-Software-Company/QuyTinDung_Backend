@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
@@ -109,22 +108,22 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public void addRoles(Long id, List<Role> roles) {
+  public void addRoles(Long id, List<String> roles) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.addRolesToGroup(group.getKcGroupId(), roles);
-    var rolesEntities = roleRepository.findAllByName(roles.stream().map(Enum::name).toList());
+    var rolesEntities = roleRepository.findAllByName(roles);
     group.getRoles().addAll(rolesEntities);
     group.setRoles(new HashSet<>(group.getRoles()).stream().toList());
     groupRepository.save(group);
   }
 
   @Override
-  public void removeRoles(Long id, List<Role> roles) {
+  public void removeRoles(Long id, List<String> roles) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.removeRolesOnGroup(group.getKcGroupId(), roles);
-    var rolesEntities = roleRepository.findAllByName(roles.stream().map(Enum::name).toList());
+    var rolesEntities = roleRepository.findAllByName(roles);
     group.getRoles().removeAll(rolesEntities);
     groupRepository.save(group);
   }

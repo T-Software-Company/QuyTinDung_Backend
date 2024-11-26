@@ -8,7 +8,9 @@ import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
 import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.GroupService;
+import com.tsoftware.qtd.validation.IsEnum;
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,8 @@ public class GroupController {
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @PostMapping
-  public ResponseEntity<ApiResponse<GroupResponse>> create(@RequestBody GroupRequest groupRequest) {
+  public ResponseEntity<ApiResponse<GroupResponse>> create(
+      @RequestBody @Valid GroupRequest groupRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(HttpStatus.OK.value(), "Created", groupService.create(groupRequest)));
   }
@@ -40,7 +43,7 @@ public class GroupController {
   @PreAuthorize("hasAnyRole('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<GroupResponse>> update(
-      @PathVariable Long id, @RequestBody GroupRequest groupRequest) {
+      @PathVariable Long id, @RequestBody @Valid GroupRequest groupRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(HttpStatus.OK.value(), "Updated", groupService.update(id, groupRequest)));
   }
@@ -89,7 +92,8 @@ public class GroupController {
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add-roles")
   public ResponseEntity<ApiResponse<Void>> addRoles(
-      @RequestBody List<Role> roles, @PathVariable Long id) {
+      @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
+      @PathVariable Long id) {
     groupService.addRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
@@ -97,7 +101,8 @@ public class GroupController {
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-roles")
   public ResponseEntity<ApiResponse<Void>> removeRoles(
-      @RequestBody List<Role> roles, @PathVariable Long id) {
+      @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
+      @PathVariable Long id) {
     groupService.removeRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }

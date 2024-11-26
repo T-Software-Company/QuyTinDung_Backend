@@ -57,7 +57,7 @@ public class InitDatabase implements CommandLineRunner {
               .gender(Gender.MALE.name())
               .status(EmploymentStatus.WORKING.name())
               .password("admin")
-              .roles(List.of(Role.ADMIN, Role.EMPLOYEE))
+              .roles(List.of(Role.ADMIN.name(), Role.EMPLOYEE.name()))
               .username("admin")
               .address(
                   AddressDto.builder()
@@ -107,7 +107,7 @@ public class InitDatabase implements CommandLineRunner {
               .gender(random.nextBoolean() ? Gender.MALE.name() : Gender.FEMALE.name())
               .status(EmploymentStatus.WORKING.name())
               .password(username)
-              .roles(List.of(Role.EMPLOYEE))
+              .roles(List.of(Role.EMPLOYEE.name()))
               .username(username)
               .address(
                   AddressDto.builder()

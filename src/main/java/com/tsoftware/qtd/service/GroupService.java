@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
@@ -24,7 +23,7 @@ public interface GroupService {
 
   void leave(Long groupId, Long employeeId);
 
-  void addRoles(Long id, List<Role> roles);
+  void addRoles(Long id, List<String> roles);
 
-  void removeRoles(Long id, List<Role> roles);
+  void removeRoles(Long id, List<String> roles);
 }
