@@ -8,6 +8,7 @@ server:
       force: true
   ssl:
     bundle: web-server
+    client-auth: want
 
 
 spring:
@@ -16,12 +17,12 @@ spring:
       jks:
         web-server:
           key:
-            alias: ${ALIAS}
+            alias: ${KEY_ALIAS}
             password: ${STORE_PASSWORD}
           keystore:
             location: classpath:server.p12
             password: ${STORE_PASSWORD}
-          
+            type: PKCS12
   threads:
     virtual:
       enabled: true
