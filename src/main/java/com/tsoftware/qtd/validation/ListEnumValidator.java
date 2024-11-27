@@ -17,10 +17,9 @@ public class ListEnumValidator implements ConstraintValidator<IsEnum, List<Strin
   @Override
   public boolean isValid(List<String> value, ConstraintValidatorContext context) {
     if (value == null || value.isEmpty()) {
-      return true; // Treat null or empty list as valid; use @NotEmpty for stricter validation
+      return true;
     }
 
-    // Validate each element in the list
     boolean isValid =
         value.stream()
             .allMatch(
@@ -36,7 +35,6 @@ public class ListEnumValidator implements ConstraintValidator<IsEnum, List<Strin
                   "Invalid values. Allowed values are: %s", String.join(", ", getEnumConstants())))
           .addConstraintViolation();
     }
-
     return isValid;
   }
 
