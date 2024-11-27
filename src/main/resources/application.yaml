@@ -23,6 +23,10 @@ spring:
             location: classpath:server.p12
             password: ${STORE_PASSWORD}
             type: PKCS12
+#          truststore:
+#            location: classpath:truststore.p12
+#            password: ${STORE_PASSWORD}
+#            type: PKCS12
   threads:
     virtual:
       enabled: true

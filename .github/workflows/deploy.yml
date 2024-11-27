@@ -19,7 +19,7 @@ jobs:
       - name: Write .env secrets
         run: |
           echo "${{ secrets.ENV_FILE }}" > deployment/.env
-          echo "${{ secrets.SSL_KEY }}" > deployment/server.key
+          echo "${{ secrets.SSL_KEY }}" > deployment/tsoftware.store.key
 
       - name: Grant execute permission for the script
         run: chmod +x deployment/decrypt-keycloak.sh
