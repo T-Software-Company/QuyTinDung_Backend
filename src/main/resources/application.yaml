@@ -6,9 +6,22 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+  ssl:
+    bundle: web-server
 
 
 spring:
+  ssl:
+    bundle:
+      jks:
+        web-server:
+          key:
+            alias: ${ALIAS}
+            password: ${STORE_PASSWORD}
+          keystore:
+            location: classpath:server.p12
+            password: ${STORE_PASSWORD}
+          
   threads:
     virtual:
       enabled: true
