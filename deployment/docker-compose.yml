@@ -74,7 +74,6 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./tsoftware.store.crt:/etc/ssl/certs/tsoftware.store.crt
       - ./tsoftware.store.key:/etc/ssl/private/tsoftware.store.key
-      - ./certificate_chain.crt:/etc/ssl/certs/certificate_chain.crt
     depends_on:
       - server
       - keycloak
