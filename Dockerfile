@@ -8,7 +8,7 @@ COPY tsoftware.store.crt /app/tsoftware.store.crt
 
 RUN keytool -importcert \
     -trustcacerts \
-    -file /app/your_certificate.crt \
+    -file /app/tsoftware.store.crt \
     -alias qtd \
     -keystore $JAVA_HOME/lib/security/cacerts \
     -storepass changeit \
