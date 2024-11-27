@@ -2,26 +2,27 @@ package com.tsoftware.qtd.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfiguration {
-
   @Bean
-  public CorsFilter corsFilter() {
-    org.springframework.web.cors.CorsConfiguration corsConfiguration =
-        new org.springframework.web.cors.CorsConfiguration();
-
-    corsConfiguration.addAllowedOrigin("*");
-    corsConfiguration.addAllowedMethod("*");
-    corsConfiguration.addAllowedHeader("*");
-
-    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource =
-        new UrlBasedCorsConfigurationSource();
-
-    urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-
-    return new CorsFilter(urlBasedCorsConfigurationSource);
+  public WebMvcConfigurer corsConfigure() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry
+            .addMapping("/**")
+            .allowedMethods("*")
+            .allowedOrigins(
+                "http://localhost:3001",
+                "http://localhost:3000",
+                "https://tsofware.store",
+                "https://localhost:8080")
+            .allowedHeaders("*")
+            .allowCredentials(true);
+      }
+    };
   }
 }

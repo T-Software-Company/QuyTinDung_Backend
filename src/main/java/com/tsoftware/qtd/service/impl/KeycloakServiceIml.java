@@ -220,6 +220,20 @@ public class KeycloakServiceIml implements KeycloakService {
     }
   }
 
+  @Override
+  public void addUserToGroup(String kcGroupId, String userId) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    var userRepresentation = realmResource.users().get(userId).toRepresentation();
+    groupResource.members().add(userRepresentation);
+  }
+
+  @Override
+  public void removeUserOnGroup(String kcGroupId, String userId) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    var userRepresentation = realmResource.users().get(userId).toRepresentation();
+    groupResource.members().remove(userRepresentation);
+  }
+
   private String extractErrorMessage(Response response) {
     var map = response.readEntity(Map.class);
     return (String) map.get("errorMessage");
@@ -242,15 +256,8 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   private void removeRolesOnUser(String userId) {
-
     var userResource = realmResource.users().get(userId);
-
-    var realmRoles = userResource.roles().realmLevel().listAll();
     var clientRoles = userResource.roles().clientLevel(getClientIdOnDb()).listAll();
-
-    if (!realmRoles.isEmpty()) {
-      userResource.roles().realmLevel().remove(realmRoles);
-    }
     if (!clientRoles.isEmpty()) {
       userResource.roles().clientLevel(getClientIdOnDb()).remove(clientRoles);
     }
@@ -258,11 +265,7 @@ public class KeycloakServiceIml implements KeycloakService {
 
   private void removeAllRolesOnGroup(String groupId) {
     var groupResource = realmResource.groups().group(groupId);
-    var realmRoles = groupResource.roles().realmLevel().listAll();
     var clientRoles = groupResource.roles().clientLevel(getClientIdOnDb()).listAll();
-    if (!realmRoles.isEmpty()) {
-      groupResource.roles().realmLevel().remove(realmRoles);
-    }
     if (!clientRoles.isEmpty()) {
       groupResource.roles().clientLevel(getClientIdOnDb()).remove(clientRoles);
     }

@@ -32,4 +32,8 @@ public interface KeycloakService {
   String[] createClientRoles(Role[] values);
 
   String createClientRole(Role role);
+
+  void addUserToGroup(String kcGroupId, String userId);
+
+  void removeUserOnGroup(String kcGroupId, String userId);
 }
