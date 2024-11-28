@@ -9,25 +9,21 @@ import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.CreditMapper;
 import com.tsoftware.qtd.repository.CreditRepository;
 import com.tsoftware.qtd.repository.CustomerRepository;
-import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.service.CreditService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class CreditServiceImpl implements CreditService {
 
-  @Autowired private CreditRepository creditRepository;
-
-  @Autowired private CreditMapper creditMapper;
-
-  @Autowired private DocumentService documentService;
-
-  @Autowired private LoanPlanRepository loanPlanRepository;
-  @Autowired private CustomerRepository customerRepository;
+  private final CreditRepository creditRepository;
+  private final CreditMapper creditMapper;
+  private final CustomerRepository customerRepository;
 
   @Override
   @Transactional

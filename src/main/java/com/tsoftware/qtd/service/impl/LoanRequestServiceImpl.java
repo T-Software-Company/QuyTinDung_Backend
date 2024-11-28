@@ -2,6 +2,7 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.dto.credit.LoanRequestRequest;
 import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
+import com.tsoftware.qtd.entity.Credit;
 import com.tsoftware.qtd.entity.LoanRequest;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;
@@ -9,36 +10,32 @@ import com.tsoftware.qtd.repository.CreditRepository;
 import com.tsoftware.qtd.repository.LoanRequestRepository;
 import com.tsoftware.qtd.service.LoanRequestService;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class LoanRequestServiceImpl implements LoanRequestService {
 
-  @Autowired private LoanRequestRepository loanrequestRepository;
-
-  @Autowired private LoanRequestMapper loanrequestMapper;
-  @Autowired private CreditRepository creditRepository;
-  @Autowired private GoogleCloudStorageService googleCloudStorageService;
-  @Autowired private DocumentService documentService;
+  private final LoanRequestRepository loanrequestRepository;
+  private final LoanRequestMapper loanrequestMapper;
+  private final CreditRepository creditRepository;
 
   @Override
-  public LoanRequestResponse create(LoanRequestRequest loanRequestRequest, Long creditId)
-      throws Exception {
+  public LoanRequestResponse create(LoanRequestRequest loanRequestRequest, Long creditId) {
     LoanRequest loanrequest = loanrequestMapper.toEntity(loanRequestRequest);
-    var credit =
+    Credit credit =
         creditRepository
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     loanrequest.setCustomer(credit.getCustomer());
     loanrequest.setCredit(credit);
-    var templateFile = googleCloudStorageService.downloadFile("tempaltefile");
-    var file = documentService.replace(loanrequest, templateFile, 3);
-    var url =
-        googleCloudStorageService.uploadFile("loan-request/" + UUID.randomUUID() + ".docx", file);
-    loanrequest.setDocumentUrl(url);
+    credit.setAmount(loanrequest.getAmount());
+    credit.setLoanSecurityType(loanrequest.getLoanSecurityType());
+    creditRepository.save(credit);
     return loanrequestMapper.toResponse(loanrequestRepository.save(loanrequest));
   }
 
@@ -49,6 +46,10 @@ public class LoanRequestServiceImpl implements LoanRequestService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanRequest not found"));
     loanrequestMapper.updateEntity(loanRequestRequest, loanrequest);
+    var credit = loanrequest.getCredit();
+    credit.setAmount(loanrequest.getAmount());
+    credit.setLoanSecurityType(loanrequest.getLoanSecurityType());
+    creditRepository.save(credit);
     return loanrequestMapper.toResponse(loanrequestRepository.save(loanrequest));
   }
 

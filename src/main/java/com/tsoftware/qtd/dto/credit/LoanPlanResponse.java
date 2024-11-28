@@ -2,6 +2,7 @@ package com.tsoftware.qtd.dto.credit;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +17,13 @@ public class LoanPlanResponse {
   private String lastModifiedBy;
   private String createdBy;
 
-  BigDecimal totalCapitalRequirement;
-  BigDecimal ownCapital;
-  BigDecimal proposedLoanAmount;
-  BigDecimal income;
-  String repaymentPlan;
-  String note;
-  private String documentUrl;
+  private String loanNeeds;
+  private BigDecimal totalCapitalRequirement;
+  private BigDecimal ownCapital;
+  private BigDecimal proposedLoanAmount;
+  private BigDecimal monthlyIncome;
+  private String repaymentPlan;
+  private String note;
+  private String loanTerm;
+  private Map<String, Object> metadata;
 }
