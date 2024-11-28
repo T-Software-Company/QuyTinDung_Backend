@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
 import java.util.List;
 
 public interface LoanRequestService {
-  LoanRequestResponse create(LoanRequestRequest loanrequestRequest, Long creditId) throws Exception;
+  LoanRequestResponse create(LoanRequestRequest loanrequestRequest, Long creditId);
 
   LoanRequestResponse update(Long id, LoanRequestRequest loanrequestRequest);
 
