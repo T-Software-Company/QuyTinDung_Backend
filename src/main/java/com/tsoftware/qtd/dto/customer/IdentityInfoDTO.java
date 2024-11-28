@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
+import com.tsoftware.qtd.constants.EnumType.LegalDocType;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -58,6 +59,8 @@ public class IdentityInfoDTO {
 
   @NotNull String frontPhotoUrl;
   @NotNull String backPhotoUrl;
+
+  @NotNull LegalDocType legalDocType;
 
   // Passport
   PassPortType passPortType;
