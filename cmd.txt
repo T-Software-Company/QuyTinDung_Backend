@@ -3,3 +3,12 @@ docker-compose down -v
 
 format code
 mvn spotless:apply
+
+
+check list database
+docker exec -it qtd-postgres bash
+
+psql -U myuser -d postgres
+
+# List all databases
+\l

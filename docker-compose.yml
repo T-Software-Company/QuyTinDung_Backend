@@ -1,20 +1,25 @@
+version: '3.8'
+
 services:
   postgres:
-    build:
-      context: .
-      dockerfile: Dockerfile-postgres
-    image: qtd-postgres
+    image: postgres:latest
     container_name: qtd-postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     environment:
-      POSTGRES_INIT_DB: qtd_tsoftware,qtd_tsoftware_1
+      POSTGRES_INIT_DB: "qtd_tsoftware,qtd_tsoftware_1"
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     networks:
       - keycloak_network
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.0
@@ -22,29 +27,23 @@ services:
     command: start-dev --import-realm
     environment:
       KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 8080
-      KC_HOSTNAME_STRICT_BACKCHANNEL: false
       KC_HTTP_ENABLED: true
-      KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HEALTH_ENABLED: true
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://qtd-postgres/qtd_tsoftware
       KC_DB_USERNAME: myuser
       KC_DB_PASSWORD: mypassword
-      QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/tsoftware-realm.json
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
-      - 8180:8080
+      - "8180:8080"
     restart: always
     volumes:
       - ./keycloak:/opt/keycloak/data/import
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - keycloak_network
-
 
 volumes:
   postgres_data:

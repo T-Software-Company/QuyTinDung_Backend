@@ -65,7 +65,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile-postgres
+          file: -postgresDockerfile
           push: true
           tags: ghcr.io/${{ env.LOWERCASE_REPO }}/postgres:latest
 
