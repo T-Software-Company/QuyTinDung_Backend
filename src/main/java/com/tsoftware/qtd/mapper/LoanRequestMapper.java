@@ -10,10 +10,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface LoanRequestMapper {
-  LoanRequest toEntity(LoanRequestRequest dto);
+  LoanRequest toEntity(LoanRequestRequest request);
 
   LoanRequestResponse toResponse(LoanRequest entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(LoanRequestRequest dto, @MappingTarget LoanRequest entity);
+  void updateEntity(LoanRequestRequest request, @MappingTarget LoanRequest entity);
 }

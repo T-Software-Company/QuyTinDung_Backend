@@ -5,6 +5,7 @@ import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.validation.IsEnum;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.ZonedDateTime;
@@ -39,21 +40,20 @@ public class EmployeeRequest {
 
   @NotBlank String lastName;
 
-  List<Role> roles;
+  @IsEnum(enumClass = Role.class)
+  List<String> roles;
 
   @NotNull @Past ZonedDateTime dayOfBirth;
 
-  @NotNull Gender gender;
-
+  @IsEnum(enumClass = Gender.class)
   @NotNull
-  @Pattern(
-      regexp = "WORKING|ON_LEAVE|RESIGNED",
-      message = "Invalid employmentStatus value should is (WORKING|ON_LEAVE|RESIGNED)")
-  EmploymentStatus employmentStatus;
+  String gender;
 
+  @IsEnum(enumClass = EmploymentStatus.class)
   @NotNull
-  @Pattern(regexp = "ACTIVE|LOCKED", message = "Invalid banned value should is (ACTIVE|LOCKED)")
-  Banned banned;
+  String status;
+
+  @NotNull Banned banned;
 
   @NotBlank
   @Size(max = 15)

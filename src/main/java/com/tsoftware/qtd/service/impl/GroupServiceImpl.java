@@ -8,8 +8,11 @@ import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
 import com.tsoftware.qtd.mapper.GroupMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.GroupRepository;
+import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
+import java.util.HashSet;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,12 +34,15 @@ public class GroupServiceImpl implements GroupService {
   private GroupMapper groupMapper;
   private final EmployeeRepository employeeRepository;
   private final KeycloakService keycloakService;
+  private final RoleRepository roleRepository;
 
   @Override
   public GroupResponse create(GroupRequest groupRequest) {
     Group group = groupMapper.toEntity(groupRequest);
     var kcGroupId = keycloakService.createGroup(groupRequest);
     group.setKcGroupId(kcGroupId);
+    var roles = roleRepository.findAllByName(groupRequest.getRoles());
+    group.setRoles(roles);
     return groupMapper.toResponse(groupRepository.save(group));
   }
 
@@ -46,6 +52,8 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.updateGroup(groupRequest, group.getKcGroupId());
     groupMapper.updateEntity(groupRequest, group);
+    var roles = roleRepository.findAllByName(groupRequest.getRoles());
+    group.setRoles(roles);
     return groupMapper.toResponse(groupRepository.save(group));
   }
 
@@ -85,6 +93,7 @@ public class GroupServiceImpl implements GroupService {
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     var employees = group.getEmployees();
     employees.add(employee);
+    keycloakService.addUserToGroup(group.getKcGroupId(), employee.getUserId());
     groupRepository.save(group);
   }
 
@@ -100,6 +109,28 @@ public class GroupServiceImpl implements GroupService {
             .findById(employeeId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     employees.remove(employee);
+    keycloakService.removeUserOnGroup(group.getKcGroupId(), employee.getUserId());
+    groupRepository.save(group);
+  }
+
+  @Override
+  public void addRoles(Long id, List<String> roles) {
+    var group =
+        groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
+    keycloakService.addRolesToGroup(group.getKcGroupId(), roles);
+    var rolesEntities = roleRepository.findAllByName(roles);
+    group.getRoles().addAll(rolesEntities);
+    group.setRoles(new HashSet<>(group.getRoles()).stream().toList());
+    groupRepository.save(group);
+  }
+
+  @Override
+  public void removeRoles(Long id, List<String> roles) {
+    var group =
+        groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
+    keycloakService.removeRolesOnGroup(group.getKcGroupId(), roles);
+    var rolesEntities = roleRepository.findAllByName(roles);
+    group.getRoles().removeAll(rolesEntities);
     groupRepository.save(group);
   }
 }

@@ -2,47 +2,39 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.dto.credit.LoanPlanRequest;
 import com.tsoftware.qtd.dto.credit.LoanPlanResponse;
+import com.tsoftware.qtd.entity.Credit;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LoanPlanMapper;
 import com.tsoftware.qtd.repository.CreditRepository;
-import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.service.LoanPlanService;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class LoanPlanServiceImpl implements LoanPlanService {
 
-  @Autowired private LoanPlanRepository loanplanRepository;
-
-  @Autowired private LoanPlanMapper loanplanMapper;
-
-  @Autowired private DocumentService documentService;
-  @Autowired private CustomerRepository customerRepository;
-
-  @Autowired private CreditRepository creditRepository;
-  @Autowired private GoogleCloudStorageService googleCloudStorageService;
+  private final LoanPlanRepository loanplanRepository;
+  private final LoanPlanMapper loanplanMapper;
+  private final CreditRepository creditRepository;
 
   @Override
-  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, Long creditId) throws Exception {
+  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, Long creditId) {
 
     LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
-    var credit =
+    Credit credit =
         creditRepository
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     loanplan.setCustomer(credit.getCustomer());
     loanplan.setCredit(credit);
-    var templateFile = googleCloudStorageService.downloadFile("tempaltefile");
-    var file = documentService.replace(loanplan, templateFile, 3);
-    var url =
-        googleCloudStorageService.uploadFile("loan-plan/" + UUID.randomUUID() + ".docx", file);
-    loanplan.setDocumentUrl(url);
+
     return loanplanMapper.toDto(loanplanRepository.save(loanplan));
   }
 

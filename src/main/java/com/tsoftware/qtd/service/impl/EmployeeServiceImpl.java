@@ -7,6 +7,7 @@ import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
 import com.tsoftware.qtd.mapper.EmployeeMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
+import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
 import lombok.AccessLevel;
@@ -31,6 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   EmployeeRepository employeeRepository;
   EmployeeMapper employeeMapper;
   KeycloakService keycloakService;
+  private final RoleRepository roleRepository;
 
   @Override
   public Page<EmployeeResponse> getEmployees(Pageable pageable) {
@@ -52,6 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     var userId = keycloakService.createUser(request);
     var employee = employeeMapper.toEmployee(request);
     employee.setUserId(userId);
+    var rolesExists = roleRepository.findAllByName(request.getRoles());
+    employee.setRoles(rolesExists);
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 

@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,6 +26,6 @@ public class Group extends AbstractAuditEntity {
   @ManyToMany(fetch = FetchType.LAZY)
   private List<Employee> employees;
 
-  @Enumerated(EnumType.STRING)
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<Role> roles;
 }

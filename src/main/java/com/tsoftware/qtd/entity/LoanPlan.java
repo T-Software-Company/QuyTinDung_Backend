@@ -27,7 +27,6 @@ public class LoanPlan extends AbstractAuditEntity {
   private BigDecimal monthlyIncome;
   private String repaymentPlan;
   private String note;
-  private String documentUrl;
   private String loanTerm;
 
   @Type(JsonType.class)
@@ -37,6 +36,6 @@ public class LoanPlan extends AbstractAuditEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Customer customer;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY)
   private Credit credit;
 }

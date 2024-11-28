@@ -1,6 +1,8 @@
 package com.tsoftware.qtd.exception;
 
 import com.tsoftware.commonlib.model.ApiResponse;
+import com.turkraft.springfilter.parser.InvalidSyntaxException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,6 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(value = KeycloakException.class)
   ResponseEntity<ApiResponse<Void>> handleKeyCloak(KeycloakException exception) {
-    log.error("KeycloakException: ", exception);
     ApiResponse<Void> apiResponse = new ApiResponse<Void>();
 
     apiResponse.setCode(exception.getStatus());
@@ -132,9 +133,21 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(SpringFilterBadRequestException.class)
   public ResponseEntity<ApiResponse<Object>> handleSpringFilterBadRequestException(
-      SpringFilterBadRequestException e) {
+      SpringFilterBadRequestException e, HttpServletRequest request) {
+    String filter = request.getParameter("filter");
     return ResponseEntity.badRequest()
-        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), "String filter is bad", null));
+        .body(
+            new ApiResponse<>(
+                HttpStatus.BAD_REQUEST.value(), "String filter is bad: " + filter, null));
+  }
+
+  @ExceptionHandler(InvalidSyntaxException.class)
+  public ResponseEntity<ApiResponse<Object>> handleInvalidSyntaxException(
+      InvalidSyntaxException e) {
+    return ResponseEntity.badRequest()
+        .body(
+            new ApiResponse<>(
+                HttpStatus.BAD_REQUEST.value(), "String filter invalid syntax", e.getMessage()));
   }
 
   @ExceptionHandler(CommonException.class)

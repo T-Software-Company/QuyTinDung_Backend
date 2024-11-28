@@ -37,3 +37,4 @@ service-account.json
 deployment/server.key
 deployment/keycloak.json
 deployment/tsoftware-realm.json
+deployment/tsoftware.store.key

@@ -9,6 +9,7 @@ import com.tsoftware.qtd.exception.KeycloakException;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.service.KeycloakService;
 import jakarta.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -176,7 +177,7 @@ public class KeycloakServiceIml implements KeycloakService {
     var groupRepresentation = groupResource.toRepresentation();
     groupRepresentation.setName(group.getName());
     groupResource.update(groupRepresentation);
-    removeRolesOnGroup(kcGroupId);
+    removeAllRolesOnGroup(kcGroupId);
     groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(group.getRoles()));
   }
 
@@ -184,6 +185,53 @@ public class KeycloakServiceIml implements KeycloakService {
   public void deleteGroup(String kcGroupId) {
     var groupResource = realmResource.groups().group(kcGroupId);
     groupResource.remove();
+  }
+
+  @Override
+  public void addRolesToGroup(String kcGroupId, List<String> roles) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
+  }
+
+  @Override
+  public void removeRolesOnGroup(String kcGroupId, List<String> roles) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    groupResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
+  }
+
+  @Override
+  public String[] createClientRoles(Role[] values) {
+    return Arrays.stream(values).map(this::createClientRole).toArray(String[]::new);
+  }
+
+  @Override
+  public String createClientRole(Role role) {
+    var clientResource = realmResource.clients().get(getClientIdOnDb());
+    var clientRolesResource = clientResource.roles();
+    try {
+      var roleRepresentationExists = clientRolesResource.get(role.name()).toRepresentation();
+      return roleRepresentationExists.getId();
+    } catch (jakarta.ws.rs.NotFoundException e) {
+      RoleRepresentation roleRepresentation = new RoleRepresentation();
+      roleRepresentation.setName(role.name());
+      roleRepresentation.setDescription(role.getDescription());
+      clientRolesResource.create(roleRepresentation);
+      return clientRolesResource.get(role.name()).toRepresentation().getId();
+    }
+  }
+
+  @Override
+  public void addUserToGroup(String kcGroupId, String userId) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    var userRepresentation = realmResource.users().get(userId).toRepresentation();
+    groupResource.members().add(userRepresentation);
+  }
+
+  @Override
+  public void removeUserOnGroup(String kcGroupId, String userId) {
+    var groupResource = realmResource.groups().group(kcGroupId);
+    var userRepresentation = realmResource.users().get(userId).toRepresentation();
+    groupResource.members().remove(userRepresentation);
   }
 
   private String extractErrorMessage(Response response) {
@@ -208,39 +256,28 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   private void removeRolesOnUser(String userId) {
-
     var userResource = realmResource.users().get(userId);
-
-    var realmRoles = userResource.roles().realmLevel().listAll();
     var clientRoles = userResource.roles().clientLevel(getClientIdOnDb()).listAll();
-
-    if (!realmRoles.isEmpty()) {
-      userResource.roles().realmLevel().remove(realmRoles);
-    }
     if (!clientRoles.isEmpty()) {
       userResource.roles().clientLevel(getClientIdOnDb()).remove(clientRoles);
     }
   }
 
-  private void removeRolesOnGroup(String groupId) {
+  private void removeAllRolesOnGroup(String groupId) {
     var groupResource = realmResource.groups().group(groupId);
-    var realmRoles = groupResource.roles().realmLevel().listAll();
     var clientRoles = groupResource.roles().clientLevel(getClientIdOnDb()).listAll();
-    if (!realmRoles.isEmpty()) {
-      groupResource.roles().realmLevel().remove(realmRoles);
-    }
     if (!clientRoles.isEmpty()) {
       groupResource.roles().clientLevel(getClientIdOnDb()).remove(clientRoles);
     }
   }
 
-  private List<RoleRepresentation> getClientRoles(List<Role> roles) {
+  private List<RoleRepresentation> getClientRoles(List<String> roles) {
     var clientResource = realmResource.clients().get(getClientIdOnDb());
     return roles.stream()
         .map(
             role -> {
               try {
-                return clientResource.roles().get(role.name()).toRepresentation();
+                return clientResource.roles().get(role).toRepresentation();
               } catch (jakarta.ws.rs.NotFoundException e) {
                 throw new NotFoundException("Role " + role + " not found");
               }

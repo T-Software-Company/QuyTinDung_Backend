@@ -5,15 +5,16 @@ import com.tsoftware.qtd.dto.credit.LoanRequestRequest;
 import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
 import com.tsoftware.qtd.service.LoanRequestService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loan-requests")
+@RequiredArgsConstructor
 public class LoanRequestController {
 
-  @Autowired private LoanRequestService loanRequestService;
+  private final LoanRequestService loanRequestService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<LoanRequestResponse>> create(

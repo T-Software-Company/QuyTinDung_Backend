@@ -34,15 +34,13 @@ public class LoanRequest extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  private String documentUrl;
-
   @Enumerated(EnumType.STRING)
   private BorrowerType borrowerType;
 
   @Enumerated(EnumType.STRING)
   private LoanSecurityType loanSecurityType;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY)
   private Credit credit;
 
   @ManyToOne(fetch = FetchType.LAZY)

@@ -19,10 +19,4 @@ public class Address extends AbstractAuditEntity {
   private String cityProvince;
   private String country;
   private String detail;
-
-  @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
-  private Employee employee;
-
-  @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
-  private Customer customer;
 }

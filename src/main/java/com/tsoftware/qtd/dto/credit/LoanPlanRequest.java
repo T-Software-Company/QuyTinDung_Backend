@@ -1,5 +1,7 @@
 package com.tsoftware.qtd.dto.credit;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
 import lombok.Builder;
@@ -11,12 +13,13 @@ import lombok.Setter;
 @Builder
 public class LoanPlanRequest {
 
-  private BigDecimal totalCapitalRequirement;
-  private BigDecimal ownCapital;
-  private BigDecimal proposedLoanAmount;
-  private BigDecimal income;
-  private String repaymentPlan;
+  @NotNull @NotBlank private String loanNeeds;
+  @NotNull @NotBlank private BigDecimal totalCapitalRequirement;
+  @NotNull @NotBlank private BigDecimal ownCapital;
+  @NotNull @NotBlank private BigDecimal proposedLoanAmount;
+  @NotNull @NotBlank private BigDecimal monthlyIncome;
+  @NotNull @NotBlank private String repaymentPlan;
   private String note;
-  private String documentUrl;
+  @NotNull @NotBlank private String loanTerm;
   private Map<String, Object> metadata;
 }
