@@ -1,15 +1,21 @@
 services:
   postgres:
     container_name: qtd-postgres
-    image: ${DB_IMAGE}
+    image: postgres:17.1
     volumes:
-      - qtd_postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     environment:
       POSTGRES_INIT_DB: ${POSTGRES_INIT_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - qtd_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.0
@@ -38,7 +44,8 @@ services:
       - ./tsoftware-realm.json:/opt/keycloak/data/import/tsoftware-realm.json
       - ./server.p12:/etc/keycloak/server.p12
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - qtd_network
   server:
@@ -61,8 +68,10 @@ services:
       - qtd_network
     restart: always
     depends_on:
-      - keycloak
-      - postgres
+      keycloak:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
 
   nginx:
     container_name: qtd-nginx
@@ -76,7 +85,6 @@ services:
       - ./tsoftware.store.key:/etc/ssl/private/tsoftware.store.key
     depends_on:
       - server
-      - keycloak
     restart: always
     networks:
       - qtd_network
