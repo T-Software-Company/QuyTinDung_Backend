@@ -43,6 +43,12 @@ services:
     volumes:
       - ./tsoftware-realm.json:/opt/keycloak/data/import/tsoftware-realm.json
       - ./server.p12:/etc/keycloak/server.p12
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/realms/master" ]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
     depends_on:
       postgres:
         condition: service_healthy
