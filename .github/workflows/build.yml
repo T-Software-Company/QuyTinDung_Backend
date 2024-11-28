@@ -61,11 +61,11 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.LOWERCASE_REPO }}:latest
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: -postgresDockerfile
-          push: true
-          tags: ghcr.io/${{ env.LOWERCASE_REPO }}/postgres:latest
+#      - name: Build and push Docker images
+#        uses: docker/build-push-action@v6
+#        with:
+#          context: .
+#          file: -postgresDockerfile
+#          push: true
+#          tags: ghcr.io/${{ env.LOWERCASE_REPO }}/postgres:latest
 
