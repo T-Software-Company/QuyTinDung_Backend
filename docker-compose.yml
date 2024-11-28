@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17.1
     container_name: qtd-postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
