@@ -1,8 +1,15 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +26,7 @@ import lombok.experimental.SuperBuilder;
 public class Customer extends AbstractAuditEntity {
 
   private String fullName;
+  private UUID customerUUID;
 
   @Column(unique = true)
   private String email;
@@ -49,14 +57,11 @@ public class Customer extends AbstractAuditEntity {
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<AssetRepossessionNotice> assetRepossessionNotices;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  private PassPort passPort;
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+  private List<RelationCustomer> relationCustomers;
 
   @OneToOne(cascade = CascadeType.ALL)
-  private CCCD cccd;
-
-  @OneToOne(cascade = CascadeType.ALL)
-  private CMND cmnd;
+  private IdentityInfo identityInfo;
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<IncomeProof> incomeProofs;

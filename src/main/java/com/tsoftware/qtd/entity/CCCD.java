@@ -1,10 +1,15 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @AllArgsConstructor
@@ -30,7 +35,4 @@ public class CCCD extends AbstractAuditEntity {
 
   @Enumerated(EnumType.STRING)
   private Gender gender;
-
-  @OneToOne(mappedBy = "cccd", fetch = FetchType.LAZY)
-  private Customer customer;
 }

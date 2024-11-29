@@ -6,11 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @EnableFeignClients
 @OpenAPIDefinition
+@EnableAspectJAutoProxy
+@ComponentScan(basePackages = {"com.tsoftware.commonlib", "com.tsoftware.qtd"})
 public class QtdServiceApplication {
   private static final Logger log = LoggerFactory.getLogger(QtdServiceApplication.class);
 

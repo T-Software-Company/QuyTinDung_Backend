@@ -22,6 +22,10 @@ jobs:
       - name: Grant execute permission for the script
         run: chmod +x decrypt-service-account.sh
 
+      - name: Setup environment variables for AWS
+        run: |
+          echo "CODEARTIFACT_AUTH_TOKEN=${{ secrets.CODEARTIFACT_AUTH_TOKEN }}" >> $GITHUB_ENV
+
       - name: Decrypt large secret
         run: |
           ./decrypt-service-account.sh 
@@ -35,6 +39,9 @@ jobs:
           distribution: oracle
           java-version: 21
 
+      - name: Add aws to .m2
+        run: |
+          cp ./settings.xml ~/.m2/settings.xml
 
       # - name: Test
       #   run: mvn -B test --file pom.xml

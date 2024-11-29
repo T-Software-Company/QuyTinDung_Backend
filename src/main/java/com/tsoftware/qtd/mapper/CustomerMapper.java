@@ -9,19 +9,10 @@ import org.mapstruct.*;
     componentModel = "spring",
     uses = {CMNDMapper.class, CCCDMapper.class, PassPortMapper.class})
 public interface CustomerMapper {
-  @Mapping(source = "cmnd", target = "cmnd")
-  @Mapping(source = "cccd", target = "cccd")
-  @Mapping(source = "passPort", target = "passPort")
   Customer toEntity(CustomerRequest dto);
 
-  @Mapping(source = "cmnd", target = "cmnd")
-  @Mapping(source = "cccd", target = "cccd")
-  @Mapping(source = "passPort", target = "passPort")
   CustomerResponse toResponse(Customer entity);
 
-  @Mapping(source = "cmnd", target = "cmnd")
-  @Mapping(source = "cccd", target = "cccd")
-  @Mapping(source = "passPort", target = "passPort")
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(CustomerRequest dto, @MappingTarget Customer entity);
 }

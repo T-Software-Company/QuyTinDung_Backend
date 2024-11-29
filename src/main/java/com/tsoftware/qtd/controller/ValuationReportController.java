@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;

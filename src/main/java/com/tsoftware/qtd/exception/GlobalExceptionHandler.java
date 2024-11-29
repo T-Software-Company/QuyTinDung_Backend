@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.exception;
 
-import com.tsoftware.qtd.dto.ApiResponse;
+import com.tsoftware.commonlib.model.ApiResponse;
 import com.turkraft.springfilter.parser.InvalidSyntaxException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -148,5 +148,20 @@ public class GlobalExceptionHandler {
         .body(
             new ApiResponse<>(
                 HttpStatus.BAD_REQUEST.value(), "String filter invalid syntax", e.getMessage()));
+  }
+
+  @ExceptionHandler(CommonException.class)
+  public ResponseEntity<ApiResponse<?>> handleRuntimeException(CommonException ex) {
+    CommonError error = ex.getResponse();
+    String message = ex.getMessage();
+    var params = ex.getParameters().toArray();
+    String errorMessage = String.format(message.replace("{}", "%s"), params);
+    return getResponse(error, errorMessage);
+  }
+
+  private ResponseEntity<ApiResponse<?>> getResponse(CommonError error, String message) {
+    return new ResponseEntity<>(
+        ApiResponse.builder().code(error.getHttpStatus().value()).message(message).build(),
+        error.getHttpStatus());
   }
 }

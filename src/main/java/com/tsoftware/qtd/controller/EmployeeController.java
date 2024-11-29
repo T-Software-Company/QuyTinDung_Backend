@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
+import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.dto.ApiResponse;
 import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
