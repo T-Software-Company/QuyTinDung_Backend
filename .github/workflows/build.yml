@@ -23,8 +23,7 @@ jobs:
         run: chmod +x decrypt-service-account.sh
 
       - name: Setup environment variables for AWS
-        run: |
-          echo "CODEARTIFACT_AUTH_TOKEN=${{ secrets.CODEARTIFACT_AUTH_TOKEN }}" >> $GITHUB_ENV
+        run: echo "CODEARTIFACT_AUTH_TOKEN=${{ secrets.CODEARTIFACT_AUTH_TOKEN }}" >> $GITHUB_ENV
 
       - name: Decrypt large secret
         run: |
@@ -47,6 +46,8 @@ jobs:
       #   run: mvn -B test --file pom.xml
 
       - name: Build the application
+        env:
+          CODEARTIFACT_AUTH_TOKEN: ${{ secrets.CODEARTIFACT_AUTH_TOKEN }}
         run: |
           mvn clean
           mvn -B  package -DskipTests --file pom.xml
