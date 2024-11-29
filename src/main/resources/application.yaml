@@ -6,23 +6,23 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-#  ssl:
-#    bundle: web-server
-#    client-auth: want
+  ssl:
+    bundle: web-server
+    client-auth: want
 
 
-#spring:
-#  ssl:
-#    bundle:
-#      jks:
-#        web-server:
-#          key:
-#            alias: ${KEY_ALIAS}
-#            password: ${STORE_PASSWORD}
-#          keystore:
-#            location: classpath:server.p12
-#            password: ${STORE_PASSWORD}
-#            type: PKCS12
+spring:
+  ssl:
+    bundle:
+      jks:
+        web-server:
+          key:
+            alias: ${KEY_ALIAS}
+            password: ${STORE_PASSWORD}
+          keystore:
+            location: classpath:server.p12
+            password: ${STORE_PASSWORD}
+            type: PKCS12
 
   threads:
     virtual:
