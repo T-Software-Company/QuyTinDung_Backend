@@ -53,7 +53,12 @@ public class EmployeeRequest {
   @NotNull
   String status;
 
-  @NotNull Banned banned;
+  @NotNull @NotBlank String employeeCode;
+
+  @IsEnum(enumClass = Banned.class)
+  @NotBlank
+  @NotNull
+  String banned;
 
   @NotBlank
   @Size(max = 15)

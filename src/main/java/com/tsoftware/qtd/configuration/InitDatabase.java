@@ -15,8 +15,8 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -53,7 +53,7 @@ public class InitDatabase implements CommandLineRunner {
               .phone("0834555923")
               .firstName("Nguyễn Văn")
               .lastName("Admin")
-              .banned(Banned.ACTIVE)
+              .banned(Banned.ACTIVE.name())
               .dayOfBirth(ZonedDateTime.of(2000, 10, 12, 0, 0, 0, 0, ZoneId.systemDefault()))
               .gender(Gender.MALE.name())
               .status(EmploymentStatus.WORKING.name())
@@ -76,17 +76,30 @@ public class InitDatabase implements CommandLineRunner {
 
   public void createEmployees() {
     var all = employeeRepository.findAll();
-    if (CollectionUtils.isNotEmpty(all)) {
+    if (all.size() < 2) {
       return;
     }
+    final List<String> FIRST_NAMES =
+        List.of(
+            "Nguyễn", "Trần", "Lê", "Phạm", "Huỳnh", "Hoàng", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ",
+            "Ngô", "Dương", "Lý", "Châu", "Cao", "Hà", "Phan", "Tô", "Tôn");
+
+    final List<String> LAST_NAMES =
+        List.of(
+            "An", "Bình", "Chi", "Dũng", "Hạnh", "Hòa", "Hùng", "Khánh", "Linh", "Long", "Minh",
+            "Nam", "Ngọc", "Phương", "Quân", "Quang", "Sơn", "Tâm", "Thành", "Thảo", "Tuấn",
+            "Vinh");
     for (int i = 1; i <= 50; i++) {
+      Random random = new Random();
+      String firstName = FIRST_NAMES.get(random.nextInt(FIRST_NAMES.size()));
+      String lastName = LAST_NAMES.get(random.nextInt(LAST_NAMES.size()));
       String email = "employee" + i + "@gmail.com";
       String username = "employee" + i;
-      createEmployee(email, username);
+      createEmployee(email, username, firstName, lastName);
     }
   }
 
-  private void createEmployee(String email, String username) {
+  private void createEmployee(String email, String username, String firstName, String lastName) {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
 
     if (!employeeRepository.existsByEmail(email)
@@ -96,9 +109,9 @@ public class InitDatabase implements CommandLineRunner {
           EmployeeRequest.builder()
               .email(email)
               .phone("083" + (random.nextInt(9000000) + 1000000))
-              .firstName("Nguyễn Văn")
-              .lastName("Ngẫu Nhiên")
-              .banned(Banned.ACTIVE)
+              .firstName(firstName)
+              .lastName(lastName)
+              .banned(random.nextBoolean() ? Banned.ACTIVE.name() : Banned.LOCKED.name())
               .dayOfBirth(
                   ZonedDateTime.of(
                       1980 + random.nextInt(20),
@@ -110,9 +123,18 @@ public class InitDatabase implements CommandLineRunner {
                       0,
                       ZoneId.systemDefault()))
               .gender(random.nextBoolean() ? Gender.MALE.name() : Gender.FEMALE.name())
-              .status(EmploymentStatus.WORKING.name())
+              .status(
+                  random.nextBoolean()
+                      ? EmploymentStatus.ON_LEAVE.name()
+                      : EmploymentStatus.WORKING.name())
               .password(username)
-              .roles(List.of(Role.EMPLOYEE.name()))
+              .employeeCode(String.valueOf(UUID.randomUUID()))
+              .roles(
+                  List.of(
+                      Arrays.stream(Role.values())
+                          .toList()
+                          .get(random.nextInt(Role.values().length))
+                          .name()))
               .username(username)
               .address(
                   AddressDto.builder()
