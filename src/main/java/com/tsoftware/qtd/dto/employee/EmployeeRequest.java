@@ -1,7 +1,5 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
@@ -49,16 +47,7 @@ public class EmployeeRequest {
   @NotNull
   String gender;
 
-  @IsEnum(enumClass = EmploymentStatus.class)
-  @NotNull
-  String status;
-
   @NotNull @NotBlank String employeeCode;
-
-  @IsEnum(enumClass = Banned.class)
-  @NotBlank
-  @NotNull
-  String banned;
 
   @NotBlank
   @Size(max = 15)

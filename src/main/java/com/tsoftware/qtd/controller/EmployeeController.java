@@ -58,6 +58,7 @@ public class EmployeeController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAllEmployees(
       @Filter Specification<Employee> spec, Pageable page) {
+
     Page<EmployeeResponse> employeesPage = employeeService.getAll(spec, page);
     var pageResponse = pageResponseMapper.toPageResponse(employeesPage);
 
@@ -144,7 +145,7 @@ public class EmployeeController {
 
   @PostMapping("/{id}/activate")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable String id) {
+  public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable Long id) {
     employeeService.activeEmployee(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
@@ -155,7 +156,7 @@ public class EmployeeController {
 
   @PostMapping("/{id}/deactivate")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable String id) {
+  public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable Long id) {
     employeeService.deactivateEmployee(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()

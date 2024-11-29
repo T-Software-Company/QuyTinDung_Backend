@@ -1,7 +1,5 @@
 package com.tsoftware.qtd.configuration;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
@@ -53,10 +51,8 @@ public class InitDatabase implements CommandLineRunner {
               .phone("0834555923")
               .firstName("Nguyễn Văn")
               .lastName("Admin")
-              .banned(Banned.ACTIVE.name())
               .dayOfBirth(ZonedDateTime.of(2000, 10, 12, 0, 0, 0, 0, ZoneId.systemDefault()))
               .gender(Gender.MALE.name())
-              .status(EmploymentStatus.WORKING.name())
               .password("admin")
               .roles(List.of(Role.ADMIN.name(), Role.EMPLOYEE.name()))
               .username("admin")
@@ -76,7 +72,7 @@ public class InitDatabase implements CommandLineRunner {
 
   public void createEmployees() {
     var all = employeeRepository.findAll();
-    if (all.size() < 2) {
+    if (all.size() > 1) {
       return;
     }
     final List<String> FIRST_NAMES =
@@ -111,7 +107,6 @@ public class InitDatabase implements CommandLineRunner {
               .phone("083" + (random.nextInt(9000000) + 1000000))
               .firstName(firstName)
               .lastName(lastName)
-              .banned(random.nextBoolean() ? Banned.ACTIVE.name() : Banned.LOCKED.name())
               .dayOfBirth(
                   ZonedDateTime.of(
                       1980 + random.nextInt(20),
@@ -123,10 +118,6 @@ public class InitDatabase implements CommandLineRunner {
                       0,
                       ZoneId.systemDefault()))
               .gender(random.nextBoolean() ? Gender.MALE.name() : Gender.FEMALE.name())
-              .status(
-                  random.nextBoolean()
-                      ? EmploymentStatus.ON_LEAVE.name()
-                      : EmploymentStatus.WORKING.name())
               .password(username)
               .employeeCode(String.valueOf(UUID.randomUUID()))
               .roles(

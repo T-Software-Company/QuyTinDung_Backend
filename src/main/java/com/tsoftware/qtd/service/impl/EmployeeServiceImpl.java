@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.constants.EnumType.Banned;
+import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -56,6 +57,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     employee.setUserId(userId);
     var rolesExists = roleRepository.findAllByName(request.getRoles());
     employee.setRoles(rolesExists);
+    employee.setBanned(Banned.ACTIVE);
+    employee.setStatus(EmploymentStatus.WORKING);
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 
@@ -93,24 +96,24 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void activeEmployee(String userId) {
+  public void activeEmployee(Long id) {
     var employee =
         employeeRepository
-            .findByUserId(userId)
+            .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     employee.setBanned(Banned.ACTIVE);
-    keycloakService.activeUser(userId);
+    keycloakService.activeUser(employee.getUserId());
     employeeRepository.save(employee);
   }
 
   @Override
-  public void deactivateEmployee(String userId) {
+  public void deactivateEmployee(Long id) {
     var employee =
         employeeRepository
-            .findByUserId(userId)
+            .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     employee.setBanned(Banned.LOCKED);
-    keycloakService.deactivateUser(userId);
+    keycloakService.deactivateUser(employee.getUserId());
     employeeRepository.save(employee);
   }
 
