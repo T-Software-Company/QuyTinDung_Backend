@@ -76,3 +76,17 @@ google:
     storage:
       bucket-name: qtd_tsoftware
       service-account: service-account.json
+
+t-software:
+  workflow:
+    rules:
+      create_customer:
+        create_application: true
+      create_application:
+        asset_valuation: true
+      asset_valuation:
+        appraisal_plan: true
+      appraisal_plan:
+        appraisal_approval: true
+      appraisal_approval:
+        appraisal_report: true

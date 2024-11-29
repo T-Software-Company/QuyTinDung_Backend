@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -74,6 +75,10 @@ public class InitDatabase implements CommandLineRunner {
   }
 
   public void createEmployees() {
+    var all = employeeRepository.findAll();
+    if (CollectionUtils.isNotEmpty(all)) {
+      return;
+    }
     for (int i = 1; i <= 50; i++) {
       String email = "employee" + i + "@gmail.com";
       String username = "employee" + i;
