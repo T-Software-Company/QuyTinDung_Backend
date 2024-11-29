@@ -22,8 +22,24 @@ jobs:
       - name: Grant execute permission for the script
         run: chmod +x decrypt-service-account.sh
 
-      - name: Setup environment variables for AWS
-        run: echo "CODEARTIFACT_AUTH_TOKEN=${{ secrets.CODEARTIFACT_AUTH_TOKEN }}" >> $GITHUB_ENV
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Generate CodeArtifact Auth Token
+        id: codeartifact-auth-token
+        run: |
+          TOKEN=$(aws codeartifact get-authorization-token \
+            --domain rido \
+            --domain-owner 546505995906 \
+            --region us-west-2 \
+            --query authorizationToken \
+            --output text)
+          echo "TOKEN=$TOKEN"
+          echo "CODEARTIFACT_AUTH_TOKEN=$TOKEN" >> $GITHUB_ENV         
 
       - name: Decrypt large secret
         run: |
@@ -46,8 +62,6 @@ jobs:
       #   run: mvn -B test --file pom.xml
 
       - name: Build the application
-        env:
-          CODEARTIFACT_AUTH_TOKEN: ${{ secrets.CODEARTIFACT_AUTH_TOKEN }}
         run: |
           mvn clean
           mvn -B  package -DskipTests --file pom.xml
