@@ -58,7 +58,6 @@ public class EmployeeController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAll(
       @Filter Specification<Employee> spec, Pageable page) {
-
     Page<EmployeeResponse> employeesPage = employeeService.getAll(spec, page);
     var pageResponse = pageResponseMapper.toPageResponse(employeesPage);
 
@@ -110,6 +109,31 @@ public class EmployeeController {
             .result(employeeService.updateEmployee(id, request))
             .build());
   }
+
+  //	@DeleteMapping("/{id}")
+  //	@PreAuthorize("hasRole('ADMIN')")
+  //	public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(
+  //					@PathVariable String id) {
+  //
+  //		return ResponseEntity.ok(
+  //						ApiResponse.<EmployeeResponse>builder()
+  //										.code(HttpStatus.OK.value())
+  //										.message("Deleted")
+  //										.result(employeeService.delete(id))
+  //										.build());
+  //	}
+  //	@DeleteMapping("/delete")
+  //	@PreAuthorize("hasRole('ADMIN')")
+  //	public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(
+  //					List<String> ids) {
+  //
+  //		return ResponseEntity.ok(
+  //						ApiResponse.<EmployeeResponse>builder()
+  //										.code(HttpStatus.OK.value())
+  //										.message("Deleted")
+  //										.result(employeeService.delete(ids))
+  //										.build());
+  //	}
 
   @GetMapping("/roles")
   @PreAuthorize("hasRole('ADMIN')")

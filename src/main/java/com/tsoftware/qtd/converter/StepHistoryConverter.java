@@ -25,6 +25,7 @@ public class StepHistoryConverter implements AttributeConverter<List<StepHistory
       return JsonParser.toObject(data, new TypeReference<>() {});
     } catch (Exception e) {
       log.error("Failed to convert string to object", e);
+      // tracking
       return null;
     }
   }

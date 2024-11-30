@@ -13,10 +13,20 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class Address extends AbstractAuditEntity {
 
+  @Column(nullable = false)
   private String streetAddress;
+
+  @Column(nullable = false)
   private String wardOrCommune;
+
+  @Column(nullable = false)
   private String district;
+
+  @Column(nullable = false)
   private String cityProvince;
+
+  @Column(nullable = false)
   private String country;
+
   private String detail;
 }

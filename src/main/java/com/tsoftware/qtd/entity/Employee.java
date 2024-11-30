@@ -19,29 +19,35 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class Employee extends AbstractAuditEntity {
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String userId;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String username;
 
   @Column(unique = true)
   private String code;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String email;
 
+  @Column(nullable = false)
   private String firstName;
+
+  @Column(nullable = false)
   private String lastName;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
   private ZonedDateTime dayOfBirth;
 
+  @Column(nullable = false)
   private String phone;
 
   @Enumerated(EnumType.ORDINAL)
+  @Column(nullable = false)
   private Gender gender;
 
+  @Column(nullable = false)
   private Boolean enabled;
 
   @OneToOne(cascade = CascadeType.ALL)
