@@ -47,7 +47,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
-
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
 
 
 idp:
