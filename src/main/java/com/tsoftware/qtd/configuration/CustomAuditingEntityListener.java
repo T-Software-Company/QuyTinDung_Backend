@@ -24,8 +24,6 @@ public class CustomAuditingEntityListener extends AuditingEntityListener {
     } else {
       if (entity.getLastModifiedBy() == null) {
         entity.setLastModifiedBy(entity.getCreatedBy());
-      } else {
-        entity.setLastModifiedBy(entity.getCreatedBy());
       }
     }
   }
