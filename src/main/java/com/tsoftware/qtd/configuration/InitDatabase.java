@@ -119,7 +119,7 @@ public class InitDatabase implements CommandLineRunner {
                       ZoneId.systemDefault()))
               .gender(random.nextBoolean() ? Gender.MALE.name() : Gender.FEMALE.name())
               .password(username)
-              .employeeCode(String.valueOf(UUID.randomUUID()))
+              .code(String.valueOf(UUID.randomUUID()))
               .roles(
                   List.of(
                       Arrays.stream(Role.values())

@@ -56,7 +56,7 @@ public class EmployeeController {
 
   @GetMapping()
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAllEmployees(
+  public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAll(
       @Filter Specification<Employee> spec, Pageable page) {
 
     Page<EmployeeResponse> employeesPage = employeeService.getAll(spec, page);
@@ -143,25 +143,47 @@ public class EmployeeController {
             .build());
   }
 
-  @PostMapping("/{id}/activate")
+  @PostMapping("/{id}/enable")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> activateUser(@PathVariable Long id) {
-    employeeService.activeEmployee(id);
+  public ResponseEntity<ApiResponse<Void>> enable(@PathVariable Long id) {
+    employeeService.enable(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
-            .message("User activated successfully")
+            .message("User enabled successfully")
             .build());
   }
 
-  @PostMapping("/{id}/deactivate")
+  @PostMapping("/{id}/disable")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> deactivateUser(@PathVariable Long id) {
-    employeeService.deactivateEmployee(id);
+  public ResponseEntity<ApiResponse<Void>> disable(@PathVariable Long id) {
+    employeeService.disable(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
-            .message("User deactivated successfully")
+            .message("Users disabled successfully")
+            .build());
+  }
+
+  @PostMapping("/enables")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<ApiResponse<Void>> enables(List<Long> ids) {
+    employeeService.enables(ids);
+    return ResponseEntity.ok(
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("Users enabled successfully")
+            .build());
+  }
+
+  @PostMapping("/disables")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<ApiResponse<Void>> disables(List<Long> ids) {
+    employeeService.disables(ids);
+    return ResponseEntity.ok(
+        ApiResponse.<Void>builder()
+            .code(HttpStatus.OK.value())
+            .message("User disabled successfully")
             .build());
   }
 
@@ -178,5 +200,19 @@ public class EmployeeController {
       @PathVariable Long id, @RequestParam Long groupId) {
     groupService.join(groupId, id);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Joined", null));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/add-roles")
+  public ResponseEntity<ApiResponse<Void>> addRoles(@PathVariable Long id, List<String> roles) {
+    employeeService.addRoles(id, roles);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/remove-roles")
+  public ResponseEntity<ApiResponse<Void>> removeRoles(@PathVariable Long id, List<String> roles) {
+    employeeService.removeRoles(id, roles);
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
   }
 }

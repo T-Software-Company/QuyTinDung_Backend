@@ -47,7 +47,7 @@ public class EmployeeRequest {
   @NotNull
   String gender;
 
-  @NotNull @NotBlank String employeeCode;
+  @NotNull @NotBlank String code;
 
   @NotBlank
   @Size(max = 15)

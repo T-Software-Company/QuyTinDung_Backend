@@ -234,6 +234,18 @@ public class KeycloakServiceIml implements KeycloakService {
     groupResource.members().remove(userRepresentation);
   }
 
+  @Override
+  public void addRolesToUser(String userId, List<String> roles) {
+    var userResource = realmResource.users().get(userId);
+    userResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
+  }
+
+  @Override
+  public void removeRolesOnUser(String userId, List<String> roles) {
+    var userResource = realmResource.users().get(userId);
+    userResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
+  }
+
   private String extractErrorMessage(Response response) {
     var map = response.readEntity(Map.class);
     return (String) map.get("errorMessage");

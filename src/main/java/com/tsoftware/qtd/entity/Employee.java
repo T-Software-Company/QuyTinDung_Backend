@@ -1,7 +1,5 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
@@ -11,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Getter
 @Setter
@@ -30,7 +26,7 @@ public class Employee extends AbstractAuditEntity {
   private String username;
 
   @Column(unique = true)
-  private String employeeCode;
+  private String code;
 
   @Column(unique = true)
   private String email;
@@ -46,12 +42,7 @@ public class Employee extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private Gender gender;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcType(PostgreSQLEnumJdbcType.class)
-  private Banned banned;
-
-  @Enumerated(EnumType.STRING)
-  private EmploymentStatus status;
+  private Boolean enabled;
 
   @OneToOne(cascade = CascadeType.ALL)
   private Address address;

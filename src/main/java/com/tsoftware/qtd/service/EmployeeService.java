@@ -4,12 +4,12 @@ import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface EmployeeService {
-  Page<EmployeeResponse> getEmployees(Pageable pageable);
 
   EmployeeResponse getProfile();
 
@@ -21,11 +21,19 @@ public interface EmployeeService {
 
   void resetPassword(String userId, String newPassword);
 
-  void activeEmployee(Long id);
+  void enable(Long id);
 
-  void deactivateEmployee(Long id);
+  void disable(Long id);
 
   EmployeeResponse getEmployee(Long id);
 
   Page<EmployeeResponse> getAll(Specification<Employee> spec, Pageable page);
+
+  void addRoles(Long id, List<String> roles);
+
+  void removeRoles(Long id, List<String> roles);
+
+  void disables(List<Long> ids);
+
+  void enables(List<Long> ids);
 }
