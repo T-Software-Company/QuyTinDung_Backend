@@ -4,9 +4,11 @@ import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
+import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
+import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -32,6 +34,7 @@ public class InitDatabase implements CommandLineRunner {
 
   private final KeycloakService keycloakService;
   private final RoleRepository roleRepository;
+  private final GroupService groupService;
 
   @Override
   @Transactional
@@ -39,6 +42,22 @@ public class InitDatabase implements CommandLineRunner {
     createRoles();
     createAdmin();
     createEmployees();
+    createGroups();
+  }
+
+  private void createGroups() {
+    var groupRequest =
+        GroupRequest.builder()
+            .name("Hội đồng tín dụng")
+            .roles(List.of(Role.CREDIT_ACCESS.name(), Role.REPORT_ACCESS.name()))
+            .build();
+    var groupRequest1 =
+        GroupRequest.builder()
+            .name("Hội đồng định giá")
+            .roles(List.of(Role.REPORT_ACCESS.name(), Role.ASSET_VALUATION_ACCESS.name()))
+            .build();
+    groupService.create(groupRequest);
+    groupService.create(groupRequest1);
   }
 
   private void createAdmin() {

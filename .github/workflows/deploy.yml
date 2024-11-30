@@ -54,7 +54,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd ./tsoftware/qtd/deployment
-            docker compose down
+            docker compose down -v
             docker compose pull 
             docker compose up -d 
           EOF

@@ -39,7 +39,7 @@ public class Employee extends AbstractAuditEntity {
 
   private String phone;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private Gender gender;
 
   private Boolean enabled;
