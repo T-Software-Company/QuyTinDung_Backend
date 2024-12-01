@@ -161,4 +161,21 @@ public class EmployeeServiceImpl implements EmployeeService {
   public void enables(List<UUID> ids) {
     ids.forEach(this::enable);
   }
+
+  @Override
+  public void delete(UUID id) {
+    var employee =
+        employeeRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("Employee not found"));
+    employee.setEnabled(false);
+    employee.setIsDeleted(true);
+    keycloakService.deactivateUser(employee.getUserId());
+    employeeRepository.save(employee);
+  }
+
+  @Override
+  public void delete(List<UUID> ids) {
+    ids.forEach(this::delete);
+  }
 }

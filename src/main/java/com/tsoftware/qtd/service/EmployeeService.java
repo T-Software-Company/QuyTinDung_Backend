@@ -37,4 +37,8 @@ public interface EmployeeService {
   void disables(List<UUID> ids);
 
   void enables(List<UUID> ids);
+
+  void delete(UUID id);
+
+  void delete(List<UUID> ids);
 }

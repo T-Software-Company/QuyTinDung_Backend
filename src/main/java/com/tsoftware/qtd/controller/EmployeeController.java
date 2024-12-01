@@ -111,30 +111,29 @@ public class EmployeeController {
             .build());
   }
 
-  //	@DeleteMapping("/{id}")
-  //	@PreAuthorize("hasRole('ADMIN')")
-  //	public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(
-  //					@PathVariable String id) {
-  //
-  //		return ResponseEntity.ok(
-  //						ApiResponse.<EmployeeResponse>builder()
-  //										.code(HttpStatus.OK.value())
-  //										.message("Deleted")
-  //										.result(employeeService.delete(id))
-  //										.build());
-  //	}
-  //	@DeleteMapping("/delete")
-  //	@PreAuthorize("hasRole('ADMIN')")
-  //	public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(
-  //					List<String> ids) {
-  //
-  //		return ResponseEntity.ok(
-  //						ApiResponse.<EmployeeResponse>builder()
-  //										.code(HttpStatus.OK.value())
-  //										.message("Deleted")
-  //										.result(employeeService.delete(ids))
-  //										.build());
-  //	}
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(@PathVariable UUID id) {
+    employeeService.delete(id);
+    return ResponseEntity.ok(
+        ApiResponse.<EmployeeResponse>builder()
+            .code(HttpStatus.OK.value())
+            .message("Deleted")
+            .result(null)
+            .build());
+  }
+
+  @DeleteMapping("/delete")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(List<UUID> ids) {
+    employeeService.delete(ids);
+    return ResponseEntity.ok(
+        ApiResponse.<EmployeeResponse>builder()
+            .code(HttpStatus.OK.value())
+            .message("Deleted")
+            .result(null)
+            .build());
+  }
 
   @GetMapping("/roles")
   @PreAuthorize("hasRole('ADMIN')")
