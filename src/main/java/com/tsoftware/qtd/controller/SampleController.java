@@ -3,6 +3,7 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.request.CreateCustomerRequest;
 import com.tsoftware.qtd.service.TransactionService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ public class SampleController {
   }
 
   @PostMapping("/customer/approve/{id}")
-  public ResponseEntity<?> approveRequest(@PathVariable Long id) {
+  public ResponseEntity<?> approveRequest(@PathVariable UUID id) {
     return ResponseEntity.ok(
         ApiResponse.builder()
             .code(1)

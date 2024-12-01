@@ -6,16 +6,18 @@ import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
 import com.tsoftware.qtd.service.ValuationReportService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/valuation-reports")
+@RequiredArgsConstructor
 public class ValuationReportController {
 
-  @Autowired private ValuationReportService valuationreportService;
+  private final ValuationReportService valuationreportService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<ValuationReportResponse>> create(
@@ -26,20 +28,20 @@ public class ValuationReportController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<ValuationReportResponse>> update(
-      @PathVariable Long id, @RequestBody ValuationReportRequest valuationreportRequest) {
+      @PathVariable UUID id, @RequestBody ValuationReportRequest valuationreportRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             1000, "Updated", valuationreportService.update(id, valuationreportRequest)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     valuationreportService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<ValuationReportResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<ValuationReportResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Fetched", valuationreportService.getById(id)));
   }
@@ -52,7 +54,7 @@ public class ValuationReportController {
 
   @PostMapping("/{id}/add-approve")
   public ResponseEntity<ApiResponse<List<ApproveResponse>>> addApprove(
-      @RequestBody List<Long> approverIds, @PathVariable Long id) {
+      @RequestBody List<UUID> approverIds, @PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             HttpStatus.OK.value(), "Added", valuationreportService.addApprove(id, approverIds)));
@@ -60,7 +62,7 @@ public class ValuationReportController {
 
   @PostMapping("/{id}/remove-approve")
   public ResponseEntity<ApiResponse<Void>> removeApprove(
-      @RequestBody List<Long> approverIds, @PathVariable Long id) {
+      @RequestBody List<UUID> approverIds, @PathVariable UUID id) {
     valuationreportService.removeApprove(id, approverIds);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }

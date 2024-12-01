@@ -6,6 +6,7 @@ import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerResponse extends AbstractWorkflow implements Serializable {
-  private Long id;
+  private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;

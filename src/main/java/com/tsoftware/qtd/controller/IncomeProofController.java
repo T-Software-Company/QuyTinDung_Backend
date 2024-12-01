@@ -4,15 +4,18 @@ import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.credit.IncomeProofDto;
 import com.tsoftware.qtd.service.IncomeProofService;
 import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/income-proofs")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class IncomeProofController {
 
-  @Autowired private IncomeProofService incomeproofService;
+  private final IncomeProofService incomeproofService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<IncomeProofDto>> create(
@@ -23,19 +26,19 @@ public class IncomeProofController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<IncomeProofDto>> update(
-      @PathVariable Long id, @RequestBody IncomeProofDto incomeproofDto) {
+      @PathVariable UUID id, @RequestBody IncomeProofDto incomeproofDto) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Updated", incomeproofService.update(id, incomeproofDto)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     incomeproofService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<IncomeProofDto>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<IncomeProofDto>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", incomeproofService.getById(id)));
   }
 

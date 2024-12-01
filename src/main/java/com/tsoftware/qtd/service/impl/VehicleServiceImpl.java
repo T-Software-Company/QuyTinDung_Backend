@@ -7,16 +7,20 @@ import com.tsoftware.qtd.mapper.VehicleMapper;
 import com.tsoftware.qtd.repository.VehicleRepository;
 import com.tsoftware.qtd.service.VehicleService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
 
-  @Autowired private VehicleRepository vehicleRepository;
+  private final VehicleRepository vehicleRepository;
 
-  @Autowired private VehicleMapper vehicleMapper;
+  private final VehicleMapper vehicleMapper;
 
   @Override
   public VehicleDto create(VehicleDto vehicleDto) {
@@ -25,7 +29,7 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   @Override
-  public VehicleDto update(Long id, VehicleDto vehicleDto) {
+  public VehicleDto update(UUID id, VehicleDto vehicleDto) {
     Vehicle vehicle =
         vehicleRepository
             .findById(id)
@@ -35,12 +39,12 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     vehicleRepository.deleteById(id);
   }
 
   @Override
-  public VehicleDto getById(Long id) {
+  public VehicleDto getById(UUID id) {
     Vehicle vehicle =
         vehicleRepository
             .findById(id)

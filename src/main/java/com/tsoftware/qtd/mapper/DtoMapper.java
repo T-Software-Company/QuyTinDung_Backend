@@ -13,8 +13,12 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface DtoMapper {
 
+  @Mapping(ignore = true, target = "id") // tạm thời
   TransactionEntity toEntity(Transaction createCustomerTransaction);
 
+  @Mapping(
+      ignore = true,
+      target = "id") // tạm thời id của transaction đang là Long còn entity là UUID
   Transaction toDomain(TransactionEntity transactionEntity);
 
   @Mapping(target = "statusUpdatedTime", source = "updatedAt")

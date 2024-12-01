@@ -12,9 +12,8 @@ import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.util.List;
-import lombok.AccessLevel;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -27,13 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Transactional()
+@Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 
-  EmployeeRepository employeeRepository;
-  EmployeeMapper employeeMapper;
-  KeycloakService keycloakService;
+  private final EmployeeRepository employeeRepository;
+  private final EmployeeMapper employeeMapper;
+  private final KeycloakService keycloakService;
   private final RoleRepository roleRepository;
 
   @Override
@@ -74,12 +72,12 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public EmployeeResponse updateEmployee(String userId, EmployeeRequest request) {
+  public EmployeeResponse updateEmployee(UUID id, EmployeeRequest request) {
     var employee =
         employeeRepository
-            .findByUserId(userId)
+            .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
-    keycloakService.updateUser(request, userId);
+    keycloakService.updateUser(request, employee.getUserId());
     employeeMapper.updateEntity(request, employee);
 
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
@@ -91,7 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void enable(Long id) {
+  public void enable(UUID id) {
     var employee =
         employeeRepository
             .findById(id)
@@ -102,7 +100,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void disable(Long id) {
+  public void disable(UUID id) {
     var employee =
         employeeRepository
             .findById(id)
@@ -113,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public EmployeeResponse getEmployee(Long id) {
+  public EmployeeResponse getEmployee(UUID id) {
 
     return employeeMapper.toEmployeeResponse(
         employeeRepository
@@ -131,7 +129,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void addRoles(Long id, List<String> roles) {
+  public void addRoles(UUID id, List<String> roles) {
     var employee =
         employeeRepository
             .findById(id)
@@ -143,7 +141,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void removeRoles(Long id, List<String> roles) {
+  public void removeRoles(UUID id, List<String> roles) {
     var employee =
         employeeRepository
             .findById(id)
@@ -155,12 +153,12 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void disables(List<Long> ids) {
+  public void disables(List<UUID> ids) {
     ids.forEach(this::disable);
   }
 
   @Override
-  public void enables(List<Long> ids) {
+  public void enables(List<UUID> ids) {
     ids.forEach(this::enable);
   }
 }

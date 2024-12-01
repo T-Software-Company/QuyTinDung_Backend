@@ -7,16 +7,20 @@ import com.tsoftware.qtd.mapper.OtherAssetMapper;
 import com.tsoftware.qtd.repository.OtherAssetRepository;
 import com.tsoftware.qtd.service.OtherAssetService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class OtherAssetServiceImpl implements OtherAssetService {
 
-  @Autowired private OtherAssetRepository otherassetRepository;
+  private final OtherAssetRepository otherassetRepository;
 
-  @Autowired private OtherAssetMapper otherassetMapper;
+  private final OtherAssetMapper otherassetMapper;
 
   @Override
   public OtherAssetDto create(OtherAssetDto otherassetDto) {
@@ -25,7 +29,7 @@ public class OtherAssetServiceImpl implements OtherAssetService {
   }
 
   @Override
-  public OtherAssetDto update(Long id, OtherAssetDto otherassetDto) {
+  public OtherAssetDto update(UUID id, OtherAssetDto otherassetDto) {
     OtherAsset otherasset =
         otherassetRepository
             .findById(id)
@@ -35,12 +39,12 @@ public class OtherAssetServiceImpl implements OtherAssetService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     otherassetRepository.deleteById(id);
   }
 
   @Override
-  public OtherAssetDto getById(Long id) {
+  public OtherAssetDto getById(UUID id) {
     OtherAsset otherasset =
         otherassetRepository
             .findById(id)

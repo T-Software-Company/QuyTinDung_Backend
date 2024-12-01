@@ -3,6 +3,7 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.constants.EnumType.DocumentType;
 import com.tsoftware.qtd.dto.document.DocumentDTO;
 import com.tsoftware.qtd.service.impl.DocumentService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class DocumentController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<DocumentDTO> getDocument(@PathVariable Long id) {
+  public ResponseEntity<DocumentDTO> getDocument(@PathVariable UUID id) {
     return ResponseEntity.ok(documentService.getDocument(id));
   }
 }

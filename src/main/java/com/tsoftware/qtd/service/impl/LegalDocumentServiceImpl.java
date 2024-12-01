@@ -7,16 +7,20 @@ import com.tsoftware.qtd.mapper.LegalDocumentMapper;
 import com.tsoftware.qtd.repository.LegalDocumentRepository;
 import com.tsoftware.qtd.service.LegalDocumentService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class LegalDocumentServiceImpl implements LegalDocumentService {
 
-  @Autowired private LegalDocumentRepository legaldocumentRepository;
+  private final LegalDocumentRepository legaldocumentRepository;
 
-  @Autowired private LegalDocumentMapper legaldocumentMapper;
+  private final LegalDocumentMapper legaldocumentMapper;
 
   @Override
   public LegalDocumentResponse create(LegalDocumentResponse legaldocumentResponse) {
@@ -25,7 +29,7 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
   }
 
   @Override
-  public LegalDocumentResponse update(Long id, LegalDocumentResponse legaldocumentResponse) {
+  public LegalDocumentResponse update(UUID id, LegalDocumentResponse legaldocumentResponse) {
     LegalDocument legaldocument =
         legaldocumentRepository
             .findById(id)
@@ -35,12 +39,12 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     legaldocumentRepository.deleteById(id);
   }
 
   @Override
-  public LegalDocumentResponse getById(Long id) {
+  public LegalDocumentResponse getById(UUID id) {
     LegalDocument legaldocument =
         legaldocumentRepository
             .findById(id)

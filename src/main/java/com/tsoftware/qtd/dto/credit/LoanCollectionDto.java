@@ -2,13 +2,14 @@ package com.tsoftware.qtd.dto.credit;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.*;
 
 @Getter
 @Setter
 @Builder
 public class LoanCollectionDto {
-  private Long id;
+  private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;

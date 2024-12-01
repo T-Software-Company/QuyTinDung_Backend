@@ -7,6 +7,7 @@ import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.request.CreateCustomerRequest;
 import com.tsoftware.qtd.mapper.DtoMapper;
 import com.tsoftware.qtd.repository.TransactionRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class TransactionService {
     return createCustomerTransaction;
   }
 
-  public Object approve(Long id) {
+  public Object approve(UUID id) {
     Transaction transaction = repository.findById(id).map(mapper::toDomain).orElseThrow();
     return registry.getExecutor(transaction.getType()).execute(transaction);
   }

@@ -11,6 +11,7 @@ import com.tsoftware.qtd.repository.CreditRepository;
 import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.service.CreditService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class CreditServiceImpl implements CreditService {
 
   @Override
   @Transactional
-  public CreditResponse create(Long customerId) {
+  public CreditResponse create(UUID customerId) {
     Credit credit =
         Credit.builder()
             .status(LoanStatus.CREATING)
@@ -42,7 +43,7 @@ public class CreditServiceImpl implements CreditService {
   }
 
   @Override
-  public CreditResponse update(Long id, CreditRequest creditRequest) {
+  public CreditResponse update(UUID id, CreditRequest creditRequest) {
     Credit credit =
         creditRepository.findById(id).orElseThrow(() -> new NotFoundException("Credit not found"));
     creditMapper.updateEntity(creditRequest, credit);
@@ -50,12 +51,12 @@ public class CreditServiceImpl implements CreditService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     creditRepository.deleteById(id);
   }
 
   @Override
-  public CreditResponse getById(Long id) {
+  public CreditResponse getById(UUID id) {
     Credit credit =
         creditRepository.findById(id).orElseThrow(() -> new NotFoundException("Credit not found"));
     return creditMapper.toResponse(credit);

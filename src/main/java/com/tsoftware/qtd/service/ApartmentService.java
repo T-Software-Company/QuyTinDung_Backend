@@ -2,15 +2,16 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.dto.asset.ApartmentDto;
 import java.util.List;
+import java.util.UUID;
 
 public interface ApartmentService {
   ApartmentDto create(ApartmentDto apartmentDto);
 
-  ApartmentDto update(Long id, ApartmentDto apartmentDto);
+  ApartmentDto update(UUID id, ApartmentDto apartmentDto);
 
-  void delete(Long id);
+  void delete(UUID id);
 
-  ApartmentDto getById(Long id);
+  ApartmentDto getById(UUID id);
 
   List<ApartmentDto> getAll();
 }

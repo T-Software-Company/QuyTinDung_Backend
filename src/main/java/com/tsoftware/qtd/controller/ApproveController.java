@@ -4,15 +4,17 @@ import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.service.ApproveService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/approves")
+@RequiredArgsConstructor
 public class ApproveController {
 
-  @Autowired private ApproveService approveService;
+  private final ApproveService approveService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<ApproveResponse>> create(
@@ -23,19 +25,19 @@ public class ApproveController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<ApproveResponse>> update(
-      @PathVariable Long id, @RequestBody ApproveResponse approveResponse) {
+      @PathVariable UUID id, @RequestBody ApproveResponse approveResponse) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Updated", approveService.update(id, approveResponse)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     approveService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<ApproveResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<ApproveResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", approveService.getById(id)));
   }
 

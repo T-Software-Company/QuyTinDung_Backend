@@ -22,7 +22,6 @@ import org.hibernate.annotations.Type;
 @Entity(name = "transaction")
 @EqualsAndHashCode(callSuper = true)
 public class TransactionEntity extends AbstractAuditEntity {
-
   @Enumerated(EnumType.STRING)
   private TransactionStatus status;
 

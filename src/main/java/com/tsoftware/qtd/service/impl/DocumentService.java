@@ -15,13 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.hwpf.HWPFDocument;
@@ -29,10 +23,12 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DocumentService {
 
   private final GoogleCloudStorageService storageService;
@@ -65,7 +61,7 @@ public class DocumentService {
     }
   }
 
-  public DocumentDTO getDocument(Long id) {
+  public DocumentDTO getDocument(UUID id) {
     var document =
         documentRepository
             .findById(id)
@@ -73,7 +69,7 @@ public class DocumentService {
     return dtoMapper.toDto(document);
   }
 
-  public List<DocumentDTO> getDocumentBelongToCustomer(Long customerId) {
+  public List<DocumentDTO> getDocumentBelongToCustomer(UUID customerId) {
     return documentRepository.findByCustomerId(customerId).stream().map(dtoMapper::toDto).toList();
   }
 

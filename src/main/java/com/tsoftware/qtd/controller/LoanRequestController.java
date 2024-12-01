@@ -5,6 +5,7 @@ import com.tsoftware.qtd.dto.credit.LoanRequestRequest;
 import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
 import com.tsoftware.qtd.service.LoanRequestService;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class LoanRequestController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<LoanRequestResponse>> create(
-      @RequestBody LoanRequestRequest loanRequestRequest, @RequestParam Long creditId)
+      @RequestBody LoanRequestRequest loanRequestRequest, @RequestParam UUID creditId)
       throws Exception {
     return ResponseEntity.ok(
         new ApiResponse<>(
@@ -27,19 +28,19 @@ public class LoanRequestController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<LoanRequestResponse>> update(
-      @PathVariable Long id, @RequestBody LoanRequestRequest loanRequestRequest) {
+      @PathVariable UUID id, @RequestBody LoanRequestRequest loanRequestRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Updated", loanRequestService.update(id, loanRequestRequest)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     loanRequestService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<LoanRequestResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<LoanRequestResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", loanRequestService.getById(id)));
   }
 

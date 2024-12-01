@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ValuationMeetingResponse {
-  private Long id;
+  private String id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;

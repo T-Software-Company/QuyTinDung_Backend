@@ -13,9 +13,8 @@ import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.util.HashSet;
 import java.util.List;
-import lombok.AccessLevel;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GroupServiceImpl implements GroupService {
 
-  private GroupRepository groupRepository;
+  private final GroupRepository groupRepository;
 
-  private GroupMapper groupMapper;
+  private final GroupMapper groupMapper;
   private final EmployeeRepository employeeRepository;
   private final KeycloakService keycloakService;
   private final RoleRepository roleRepository;
@@ -47,7 +45,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public GroupResponse update(Long id, GroupRequest groupRequest) {
+  public GroupResponse update(UUID id, GroupRequest groupRequest) {
     Group group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.updateGroup(groupRequest, group.getKcGroupId());
@@ -58,7 +56,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.deleteGroup(group.getKcGroupId());
@@ -66,7 +64,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public GroupResponse getById(Long id) {
+  public GroupResponse getById(UUID id) {
     Group group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     return groupMapper.toResponse(group);
@@ -82,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public void join(Long groupId, Long employeeId) {
+  public void join(UUID groupId, UUID employeeId) {
     var group =
         groupRepository
             .findById(groupId)
@@ -98,7 +96,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public void leave(Long groupId, Long employeeId) {
+  public void leave(UUID groupId, UUID employeeId) {
     var group =
         groupRepository
             .findById(groupId)
@@ -114,7 +112,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public void addRoles(Long id, List<String> roles) {
+  public void addRoles(UUID id, List<String> roles) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.addRolesToGroup(group.getKcGroupId(), roles);
@@ -125,7 +123,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public void removeRoles(Long id, List<String> roles) {
+  public void removeRoles(UUID id, List<String> roles) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
     keycloakService.removeRolesOnGroup(group.getKcGroupId(), roles);

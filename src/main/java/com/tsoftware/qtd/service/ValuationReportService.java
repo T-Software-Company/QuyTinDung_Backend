@@ -4,19 +4,20 @@ import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
 import java.util.List;
+import java.util.UUID;
 
 public interface ValuationReportService {
   ValuationReportResponse create(ValuationReportRequest valuationreportRequest);
 
-  ValuationReportResponse update(Long id, ValuationReportRequest valuationreportRequest);
+  ValuationReportResponse update(UUID id, ValuationReportRequest valuationreportRequest);
 
-  void delete(Long id);
+  void delete(UUID id);
 
-  ValuationReportResponse getById(Long id);
+  ValuationReportResponse getById(UUID id);
 
   List<ValuationReportResponse> getAll();
 
-  List<ApproveResponse> addApprove(Long id, List<Long> approverIds);
+  List<ApproveResponse> addApprove(UUID id, List<UUID> approverIds);
 
-  void removeApprove(Long id, List<Long> approverIds);
+  void removeApprove(UUID id, List<UUID> approverIds);
 }

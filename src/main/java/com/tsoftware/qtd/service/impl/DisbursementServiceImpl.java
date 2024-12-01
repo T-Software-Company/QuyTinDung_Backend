@@ -7,16 +7,20 @@ import com.tsoftware.qtd.mapper.DisbursementMapper;
 import com.tsoftware.qtd.repository.DisbursementRepository;
 import com.tsoftware.qtd.service.DisbursementService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class DisbursementServiceImpl implements DisbursementService {
 
-  @Autowired private DisbursementRepository disbursementRepository;
+  private final DisbursementRepository disbursementRepository;
 
-  @Autowired private DisbursementMapper disbursementMapper;
+  private final DisbursementMapper disbursementMapper;
 
   @Override
   public DisbursementDto create(DisbursementDto disbursementDto) {
@@ -25,7 +29,7 @@ public class DisbursementServiceImpl implements DisbursementService {
   }
 
   @Override
-  public DisbursementDto update(Long id, DisbursementDto disbursementDto) {
+  public DisbursementDto update(UUID id, DisbursementDto disbursementDto) {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)
@@ -35,12 +39,12 @@ public class DisbursementServiceImpl implements DisbursementService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     disbursementRepository.deleteById(id);
   }
 
   @Override
-  public DisbursementDto getById(Long id) {
+  public DisbursementDto getById(UUID id) {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)

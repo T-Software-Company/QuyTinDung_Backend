@@ -5,20 +5,22 @@ import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.service.AssetService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/assets")
+@RequiredArgsConstructor
 public class AssetController {
 
-  @Autowired private AssetService assetService;
+  private final AssetService assetService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<AssetResponse>> create(
-      @RequestBody AssetRequest assetRequest, @RequestParam Long creditId) {
+      @RequestBody AssetRequest assetRequest, @RequestParam UUID creditId) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
             new ApiResponse<>(
@@ -29,19 +31,19 @@ public class AssetController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<AssetResponse>> update(
-      @PathVariable Long id, @RequestBody AssetRequest assetRequest) {
+      @PathVariable UUID id, @RequestBody AssetRequest assetRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(HttpStatus.OK.value(), "Updated", assetService.update(id, assetRequest)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     assetService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<AssetResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<AssetResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(HttpStatus.OK.value(), "Fetched", assetService.getById(id)));
   }

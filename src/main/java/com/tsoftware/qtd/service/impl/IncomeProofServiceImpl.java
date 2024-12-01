@@ -7,16 +7,20 @@ import com.tsoftware.qtd.mapper.IncomeProofMapper;
 import com.tsoftware.qtd.repository.IncomeProofRepository;
 import com.tsoftware.qtd.service.IncomeProofService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class IncomeProofServiceImpl implements IncomeProofService {
 
-  @Autowired private IncomeProofRepository incomeproofRepository;
+  private final IncomeProofRepository incomeproofRepository;
 
-  @Autowired private IncomeProofMapper incomeproofMapper;
+  private final IncomeProofMapper incomeproofMapper;
 
   @Override
   public IncomeProofDto create(IncomeProofDto incomeproofDto) {
@@ -25,7 +29,7 @@ public class IncomeProofServiceImpl implements IncomeProofService {
   }
 
   @Override
-  public IncomeProofDto update(Long id, IncomeProofDto incomeproofDto) {
+  public IncomeProofDto update(UUID id, IncomeProofDto incomeproofDto) {
     IncomeProof incomeproof =
         incomeproofRepository
             .findById(id)
@@ -35,12 +39,12 @@ public class IncomeProofServiceImpl implements IncomeProofService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     incomeproofRepository.deleteById(id);
   }
 
   @Override
-  public IncomeProofDto getById(Long id) {
+  public IncomeProofDto getById(UUID id) {
     IncomeProof incomeproof =
         incomeproofRepository
             .findById(id)

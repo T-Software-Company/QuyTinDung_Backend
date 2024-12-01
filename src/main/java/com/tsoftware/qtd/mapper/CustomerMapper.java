@@ -5,9 +5,7 @@ import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
 import org.mapstruct.*;
 
-@Mapper(
-    componentModel = "spring",
-    uses = {CMNDMapper.class, CCCDMapper.class, PassPortMapper.class})
+@Mapper(componentModel = "spring")
 public interface CustomerMapper {
   Customer toEntity(CustomerRequest dto);
 

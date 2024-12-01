@@ -11,20 +11,24 @@ import com.tsoftware.qtd.repository.CreditRepository;
 import com.tsoftware.qtd.repository.ValuationMeetingRepository;
 import com.tsoftware.qtd.service.ValuationMeetingService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ValuationMeetingServiceImpl implements ValuationMeetingService {
 
-  @Autowired private ValuationMeetingRepository valuationMeetingRepository;
-  @Autowired private CreditRepository creditRepository;
-  @Autowired private ValuationMeetingMapper valuationMeetingMapper;
+  private final ValuationMeetingRepository valuationMeetingRepository;
+  private final CreditRepository creditRepository;
+  private final ValuationMeetingMapper valuationMeetingMapper;
 
   @Override
   public ValuationMeetingResponse create(
-      ValuationMeetingRequest valuationMeetingRequest, Long creditId) {
+      ValuationMeetingRequest valuationMeetingRequest, UUID creditId) {
     ValuationMeeting valuationMeeting = valuationMeetingMapper.toEntity(valuationMeetingRequest);
     Credit credit =
         creditRepository
@@ -35,7 +39,7 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
   }
 
   @Override
-  public ValuationMeetingResponse update(Long id, ValuationMeetingRequest valuationMeetingRequest) {
+  public ValuationMeetingResponse update(UUID id, ValuationMeetingRequest valuationMeetingRequest) {
     ValuationMeeting valuationMeeting =
         valuationMeetingRepository
             .findById(id)
@@ -45,12 +49,12 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     valuationMeetingRepository.deleteById(id);
   }
 
   @Override
-  public ValuationMeetingResponse getById(Long id) {
+  public ValuationMeetingResponse getById(UUID id) {
     ValuationMeeting valuationMeeting =
         valuationMeetingRepository
             .findById(id)
@@ -66,7 +70,7 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
   }
 
   @Override
-  public void addParticipants(Long id, List<Long> participantIds) {
+  public void addParticipants(UUID id, List<UUID> participantIds) {
     List<Employee> participants =
         participantIds.stream()
             .map(participantId -> Employee.builder().id(id).build())
@@ -80,7 +84,7 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
   }
 
   @Override
-  public void removeParticipants(Long id, List<Long> participantIds) {
+  public void removeParticipants(UUID id, List<UUID> participantIds) {
     ValuationMeeting valuationMeeting =
         valuationMeetingRepository
             .findById(id)
@@ -94,7 +98,7 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
   }
 
   @Override
-  public ValuationMeetingResponse getByCreditId(Long creditId) {
+  public ValuationMeetingResponse getByCreditId(UUID creditId) {
     var valuationMeeting =
         valuationMeetingRepository
             .findByCreditId(creditId)

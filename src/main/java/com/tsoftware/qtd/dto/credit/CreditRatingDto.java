@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @Builder
 public class CreditRatingDto {
-  private Long id;
+  private String id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;

@@ -10,6 +10,7 @@ import com.tsoftware.qtd.service.CreditService;
 import com.tsoftware.qtd.service.CustomerService;
 import com.tsoftware.qtd.service.impl.DocumentService;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,24 +41,24 @@ public class CustomerController {
   @WorkflowAPI
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<CustomerResponse>> update(
-      @PathVariable Long id, @RequestBody CustomerRequest customerRequest) {
+      @PathVariable UUID id, @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(200, "Updated", customerService.update(id, customerRequest)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     customerService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(200, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(200, "Fetched", customerService.getById(id)));
   }
 
   @GetMapping("/{id}/documents")
-  public ResponseEntity<?> getDocumentBelongToCustomer(@PathVariable Long id) {
+  public ResponseEntity<?> getDocumentBelongToCustomer(@PathVariable UUID id) {
     return ResponseEntity.ok(documentService.getDocumentBelongToCustomer(id));
   }
 
@@ -68,7 +69,7 @@ public class CustomerController {
 
   @PostMapping("/{id}/credit")
   public ResponseEntity<ApiResponse<CreditResponse>> create(
-      @RequestBody CreditRequest creditRequest, @PathVariable Long id) throws Exception {
+      @RequestBody CreditRequest creditRequest, @PathVariable UUID id) throws Exception {
     return ResponseEntity.ok(new ApiResponse<>(200, "Created", creditService.create(id)));
   }
 }

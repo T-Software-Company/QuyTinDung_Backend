@@ -10,6 +10,7 @@ import com.tsoftware.qtd.repository.CreditRepository;
 import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.service.LoanPlanService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class LoanPlanServiceImpl implements LoanPlanService {
   private final CreditRepository creditRepository;
 
   @Override
-  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, Long creditId) {
+  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, UUID creditId) {
 
     LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
     Credit credit =
@@ -39,7 +40,7 @@ public class LoanPlanServiceImpl implements LoanPlanService {
   }
 
   @Override
-  public LoanPlanResponse update(Long id, LoanPlanRequest loanplanRequest) {
+  public LoanPlanResponse update(UUID id, LoanPlanRequest loanplanRequest) {
     LoanPlan loanplan =
         loanplanRepository
             .findById(id)
@@ -49,12 +50,12 @@ public class LoanPlanServiceImpl implements LoanPlanService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     loanplanRepository.deleteById(id);
   }
 
   @Override
-  public LoanPlanResponse getById(Long id) {
+  public LoanPlanResponse getById(UUID id) {
     LoanPlan loanplan =
         loanplanRepository
             .findById(id)

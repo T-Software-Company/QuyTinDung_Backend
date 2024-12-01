@@ -5,27 +5,29 @@ import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.service.ValuationMeetingService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/valuation-meetings")
+@RequiredArgsConstructor
 public class ValuationMeetingController {
 
-  @Autowired private ValuationMeetingService valuationMeetingService;
+  private final ValuationMeetingService valuationMeetingService;
 
   @PostMapping("/{id}/add-participants")
   public ResponseEntity<ApiResponse<Void>> addParticipants(
-      @PathVariable Long id, @RequestBody List<Long> participantIds) {
+      @PathVariable UUID id, @RequestBody List<UUID> participantIds) {
     valuationMeetingService.addParticipants(id, participantIds);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
 
   @DeleteMapping("/{id}/remove-participants")
   public ResponseEntity<ApiResponse<Void>> RemoveParticipants(
-      @PathVariable Long id, @RequestBody List<Long> participantIds) {
+      @PathVariable UUID id, @RequestBody List<UUID> participantIds) {
     valuationMeetingService.removeParticipants(id, participantIds);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
@@ -39,20 +41,20 @@ public class ValuationMeetingController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> update(
-      @PathVariable Long id, @RequestBody ValuationMeetingRequest valuationmeetingRequest) {
+      @PathVariable UUID id, @RequestBody ValuationMeetingRequest valuationmeetingRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             1000, "Updated", valuationMeetingService.update(id, valuationmeetingRequest)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     valuationMeetingService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<ValuationMeetingResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<ValuationMeetingResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Fetched", valuationMeetingService.getById(id)));
   }

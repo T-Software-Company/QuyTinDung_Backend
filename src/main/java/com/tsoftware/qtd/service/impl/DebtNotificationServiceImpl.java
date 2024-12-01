@@ -7,16 +7,20 @@ import com.tsoftware.qtd.mapper.DebtNotificationMapper;
 import com.tsoftware.qtd.repository.DebtNotificationRepository;
 import com.tsoftware.qtd.service.DebtNotificationService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class DebtNotificationServiceImpl implements DebtNotificationService {
 
-  @Autowired private DebtNotificationRepository debtnotificationRepository;
+  private final DebtNotificationRepository debtnotificationRepository;
 
-  @Autowired private DebtNotificationMapper debtnotificationMapper;
+  private final DebtNotificationMapper debtnotificationMapper;
 
   @Override
   public DebtNotificationDto create(DebtNotificationDto debtnotificationDto) {
@@ -25,7 +29,7 @@ public class DebtNotificationServiceImpl implements DebtNotificationService {
   }
 
   @Override
-  public DebtNotificationDto update(Long id, DebtNotificationDto debtnotificationDto) {
+  public DebtNotificationDto update(UUID id, DebtNotificationDto debtnotificationDto) {
     DebtNotification debtnotification =
         debtnotificationRepository
             .findById(id)
@@ -35,12 +39,12 @@ public class DebtNotificationServiceImpl implements DebtNotificationService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     debtnotificationRepository.deleteById(id);
   }
 
   @Override
-  public DebtNotificationDto getById(Long id) {
+  public DebtNotificationDto getById(UUID id) {
     DebtNotification debtnotification =
         debtnotificationRepository
             .findById(id)

@@ -5,38 +5,40 @@ import com.tsoftware.qtd.dto.credit.LoanPlanRequest;
 import com.tsoftware.qtd.dto.credit.LoanPlanResponse;
 import com.tsoftware.qtd.service.LoanPlanService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loan-plans")
+@RequiredArgsConstructor
 public class LoanPlanController {
 
-  @Autowired private LoanPlanService loanplanService;
+  private final LoanPlanService loanplanService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<LoanPlanResponse>> create(
-      @RequestBody LoanPlanRequest loanPlanRequest, @PathVariable Long creditId) throws Exception {
+      @RequestBody LoanPlanRequest loanPlanRequest, @PathVariable UUID creditId) throws Exception {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Created", loanplanService.create(loanPlanRequest, creditId)));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<LoanPlanResponse>> update(
-      @PathVariable Long id, @RequestBody LoanPlanRequest loanPlanRequest) {
+      @PathVariable UUID id, @RequestBody LoanPlanRequest loanPlanRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Updated", loanplanService.update(id, loanPlanRequest)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     loanplanService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<LoanPlanResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<LoanPlanResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", loanplanService.getById(id)));
   }
 

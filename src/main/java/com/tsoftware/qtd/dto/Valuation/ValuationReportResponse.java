@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ValuationReportResponse {
-  private Long id;
+  private String id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;

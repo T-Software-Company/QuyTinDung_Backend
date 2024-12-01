@@ -5,6 +5,7 @@ import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,23 +18,23 @@ public interface EmployeeService {
 
   EmployeeResponse updateProfile(ProfileRequest request);
 
-  EmployeeResponse updateEmployee(String userId, EmployeeRequest request);
+  EmployeeResponse updateEmployee(UUID id, EmployeeRequest request);
 
   void resetPassword(String userId, String newPassword);
 
-  void enable(Long id);
+  void enable(UUID id);
 
-  void disable(Long id);
+  void disable(UUID id);
 
-  EmployeeResponse getEmployee(Long id);
+  EmployeeResponse getEmployee(UUID id);
 
   Page<EmployeeResponse> getAll(Specification<Employee> spec, Pageable page);
 
-  void addRoles(Long id, List<String> roles);
+  void addRoles(UUID id, List<String> roles);
 
-  void removeRoles(Long id, List<String> roles);
+  void removeRoles(UUID id, List<String> roles);
 
-  void disables(List<Long> ids);
+  void disables(List<UUID> ids);
 
-  void enables(List<Long> ids);
+  void enables(List<UUID> ids);
 }

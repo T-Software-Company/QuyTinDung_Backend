@@ -7,16 +7,20 @@ import com.tsoftware.qtd.mapper.ApproveMapper;
 import com.tsoftware.qtd.repository.ApproveRepository;
 import com.tsoftware.qtd.service.ApproveService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ApproveServiceImpl implements ApproveService {
 
-  @Autowired private ApproveRepository approveRepository;
+  private final ApproveRepository approveRepository;
 
-  @Autowired private ApproveMapper approveMapper;
+  private final ApproveMapper approveMapper;
 
   @Override
   public ApproveResponse create(ApproveResponse approveResponse) {
@@ -25,7 +29,7 @@ public class ApproveServiceImpl implements ApproveService {
   }
 
   @Override
-  public ApproveResponse update(Long id, ApproveResponse approveResponse) {
+  public ApproveResponse update(UUID id, ApproveResponse approveResponse) {
     Approve approve =
         approveRepository
             .findById(id)
@@ -35,12 +39,12 @@ public class ApproveServiceImpl implements ApproveService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     approveRepository.deleteById(id);
   }
 
   @Override
-  public ApproveResponse getById(Long id) {
+  public ApproveResponse getById(UUID id) {
     Approve approve =
         approveRepository
             .findById(id)
@@ -56,7 +60,7 @@ public class ApproveServiceImpl implements ApproveService {
   }
 
   @Override
-  public List<ApproveResponse> getByApproverId(Long id) {
+  public List<ApproveResponse> getByApproverId(UUID id) {
     var approves = approveRepository.findByApproverId(id);
     return approves.stream().map(approveMapper::toDto).collect(Collectors.toList());
   }

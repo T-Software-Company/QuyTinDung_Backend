@@ -4,15 +4,17 @@ import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
 import com.tsoftware.qtd.service.DebtNotificationService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/debt-notifications")
+@RequiredArgsConstructor
 public class DebtNotificationController {
 
-  @Autowired private DebtNotificationService debtnotificationService;
+  private final DebtNotificationService debtnotificationService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<DebtNotificationDto>> create(
@@ -23,20 +25,20 @@ public class DebtNotificationController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<DebtNotificationDto>> update(
-      @PathVariable Long id, @RequestBody DebtNotificationDto debtnotificationDto) {
+      @PathVariable UUID id, @RequestBody DebtNotificationDto debtnotificationDto) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             1000, "Updated", debtnotificationService.update(id, debtnotificationDto)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     debtnotificationService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<DebtNotificationDto>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<DebtNotificationDto>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Fetched", debtnotificationService.getById(id)));
   }

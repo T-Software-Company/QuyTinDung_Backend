@@ -16,6 +16,7 @@ import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -78,7 +79,7 @@ public class EmployeeController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable UUID id) {
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())
@@ -100,7 +101,7 @@ public class EmployeeController {
   @PutMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(
-      @PathVariable String id, @RequestBody @Valid EmployeeRequest request) {
+      @PathVariable UUID id, @RequestBody @Valid EmployeeRequest request) {
 
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
@@ -169,7 +170,7 @@ public class EmployeeController {
 
   @PostMapping("/{id}/enable")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> enable(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> enable(@PathVariable UUID id) {
     employeeService.enable(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
@@ -180,7 +181,7 @@ public class EmployeeController {
 
   @PostMapping("/{id}/disable")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> disable(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> disable(@PathVariable UUID id) {
     employeeService.disable(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
@@ -191,7 +192,7 @@ public class EmployeeController {
 
   @PostMapping("/enables")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> enables(List<Long> ids) {
+  public ResponseEntity<ApiResponse<Void>> enables(List<UUID> ids) {
     employeeService.enables(ids);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
@@ -202,7 +203,7 @@ public class EmployeeController {
 
   @PostMapping("/disables")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> disables(List<Long> ids) {
+  public ResponseEntity<ApiResponse<Void>> disables(List<UUID> ids) {
     employeeService.disables(ids);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
@@ -212,7 +213,7 @@ public class EmployeeController {
   }
 
   @GetMapping("/{id}/approves")
-  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             HttpStatus.OK.value(), "Fetched All", approveService.getByApproverId(id)));
@@ -221,21 +222,21 @@ public class EmployeeController {
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/join-group")
   public ResponseEntity<ApiResponse<Void>> joinGroup(
-      @PathVariable Long id, @RequestParam Long groupId) {
+      @PathVariable UUID id, @RequestParam UUID groupId) {
     groupService.join(groupId, id);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Joined", null));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add-roles")
-  public ResponseEntity<ApiResponse<Void>> addRoles(@PathVariable Long id, List<String> roles) {
+  public ResponseEntity<ApiResponse<Void>> addRoles(@PathVariable UUID id, List<String> roles) {
     employeeService.addRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-roles")
-  public ResponseEntity<ApiResponse<Void>> removeRoles(@PathVariable Long id, List<String> roles) {
+  public ResponseEntity<ApiResponse<Void>> removeRoles(@PathVariable UUID id, List<String> roles) {
     employeeService.removeRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
   }

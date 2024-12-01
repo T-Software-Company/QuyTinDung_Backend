@@ -4,15 +4,17 @@ import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.credit.CreditRatingDto;
 import com.tsoftware.qtd.service.CreditRatingService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/credit-ratings")
+@RequiredArgsConstructor
 public class CreditRatingController {
 
-  @Autowired private CreditRatingService creditratingService;
+  private final CreditRatingService creditratingService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<CreditRatingDto>> create(
@@ -23,19 +25,19 @@ public class CreditRatingController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<CreditRatingDto>> update(
-      @PathVariable Long id, @RequestBody CreditRatingDto creditratingDto) {
+      @PathVariable UUID id, @RequestBody CreditRatingDto creditratingDto) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Updated", creditratingService.update(id, creditratingDto)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     creditratingService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CreditRatingDto>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<CreditRatingDto>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", creditratingService.getById(id)));
   }
 

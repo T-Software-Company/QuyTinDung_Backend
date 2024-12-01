@@ -2,6 +2,7 @@ package com.tsoftware.qtd.dto.debtNotification;
 
 import jakarta.validation.constraints.*;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class DebtNotificationDto {
 
-  Long id;
+  private UUID id;
   ZonedDateTime createdAt;
   ZonedDateTime updatedAt;
   String lastModifiedBy;
