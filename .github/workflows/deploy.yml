@@ -40,6 +40,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "rm -rf ./tsoftware/qtd/deployment/server && mkdir -p ./tsoftware/qtd/deployment/server"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "mkdir -p ./tsoftware/qtd/deployment/client"
           scp -o StrictHostKeyChecking=no -r deployment/* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment/server 
           scp -o StrictHostKeyChecking=no -r deployment/.env ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment/server/.env
 
