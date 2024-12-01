@@ -4,6 +4,7 @@ import com.tsoftware.qtd.constants.EnumType.DocumentType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,14 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Entity(name = "document")
+@Entity
+@Table
 public class Document extends AbstractAuditEntity {
   private UUID customerId;
   private String url;
   private String title;
   private Boolean isUsed;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private DocumentType type;
 }

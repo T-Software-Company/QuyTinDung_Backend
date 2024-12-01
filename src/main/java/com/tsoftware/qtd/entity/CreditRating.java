@@ -20,7 +20,7 @@ public class CreditRating extends AbstractAuditEntity {
 
   private BigDecimal score;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private RatingLevel ratingLevel;
 
   @OneToOne(fetch = FetchType.LAZY)

@@ -3,10 +3,7 @@ package com.tsoftware.qtd.entity;
 import com.tsoftware.qtd.constants.EnumType.TransactionStatus;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,13 +16,14 @@ import org.hibernate.annotations.Type;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "transaction")
+@Entity
+@Table
 @EqualsAndHashCode(callSuper = true)
 public class TransactionEntity extends AbstractAuditEntity {
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private TransactionStatus status;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private TransactionType type;
 
   private ZonedDateTime createdAt;

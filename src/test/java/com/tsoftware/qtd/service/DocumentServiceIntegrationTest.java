@@ -2,14 +2,13 @@ package com.tsoftware.qtd.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.entity.CCCD;
 import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.service.impl.DocumentService;
 import com.tsoftware.qtd.service.impl.GoogleCloudStorageService;
 import java.io.*;
 import java.util.Iterator;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.Range;
@@ -29,15 +28,13 @@ public class DocumentServiceIntegrationTest {
 
   @Test
   public void objectToMapstruct() throws IllegalAccessException {
-    Long id = 1L;
-    var cccd = CCCD.builder().id(id).gender(Gender.FEMALE).nationality("Kinh").build();
+    var id = UUID.randomUUID();
     var customer =
         Customer.builder()
             .id(id)
             .fullName("Nguyen van Tuan")
             .email("tuan@gmail.com")
             .phone("20232092390")
-            .cccd(cccd)
             .build();
     var loanPlan = LoanPlan.builder().note("note").id(id).customer(customer).build();
 

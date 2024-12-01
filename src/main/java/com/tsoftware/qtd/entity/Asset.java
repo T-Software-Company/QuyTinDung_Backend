@@ -28,7 +28,7 @@ public class Asset extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private AssetType assetType;
 
   @OneToMany(fetch = FetchType.EAGER)

@@ -21,7 +21,7 @@ public class AppraisalReport extends AbstractAuditEntity {
   private String title;
   private String note;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private ApproveStatus approveStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)

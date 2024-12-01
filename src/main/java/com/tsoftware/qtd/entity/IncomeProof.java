@@ -26,7 +26,7 @@ public class IncomeProof extends AbstractAuditEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Customer customer;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private IncomeProofType incomeProofType;
 
   @ManyToOne(fetch = FetchType.LAZY)

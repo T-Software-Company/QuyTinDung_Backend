@@ -30,6 +30,6 @@ public class ApartmentDto {
   private String issuingAuthority;
   private ZonedDateTime issueDate;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private TypeOfUse typeOfUse;
 }

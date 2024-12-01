@@ -5,6 +5,7 @@ import com.tsoftware.commonlib.model.StepHistory;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -14,7 +15,8 @@ import org.hibernate.annotations.Type;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "onboarding_workflow")
+@Entity
+@Table
 public class OnboardingWorkflowEntity extends AbstractAuditEntity {
   private UUID targetUuid;
   private String currentStep;

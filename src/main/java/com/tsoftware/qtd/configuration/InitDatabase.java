@@ -46,6 +46,11 @@ public class InitDatabase implements CommandLineRunner {
   }
 
   private void createGroups() {
+    var groupsResource = keycloak.realm(idpProperties.getRealm()).groups();
+    if (!groupsResource.groups().isEmpty()) {
+      return;
+    }
+
     var groupRequest =
         GroupRequest.builder()
             .name("Hội đồng tín dụng")

@@ -40,10 +40,10 @@ public class Credit extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private LoanStatus status;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private LoanSecurityType loanSecurityType;
 
   @ManyToOne(fetch = FetchType.LAZY)
