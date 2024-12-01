@@ -12,6 +12,7 @@ import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.ApproveService;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.GroupService;
+import com.tsoftware.qtd.validation.IsEnum;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -125,7 +126,8 @@ public class EmployeeController {
 
   @DeleteMapping("/delete")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(List<UUID> ids) {
+  public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployees(
+      @RequestBody List<UUID> ids) {
     employeeService.delete(ids);
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
@@ -191,7 +193,7 @@ public class EmployeeController {
 
   @PostMapping("/enables")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> enables(List<UUID> ids) {
+  public ResponseEntity<ApiResponse<Void>> enables(@RequestBody List<UUID> ids) {
     employeeService.enables(ids);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
@@ -202,7 +204,7 @@ public class EmployeeController {
 
   @PostMapping("/disables")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> disables(List<UUID> ids) {
+  public ResponseEntity<ApiResponse<Void>> disables(@RequestBody List<UUID> ids) {
     employeeService.disables(ids);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
@@ -228,14 +230,18 @@ public class EmployeeController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add-roles")
-  public ResponseEntity<ApiResponse<Void>> addRoles(@PathVariable UUID id, List<String> roles) {
+  public ResponseEntity<ApiResponse<Void>> addRoles(
+      @PathVariable UUID id,
+      @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles) {
     employeeService.addRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-roles")
-  public ResponseEntity<ApiResponse<Void>> removeRoles(@PathVariable UUID id, List<String> roles) {
+  public ResponseEntity<ApiResponse<Void>> removeRoles(
+      @PathVariable UUID id,
+      @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles) {
     employeeService.removeRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
   }
