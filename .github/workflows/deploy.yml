@@ -39,9 +39,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "rm -rf ./tsoftware/qtd/deployment && mkdir -p ./tsoftware/qtd/deployment"
-          scp -o StrictHostKeyChecking=no -r deployment/* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment 
-          scp -o StrictHostKeyChecking=no -r deployment/.env ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment/.env
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "rm -rf ./tsoftware/qtd/deployment/server && mkdir -p ./tsoftware/qtd/deployment/server"
+          scp -o StrictHostKeyChecking=no -r deployment/* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment/server 
+          scp -o StrictHostKeyChecking=no -r deployment/.env ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:./tsoftware/qtd/deployment/server/.env
 
 
       - name: Docker login to VPS
@@ -53,7 +53,7 @@ jobs:
       - name: Run Docker Compose on VPS
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            cd ./tsoftware/qtd/deployment
+            cd ./tsoftware/qtd/deployment/server
             docker compose down -v
             docker compose pull 
             docker compose up -d 
