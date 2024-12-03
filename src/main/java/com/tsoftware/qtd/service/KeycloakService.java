@@ -5,6 +5,9 @@ import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import java.util.List;
+import org.keycloak.representations.idm.GroupRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 
 public interface KeycloakService {
   String createUser(EmployeeRequest employeeRequest);
@@ -40,4 +43,32 @@ public interface KeycloakService {
   void addRolesToUser(String userId, List<String> roles);
 
   void removeRolesOnUser(String userId, List<String> roles);
+
+  UserRepresentation getUser(String userId);
+
+  GroupRepresentation getGroup(String id);
+
+  List<UserRepresentation> getUsersByGroup(String id);
+
+  void deleteUser(String id);
+
+  List<GroupRepresentation> getGroupsByUser(String id);
+
+  List<RoleRepresentation> getRolesByGroup(String id);
+
+  void updateGroup(GroupRepresentation root, List<RoleRepresentation> includes);
+
+  void createGroup(
+      GroupRepresentation root, List<RoleRepresentation> includes, List<UserRepresentation> object);
+
+  void resetRoles(
+      GroupRepresentation groupRepresentation, List<RoleRepresentation> roleRepresentations);
+
+  List<RoleRepresentation> getRolesByUser(String id);
+
+  void updateUser(
+      UserRepresentation userRepresentation, List<RoleRepresentation> roleRepresentations);
+
+  void resetRoles(
+      UserRepresentation userRepresentation, List<RoleRepresentation> roleRepresentations);
 }

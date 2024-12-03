@@ -6,6 +6,7 @@ import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
+import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.mapper.EmployeeMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.RoleRepository;
@@ -45,6 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
+  @KcTransactional(KcTransactional.KcTransactionType.CREATE_USER)
   public EmployeeResponse createEmployee(EmployeeRequest request) {
     var userId = keycloakService.createUser(request);
     var employee = employeeMapper.toEmployee(request);
@@ -56,13 +58,14 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
+  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public EmployeeResponse updateProfile(ProfileRequest request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-    keycloakService.updateUser(request, userId);
     var employee =
         employeeRepository
             .findByUserId(userId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
+    keycloakService.updateUser(request, userId);
     employee.setFirstName(request.getFirstName());
     employee.setLastName(request.getLastName());
     employee.setEmail(request.getEmail());
@@ -72,6 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
+  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public EmployeeResponse updateEmployee(UUID id, EmployeeRequest request) {
     var employee =
         employeeRepository
@@ -129,6 +133,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
+  @KcTransactional(KcTransactional.KcTransactionType.ADD_ROLE_TO_USER)
   public void addRoles(UUID id, List<String> roles) {
     var employee =
         employeeRepository
@@ -141,6 +146,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
+  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_USER)
   public void removeRoles(UUID id, List<String> roles) {
     var employee =
         employeeRepository

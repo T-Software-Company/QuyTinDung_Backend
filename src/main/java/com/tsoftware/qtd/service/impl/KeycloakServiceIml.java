@@ -7,6 +7,8 @@ import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.exception.KeycloakException;
 import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.kcTransactionManager.KcTransactionContext;
+import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.service.KeycloakService;
 import jakarta.ws.rs.core.Response;
 import java.util.Arrays;
@@ -15,10 +17,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.GroupRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.representations.idm.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +34,7 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.CREATE_USER)
   public String createUser(EmployeeRequest employeeRequest) {
 
     String userId = null;
@@ -77,6 +77,7 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.UPDATE_USER)
   public void updateUser(EmployeeRequest request, String userId) {
     var userResource = realmResource.users().get(userId);
     var userRepresentation = userResource.toRepresentation();
@@ -143,6 +144,7 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.CREATE_GROUP)
   public String createGroup(GroupRequest group) {
 
     GroupRepresentation groupRepresentation = new GroupRepresentation();
@@ -172,6 +174,7 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.UPDATE_GROUP)
   public void updateGroup(GroupRequest group, String kcGroupId) {
     var groupResource = realmResource.groups().group(kcGroupId);
     var groupRepresentation = groupResource.toRepresentation();
@@ -182,18 +185,21 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.DELETE_GROUP)
   public void deleteGroup(String kcGroupId) {
     var groupResource = realmResource.groups().group(kcGroupId);
     groupResource.remove();
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.ADD_ROLE_TO_GROUP)
   public void addRolesToGroup(String kcGroupId, List<String> roles) {
     var groupResource = realmResource.groups().group(kcGroupId);
     groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_GROUP)
   public void removeRolesOnGroup(String kcGroupId, List<String> roles) {
     var groupResource = realmResource.groups().group(kcGroupId);
     groupResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
@@ -221,6 +227,7 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.ADD_USER_TO_GROUP)
   public void addUserToGroup(String kcGroupId, String userId) {
     var groupResource = realmResource.groups().group(kcGroupId);
     var userRepresentation = realmResource.users().get(userId).toRepresentation();
@@ -228,6 +235,7 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.REMOVE_USER_ON_GROUP)
   public void removeUserOnGroup(String kcGroupId, String userId) {
     var groupResource = realmResource.groups().group(kcGroupId);
     var userRepresentation = realmResource.users().get(userId).toRepresentation();
@@ -235,15 +243,118 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.ADD_ROLE_TO_USER)
   public void addRolesToUser(String userId, List<String> roles) {
     var userResource = realmResource.users().get(userId);
     userResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
   }
 
   @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_USER)
   public void removeRolesOnUser(String userId, List<String> roles) {
     var userResource = realmResource.users().get(userId);
     userResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
+  }
+
+  @Override
+  public UserRepresentation getUser(String userId) {
+    var userResource = realmResource.users().get(userId);
+    return userResource.toRepresentation();
+  }
+
+  @Override
+  public GroupRepresentation getGroup(String id) {
+    return realmResource.groups().group(id).toRepresentation();
+  }
+
+  @Override
+  public List<UserRepresentation> getUsersByGroup(String id) {
+    return realmResource.groups().group(id).members();
+  }
+
+  @Override
+  public void deleteUser(String id) {
+    var userResource = realmResource.users().get(id);
+    userResource.remove();
+  }
+
+  @Override
+  public List<GroupRepresentation> getGroupsByUser(String id) {
+    return realmResource.users().get(id).groups();
+  }
+
+  @Override
+  public void updateUser(UserRepresentation userRepresentation, List<RoleRepresentation> roles) {
+    realmResource.users().get(userRepresentation.getId()).update(userRepresentation);
+    removeRolesOnUser(userRepresentation.getId());
+    realmResource
+        .users()
+        .get(userRepresentation.getId())
+        .roles()
+        .clientLevel(getClientIdOnDb())
+        .add(roles);
+  }
+
+  @Override
+  public void resetRoles(
+      UserRepresentation userRepresentation, List<RoleRepresentation> roleRepresentations) {
+    removeRolesOnUser(userRepresentation.getId());
+    realmResource
+        .users()
+        .get(userRepresentation.getId())
+        .roles()
+        .clientLevel(getClientIdOnDb())
+        .add(roleRepresentations);
+  }
+
+  @Override
+  public List<RoleRepresentation> getRolesByGroup(String id) {
+    return realmResource.groups().group(id).roles().clientLevel(getClientIdOnDb()).listAll();
+  }
+
+  @Override
+  public void updateGroup(
+      GroupRepresentation groupRepresentation, List<RoleRepresentation> roleRepresentations) {
+    realmResource.groups().group(groupRepresentation.getId()).update(groupRepresentation);
+    realmResource
+        .groups()
+        .group(groupRepresentation.getId())
+        .roles()
+        .clientLevel(getClientIdOnDb())
+        .add(roleRepresentations);
+  }
+
+  @Override
+  public void createGroup(
+      GroupRepresentation groupRepresentation,
+      List<RoleRepresentation> roleRepresentations,
+      List<UserRepresentation> userRepresentations) {
+    var groupResource = realmResource.groups();
+    var response = groupResource.add(groupRepresentation);
+    if (response.getStatus() != 201) {
+      throw new KeycloakException(response.getStatus(), extractErrorMessage(response));
+    }
+
+    var groupId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+    groupResource.group(groupId).roles().clientLevel(getClientIdOnDb()).add(roleRepresentations);
+    groupResource.group(groupId).members().addAll(userRepresentations);
+  }
+
+  @Override
+  public void resetRoles(
+      GroupRepresentation groupRepresentation, List<RoleRepresentation> roleRepresentations) {
+    removeAllRolesOnGroup(groupRepresentation.getId());
+    realmResource
+        .groups()
+        .group(groupRepresentation.getId())
+        .roles()
+        .clientLevel(getClientIdOnDb())
+        .add(roleRepresentations);
+  }
+
+  @Override
+  public List<RoleRepresentation> getRolesByUser(String id) {
+    return realmResource.users().get(id).roles().clientLevel(getClientIdOnDb()).listAll();
   }
 
   private String extractErrorMessage(Response response) {
