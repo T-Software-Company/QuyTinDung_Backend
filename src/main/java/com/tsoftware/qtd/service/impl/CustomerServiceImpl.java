@@ -2,6 +2,7 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.commonlib.constant.WorkflowStatus;
 import com.tsoftware.commonlib.context.WorkflowContext;
+import com.tsoftware.commonlib.exception.WorkflowException;
 import com.tsoftware.commonlib.model.Workflow;
 import com.tsoftware.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
       if (customer.getIsDeleted()) {
         return update(customer.getId(), customerRequest);
       } else {
-        WorkflowContext.setStatus(WorkflowStatus.DENIED);
-        throw new CommonException(ErrorType.METHOD_ARGUMENT_NOT_VALID, "Customer already exists.");
+        throw new WorkflowException(HttpStatus.CONFLICT.value(), "Customer already exists.");
       }
     }
 
