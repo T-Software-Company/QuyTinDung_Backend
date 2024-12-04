@@ -4,10 +4,7 @@ import com.tsoftware.qtd.configuration.CustomAuditingEntityListener;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,5 +29,8 @@ public class AbstractAuditEntity {
   @LastModifiedDate protected ZonedDateTime updatedAt;
   @LastModifiedBy protected String lastModifiedBy;
   @CreatedBy protected String createdBy;
+
+  @Column(columnDefinition = "boolean default false")
+  @Builder.Default
   protected Boolean isDeleted = false;
 }
