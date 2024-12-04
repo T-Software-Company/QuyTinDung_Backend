@@ -36,4 +36,5 @@ public class EmployeeResponse {
   String code;
   Gender gender;
   Boolean enabled;
+  Boolean isDeleted;
 }

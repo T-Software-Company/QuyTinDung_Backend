@@ -15,14 +15,14 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@MappedSuperclass
 @Getter
 @Setter
 @SuperBuilder
+@MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(CustomAuditingEntityListener.class)
 @EnableJpaAuditing
+@EntityListeners(CustomAuditingEntityListener.class)
 public class AbstractAuditEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,5 +32,5 @@ public class AbstractAuditEntity {
   @LastModifiedDate protected ZonedDateTime updatedAt;
   @LastModifiedBy protected String lastModifiedBy;
   @CreatedBy protected String createdBy;
-  protected Boolean isDeleted;
+  protected Boolean isDeleted = false;
 }

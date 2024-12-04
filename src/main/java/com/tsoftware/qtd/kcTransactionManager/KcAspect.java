@@ -52,7 +52,7 @@ public class KcAspect {
 
     // user
     if (kcTransactionContext.value() == KcTransactional.KcTransactionType.UPDATE_USER) {
-      kcUserTransactionManager.handleUpdate((String) joinPoint.getArgs()[0]);
+      kcUserTransactionManager.handleUpdate((String) joinPoint.getArgs()[1]);
       return;
     }
     if (kcTransactionContext.value() == KcTransactional.KcTransactionType.ADD_ROLE_TO_USER) {
