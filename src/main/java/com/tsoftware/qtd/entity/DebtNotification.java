@@ -1,9 +1,15 @@
 package com.tsoftware.qtd.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import java.math.BigDecimal;
 import java.util.Map;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
@@ -15,7 +21,7 @@ import org.hibernate.annotations.Type;
 @Entity
 public class DebtNotification extends AbstractAuditEntity {
 
-  private Long amount;
+  private BigDecimal amount;
   private String message;
 
   @Type(JsonType.class)
@@ -24,5 +30,5 @@ public class DebtNotification extends AbstractAuditEntity {
 
   @ManyToOne private Customer customer;
 
-  @ManyToOne private Credit credit;
+  @ManyToOne private Application application;
 }

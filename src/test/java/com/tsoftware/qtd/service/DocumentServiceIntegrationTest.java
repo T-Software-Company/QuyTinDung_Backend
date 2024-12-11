@@ -29,7 +29,7 @@ public class DocumentServiceIntegrationTest {
 
   @Test
   public void objectToMapstruct() throws IllegalAccessException {
-    Long id = 1L;
+    UUID id = 1L;
     var cccd = CCCD.builder().id(id).gender(Gender.FEMALE).nationality("Kinh").build();
     var customer =
         Customer.builder()

@@ -31,7 +31,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ${ENTITY_NAME}Repository extends JpaRepository<$ENTITY_NAME, Long> {
+public interface ${ENTITY_NAME}Repository extends JpaRepository<$ENTITY_NAME, UUID> {
 }
 EOF
 fi
@@ -47,9 +47,9 @@ import java.util.List;
 
 public interface ${ENTITY_NAME}Service {
     ${ENTITY_NAME}Dto create(${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto);
-    ${ENTITY_NAME}Dto update(Long id, ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto);
-    void delete(Long id);
-    ${ENTITY_NAME}Dto getById(Long id);
+    ${ENTITY_NAME}Dto update(UUID id, ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto);
+    void delete(UUID id);
+    ${ENTITY_NAME}Dto getById(UUID id);
     List<${ENTITY_NAME}Dto> getAll();
 }
 EOF
@@ -87,19 +87,19 @@ public class ${ENTITY_NAME}ServiceImpl implements ${ENTITY_NAME}Service {
     }
 
     @Override
-    public ${ENTITY_NAME}Dto update(Long id, ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto) {
+    public ${ENTITY_NAME}Dto update(UUID id, ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto) {
         $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new NotFoundException("${ENTITY_NAME} not found"));
         ${ENTITY_LOWER}Mapper.updateEntity(${ENTITY_LOWER}Dto, ${ENTITY_LOWER});
         return ${ENTITY_LOWER}Mapper.toDto(${ENTITY_LOWER}Repository.save(${ENTITY_LOWER}));
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         ${ENTITY_LOWER}Repository.deleteById(id);
     }
 
     @Override
-    public ${ENTITY_NAME}Dto getById(Long id) {
+    public ${ENTITY_NAME}Dto getById(UUID id) {
         $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new NotFoundException("${ENTITY_NAME} not found"));
         return ${ENTITY_LOWER}Mapper.toDto(${ENTITY_LOWER});
     }
@@ -165,18 +165,18 @@ public class ${ENTITY_NAME}Controller {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<${ENTITY_NAME}Dto>> update(@PathVariable Long id, @RequestBody ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto) {
+    public ResponseEntity<ApiResponse<${ENTITY_NAME}Dto>> update(@PathVariable UUID id, @RequestBody ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto) {
         return ResponseEntity.ok(new ApiResponse<>(1000, "Updated", ${ENTITY_LOWER}Service.update(id, ${ENTITY_LOWER}Dto)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         ${ENTITY_LOWER}Service.delete(id);
         return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<${ENTITY_NAME}Dto>> getById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<${ENTITY_NAME}Dto>> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", ${ENTITY_LOWER}Service.getById(id)));
     }
 
@@ -195,7 +195,7 @@ fi
 #
 #@Data
 #public class ${ENTITY_NAME}Dto {
-#    private Long id;
+#    private UUID id;
 #    // Add other fields based on ${ENTITY_NAME} entity
 #}
 #EOF

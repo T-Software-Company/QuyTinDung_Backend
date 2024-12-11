@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
 import com.tsoftware.commonlib.model.OnboardingWorkflow;
-import com.tsoftware.commonlib.model.Transaction;
+import com.tsoftware.qtd.dto.Transaction;
 import com.tsoftware.qtd.dto.document.DocumentDTO;
 import com.tsoftware.qtd.entity.Document;
 import com.tsoftware.qtd.entity.OnboardingWorkflowEntity;
@@ -13,7 +13,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface DtoMapper {
 
-  TransactionEntity toEntity(Transaction createCustomerTransaction);
+  TransactionEntity toEntity(Transaction createCustomerAbstractTransaction);
 
   Transaction toDomain(TransactionEntity transactionEntity);
 

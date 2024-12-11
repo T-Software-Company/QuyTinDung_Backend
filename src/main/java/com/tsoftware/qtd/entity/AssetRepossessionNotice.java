@@ -30,5 +30,5 @@ public class AssetRepossessionNotice extends AbstractAuditEntity {
 
   @ManyToOne private Customer customer;
 
-  @ManyToOne private Credit credit;
+  @ManyToOne private Application application;
 }

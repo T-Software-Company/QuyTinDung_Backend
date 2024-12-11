@@ -39,5 +39,5 @@ public class LoanCollection extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @ManyToOne private Credit credit;
+  @ManyToOne private Application application;
 }

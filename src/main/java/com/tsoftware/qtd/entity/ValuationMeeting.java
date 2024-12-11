@@ -1,11 +1,22 @@
 package com.tsoftware.qtd.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
@@ -34,7 +45,7 @@ public class ValuationMeeting extends AbstractAuditEntity {
   private List<Asset> assets;
 
   @OneToOne(fetch = FetchType.LAZY)
-  private Credit credit;
+  private Application application;
 
   @ManyToMany(mappedBy = "valuationMeetings")
   private List<Employee> participants;

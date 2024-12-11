@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.dto.assetRepossessionNotice;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Builder
 public class AssetRepossessionNoticeDto {
 
-  Long id;
+  UUID id;
   ZonedDateTime createdAt;
   ZonedDateTime updatedAt;
   String lastModifiedBy;

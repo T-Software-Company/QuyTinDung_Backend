@@ -7,7 +7,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,6 +27,8 @@ import org.hibernate.annotations.Type;
 @EqualsAndHashCode(callSuper = true)
 public class TransactionEntity extends AbstractAuditEntity {
 
+  private UUID customerId;
+
   @Enumerated(EnumType.STRING)
   private TransactionStatus status;
 
@@ -33,7 +39,17 @@ public class TransactionEntity extends AbstractAuditEntity {
   private ZonedDateTime approvedAt;
   private String approvedBy;
 
+  private String PIC;
+  private Boolean multipleApproval;
+
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private List<String> approvers;
+
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Object metadata;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Application application;
 }

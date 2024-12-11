@@ -16,6 +16,7 @@ import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +28,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,7 +86,7 @@ public class EmployeeController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable UUID id) {
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())
@@ -165,7 +173,7 @@ public class EmployeeController {
   }
 
   @GetMapping("/{id}/approves")
-  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             HttpStatus.OK.value(), "Fetched All", approveService.getByApproverId(id)));
@@ -174,7 +182,7 @@ public class EmployeeController {
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/join-group")
   public ResponseEntity<ApiResponse<Void>> joinGroup(
-      @PathVariable Long id, @RequestParam Long groupId) {
+      @PathVariable UUID id, @RequestParam UUID groupId) {
     groupService.join(groupId, id);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Joined", null));
   }

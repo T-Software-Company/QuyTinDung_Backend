@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Builder
 @Setter
-public class LoanRequestRequest {
+public class LoanRequestDTO {
   @NotNull @NotBlank private String purpose;
   @NotNull @NotBlank private ZonedDateTime startDate;
 

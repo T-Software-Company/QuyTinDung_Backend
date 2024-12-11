@@ -2,15 +2,16 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.dto.credit.DisbursementDto;
 import java.util.List;
+import java.util.UUID;
 
 public interface DisbursementService {
   DisbursementDto create(DisbursementDto disbursementDto);
 
-  DisbursementDto update(Long id, DisbursementDto disbursementDto);
+  DisbursementDto update(UUID id, DisbursementDto disbursementDto);
 
-  void delete(Long id);
+  void delete(UUID id);
 
-  DisbursementDto getById(Long id);
+  DisbursementDto getById(UUID id);
 
   List<DisbursementDto> getAll();
 }

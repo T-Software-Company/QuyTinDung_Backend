@@ -4,6 +4,7 @@ import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,19 +12,19 @@ import org.springframework.data.jpa.domain.Specification;
 public interface GroupService {
   GroupResponse create(GroupRequest groupRequest);
 
-  GroupResponse update(Long id, GroupRequest groupRequest);
+  GroupResponse update(UUID id, GroupRequest groupRequest);
 
-  void delete(Long id);
+  void delete(UUID id);
 
-  GroupResponse getById(Long id);
+  GroupResponse getById(UUID id);
 
   Page<GroupResponse> getAll(Specification<Group> specification, Pageable pageable);
 
-  void join(Long groupId, Long employeeId);
+  void join(UUID groupId, UUID employeeId);
 
-  void leave(Long groupId, Long employeeId);
+  void leave(UUID groupId, UUID employeeId);
 
-  void addRoles(Long id, List<String> roles);
+  void addRoles(UUID id, List<String> roles);
 
-  void removeRoles(Long id, List<String> roles);
+  void removeRoles(UUID id, List<String> roles);
 }

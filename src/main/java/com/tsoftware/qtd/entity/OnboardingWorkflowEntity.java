@@ -25,5 +25,7 @@ public class OnboardingWorkflowEntity extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
   private List<StepHistory> stepHistories;
 }

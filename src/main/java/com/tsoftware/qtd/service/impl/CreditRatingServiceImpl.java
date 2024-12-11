@@ -7,6 +7,7 @@ import com.tsoftware.qtd.mapper.CreditRatingMapper;
 import com.tsoftware.qtd.repository.CreditRatingRepository;
 import com.tsoftware.qtd.service.CreditRatingService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class CreditRatingServiceImpl implements CreditRatingService {
   }
 
   @Override
-  public CreditRatingDto update(Long id, CreditRatingDto creditratingDto) {
+  public CreditRatingDto update(UUID id, CreditRatingDto creditratingDto) {
     CreditRating creditrating =
         creditratingRepository
             .findById(id)
@@ -35,12 +36,12 @@ public class CreditRatingServiceImpl implements CreditRatingService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     creditratingRepository.deleteById(id);
   }
 
   @Override
-  public CreditRatingDto getById(Long id) {
+  public CreditRatingDto getById(UUID id) {
     CreditRating creditrating =
         creditratingRepository
             .findById(id)

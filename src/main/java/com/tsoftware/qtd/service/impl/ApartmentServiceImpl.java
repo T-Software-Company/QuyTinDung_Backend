@@ -7,6 +7,7 @@ import com.tsoftware.qtd.mapper.ApartmentMapper;
 import com.tsoftware.qtd.repository.ApartmentRepository;
 import com.tsoftware.qtd.service.ApartmentService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ApartmentServiceImpl implements ApartmentService {
   }
 
   @Override
-  public ApartmentDto update(Long id, ApartmentDto apartmentDto) {
+  public ApartmentDto update(UUID id, ApartmentDto apartmentDto) {
     Apartment apartment =
         apartmentRepository
             .findById(id)
@@ -35,12 +36,12 @@ public class ApartmentServiceImpl implements ApartmentService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     apartmentRepository.deleteById(id);
   }
 
   @Override
-  public ApartmentDto getById(Long id) {
+  public ApartmentDto getById(UUID id) {
     Apartment apartment =
         apartmentRepository
             .findById(id)

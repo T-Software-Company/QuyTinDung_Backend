@@ -3,21 +3,22 @@ package com.tsoftware.qtd.service;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import java.util.List;
+import java.util.UUID;
 
 public interface ValuationMeetingService {
-  ValuationMeetingResponse create(ValuationMeetingRequest valuationmeetingRequest, Long creditId);
+  ValuationMeetingResponse create(ValuationMeetingRequest valuationmeetingRequest, UUID creditId);
 
-  ValuationMeetingResponse update(Long id, ValuationMeetingRequest valuationmeetingRequest);
+  ValuationMeetingResponse update(UUID id, ValuationMeetingRequest valuationmeetingRequest);
 
-  void delete(Long id);
+  void delete(UUID id);
 
-  ValuationMeetingResponse getById(Long id);
+  ValuationMeetingResponse getById(UUID id);
 
   List<ValuationMeetingResponse> getAll();
 
-  void addParticipants(Long id, List<Long> participantIds);
+  void addParticipants(UUID id, List<UUID> participantIds);
 
-  void removeParticipants(Long id, List<Long> participantIds);
+  void removeParticipants(UUID id, List<UUID> participantIds);
 
-  ValuationMeetingResponse getByCreditId(Long creditId);
+  ValuationMeetingResponse getByCreditId(UUID creditId);
 }

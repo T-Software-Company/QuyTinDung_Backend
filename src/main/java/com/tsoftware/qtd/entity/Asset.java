@@ -34,7 +34,7 @@ public class Asset extends AbstractAuditEntity {
   @OneToMany(fetch = FetchType.EAGER)
   private List<LegalDocument> legalDocuments;
 
-  @ManyToOne private Credit credit;
+  @ManyToOne private Application application;
 
   @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
   private Apartment apartment;

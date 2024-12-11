@@ -1,7 +1,9 @@
 package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.dto.employee.*;
+import com.tsoftware.qtd.dto.employee.EmployeeRequest;
+import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
@@ -10,6 +12,7 @@ import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -115,7 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public EmployeeResponse getEmployee(Long id) {
+  public EmployeeResponse getEmployee(UUID id) {
 
     return employeeMapper.toEmployeeResponse(
         employeeRepository

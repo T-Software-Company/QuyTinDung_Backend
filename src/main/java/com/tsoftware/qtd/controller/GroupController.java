@@ -12,6 +12,7 @@ import com.tsoftware.qtd.validation.IsEnum;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,7 +22,15 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/groups")
@@ -43,21 +52,21 @@ public class GroupController {
   @PreAuthorize("hasAnyRole('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<GroupResponse>> update(
-      @PathVariable Long id, @RequestBody @Valid GroupRequest groupRequest) {
+      @PathVariable UUID id, @RequestBody @Valid GroupRequest groupRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(HttpStatus.OK.value(), "Updated", groupService.update(id, groupRequest)));
   }
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     groupService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
   }
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<GroupResponse>> getById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<GroupResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(HttpStatus.OK.value(), "Fetched", groupService.getById(id)));
   }
@@ -76,7 +85,7 @@ public class GroupController {
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add-employee")
   public ResponseEntity<ApiResponse<Void>> joinGroup(
-      @PathVariable Long id, @RequestParam Long employeeId) {
+      @PathVariable UUID id, @RequestParam UUID employeeId) {
     groupService.join(id, employeeId);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
@@ -84,7 +93,7 @@ public class GroupController {
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-employee")
   public ResponseEntity<ApiResponse<Void>> LeaveGroup(
-      @PathVariable Long id, @RequestParam Long employeeId) {
+      @PathVariable UUID id, @RequestParam UUID employeeId) {
     groupService.leave(id, employeeId);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }
@@ -93,7 +102,7 @@ public class GroupController {
   @PostMapping("/{id}/add-roles")
   public ResponseEntity<ApiResponse<Void>> addRoles(
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
-      @PathVariable Long id) {
+      @PathVariable UUID id) {
     groupService.addRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
@@ -102,7 +111,7 @@ public class GroupController {
   @PostMapping("/{id}/remove-roles")
   public ResponseEntity<ApiResponse<Void>> removeRoles(
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
-      @PathVariable Long id) {
+      @PathVariable UUID id) {
     groupService.removeRoles(id, roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }

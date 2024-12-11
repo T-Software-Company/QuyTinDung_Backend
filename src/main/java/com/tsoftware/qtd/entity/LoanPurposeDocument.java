@@ -28,7 +28,7 @@ public class LoanPurposeDocument extends AbstractAuditEntity {
   private Map<String, Object> metadata;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Credit credit;
+  private Application application;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private AppraisalPlan appraisalPlan;

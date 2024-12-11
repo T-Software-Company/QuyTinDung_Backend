@@ -7,6 +7,7 @@ import com.tsoftware.qtd.mapper.LandAssetMapper;
 import com.tsoftware.qtd.repository.LandAssetRepository;
 import com.tsoftware.qtd.service.LandAssetService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class LandAssetServiceImpl implements LandAssetService {
   }
 
   @Override
-  public LandAssetDto update(Long id, LandAssetDto landassetDto) {
+  public LandAssetDto update(UUID id, LandAssetDto landassetDto) {
     LandAsset landasset =
         landassetRepository
             .findById(id)
@@ -35,12 +36,12 @@ public class LandAssetServiceImpl implements LandAssetService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     landassetRepository.deleteById(id);
   }
 
   @Override
-  public LandAssetDto getById(Long id) {
+  public LandAssetDto getById(UUID id) {
     LandAsset landasset =
         landassetRepository
             .findById(id)

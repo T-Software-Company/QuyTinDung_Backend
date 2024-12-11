@@ -7,6 +7,7 @@ import com.tsoftware.qtd.mapper.PassPortMapper;
 import com.tsoftware.qtd.repository.PassPortRepository;
 import com.tsoftware.qtd.service.PassPortService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class PassPortServiceImpl implements PassPortService {
   }
 
   @Override
-  public PassPortDto update(Long id, PassPortDto passportDto) {
+  public PassPortDto update(UUID id, PassPortDto passportDto) {
     PassPort passport =
         passportRepository
             .findById(id)
@@ -35,12 +36,12 @@ public class PassPortServiceImpl implements PassPortService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     passportRepository.deleteById(id);
   }
 
   @Override
-  public PassPortDto getById(Long id) {
+  public PassPortDto getById(UUID id) {
     PassPort passport =
         passportRepository
             .findById(id)

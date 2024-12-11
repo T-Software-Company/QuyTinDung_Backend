@@ -9,7 +9,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.List;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +25,6 @@ import lombok.experimental.SuperBuilder;
 public class Customer extends AbstractAuditEntity {
 
   private String fullName;
-  private UUID customerUUID;
 
   @Column(unique = true)
   private String email;
@@ -46,7 +44,7 @@ public class Customer extends AbstractAuditEntity {
   private List<LoanPlan> loanPlans;
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<Credit> credits;
+  private List<Application> applications;
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<LoanRequest> loanRequests;

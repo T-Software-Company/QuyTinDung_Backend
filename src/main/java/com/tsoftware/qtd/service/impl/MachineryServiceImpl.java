@@ -7,6 +7,7 @@ import com.tsoftware.qtd.mapper.MachineryMapper;
 import com.tsoftware.qtd.repository.MachineryRepository;
 import com.tsoftware.qtd.service.MachineryService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class MachineryServiceImpl implements MachineryService {
   }
 
   @Override
-  public MachineryDto update(Long id, MachineryDto machineryDto) {
+  public MachineryDto update(UUID id, MachineryDto machineryDto) {
     Machinery machinery =
         machineryRepository
             .findById(id)
@@ -35,12 +36,12 @@ public class MachineryServiceImpl implements MachineryService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     machineryRepository.deleteById(id);
   }
 
   @Override
-  public MachineryDto getById(Long id) {
+  public MachineryDto getById(UUID id) {
     Machinery machinery =
         machineryRepository
             .findById(id)

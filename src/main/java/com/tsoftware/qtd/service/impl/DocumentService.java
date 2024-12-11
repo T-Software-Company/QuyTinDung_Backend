@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.hwpf.HWPFDocument;
@@ -65,7 +66,7 @@ public class DocumentService {
     }
   }
 
-  public DocumentDTO getDocument(Long id) {
+  public DocumentDTO getDocument(UUID id) {
     var document =
         documentRepository
             .findById(id)
@@ -73,7 +74,7 @@ public class DocumentService {
     return dtoMapper.toDto(document);
   }
 
-  public List<DocumentDTO> getDocumentBelongToCustomer(Long customerId) {
+  public List<DocumentDTO> getDocumentBelongToCustomer(UUID customerId) {
     return documentRepository.findByCustomerId(customerId).stream().map(dtoMapper::toDto).toList();
   }
 

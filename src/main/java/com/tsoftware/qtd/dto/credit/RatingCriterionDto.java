@@ -4,13 +4,14 @@ import com.tsoftware.qtd.constants.EnumType.RatingCriterionType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.*;
 
 @Getter
 @Setter
 @Builder
 public class RatingCriterionDto {
-  private Long id;
+  private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;

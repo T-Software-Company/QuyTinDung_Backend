@@ -51,14 +51,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     Customer customer = customerMapper.toEntity(customerRequest);
-    customer.setCustomerUUID(UUID.randomUUID());
     customer.setIsDeleted(false);
     Set<String> urls = getDocumentUrls(customerRequest);
     var entity = customerRepository.save(customer);
     documentService.signCustomerDocument(entity, urls);
     WorkflowContext.putMetadata(customer);
     Workflow workflow = WorkflowContext.get();
-    workflow.setTargetId(entity.getCustomerUUID());
+    workflow.setTargetId(entity.getId());
     return customerMapper.toResponse(entity);
   }
 
@@ -86,7 +85,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerResponse update(Long id, CustomerRequest customerRequest) {
+  public CustomerResponse update(UUID id, CustomerRequest customerRequest) {
     Customer customer =
         customerRepository
             .findById(id)
@@ -104,7 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     Customer customer =
         customerRepository
             .findById(id)
@@ -112,7 +111,7 @@ public class CustomerServiceImpl implements CustomerService {
     customer.setIsDeleted(true);
     customerRepository.save(customer);
     workflowService
-        .getByStatus(customer.getCustomerUUID(), WorkflowStatus.INPROGRESS)
+        .getByStatus(customer.getId(), WorkflowStatus.INPROGRESS)
         .forEach(
             workflow -> {
               workflow.setWorkflowStatus(WorkflowStatus.EXPIRED);
@@ -121,7 +120,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerResponse getById(Long id) {
+  public CustomerResponse getById(UUID id) {
     Customer customer =
         customerRepository
             .findById(id)

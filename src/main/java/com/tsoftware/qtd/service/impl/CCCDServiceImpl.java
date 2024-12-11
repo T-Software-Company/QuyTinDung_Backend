@@ -7,6 +7,7 @@ import com.tsoftware.qtd.mapper.CCCDMapper;
 import com.tsoftware.qtd.repository.CCCDRepository;
 import com.tsoftware.qtd.service.CCCDService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class CCCDServiceImpl implements CCCDService {
   }
 
   @Override
-  public CCCDDto update(Long id, CCCDDto cccdDto) {
+  public CCCDDto update(UUID id, CCCDDto cccdDto) {
     CCCD cccd =
         cccdRepository.findById(id).orElseThrow(() -> new NotFoundException("CCCD not found"));
     cccdMapper.updateEntity(cccdDto, cccd);
@@ -33,12 +34,12 @@ public class CCCDServiceImpl implements CCCDService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     cccdRepository.deleteById(id);
   }
 
   @Override
-  public CCCDDto getById(Long id) {
+  public CCCDDto getById(UUID id) {
     CCCD cccd =
         cccdRepository.findById(id).orElseThrow(() -> new NotFoundException("CCCD not found"));
     return cccdMapper.toDto(cccd);

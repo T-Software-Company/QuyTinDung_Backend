@@ -7,6 +7,7 @@ import com.tsoftware.qtd.mapper.MarketStallsMapper;
 import com.tsoftware.qtd.repository.MarketStallsRepository;
 import com.tsoftware.qtd.service.MarketStallsService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class MarketStallsServiceImpl implements MarketStallsService {
   }
 
   @Override
-  public MarketStallsDto update(Long id, MarketStallsDto marketstallsDto) {
+  public MarketStallsDto update(UUID id, MarketStallsDto marketstallsDto) {
     MarketStalls marketstalls =
         marketstallsRepository
             .findById(id)
@@ -35,12 +36,12 @@ public class MarketStallsServiceImpl implements MarketStallsService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(UUID id) {
     marketstallsRepository.deleteById(id);
   }
 
   @Override
-  public MarketStallsDto getById(Long id) {
+  public MarketStallsDto getById(UUID id) {
     MarketStalls marketstalls =
         marketstallsRepository
             .findById(id)

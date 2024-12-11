@@ -15,6 +15,7 @@ import com.tsoftware.qtd.repository.ValuationReportRepository;
 import com.tsoftware.qtd.service.ValuationReportService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class ValuationReportServiceImpl implements ValuationReportService {
 
   @Override
   @Transactional
-  public ValuationReportResponse update(Long id, ValuationReportRequest valuationreportRequest) {
+  public ValuationReportResponse update(UUID id, ValuationReportRequest valuationreportRequest) {
     ValuationReport valuationreport =
         valuationreportRepository
             .findById(id)
@@ -50,12 +51,12 @@ public class ValuationReportServiceImpl implements ValuationReportService {
 
   @Override
   @Transactional
-  public void delete(Long id) {
+  public void delete(UUID id) {
     valuationreportRepository.deleteById(id);
   }
 
   @Override
-  public ValuationReportResponse getById(Long id) {
+  public ValuationReportResponse getById(UUID id) {
     ValuationReport valuationreport =
         valuationreportRepository
             .findById(id)
@@ -72,7 +73,7 @@ public class ValuationReportServiceImpl implements ValuationReportService {
 
   @Override
   @Transactional
-  public List<ApproveResponse> addApprove(Long id, List<Long> approverIds) {
+  public List<ApproveResponse> addApprove(UUID id, List<UUID> approverIds) {
     var valuationReport =
         valuationreportRepository
             .findById(id)
@@ -92,7 +93,7 @@ public class ValuationReportServiceImpl implements ValuationReportService {
   }
 
   @Override
-  public void removeApprove(Long id, List<Long> approverIds) {
+  public void removeApprove(UUID id, List<UUID> approverIds) {
     approveRepository.deleteAllByIdInBatch(approverIds);
   }
 }

@@ -1,8 +1,9 @@
 package com.tsoftware.qtd.repository;
 
 import com.tsoftware.qtd.entity.LegalDocument;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LegalDocumentRepository extends JpaRepository<LegalDocument, Long> {}
+public interface LegalDocumentRepository extends JpaRepository<LegalDocument, UUID> {}

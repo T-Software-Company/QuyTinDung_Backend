@@ -4,6 +4,7 @@ import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,7 +26,7 @@ public interface EmployeeService {
 
   void deactivateEmployee(String userId);
 
-  EmployeeResponse getEmployee(Long id);
+  EmployeeResponse getEmployee(UUID id);
 
   Page<EmployeeResponse> getAll(Specification<Employee> spec, Pageable page);
 }

@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +29,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing
 public class AbstractAuditEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  protected Long id;
+  @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
+  protected UUID id;
 
   @CreatedDate protected ZonedDateTime createdAt;
   @LastModifiedDate protected ZonedDateTime updatedAt;
