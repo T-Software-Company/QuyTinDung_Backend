@@ -115,8 +115,12 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void resetPassword(String userId, String newPassword) {
-    keycloakService.resetPassword(userId, newPassword);
+  public void resetPassword(UUID id) {
+    var employee =
+        employeeRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, "employee: " + id));
+    keycloakService.resetPasswordByEmail(employee.getUserId());
   }
 
   @Override

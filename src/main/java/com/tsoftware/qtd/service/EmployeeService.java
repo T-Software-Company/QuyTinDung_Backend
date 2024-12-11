@@ -20,7 +20,7 @@ public interface EmployeeService {
 
   EmployeeResponse updateEmployee(UUID id, EmployeeRequest request);
 
-  void resetPassword(String userId, String newPassword);
+  void resetPassword(UUID id);
 
   void enable(UUID id);
 

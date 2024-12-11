@@ -22,6 +22,8 @@ public interface KeycloakService {
 
   void resetPassword(String userId, String newPassword);
 
+  void resetPasswordByEmail(String userId);
+
   String createGroup(GroupRequest group);
 
   void updateGroup(GroupRequest group, String kcGroupId);

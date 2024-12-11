@@ -13,11 +13,11 @@ import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.ApproveService;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.GroupService;
+import com.tsoftware.qtd.service.KeycloakService;
 import com.tsoftware.qtd.validation.IsEnum;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +43,7 @@ public class EmployeeController {
   ApproveService approveService;
   private final GroupService groupService;
   private final PageResponseMapper pageResponseMapper;
+  private final KeycloakService keycloakService;
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
@@ -148,11 +149,9 @@ public class EmployeeController {
   }
 
   @PostMapping("/reset-password")
-  public ResponseEntity<ApiResponse<Void>> employeeResetPassword(
-      @RequestBody Map<String, Object> request) {
+  public ResponseEntity<ApiResponse<Void>> employeeResetPassword() {
     String id = SecurityContextHolder.getContext().getAuthentication().getName();
-    String newPassword = (String) request.get("newPassword");
-    employeeService.resetPassword(id, newPassword);
+    keycloakService.resetPasswordByEmail(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -162,10 +161,8 @@ public class EmployeeController {
 
   @PostMapping("/{id}/reset-password")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(
-      @PathVariable String id, @RequestBody Map<String, Object> request) {
-    String newPassword = (String) request.get("newPassword");
-    employeeService.resetPassword(id, newPassword);
+  public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(@PathVariable UUID id) {
+    employeeService.resetPassword(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())

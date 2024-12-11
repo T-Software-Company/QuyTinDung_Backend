@@ -133,15 +133,23 @@ public class KeycloakServiceIml implements KeycloakService {
 
   @Override
   public void resetPassword(String userId, String newPassword) {
+
     var usersResource = keycloak.realm(idpProperties.getRealm()).users();
     var userResource = usersResource.get(userId);
-
     CredentialRepresentation credential = new CredentialRepresentation();
     credential.setType(CredentialRepresentation.PASSWORD);
     credential.setValue(newPassword);
     credential.setTemporary(false);
 
     userResource.resetPassword(credential);
+  }
+
+  @Override
+  public void resetPasswordByEmail(String userId) {
+    realmResource
+        .users()
+        .get(userId)
+        .executeActionsEmail(Collections.singletonList("UPDATE_PASSWORD"));
   }
 
   @Override
