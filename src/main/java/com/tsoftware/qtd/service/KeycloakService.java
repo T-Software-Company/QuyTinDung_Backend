@@ -2,6 +2,7 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
+import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface KeycloakService {
 
   void updateUser(ProfileRequest request, String userId);
 
-  void updateUser(EmployeeRequest request, String userId);
+  void updateUser(EmployeeUpdateRequest request, String userId);
 
   void activeUser(String userId);
 

@@ -6,6 +6,7 @@ import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
@@ -107,7 +108,7 @@ public class EmployeeController {
   @PreAuthorize("hasRole('ADMIN')")
   @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(
-      @PathVariable UUID id, @RequestBody @Valid EmployeeRequest request) {
+      @PathVariable UUID id, @RequestBody @Valid EmployeeUpdateRequest request) {
 
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()

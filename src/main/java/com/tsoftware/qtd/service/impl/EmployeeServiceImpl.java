@@ -103,14 +103,15 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public EmployeeResponse updateEmployee(UUID id, EmployeeRequest request) {
+  public EmployeeResponse updateEmployee(UUID id, EmployeeUpdateRequest request) {
     var employee =
         employeeRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     keycloakService.updateUser(request, employee.getUserId());
     employeeMapper.updateEntity(request, employee);
-
+    var roles = roleRepository.findAllByName(request.getRoles());
+    employee.setRoles(roles);
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 

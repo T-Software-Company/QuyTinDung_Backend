@@ -2,10 +2,7 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.dto.employee.EmployeeRequest;
-import com.tsoftware.qtd.dto.employee.GroupDto;
-import com.tsoftware.qtd.dto.employee.GroupRequest;
-import com.tsoftware.qtd.dto.employee.ProfileRequest;
+import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.exception.*;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactionContext;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
@@ -82,7 +79,7 @@ public class KeycloakServiceIml implements KeycloakService {
 
   @Override
   @KcTransactionContext(KcTransactional.KcTransactionType.UPDATE_USER)
-  public void updateUser(EmployeeRequest request, String userId) {
+  public void updateUser(EmployeeUpdateRequest request, String userId) {
     var userResource = realmResource.users().get(userId);
     var userRepresentation = userResource.toRepresentation();
 
@@ -106,11 +103,11 @@ public class KeycloakServiceIml implements KeycloakService {
     removeRolesOnUser(userId);
     var clientRoles = getClientRoles(request.getRoles());
     realmResource.users().get(userId).roles().clientLevel(getClientIdOnDb()).add(clientRoles);
-    realmResource
-        .users()
-        .get(userId)
-        .groups()
-        .addAll(getGroupsByIds(request.getGroups().stream().map(GroupDto::getKcGroupId).toList()));
+    getGroupsBy(request.getGroups())
+        .forEach(
+            group -> {
+              realmResource.users().get(userId).joinGroup(group.getId());
+            });
   }
 
   @Override

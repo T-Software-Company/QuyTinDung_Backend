@@ -2,6 +2,7 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
 import java.util.List;
@@ -18,7 +19,7 @@ public interface EmployeeService {
 
   EmployeeResponse updateProfile(ProfileRequest request);
 
-  EmployeeResponse updateEmployee(UUID id, EmployeeRequest request);
+  EmployeeResponse updateEmployee(UUID id, EmployeeUpdateRequest request);
 
   void resetPassword(UUID id);
 
