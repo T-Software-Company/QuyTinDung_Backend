@@ -5,7 +5,6 @@ import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
-import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.mapper.GroupMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.GroupRepository;
@@ -36,7 +35,6 @@ public class GroupServiceImpl implements GroupService {
   private final RoleRepository roleRepository;
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.CREATE_GROUP)
   public GroupResponse create(GroupRequest groupRequest) {
     Group group = groupMapper.toEntity(groupRequest);
     var kcGroupId = keycloakService.createGroup(groupRequest);
@@ -47,7 +45,6 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_GROUP)
   public GroupResponse update(UUID id, GroupRequest groupRequest) {
     Group group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
@@ -59,7 +56,6 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.DELETE_GROUP)
   public void delete(UUID id) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
@@ -84,7 +80,6 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.ADD_USER_TO_GROUP)
   public void join(UUID groupId, UUID employeeId) {
     var group =
         groupRepository
@@ -101,7 +96,6 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_USER_ON_GROUP)
   public void leave(UUID groupId, UUID employeeId) {
     var group =
         groupRepository
@@ -118,7 +112,6 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.ADD_ROLE_TO_GROUP)
   public void addRoles(UUID id, List<String> roles) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));
@@ -130,7 +123,6 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_GROUP)
   public void removeRoles(UUID id, List<String> roles) {
     var group =
         groupRepository.findById(id).orElseThrow(() -> new NotFoundException("Group not found"));

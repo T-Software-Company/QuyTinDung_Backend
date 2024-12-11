@@ -67,7 +67,9 @@ public interface KeycloakService {
   List<RoleRepresentation> getRolesByUser(String id);
 
   void updateUser(
-      UserRepresentation userRepresentation, List<RoleRepresentation> roleRepresentations);
+      UserRepresentation userRepresentation,
+      List<RoleRepresentation> roleRepresentations,
+      List<GroupRepresentation> groupRepresentations);
 
   void resetRoles(
       UserRepresentation userRepresentation, List<RoleRepresentation> roleRepresentations);

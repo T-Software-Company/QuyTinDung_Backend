@@ -8,6 +8,7 @@ import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
+import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.ApproveService;
 import com.tsoftware.qtd.service.EmployeeService;
@@ -45,6 +46,7 @@ public class EmployeeController {
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
+  @KcTransactional(KcTransactional.KcTransactionType.CREATE_USER)
   public ResponseEntity<ApiResponse<EmployeeResponse>> create(
       @RequestBody @Valid EmployeeRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
@@ -89,6 +91,7 @@ public class EmployeeController {
   }
 
   @PutMapping("/profile")
+  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public ResponseEntity<ApiResponse<EmployeeResponse>> updateMyProfile(
       @RequestBody @Valid ProfileRequest request) {
     return ResponseEntity.ok(
@@ -101,6 +104,7 @@ public class EmployeeController {
 
   @PutMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
+  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(
       @PathVariable UUID id, @RequestBody @Valid EmployeeRequest request) {
 
@@ -222,6 +226,7 @@ public class EmployeeController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/join-group")
+  @KcTransactional(KcTransactional.KcTransactionType.ADD_USER_TO_GROUP)
   public ResponseEntity<ApiResponse<Void>> joinGroup(
       @PathVariable UUID id, @RequestParam UUID groupId) {
     groupService.join(groupId, id);
@@ -230,6 +235,7 @@ public class EmployeeController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add-roles")
+  @KcTransactional(KcTransactional.KcTransactionType.ADD_ROLE_TO_USER)
   public ResponseEntity<ApiResponse<Void>> addRoles(
       @PathVariable UUID id,
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles) {
@@ -239,6 +245,7 @@ public class EmployeeController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-roles")
+  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_USER)
   public ResponseEntity<ApiResponse<Void>> removeRoles(
       @PathVariable UUID id,
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles) {

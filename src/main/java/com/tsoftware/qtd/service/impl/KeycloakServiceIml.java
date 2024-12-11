@@ -3,17 +3,16 @@ package com.tsoftware.qtd.service.impl;
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
+import com.tsoftware.qtd.dto.employee.GroupDto;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
-import com.tsoftware.qtd.exception.KeycloakException;
-import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.exception.*;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactionContext;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.service.KeycloakService;
 import jakarta.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -37,22 +36,27 @@ public class KeycloakServiceIml implements KeycloakService {
   @KcTransactionContext(KcTransactional.KcTransactionType.CREATE_USER)
   public String createUser(EmployeeRequest employeeRequest) {
 
-    String userId = null;
     var user = getUserRepresentation(employeeRequest);
     var res = realmResource.users().create(user);
     if (res.getStatus() != 201) {
       throw new KeycloakException(res.getStatus(), extractErrorMessage(res));
     }
-
+    String userId = null;
     try {
       userId = res.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
       var roles = employeeRequest.getRoles();
       var clientRoles = getClientRoles(roles);
       realmResource.users().get(userId).roles().clientLevel(getClientIdOnDb()).add(clientRoles);
+      String finalUserId = userId;
+      getGroupsBy(employeeRequest.getGroups())
+          .forEach(
+              group -> {
+                realmResource.users().get(finalUserId).joinGroup(group.getId());
+              });
       return userId;
-    } catch (RuntimeException e) {
+    } catch (Exception e) {
       if (userId != null) {
-        realmResource.users().delete(userId);
+        deleteUser(userId);
       }
       throw e;
     }
@@ -87,6 +91,7 @@ public class KeycloakServiceIml implements KeycloakService {
     }
     if (request.getEmail() != null) {
       userRepresentation.setEmail(request.getEmail());
+      userRepresentation.setEmailVerified(false);
     }
     if (request.getFirstName() != null) {
       userRepresentation.setFirstName(request.getFirstName());
@@ -96,20 +101,16 @@ public class KeycloakServiceIml implements KeycloakService {
     }
 
     userRepresentation.setEnabled(true);
-    userRepresentation.setEmailVerified(false);
-
-    if (request.getPassword() != null) {
-      var credential = new CredentialRepresentation();
-      credential.setType(CredentialRepresentation.PASSWORD);
-      credential.setTemporary(false);
-      credential.setValue(request.getPassword());
-      userRepresentation.setCredentials(List.of(credential));
-    }
     userResource.update(userRepresentation);
 
     removeRolesOnUser(userId);
     var clientRoles = getClientRoles(request.getRoles());
     realmResource.users().get(userId).roles().clientLevel(getClientIdOnDb()).add(clientRoles);
+    realmResource
+        .users()
+        .get(userId)
+        .groups()
+        .addAll(getGroupsByIds(request.getGroups().stream().map(GroupDto::getKcGroupId).toList()));
   }
 
   @Override
@@ -149,14 +150,13 @@ public class KeycloakServiceIml implements KeycloakService {
 
     GroupRepresentation groupRepresentation = new GroupRepresentation();
     groupRepresentation.setName(group.getName());
-    String groupId = null;
     var groupResource = realmResource.groups();
     var response = groupResource.add(groupRepresentation);
     if (response.getStatus() != 201) {
       throw new KeycloakException(response.getStatus(), extractErrorMessage(response));
     }
+    String groupId = null;
     try {
-
       groupId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
       groupResource
           .group(groupId)
@@ -164,10 +164,9 @@ public class KeycloakServiceIml implements KeycloakService {
           .clientLevel(getClientIdOnDb())
           .add(getClientRoles(group.getRoles()));
       return groupId;
-
     } catch (Exception e) {
       if (groupId != null) {
-        realmResource.groups().group(groupId).remove();
+        deleteGroup(groupId);
       }
       throw e;
     }
@@ -284,7 +283,10 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   @Override
-  public void updateUser(UserRepresentation userRepresentation, List<RoleRepresentation> roles) {
+  public void updateUser(
+      UserRepresentation userRepresentation,
+      List<RoleRepresentation> roles,
+      List<GroupRepresentation> groups) {
     realmResource.users().get(userRepresentation.getId()).update(userRepresentation);
     removeRolesOnUser(userRepresentation.getId());
     realmResource
@@ -293,6 +295,7 @@ public class KeycloakServiceIml implements KeycloakService {
         .roles()
         .clientLevel(getClientIdOnDb())
         .add(roles);
+    realmResource.users().get(userRepresentation.getId()).groups().addAll(groups);
   }
 
   @Override
@@ -372,7 +375,7 @@ public class KeycloakServiceIml implements KeycloakService {
     user.setEmailVerified(false);
     var credential = new CredentialRepresentation();
     credential.setType(CredentialRepresentation.PASSWORD);
-    credential.setTemporary(false);
+    credential.setTemporary(true);
     credential.setValue(employeeRequest.getPassword());
     user.setCredentials(List.of(credential));
     return user;
@@ -395,6 +398,7 @@ public class KeycloakServiceIml implements KeycloakService {
   }
 
   private List<RoleRepresentation> getClientRoles(List<String> roles) {
+    if (roles == null) return Collections.emptyList();
     var clientResource = realmResource.clients().get(getClientIdOnDb());
     return roles.stream()
         .map(
@@ -411,5 +415,23 @@ public class KeycloakServiceIml implements KeycloakService {
   private String getClientIdOnDb() {
     var clientRepresentations = realmResource.clients().findByClientId(idpProperties.getClientId());
     return clientRepresentations.getFirst().getId();
+  }
+
+  private List<GroupRepresentation> getGroupsByIds(List<String> ids) {
+    return ids.stream()
+        .map(
+            id -> {
+              try {
+                return realmResource.groups().group(id).toRepresentation();
+              } catch (jakarta.ws.rs.NotFoundException e) {
+                throw new CommonException(ErrorType.ENTITY_NOT_FOUND, "Group: " + id);
+              }
+            })
+        .collect(Collectors.toList());
+  }
+
+  private List<GroupRepresentation> getGroupsBy(List<GroupDto> groups) {
+    if (groups == null) return Collections.emptyList();
+    return getGroupsByIds(groups.stream().map(GroupDto::getKcGroupId).collect(Collectors.toList()));
   }
 }

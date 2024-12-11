@@ -2,18 +2,17 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.entity.Employee;
-import com.tsoftware.qtd.exception.CommonException;
-import com.tsoftware.qtd.exception.ErrorType;
-import com.tsoftware.qtd.exception.NotFoundException;
-import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
-import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
+import com.tsoftware.qtd.entity.Group;
+import com.tsoftware.qtd.exception.*;
 import com.tsoftware.qtd.mapper.EmployeeMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
+import com.tsoftware.qtd.repository.GroupRepository;
 import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,6 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   private final EmployeeMapper employeeMapper;
   private final KeycloakService keycloakService;
   private final RoleRepository roleRepository;
+  private final GroupRepository groupRepository;
 
   @Override
   public EmployeeResponse getProfile() {
@@ -46,19 +46,47 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.CREATE_USER)
   public EmployeeResponse createEmployee(EmployeeRequest request) {
-    var userId = keycloakService.createUser(request);
     var employee = employeeMapper.toEmployee(request);
+    if (request.getRoles() != null) {
+      request
+          .getRoles()
+          .forEach(
+              role -> {
+                if (!roleRepository.existsByName(role)) {
+                  throw new CommonException(ErrorType.ENTITY_NOT_FOUND, "Role: " + role);
+                }
+              });
+      var rolesExists = roleRepository.findAllByName(request.getRoles());
+      employee.setRoles(rolesExists);
+    }
+
+    var userId = keycloakService.createUser(request);
     employee.setUserId(userId);
-    var rolesExists = roleRepository.findAllByName(request.getRoles());
-    employee.setRoles(rolesExists);
     employee.setEnabled(true);
-    return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
+    var employeeSaved = employeeRepository.save(employee);
+    if (employee.getGroups() != null) {
+      employee
+          .getGroups()
+          .forEach(
+              group -> {
+                if (!groupRepository.existsById(group.getId())) {
+                  throw new CommonException(ErrorType.ENTITY_NOT_FOUND, "Group: " + group);
+                }
+              });
+      var groupExists =
+          groupRepository.findAllById(
+              employee.getGroups().stream().map(Group::getId).collect(Collectors.toList()));
+      groupExists.forEach(
+          group -> {
+            group.getEmployees().add(employee);
+            groupRepository.save(group);
+          });
+    }
+    return employeeMapper.toEmployeeResponse(employeeSaved);
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public EmployeeResponse updateProfile(ProfileRequest request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
     var employee =
@@ -75,7 +103,6 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public EmployeeResponse updateEmployee(UUID id, EmployeeRequest request) {
     var employee =
         employeeRepository
@@ -133,7 +160,6 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.ADD_ROLE_TO_USER)
   public void addRoles(UUID id, List<String> roles) {
     var employee =
         employeeRepository
@@ -146,7 +172,6 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_USER)
   public void removeRoles(UUID id, List<String> roles) {
     var employee =
         employeeRepository
