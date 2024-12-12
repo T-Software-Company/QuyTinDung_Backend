@@ -9,15 +9,18 @@ import com.tsoftware.qtd.service.OtherAssetService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class OtherAssetServiceImpl implements OtherAssetService {
 
-  @Autowired private OtherAssetRepository otherassetRepository;
+  private final OtherAssetRepository otherassetRepository;
 
-  @Autowired private OtherAssetMapper otherassetMapper;
+  private final OtherAssetMapper otherassetMapper;
 
   @Override
   public OtherAssetDto create(OtherAssetDto otherassetDto) {

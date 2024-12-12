@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.configuration.CustomAuditingEntityListener;
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +10,7 @@ import jakarta.persistence.MappedSuperclass;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,22 +21,25 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@MappedSuperclass
 @Getter
 @Setter
 @SuperBuilder
+@MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(CustomAuditingEntityListener.class)
 @EnableJpaAuditing
+@EntityListeners(CustomAuditingEntityListener.class)
 public class AbstractAuditEntity {
   @Id
-  @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.UUID)
   protected UUID id;
 
   @CreatedDate protected ZonedDateTime createdAt;
   @LastModifiedDate protected ZonedDateTime updatedAt;
   @LastModifiedBy protected String lastModifiedBy;
   @CreatedBy protected String createdBy;
-  protected Boolean isDeleted;
+
+  @Column(columnDefinition = "boolean default false")
+  @Builder.Default
+  protected Boolean isDeleted = false;
 }

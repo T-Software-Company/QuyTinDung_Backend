@@ -19,21 +19,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
-  @Autowired private CustomerRepository customerRepository;
-  @Autowired private CustomerMapper customerMapper;
-  @Autowired private DocumentService documentService;
-  @Autowired private WorkflowServiceImpl workflowService;
+  private final CustomerRepository customerRepository;
+  private final CustomerMapper customerMapper;
+  private final DocumentService documentService;
+  private final WorkflowServiceImpl workflowService;
 
   @Override
   public CustomerResponse create(CustomerRequest customerRequest) throws Exception {

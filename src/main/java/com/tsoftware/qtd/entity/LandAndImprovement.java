@@ -47,7 +47,7 @@ public class LandAndImprovement extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private TypeOfUse typeOfUse;
 
   @OneToOne(fetch = FetchType.LAZY)

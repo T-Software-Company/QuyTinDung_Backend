@@ -870,8 +870,8 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : true,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "http://localhost:8080/api/v1/swagger-ui/oauth2-redirect.html", "https://oauth.pstmn.io/v1/browser-callback", "http://tsoftware.store/api/v1/swagger-ui/oauth2-redirect.html", "https://tsoftware.store/api/v1/swagger-ui/oauth2-redirect.html", "http://14.225.215.106/api/v1/swagger-ui/oauth2-redirect.html", "https://localhost:8080/api/v1/swagger-ui/oauth2-redirect.html", "https://14.225.215.106/api/v1/swagger-ui/oauth2-redirect.html", "http://localhost:3000", "https://oauth.pstmn.io/v1/callback" ],
-    "webOrigins" : [ "http://localhost:8080", "https://14.225.215.106", "https://oauth.pstmn.io", "https://tsoftware.store", "http://tsoftware.store", "http://localhost:3000", "http://14.225.215.106", "https://localhost:8080" ],
+    "redirectUris" : [ "http://localhost:8080/api/v1/swagger-ui/oauth2-redirect.html", "https://oauth.pstmn.io/v1/browser-callback", "http://tsoftware.store/api/v1/swagger-ui/oauth2-redirect.html", "https://tsoftware.store/api/v1/swagger-ui/oauth2-redirect.html", "http://14.225.215.106/api/v1/swagger-ui/oauth2-redirect.html", "https://localhost:8080/api/v1/swagger-ui/oauth2-redirect.html", "https://14.225.215.106/api/v1/swagger-ui/oauth2-redirect.html", "http://localhost:3001/*", "https://tsoftware.store/*", "http://localhost:3000", "https://oauth.pstmn.io/v1/callback" ],
+    "webOrigins" : [ "http://localhost:8080", "https://14.225.215.106", "https://oauth.pstmn.io", "https://tsoftware.store", "http://tsoftware.store", "http://localhost:3001", "http://14.225.215.106", "https://localhost:8080" ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,
@@ -885,7 +885,7 @@
     "attributes" : {
       "oidc.ciba.grant.enabled" : "false",
       "backchannel.logout.session.required" : "true",
-      "post.logout.redirect.uris" : "http://localhost:8080##http://localhost:3000##https://14.225.215.106##https://tsoftware.store##https://localhost:8080##",
+      "post.logout.redirect.uris" : "http://localhost:8080##http://localhost:3000##https://14.225.215.106##https://tsoftware.store##https://localhost:8080##http://localhost:3001##https://tsoftware.store/*",
       "display.on.consent.screen" : "false",
       "oauth2.device.authorization.grant.enabled" : "false",
       "backchannel.logout.revoke.offline.tokens" : "false"
@@ -1472,7 +1472,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "oidc-usermodel-attribute-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper", "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper", "oidc-full-name-mapper" ]
       }
     }, {
       "id" : "2a48a511-f7a7-4eba-81ff-da5e0a34118f",
@@ -1488,7 +1488,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-full-name-mapper", "oidc-address-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper" ]
       }
     }, {
       "id" : "6faa7fb7-0735-472b-9f1c-9b8c3cae529c",

@@ -22,6 +22,6 @@ public class Approve extends AbstractAuditEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private ValuationReport valuationReport;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private ApproveStatus status;
 }

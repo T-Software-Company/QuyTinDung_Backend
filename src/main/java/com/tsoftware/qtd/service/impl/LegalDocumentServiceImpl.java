@@ -9,15 +9,18 @@ import com.tsoftware.qtd.service.LegalDocumentService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class LegalDocumentServiceImpl implements LegalDocumentService {
 
-  @Autowired private LegalDocumentRepository legaldocumentRepository;
+  private final LegalDocumentRepository legaldocumentRepository;
 
-  @Autowired private LegalDocumentMapper legaldocumentMapper;
+  private final LegalDocumentMapper legaldocumentMapper;
 
   @Override
   public LegalDocumentResponse create(LegalDocumentResponse legaldocumentResponse) {

@@ -9,6 +9,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,16 +24,17 @@ import org.hibernate.annotations.Type;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "transaction")
+@Entity
+@Table
 @EqualsAndHashCode(callSuper = true)
 public class TransactionEntity extends AbstractAuditEntity {
-
+  @Enumerated(EnumType.ORDINAL)
   private UUID customerId;
 
   @Enumerated(EnumType.STRING)
   private TransactionStatus status;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private TransactionType type;
 
   private ZonedDateTime createdAt;

@@ -13,7 +13,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface DtoMapper {
 
-  TransactionEntity toEntity(Transaction createCustomerAbstractTransaction);
+  TransactionEntity toEntity(Transaction createCustomerTransaction);
 
   Transaction toDomain(TransactionEntity transactionEntity);
 

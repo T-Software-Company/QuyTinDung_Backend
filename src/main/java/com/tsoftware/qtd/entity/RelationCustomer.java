@@ -1,10 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +11,8 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Entity(name = "relation_customer")
+@Entity
+@Table
 public class RelationCustomer extends AbstractAuditEntity {
   private String fullName;
   private ZonedDateTime dateOfBirth;

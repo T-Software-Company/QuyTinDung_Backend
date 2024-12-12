@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.asset.LegalDocumentResponse;
 import com.tsoftware.qtd.service.LegalDocumentService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/legal-documents")
+@RequiredArgsConstructor
 public class LegalDocumentController {
 
-  @Autowired private LegalDocumentService legaldocumentService;
+  private final LegalDocumentService legaldocumentService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<LegalDocumentResponse>> create(

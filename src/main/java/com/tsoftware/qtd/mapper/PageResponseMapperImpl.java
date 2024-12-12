@@ -11,7 +11,7 @@ public class PageResponseMapperImpl implements PageResponseMapper {
   public <T> PageResponse<T> toPageResponse(Page<T> page) {
     return new PageResponse<>(
         page.getContent(),
-        page.getNumber(),
+        page.getNumber() + 1,
         page.getSize(),
         page.getTotalElements(),
         page.getTotalPages(),

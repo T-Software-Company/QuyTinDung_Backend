@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApproveResponse {
+  private String id;
   private EmployeeResponse approver;
   private ApproveStatus status;
 }

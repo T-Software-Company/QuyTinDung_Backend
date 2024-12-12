@@ -9,15 +9,18 @@ import com.tsoftware.qtd.service.ApartmentService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ApartmentServiceImpl implements ApartmentService {
 
-  @Autowired private ApartmentRepository apartmentRepository;
+  private final ApartmentRepository apartmentRepository;
 
-  @Autowired private ApartmentMapper apartmentMapper;
+  private final ApartmentMapper apartmentMapper;
 
   @Override
   public ApartmentDto create(ApartmentDto apartmentDto) {

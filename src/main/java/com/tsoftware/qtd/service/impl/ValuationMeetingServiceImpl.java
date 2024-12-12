@@ -13,15 +13,18 @@ import com.tsoftware.qtd.service.ValuationMeetingService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ValuationMeetingServiceImpl implements ValuationMeetingService {
 
-  @Autowired private ValuationMeetingRepository valuationMeetingRepository;
-  @Autowired private ApplicationRepository applicationRepository;
-  @Autowired private ValuationMeetingMapper valuationMeetingMapper;
+  private final ValuationMeetingRepository valuationMeetingRepository;
+  private final ApplicationRepository applicationRepository;
+  private final ValuationMeetingMapper valuationMeetingMapper;
 
   @Override
   public ValuationMeetingResponse create(

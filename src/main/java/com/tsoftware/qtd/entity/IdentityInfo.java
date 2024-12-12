@@ -3,10 +3,7 @@ package com.tsoftware.qtd.entity;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.LegalDocType;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +16,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "identity_info")
+@Entity
+@Table
 public class IdentityInfo extends AbstractAuditEntity {
   String identifyId;
   String fullName;
@@ -34,15 +32,16 @@ public class IdentityInfo extends AbstractAuditEntity {
   ZonedDateTime expirationDate;
   String issuingAuthority;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   LegalDocType legalDocType;
 
   String frontPhotoUrl;
   String backPhotoUrl;
 
   // Passport
+  @Enumerated(EnumType.ORDINAL)
   PassPortType passPortType;
 
-  @OneToOne(mappedBy = "identityInfo")
+  @OneToOne(mappedBy = "identityInfo", fetch = FetchType.LAZY)
   private Customer customer;
 }

@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.service.ApproveService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/approves")
+@RequiredArgsConstructor
 public class ApproveController {
 
-  @Autowired private ApproveService approveService;
+  private final ApproveService approveService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<ApproveResponse>> create(

@@ -1,7 +1,5 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
@@ -43,17 +41,15 @@ public class EmployeeRequest {
   @IsEnum(enumClass = Role.class)
   List<String> roles;
 
+  List<@Valid GroupDto> groups;
+
   @NotNull @Past ZonedDateTime dayOfBirth;
 
   @IsEnum(enumClass = Gender.class)
   @NotNull
   String gender;
 
-  @IsEnum(enumClass = EmploymentStatus.class)
-  @NotNull
-  String status;
-
-  @NotNull Banned banned;
+  @NotNull @NotBlank String code;
 
   @NotBlank
   @Size(max = 15)

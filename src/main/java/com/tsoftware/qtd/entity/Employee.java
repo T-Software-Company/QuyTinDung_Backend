@@ -1,7 +1,5 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
@@ -21,34 +19,36 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class Employee extends AbstractAuditEntity {
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String userId;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String username;
 
   @Column(unique = true)
-  private String employeeCode;
+  private String code;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String email;
 
+  @Column(nullable = false)
   private String firstName;
+
+  @Column(nullable = false)
   private String lastName;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
   private ZonedDateTime dayOfBirth;
 
+  @Column(nullable = false)
   private String phone;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
+  @Column(nullable = false)
   private Gender gender;
 
-  @Enumerated(EnumType.STRING)
-  private Banned banned;
-
-  @Enumerated(EnumType.STRING)
-  private EmploymentStatus status;
+  @Column(nullable = false)
+  private Boolean enabled;
 
   @OneToOne(cascade = CascadeType.ALL)
   private Address address;

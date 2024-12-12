@@ -22,7 +22,7 @@ public class RatingCriterion extends AbstractAuditEntity {
   private Integer score;
   private String title;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private RatingCriterionType ratingCriterionType;
 
   @ManyToOne private RatingFormula ratingFormula;

@@ -6,7 +6,7 @@ import com.tsoftware.qtd.dto.credit.LoanPlanResponse;
 import com.tsoftware.qtd.service.LoanPlanService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/loan-plans")
+@RequiredArgsConstructor
 public class LoanPlanController {
 
-  @Autowired private LoanPlanService loanplanService;
+  private final LoanPlanService loanplanService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<LoanPlanResponse>> create(

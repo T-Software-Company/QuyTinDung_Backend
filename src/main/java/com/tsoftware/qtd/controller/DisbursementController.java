@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.credit.DisbursementDto;
 import com.tsoftware.qtd.service.DisbursementService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/disbursements")
+@RequiredArgsConstructor
 public class DisbursementController {
 
-  @Autowired private DisbursementService disbursementService;
+  private final DisbursementService disbursementService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<DisbursementDto>> create(

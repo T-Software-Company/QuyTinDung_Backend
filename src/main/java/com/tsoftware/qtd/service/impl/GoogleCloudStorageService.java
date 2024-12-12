@@ -15,10 +15,12 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
+@Transactional
 public class GoogleCloudStorageService {
 
   @Value("${google.cloud.storage.bucket-name}")

@@ -9,15 +9,18 @@ import com.tsoftware.qtd.service.DebtNotificationService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class DebtNotificationServiceImpl implements DebtNotificationService {
 
-  @Autowired private DebtNotificationRepository debtnotificationRepository;
+  private final DebtNotificationRepository debtnotificationRepository;
 
-  @Autowired private DebtNotificationMapper debtnotificationMapper;
+  private final DebtNotificationMapper debtnotificationMapper;
 
   @Override
   public DebtNotificationDto create(DebtNotificationDto debtnotificationDto) {

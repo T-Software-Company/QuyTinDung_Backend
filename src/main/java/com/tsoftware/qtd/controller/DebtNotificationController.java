@@ -5,7 +5,7 @@ import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
 import com.tsoftware.qtd.service.DebtNotificationService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/debt-notifications")
+@RequiredArgsConstructor
 public class DebtNotificationController {
 
-  @Autowired private DebtNotificationService debtnotificationService;
+  private final DebtNotificationService debtnotificationService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<DebtNotificationDto>> create(

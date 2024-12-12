@@ -26,3 +26,4 @@ EOSQL
     echo "Database $db already exists, skipping creation."
   fi
 done
+

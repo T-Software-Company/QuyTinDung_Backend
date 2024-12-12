@@ -6,6 +6,7 @@ import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
+import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.validation.IsEnum;
@@ -43,6 +44,7 @@ public class GroupController {
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @PostMapping
+  @KcTransactional(KcTransactional.KcTransactionType.CREATE_GROUP)
   public ResponseEntity<ApiResponse<GroupResponse>> create(
       @RequestBody @Valid GroupRequest groupRequest) {
     return ResponseEntity.ok(
@@ -51,6 +53,7 @@ public class GroupController {
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @PutMapping("/{id}")
+  @KcTransactional(KcTransactional.KcTransactionType.UPDATE_GROUP)
   public ResponseEntity<ApiResponse<GroupResponse>> update(
       @PathVariable UUID id, @RequestBody @Valid GroupRequest groupRequest) {
     return ResponseEntity.ok(
@@ -59,6 +62,7 @@ public class GroupController {
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @DeleteMapping("/{id}")
+  @KcTransactional(KcTransactional.KcTransactionType.DELETE_GROUP)
   public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     groupService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
@@ -84,6 +88,7 @@ public class GroupController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add-employee")
+  @KcTransactional(KcTransactional.KcTransactionType.ADD_USER_TO_GROUP)
   public ResponseEntity<ApiResponse<Void>> joinGroup(
       @PathVariable UUID id, @RequestParam UUID employeeId) {
     groupService.join(id, employeeId);
@@ -92,6 +97,7 @@ public class GroupController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-employee")
+  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_USER_ON_GROUP)
   public ResponseEntity<ApiResponse<Void>> LeaveGroup(
       @PathVariable UUID id, @RequestParam UUID employeeId) {
     groupService.leave(id, employeeId);
@@ -100,6 +106,7 @@ public class GroupController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add-roles")
+  @KcTransactional(KcTransactional.KcTransactionType.ADD_ROLE_TO_GROUP)
   public ResponseEntity<ApiResponse<Void>> addRoles(
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
       @PathVariable UUID id) {
@@ -109,6 +116,7 @@ public class GroupController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-roles")
+  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_GROUP)
   public ResponseEntity<ApiResponse<Void>> removeRoles(
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
       @PathVariable UUID id) {

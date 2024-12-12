@@ -13,19 +13,20 @@ import com.tsoftware.qtd.service.AssetService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AssetServiceImpl implements AssetService {
 
-  @Autowired private AssetRepository assetRepository;
+  private final AssetRepository assetRepository;
 
-  @Autowired private AssetMapper assetMapper;
-  @Autowired private ApplicationRepository applicationRepository;
-  @Autowired private LegalDocumentRepository legalDocumentRepository;
+  private final AssetMapper assetMapper;
+  private final ApplicationRepository applicationRepository;
+  private final LegalDocumentRepository legalDocumentRepository;
 
   @Override
   public AssetResponse create(AssetRequest assetRequest, UUID creditId) {

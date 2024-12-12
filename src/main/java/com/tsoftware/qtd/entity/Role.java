@@ -20,10 +20,12 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class Role extends AbstractAuditEntity {
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String name;
 
+  @Column(unique = true, nullable = false)
   private String kcId;
+
   private String description;
 
   @ManyToMany(mappedBy = "roles")

@@ -34,10 +34,10 @@ public class LoanRequest extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private BorrowerType borrowerType;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private LoanSecurityType loanSecurityType;
 
   @OneToOne(fetch = FetchType.LAZY)
@@ -46,6 +46,6 @@ public class LoanRequest extends AbstractAuditEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Customer customer;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private AssetType loanCollateralType;
 }

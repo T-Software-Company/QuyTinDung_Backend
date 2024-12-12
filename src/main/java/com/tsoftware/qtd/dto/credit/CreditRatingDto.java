@@ -3,7 +3,6 @@ package com.tsoftware.qtd.dto.credit;
 import com.tsoftware.qtd.constants.EnumType.RatingLevel;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class CreditRatingDto {
-  private UUID id;
+  private String id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;

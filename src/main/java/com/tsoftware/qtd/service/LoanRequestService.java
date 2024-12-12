@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface LoanRequestService {
-  LoanRequestResponse create(LoanRequestDTO loanrequestRequestDTO, UUID creditId);
+  LoanRequestResponse create(LoanRequestDTO loanRequestDTO, UUID creditId);
 
-  LoanRequestResponse update(UUID id, LoanRequestDTO loanrequestRequestDTO);
+  LoanRequestResponse update(UUID id, LoanRequestDTO loanRequestDTO);
 
   void delete(UUID id);
 

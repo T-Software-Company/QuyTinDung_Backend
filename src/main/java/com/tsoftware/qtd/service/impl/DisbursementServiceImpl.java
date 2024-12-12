@@ -9,15 +9,18 @@ import com.tsoftware.qtd.service.DisbursementService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class DisbursementServiceImpl implements DisbursementService {
 
-  @Autowired private DisbursementRepository disbursementRepository;
+  private final DisbursementRepository disbursementRepository;
 
-  @Autowired private DisbursementMapper disbursementMapper;
+  private final DisbursementMapper disbursementMapper;
 
   @Override
   public DisbursementDto create(DisbursementDto disbursementDto) {

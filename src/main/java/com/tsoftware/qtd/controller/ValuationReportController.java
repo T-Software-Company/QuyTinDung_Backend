@@ -7,7 +7,7 @@ import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
 import com.tsoftware.qtd.service.ValuationReportService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/valuation-reports")
+@RequiredArgsConstructor
 public class ValuationReportController {
 
-  @Autowired private ValuationReportService valuationreportService;
+  private final ValuationReportService valuationreportService;
 
   @PostMapping
   public ResponseEntity<ApiResponse<ValuationReportResponse>> create(

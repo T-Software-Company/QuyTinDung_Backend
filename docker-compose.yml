@@ -20,6 +20,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    restart: always
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.0

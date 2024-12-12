@@ -17,19 +17,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ValuationReportServiceImpl implements ValuationReportService {
 
-  @Autowired private ValuationReportRepository valuationreportRepository;
+  private final ValuationReportRepository valuationreportRepository;
 
-  @Autowired private ValuationReportMapper valuationreportMapper;
+  private final ValuationReportMapper valuationreportMapper;
 
-  @Autowired private ApproveRepository approveRepository;
-  @Autowired private ApproveMapper approveMapper;
+  private final ApproveRepository approveRepository;
+  private final ApproveMapper approveMapper;
 
   @Override
   @Transactional

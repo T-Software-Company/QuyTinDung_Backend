@@ -8,18 +8,19 @@ import com.tsoftware.qtd.mapper.DtoMapper;
 import com.tsoftware.qtd.repository.OnboardingWorkflowRepository;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Primary
+@Transactional
+@RequiredArgsConstructor
 public class WorkflowServiceImpl implements WorkflowStorage<OnboardingWorkflow> {
 
-  private static final String UNKNOWN_STEP = "unknown";
-
-  @Autowired OnboardingWorkflowRepository onboardingWorkflowRepository;
-  @Autowired DtoMapper mapper;
+  private final OnboardingWorkflowRepository onboardingWorkflowRepository;
+  private final DtoMapper mapper;
 
   @Override
   public List<OnboardingWorkflow> getByStatus(UUID targetUUID, WorkflowStatus status) {

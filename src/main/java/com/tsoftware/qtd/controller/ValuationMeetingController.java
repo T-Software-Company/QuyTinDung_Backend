@@ -6,7 +6,7 @@ import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.service.ValuationMeetingService;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,9 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/valuation-meetings")
+@RequiredArgsConstructor
 public class ValuationMeetingController {
 
-  @Autowired private ValuationMeetingService valuationMeetingService;
+  private final ValuationMeetingService valuationMeetingService;
 
   @PostMapping("/{id}/add-participants")
   public ResponseEntity<ApiResponse<Void>> addParticipants(

@@ -9,15 +9,18 @@ import com.tsoftware.qtd.service.CreditRatingService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class CreditRatingServiceImpl implements CreditRatingService {
 
-  @Autowired private CreditRatingRepository creditratingRepository;
+  private final CreditRatingRepository creditratingRepository;
 
-  @Autowired private CreditRatingMapper creditratingMapper;
+  private final CreditRatingMapper creditratingMapper;
 
   @Override
   public CreditRatingDto create(CreditRatingDto creditratingDto) {

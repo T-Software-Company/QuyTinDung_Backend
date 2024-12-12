@@ -1,7 +1,5 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.constants.EnumType.EmploymentStatus;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
@@ -35,8 +33,8 @@ public class EmployeeResponse {
   ZonedDateTime dayOfBirth;
   String phone;
   AddressDto address;
-  String employeeCode;
+  String code;
   Gender gender;
-  EmploymentStatus status;
-  Banned banned;
+  Boolean enabled;
+  Boolean isDeleted;
 }

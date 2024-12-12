@@ -14,9 +14,7 @@ import com.tsoftware.qtd.service.KeycloakService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GroupServiceImpl implements GroupService {
 
-  private GroupRepository groupRepository;
+  private final GroupRepository groupRepository;
 
-  private GroupMapper groupMapper;
+  private final GroupMapper groupMapper;
   private final EmployeeRepository employeeRepository;
   private final KeycloakService keycloakService;
   private final RoleRepository roleRepository;

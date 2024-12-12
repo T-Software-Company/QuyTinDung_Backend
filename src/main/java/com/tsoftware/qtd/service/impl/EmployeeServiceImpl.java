@@ -1,21 +1,19 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.constants.EnumType.Banned;
-import com.tsoftware.qtd.dto.employee.EmployeeRequest;
-import com.tsoftware.qtd.dto.employee.EmployeeResponse;
-import com.tsoftware.qtd.dto.employee.ProfileRequest;
+import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.entity.Employee;
-import com.tsoftware.qtd.exception.NotFoundException;
-import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
+import com.tsoftware.qtd.entity.Group;
+import com.tsoftware.qtd.exception.*;
 import com.tsoftware.qtd.mapper.EmployeeMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
+import com.tsoftware.qtd.repository.GroupRepository;
 import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
+import java.util.List;
 import java.util.UUID;
-import lombok.AccessLevel;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -28,19 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Transactional()
+@Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 
-  EmployeeRepository employeeRepository;
-  EmployeeMapper employeeMapper;
-  KeycloakService keycloakService;
+  private final EmployeeRepository employeeRepository;
+  private final EmployeeMapper employeeMapper;
+  private final KeycloakService keycloakService;
   private final RoleRepository roleRepository;
-
-  @Override
-  public Page<EmployeeResponse> getEmployees(Pageable pageable) {
-    return employeeRepository.findAll(pageable).map(employeeMapper::toEmployeeResponse);
-  }
+  private final GroupRepository groupRepository;
 
   @Override
   public EmployeeResponse getProfile() {
@@ -54,22 +47,53 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Override
   public EmployeeResponse createEmployee(EmployeeRequest request) {
-    var userId = keycloakService.createUser(request);
     var employee = employeeMapper.toEmployee(request);
+    if (request.getRoles() != null) {
+      request
+          .getRoles()
+          .forEach(
+              role -> {
+                if (!roleRepository.existsByName(role)) {
+                  throw new CommonException(ErrorType.ENTITY_NOT_FOUND, "Role: " + role);
+                }
+              });
+      var rolesExists = roleRepository.findAllByName(request.getRoles());
+      employee.setRoles(rolesExists);
+    }
+
+    var userId = keycloakService.createUser(request);
     employee.setUserId(userId);
-    var rolesExists = roleRepository.findAllByName(request.getRoles());
-    employee.setRoles(rolesExists);
-    return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
+    employee.setEnabled(true);
+    var employeeSaved = employeeRepository.save(employee);
+    if (employee.getGroups() != null) {
+      employee
+          .getGroups()
+          .forEach(
+              group -> {
+                if (!groupRepository.existsById(group.getId())) {
+                  throw new CommonException(ErrorType.ENTITY_NOT_FOUND, "Group: " + group);
+                }
+              });
+      var groupExists =
+          groupRepository.findAllById(
+              employee.getGroups().stream().map(Group::getId).collect(Collectors.toList()));
+      groupExists.forEach(
+          group -> {
+            group.getEmployees().add(employee);
+            groupRepository.save(group);
+          });
+    }
+    return employeeMapper.toEmployeeResponse(employeeSaved);
   }
 
   @Override
   public EmployeeResponse updateProfile(ProfileRequest request) {
     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-    keycloakService.updateUser(request, userId);
     var employee =
         employeeRepository
             .findByUserId(userId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
+    keycloakService.updateUser(request, userId);
     employee.setFirstName(request.getFirstName());
     employee.setLastName(request.getLastName());
     employee.setEmail(request.getEmail());
@@ -79,41 +103,46 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public EmployeeResponse updateEmployee(String userId, EmployeeRequest request) {
+  public EmployeeResponse updateEmployee(UUID id, EmployeeUpdateRequest request) {
     var employee =
         employeeRepository
-            .findByUserId(userId)
+            .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
-    keycloakService.updateUser(request, userId);
+    keycloakService.updateUser(request, employee.getUserId());
     employeeMapper.updateEntity(request, employee);
-
+    var roles = roleRepository.findAllByName(request.getRoles());
+    employee.setRoles(roles);
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 
   @Override
-  public void resetPassword(String userId, String newPassword) {
-    keycloakService.resetPassword(userId, newPassword);
+  public void resetPassword(UUID id) {
+    var employee =
+        employeeRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, "employee: " + id));
+    keycloakService.resetPasswordByEmail(employee.getUserId());
   }
 
   @Override
-  public void activeEmployee(String userId) {
+  public void enable(UUID id) {
     var employee =
         employeeRepository
-            .findByUserId(userId)
+            .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
-    employee.setBanned(Banned.ACTIVE);
-    keycloakService.activeUser(userId);
+    employee.setEnabled(true);
+    keycloakService.activeUser(employee.getUserId());
     employeeRepository.save(employee);
   }
 
   @Override
-  public void deactivateEmployee(String userId) {
+  public void disable(UUID id) {
     var employee =
         employeeRepository
-            .findByUserId(userId)
+            .findById(id)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
-    employee.setBanned(Banned.LOCKED);
-    keycloakService.deactivateUser(userId);
+    employee.setEnabled(false);
+    keycloakService.deactivateUser(employee.getUserId());
     employeeRepository.save(employee);
   }
 
@@ -133,5 +162,56 @@ public class EmployeeServiceImpl implements EmployeeService {
     } catch (DataIntegrityViolationException e) {
       throw new SpringFilterBadRequestException(e.getMessage());
     }
+  }
+
+  @Override
+  public void addRoles(UUID id, List<String> roles) {
+    var employee =
+        employeeRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
+    keycloakService.addRolesToUser(employee.getUserId(), roles);
+    var roleEntities = roleRepository.findAllByName(roles);
+    employee.setRoles(roleEntities);
+    employeeRepository.save(employee);
+  }
+
+  @Override
+  public void removeRoles(UUID id, List<String> roles) {
+    var employee =
+        employeeRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
+    keycloakService.removeRolesOnUser(employee.getUserId(), roles);
+    var roleEntities = roleRepository.findAllByName(roles);
+    employee.getRoles().removeAll(roleEntities);
+    employeeRepository.save(employee);
+  }
+
+  @Override
+  public void disables(List<UUID> ids) {
+    ids.forEach(this::disable);
+  }
+
+  @Override
+  public void enables(List<UUID> ids) {
+    ids.forEach(this::enable);
+  }
+
+  @Override
+  public void delete(UUID id) {
+    var employee =
+        employeeRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("Employee not found"));
+    employee.setEnabled(false);
+    employee.setIsDeleted(true);
+    keycloakService.deactivateUser(employee.getUserId());
+    employeeRepository.save(employee);
+  }
+
+  @Override
+  public void delete(List<UUID> ids) {
+    ids.forEach(this::delete);
   }
 }
