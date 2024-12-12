@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-header {
+            background-color: #0044cc;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .email-body {
+            padding: 20px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .email-body h2 {
+            color: #0044cc;
+            font-size: 20px;
+        }
+
+        .email-body p {
+            margin: 10px 0;
+        }
+
+        .email-footer {
+            background-color: #f4f4f4;
+            color: #777777;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #0044cc;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #0033a0;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <h1 th:text="${companyName}">Your Company Name</h1>
+    </div>
+
+    <!-- Body -->
+    <div class="email-body">
+        <h2 th:text="'Dear ' + ${recipientName} + ','">Dear [Recipient's Name],</h2>
+        <p th:text="${content}">
+            We are thrilled to have you as part of our community! Below are some details to get you started.
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+        <p>© 2024 <span th:text="${companyName}">Your Company Name</span>. All rights reserved.</p>
+        <p>
+            <a th:href="${privacyPolicyLink}">Privacy Policy</a> |
+            <a th:href="${contactUsLink}">Contact Us</a>
+        </p>
+    </div>
+</div>
+</body>
+
+</html>

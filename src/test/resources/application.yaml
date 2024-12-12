@@ -6,8 +6,24 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+  ssl:
+    bundle: web-server
+    client-auth: want
+
 
 spring:
+  ssl:
+    bundle:
+      jks:
+        web-server:
+          key:
+            alias: ${KEY_ALIAS}
+            password: ${STORE_PASSWORD}
+          keystore:
+            location: classpath:server.p12
+            password: ${STORE_PASSWORD}
+            type: PKCS12
+
   threads:
     virtual:
       enabled: true
@@ -31,12 +47,30 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+  mail:
+    host: ${HOST_MAIL}
+    port: ${PORT_MAIL}
+    username: ${USER_MAIL}
+    password: ${PAW_MAIL}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
 
 idp:
   server-url: ${IDP_URL}
+  server-external-url: ${IDP_EXTERNAL_URL}
   client-id: ${CLIENT_ID}
   client-secret: ${CLIENT_SECRET}
-  realm: tsoftware
+  realm: ${IDP_REALM}
 
 springdoc:
   api-docs:
@@ -46,9 +80,28 @@ springdoc:
     oauth:
       client-id: web
 
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} [%clr(%X{TraceId}){yellow}] %m%n%wex"
+
+
 
 google:
   cloud:
     storage:
       bucket-name: qtd_tsoftware
       service-account: service-account.json
+
+t-software:
+  workflow:
+    rules:
+      create_customer:
+        create_application: true
+      create_application:
+        asset_valuation: true
+      asset_valuation:
+        appraisal_plan: true
+      appraisal_plan:
+        appraisal_approval: true
+      appraisal_approval:
+        appraisal_report: true
