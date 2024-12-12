@@ -64,6 +64,10 @@ services:
       CLIENT_SECRET: ${CLIENT_SECRET}
       IDP_REALM: ${IDP_REALM}
       STORE_PASSWORD: ${STORE_PASSWORD}
+      HOST_MAIL: ${HOST_MAIL}
+      PORT_MAIL: ${PORT_MAIL}
+      USER_MAIL: ${USER_MAIL}
+      PAW_MAIL: ${PAW_MAIL}
     networks:
       - qtd_network
     restart: always
