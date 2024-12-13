@@ -3,7 +3,9 @@ package com.tsoftware.qtd.dto.employee;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.validation.IsEnum;
+import com.tsoftware.qtd.validation.Unique;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.ZonedDateTime;
@@ -24,6 +26,7 @@ public class EmployeeRequest {
 
   @NotBlank
   @Size(min = 4)
+  @Unique(repositoryClass = EmployeeRepository.class, checkMethod = "existsByUsername")
   String username;
 
   @NotBlank
