@@ -3,6 +3,7 @@ package com.tsoftware.qtd.exception;
 import com.tsoftware.commonlib.model.ApiResponse;
 import com.turkraft.springfilter.parser.InvalidSyntaxException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,19 +92,19 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  protected ResponseEntity<ApiResponse<Map<String, String>>> handleMethodArgumentNotValid(
+  protected ResponseEntity<ApiResponse<Map<String, Object>>> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex) {
-    Map<String, String> errors = new HashMap<>();
+    Map<String, Object> errors = new HashMap<>();
 
     ex.getBindingResult()
         .getFieldErrors()
         .forEach(
             error -> {
-              errors.put(error.getField(), error.getDefaultMessage());
+              addNestedFieldError(errors, error.getField(), error.getDefaultMessage());
             });
     return ResponseEntity.badRequest()
         .body(
-            ApiResponse.<Map<String, String>>builder()
+            ApiResponse.<Map<String, Object>>builder()
                 .message(INVALID_REQUEST_INFORMATION_MESSAGE)
                 .code(HttpStatus.BAD_REQUEST.value())
                 .result(errors)
@@ -163,5 +164,45 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(
         ApiResponse.builder().code(error.getHttpStatus().value()).message(message).build(),
         error.getHttpStatus());
+  }
+
+  private void addNestedFieldError(Map<String, Object> errors, String field, String errorMessage) {
+    String[] parts = field.split("\\.");
+    Map<String, Object> current = errors;
+
+    for (int i = 0; i < parts.length; i++) {
+      String part = parts[i];
+      current = handleFieldPart(current, part, i == parts.length - 1, errorMessage);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, Object> handleFieldPart(
+      Map<String, Object> current, String part, boolean isFinalField, String errorMessage) {
+
+    if (part.matches("\\w+\\[\\d+]")) {
+      String arrayKey = part.substring(0, part.indexOf("["));
+      int index = Integer.parseInt(part.substring(part.indexOf("[") + 1, part.indexOf("]")));
+
+      current.putIfAbsent(arrayKey, new ArrayList<>());
+      List<Object> array = (List<Object>) current.get(arrayKey);
+      while (array.size() <= index) {
+        array.add(new HashMap<>());
+      }
+
+      current = (Map<String, Object>) array.get(index);
+
+      if (isFinalField) {
+        array.set(index, errorMessage);
+      }
+    } else {
+      current.putIfAbsent(part, new HashMap<>());
+      if (isFinalField) {
+        current.put(part, errorMessage);
+      } else {
+        current = (Map<String, Object>) current.get(part);
+      }
+    }
+    return current;
   }
 }
