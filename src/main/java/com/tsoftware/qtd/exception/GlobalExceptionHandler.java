@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -158,6 +161,24 @@ public class GlobalExceptionHandler {
     var params = ex.getParameters().toArray();
     String errorMessage = String.format(message.replace("{}", "%s"), params);
     return getResponse(error, errorMessage);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ApiResponse<?>> handleDataIntegrityViolationException(
+      DataIntegrityViolationException ex) {
+    String originalMessage = ex.getMessage();
+
+    Pattern pattern = Pattern.compile("Detail: Key \\((.*?)\\)=\\((.*?)\\) already exists\\.");
+    Matcher matcher = pattern.matcher(originalMessage);
+
+    String errorDetail = "Duplicate key value found.";
+    if (matcher.find()) {
+      String field = matcher.group(1); // "code"
+      String value = matcher.group(2); // "string"
+      errorDetail = String.format("Field '%s' with value '%s' already exists.", field, value);
+    }
+    return ResponseEntity.badRequest()
+        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), errorDetail, null));
   }
 
   private ResponseEntity<ApiResponse<?>> getResponse(CommonError error, String message) {
