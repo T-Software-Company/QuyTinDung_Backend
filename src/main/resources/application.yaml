@@ -51,6 +51,18 @@ spring:
     web:
       pageable:
         one-indexed-parameters: true
+  mail:
+    host: ${HOST_MAIL}
+    port: ${PORT_MAIL}
+    username: ${USER_MAIL}
+    password: ${PAW_MAIL}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 
 
 idp:

@@ -10,6 +10,7 @@ import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.validation.IsEnum;
+import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -55,24 +56,29 @@ public class GroupController {
   @PutMapping("/{id}")
   @KcTransactional(KcTransactional.KcTransactionType.UPDATE_GROUP)
   public ResponseEntity<ApiResponse<GroupResponse>> update(
-      @PathVariable UUID id, @RequestBody @Valid GroupRequest groupRequest) {
+      @PathVariable @Valid @IsUUID String id, @RequestBody @Valid GroupRequest groupRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(HttpStatus.OK.value(), "Updated", groupService.update(id, groupRequest)));
+        new ApiResponse<>(
+            HttpStatus.OK.value(),
+            "Updated",
+            groupService.update(UUID.fromString(id), groupRequest)));
   }
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @DeleteMapping("/{id}")
   @KcTransactional(KcTransactional.KcTransactionType.DELETE_GROUP)
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
-    groupService.delete(id);
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable @Valid @IsUUID String id) {
+    groupService.delete(UUID.fromString(id));
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
   }
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<GroupResponse>> getById(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<GroupResponse>> getById(
+      @PathVariable @Valid @IsUUID String id) {
     return ResponseEntity.ok(
-        new ApiResponse<>(HttpStatus.OK.value(), "Fetched", groupService.getById(id)));
+        new ApiResponse<>(
+            HttpStatus.OK.value(), "Fetched", groupService.getById(UUID.fromString(id))));
   }
 
   @GetMapping
@@ -90,8 +96,8 @@ public class GroupController {
   @PostMapping("/{id}/add-employee")
   @KcTransactional(KcTransactional.KcTransactionType.ADD_USER_TO_GROUP)
   public ResponseEntity<ApiResponse<Void>> joinGroup(
-      @PathVariable UUID id, @RequestParam UUID employeeId) {
-    groupService.join(id, employeeId);
+      @PathVariable @Valid @IsUUID String id, @RequestParam @Valid @IsUUID String employeeId) {
+    groupService.join(UUID.fromString(id), UUID.fromString(employeeId));
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
 
@@ -99,8 +105,8 @@ public class GroupController {
   @PostMapping("/{id}/remove-employee")
   @KcTransactional(KcTransactional.KcTransactionType.REMOVE_USER_ON_GROUP)
   public ResponseEntity<ApiResponse<Void>> LeaveGroup(
-      @PathVariable UUID id, @RequestParam UUID employeeId) {
-    groupService.leave(id, employeeId);
+      @PathVariable @Valid @IsUUID String id, @RequestParam @Valid @IsUUID String employeeId) {
+    groupService.leave(UUID.fromString(id), UUID.fromString(employeeId));
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }
 
@@ -109,8 +115,8 @@ public class GroupController {
   @KcTransactional(KcTransactional.KcTransactionType.ADD_ROLE_TO_GROUP)
   public ResponseEntity<ApiResponse<Void>> addRoles(
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
-      @PathVariable UUID id) {
-    groupService.addRoles(id, roles);
+      @PathVariable @Valid @IsUUID String id) {
+    groupService.addRoles(UUID.fromString(id), roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
 
@@ -119,8 +125,8 @@ public class GroupController {
   @KcTransactional(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_GROUP)
   public ResponseEntity<ApiResponse<Void>> removeRoles(
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles,
-      @PathVariable UUID id) {
-    groupService.removeRoles(id, roles);
+      @PathVariable @Valid @IsUUID String id) {
+    groupService.removeRoles(UUID.fromString(id), roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }
 }

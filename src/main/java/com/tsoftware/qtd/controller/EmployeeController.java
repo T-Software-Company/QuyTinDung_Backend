@@ -16,10 +16,12 @@ import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
 import com.tsoftware.qtd.validation.IsEnum;
+import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -92,11 +94,12 @@ public class EmployeeController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(
+      @PathVariable @Valid @IsUUID String id) {
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())
-            .result(employeeService.getEmployee(id))
+            .result(employeeService.getEmployee(UUID.fromString(id)))
             .build());
   }
 
@@ -116,20 +119,21 @@ public class EmployeeController {
   @PreAuthorize("hasRole('ADMIN')")
   @KcTransactional(KcTransactional.KcTransactionType.UPDATE_USER)
   public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(
-      @PathVariable UUID id, @RequestBody @Valid EmployeeUpdateRequest request) {
+      @PathVariable @Valid @IsUUID String id, @RequestBody @Valid EmployeeUpdateRequest request) {
 
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())
             .message("Profile updated successfully")
-            .result(employeeService.updateEmployee(id, request))
+            .result(employeeService.updateEmployee(UUID.fromString(id), request))
             .build());
   }
 
   @DeleteMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(@PathVariable UUID id) {
-    employeeService.delete(id);
+  public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployee(
+      @PathVariable @Valid @IsUUID String id) {
+    employeeService.delete(UUID.fromString(id));
     return ResponseEntity.ok(
         ApiResponse.<EmployeeResponse>builder()
             .code(HttpStatus.OK.value())
@@ -170,8 +174,9 @@ public class EmployeeController {
 
   @PostMapping("/{id}/reset-password")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(@PathVariable UUID id) {
-    employeeService.resetPassword(id);
+  public ResponseEntity<ApiResponse<Void>> resetPasswordForUserByAdmin(
+      @PathVariable @Valid @IsUUID String id) {
+    employeeService.resetPassword(UUID.fromString(id));
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -181,8 +186,8 @@ public class EmployeeController {
 
   @PostMapping("/{id}/enable")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> enable(@PathVariable UUID id) {
-    employeeService.enable(id);
+  public ResponseEntity<ApiResponse<Void>> enable(@PathVariable @Valid @IsUUID String id) {
+    employeeService.enable(UUID.fromString(id));
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -192,8 +197,8 @@ public class EmployeeController {
 
   @PostMapping("/{id}/disable")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> disable(@PathVariable UUID id) {
-    employeeService.disable(id);
+  public ResponseEntity<ApiResponse<Void>> disable(@PathVariable @Valid @IsUUID String id) {
+    employeeService.disable(UUID.fromString(id));
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -203,8 +208,8 @@ public class EmployeeController {
 
   @PostMapping("/enables")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> enables(@RequestBody List<UUID> ids) {
-    employeeService.enables(ids);
+  public ResponseEntity<ApiResponse<Void>> enables(@RequestBody @Valid List<@IsUUID String> ids) {
+    employeeService.enables(ids.stream().map(UUID::fromString).collect(Collectors.toList()));
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -214,8 +219,8 @@ public class EmployeeController {
 
   @PostMapping("/disables")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<Void>> disables(@RequestBody List<UUID> ids) {
-    employeeService.disables(ids);
+  public ResponseEntity<ApiResponse<Void>> disables(@RequestBody @Valid List<@IsUUID String> ids) {
+    employeeService.disables(ids.stream().map(UUID::fromString).collect(Collectors.toList()));
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -224,18 +229,21 @@ public class EmployeeController {
   }
 
   @GetMapping("/{id}/approves")
-  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(
+      @PathVariable @Valid @IsUUID String id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            HttpStatus.OK.value(), "Fetched All", approveService.getByApproverId(id)));
+            HttpStatus.OK.value(),
+            "Fetched All",
+            approveService.getByApproverId(UUID.fromString(id))));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/join-group")
   @KcTransactional(KcTransactional.KcTransactionType.ADD_USER_TO_GROUP)
   public ResponseEntity<ApiResponse<Void>> joinGroup(
-      @PathVariable UUID id, @RequestParam UUID groupId) {
-    groupService.join(groupId, id);
+      @PathVariable @Valid @IsUUID String id, @RequestParam @Valid @IsUUID String groupId) {
+    groupService.join(UUID.fromString(id), UUID.fromString(groupId));
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Joined", null));
   }
 
@@ -243,9 +251,9 @@ public class EmployeeController {
   @PostMapping("/{id}/add-roles")
   @KcTransactional(KcTransactional.KcTransactionType.ADD_ROLE_TO_USER)
   public ResponseEntity<ApiResponse<Void>> addRoles(
-      @PathVariable UUID id,
+      @PathVariable @Valid @IsUUID String id,
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles) {
-    employeeService.addRoles(id, roles);
+    employeeService.addRoles(UUID.fromString(id), roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
   }
 
@@ -253,9 +261,9 @@ public class EmployeeController {
   @PostMapping("/{id}/remove-roles")
   @KcTransactional(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_USER)
   public ResponseEntity<ApiResponse<Void>> removeRoles(
-      @PathVariable UUID id,
+      @PathVariable @Valid @IsUUID String id,
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles) {
-    employeeService.removeRoles(id, roles);
+    employeeService.removeRoles(UUID.fromString(id), roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
   }
 }
