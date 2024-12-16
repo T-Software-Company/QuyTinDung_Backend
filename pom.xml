@@ -252,7 +252,8 @@
                                 <chmod file="${basedir}/.git/hooks/commit-msg" perm="755"/>
                             </target>
                         </configuration>
-                        <goals>!--                            <goal>run</goal>-->
+                        <goals>
+                            <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
