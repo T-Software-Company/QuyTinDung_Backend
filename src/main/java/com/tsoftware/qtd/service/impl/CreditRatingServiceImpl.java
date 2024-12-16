@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.credit.CreditRatingDto;
+import com.tsoftware.qtd.dto.application.CreditRatingDto;
 import com.tsoftware.qtd.entity.CreditRating;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.CreditRatingMapper;

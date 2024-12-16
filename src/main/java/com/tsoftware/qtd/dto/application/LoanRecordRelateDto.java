@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;

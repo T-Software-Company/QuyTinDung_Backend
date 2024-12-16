@@ -18,7 +18,7 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table
 public class OnboardingWorkflowEntity extends AbstractAuditEntity {
-  private UUID targetUuid;
+  private UUID targetId;
   private String currentStep;
   private String nextStep;
   private WorkflowStatus workflowStatus;

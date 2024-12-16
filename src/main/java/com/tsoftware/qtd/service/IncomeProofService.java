@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.credit.IncomeProofDto;
+import com.tsoftware.qtd.dto.application.IncomeProofDto;
 import java.util.List;
 import java.util.UUID;
 

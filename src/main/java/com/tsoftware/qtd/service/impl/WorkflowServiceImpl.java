@@ -25,7 +25,7 @@ public class WorkflowServiceImpl implements WorkflowStorage<OnboardingWorkflow> 
   @Override
   public List<OnboardingWorkflow> getByStatus(UUID targetUUID, WorkflowStatus status) {
     return onboardingWorkflowRepository
-        .findAllByTargetUuidAndWorkflowStatus(targetUUID, status)
+        .findAllByTargetIdAndWorkflowStatus(targetUUID, status)
         .stream()
         .map(mapper::toWorkflow)
         .toList();
@@ -35,7 +35,7 @@ public class WorkflowServiceImpl implements WorkflowStorage<OnboardingWorkflow> 
   public OnboardingWorkflow save(OnboardingWorkflow workflow) {
     var entity =
         onboardingWorkflowRepository
-            .findByTargetUuid(workflow.getTargetId())
+            .findByTargetId(workflow.getTargetId())
             .orElse(new OnboardingWorkflowEntity());
     mapper.updateEntity(entity, workflow);
     onboardingWorkflowRepository.save(entity);

@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import com.tsoftware.commonlib.model.AbstractWorkflowRequest;
 import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
@@ -11,6 +11,6 @@ import lombok.Setter;
 @Builder
 public class ApplicationRequest extends AbstractWorkflowRequest {
   private FinancialInfoDTO financialInfo;
-  private LoanPlanRequest loanPlan;
-  private LoanRequestDTO loanRequestDTO;
+  private LoanPlanDTO loanPlan;
+  private LoanRequestDTO loanRequest;
 }

@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.dto;
 
+import com.tsoftware.commonlib.model.AbstractWorkflowResponse;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
-import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +10,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class ApproveResponse {
-  private String id;
-  private EmployeeResponse approver;
+public class ApproveResponse extends AbstractWorkflowResponse {
+  private UUID transactionId;
   private ApproveStatus status;
 }

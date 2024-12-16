@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.credit.CreditRatingDto;
+import com.tsoftware.qtd.dto.application.CreditRatingDto;
 import com.tsoftware.qtd.service.CreditRatingService;
 import java.util.List;
 import java.util.UUID;

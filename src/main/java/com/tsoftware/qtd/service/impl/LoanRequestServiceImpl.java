@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.credit.LoanRequestDTO;
-import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
+import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;

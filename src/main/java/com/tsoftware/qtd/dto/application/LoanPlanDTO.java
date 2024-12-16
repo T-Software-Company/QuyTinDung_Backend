@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class LoanPlanRequest {
+public class LoanPlanDTO {
 
   @NotNull @NotBlank private String loanNeeds;
   @NotNull @NotBlank private BigDecimal totalCapitalRequirement;

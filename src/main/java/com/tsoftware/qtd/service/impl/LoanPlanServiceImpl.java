@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.credit.LoanPlanRequest;
-import com.tsoftware.qtd.dto.credit.LoanPlanResponse;
+import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -26,9 +26,9 @@ public class LoanPlanServiceImpl implements LoanPlanService {
   private final ApplicationRepository applicationRepository;
 
   @Override
-  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, UUID applicationId) {
+  public LoanPlanResponse create(LoanPlanDTO loanplanDTO, UUID applicationId) {
 
-    LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
+    LoanPlan loanplan = loanplanMapper.toEntity(loanplanDTO);
     Application application =
         applicationRepository
             .findById(applicationId)
@@ -40,12 +40,12 @@ public class LoanPlanServiceImpl implements LoanPlanService {
   }
 
   @Override
-  public LoanPlanResponse update(UUID id, LoanPlanRequest loanplanRequest) {
+  public LoanPlanResponse update(UUID id, LoanPlanDTO loanplanDTO) {
     LoanPlan loanplan =
         loanplanRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanPlan not found"));
-    loanplanMapper.updateEntity(loanplanRequest, loanplan);
+    loanplanMapper.updateEntity(loanplanDTO, loanplan);
     return loanplanMapper.toDto(loanplanRepository.save(loanplan));
   }
 

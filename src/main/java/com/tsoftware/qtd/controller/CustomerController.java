@@ -2,7 +2,7 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.credit.ApplicationRequest;
+import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.service.ApplicationService;

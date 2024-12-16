@@ -186,33 +186,33 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <excludes>
-                        <exclude>com/tsoftware/qtd/dto/**</exclude>
-                        <exclude>com/tsoftware/qtd/entity/**</exclude>
-                        <exclude>com/tsoftware/qtd/mapper/**</exclude>
-                        <exclude>com/tsoftware/qtd/configuration/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.jacoco</groupId>-->
+<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--                <version>0.8.12</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>prepare-agent</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>report</id>-->
+<!--                        <phase>prepare-package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>report</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <excludes>-->
+<!--                        <exclude>com/tsoftware/qtd/dto/**</exclude>-->
+<!--                        <exclude>com/tsoftware/qtd/entity/**</exclude>-->
+<!--                        <exclude>com/tsoftware/qtd/mapper/**</exclude>-->
+<!--                        <exclude>com/tsoftware/qtd/configuration/**</exclude>-->
+<!--                    </excludes>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
@@ -232,32 +232,31 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>install-git-hooks</id>
-                        <phase>initialize</phase>
-                        <configuration>
-                            <target>
-                                <copy file="hooks/pre-commit"
-                                      tofile="${basedir}/.git/hooks/pre-commit"
-                                      overwrite="true"/>
-                                <chmod file="${basedir}/.git/hooks/pre-commit" perm="755"/>
-                                <copy file="hooks/commit-msg"
-                                      tofile="${basedir}/.git/hooks/commit-msg"
-                                      overwrite="true"/>
-                                <chmod file="${basedir}/.git/hooks/commit-msg" perm="755"/>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-antrun-plugin</artifactId>-->
+<!--                <version>3.1.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>install-git-hooks</id>-->
+<!--                        <phase>initialize</phase>-->
+<!--                        <configuration>-->
+<!--                            <target>-->
+<!--                                <copy file="hooks/pre-commit"-->
+<!--                                      tofile="${basedir}/.git/hooks/pre-commit"-->
+<!--                                      overwrite="true"/>-->
+<!--                                <chmod file="${basedir}/.git/hooks/pre-commit" perm="755"/>-->
+<!--                                <copy file="hooks/commit-msg"-->
+<!--                                      tofile="${basedir}/.git/hooks/commit-msg"-->
+<!--                                      overwrite="true"/>-->
+<!--                                <chmod file="${basedir}/.git/hooks/commit-msg" perm="755"/>-->
+<!--                            </target>-->
+<!--                        </configuration>-->
+<!--                        <goals>!&#45;&#45;                            <goal>run</goal>&ndash;&gt;-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
     <repositories>

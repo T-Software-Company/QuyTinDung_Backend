@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.credit.DisbursementDto;
+import com.tsoftware.qtd.dto.application.DisbursementDto;
 import com.tsoftware.qtd.entity.Disbursement;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

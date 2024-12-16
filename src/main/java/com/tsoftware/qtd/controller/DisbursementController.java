@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.credit.DisbursementDto;
+import com.tsoftware.qtd.dto.application.DisbursementDto;
 import com.tsoftware.qtd.service.DisbursementService;
 import java.util.List;
 import java.util.UUID;

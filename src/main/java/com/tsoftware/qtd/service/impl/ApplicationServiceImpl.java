@@ -1,10 +1,11 @@
 package com.tsoftware.qtd.service.impl;
 
+import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
-import com.tsoftware.qtd.constants.EnumType.TransactionStatus;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
-import com.tsoftware.qtd.dto.credit.ApplicationRequest;
-import com.tsoftware.qtd.dto.credit.ApplicationResponse;
+import com.tsoftware.qtd.dto.application.ApplicationDTO;
+import com.tsoftware.qtd.dto.application.ApplicationRequest;
+import com.tsoftware.qtd.dto.application.ApplicationResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.TransactionEntity;
 import com.tsoftware.qtd.exception.CommonException;
@@ -16,6 +17,7 @@ import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.repository.TransactionRepository;
 import com.tsoftware.qtd.service.ApplicationService;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -40,34 +42,43 @@ public class ApplicationServiceImpl implements ApplicationService {
     var customer =
         customerRepository
             .findById(applicationRequest.getTargetId())
-            .orElseThrow(() -> new NotFoundException("Customer not found"));
+            .orElseThrow(() -> new NotFoundException("Customer not found."));
 
     TransactionEntity loanRequestTransaction =
         TransactionEntity.builder()
             .PIC("user1")
-            .multipleApproval(false)
-            .metadata(applicationRequest.getLoanRequestDTO())
-            .status(TransactionStatus.CREATED)
+            .metadata(applicationRequest.getLoanRequest())
+            .status(ApproveStatus.WAIT)
             .type(TransactionType.CREATE_LOAN_REQUEST)
             .customerId(applicationRequest.getTargetId())
+            .approvers(new ArrayList<>())
+            .requiredApprovals(1)
             .createdAt(ZonedDateTime.now())
+            .metadata(applicationRequest.getLoanRequest())
             .build();
     //    transactionRepository.save(loanRequestTransaction);
     TransactionEntity loanPlanTransaction =
         TransactionEntity.builder()
             .PIC("user1")
-            .multipleApproval(false)
             .metadata(applicationRequest.getLoanPlan())
-            .status(TransactionStatus.CREATED)
+            .status(ApproveStatus.WAIT)
             .type(TransactionType.CREATE_LOAN_PLAN)
             .customerId(applicationRequest.getTargetId())
+            .approvers(new ArrayList<>())
+            .requiredApprovals(2)
             .createdAt(ZonedDateTime.now())
+            .metadata(applicationRequest.getLoanPlan())
             .build();
     //    transactionRepository.save(loanPlanTransaction);
 
     Application application = Application.builder().status(LoanStatus.CREATING).build();
     application.setCustomer(customer);
+
+    loanRequestTransaction.setApplication(application);
+    loanPlanTransaction.setApplication(application);
+
     application.setTransactions(Arrays.asList(loanRequestTransaction, loanPlanTransaction));
+
     applicationRepository.save(application);
     return ApplicationResponse.builder()
         .applicationId(application.getId())
@@ -96,12 +107,12 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public ApplicationResponse getById(UUID id) {
+  public ApplicationDTO getById(UUID id) {
     Application application =
         applicationRepository
             .findById(id)
-            .orElseThrow(() -> new NotFoundException("Credit not found"));
-    return applicationMapper.toResponse(application);
+            .orElseThrow(() -> new NotFoundException("Application not found"));
+    return applicationMapper.toDTO(application);
   }
 
   @Override

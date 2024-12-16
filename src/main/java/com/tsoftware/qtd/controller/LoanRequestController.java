@@ -1,8 +1,8 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.credit.LoanRequestDTO;
-import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
+import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.service.LoanRequestService;
 import java.util.List;
 import java.util.UUID;

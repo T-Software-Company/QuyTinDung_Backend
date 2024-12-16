@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.credit.LoanRequestDTO;
-import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
+import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.entity.LoanRequest;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

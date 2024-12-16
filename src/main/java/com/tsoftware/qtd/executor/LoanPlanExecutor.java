@@ -5,14 +5,14 @@ import com.tsoftware.commonlib.util.JsonParser;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.Transaction;
-import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanDTO;
 import com.tsoftware.qtd.entity.TransactionEntity;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.DtoMapper;
-import com.tsoftware.qtd.mapper.LoanRequestMapper;
+import com.tsoftware.qtd.mapper.LoanPlanMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
-import com.tsoftware.qtd.repository.LoanRequestRepository;
+import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.repository.TransactionRepository;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service("loanRequestExecutor")
+@Service("loanPlanExecutor")
 @RequiredArgsConstructor
-public class LoanRequestExecutor extends BaseTransactionExecutor<Transaction> {
+public class LoanPlanExecutor extends BaseTransactionExecutor<Transaction> {
   final DtoMapper dtoMapper;
-  final LoanRequestMapper loanRequestMapper;
+  final LoanPlanMapper loanPlanMapper;
   final ApplicationRepository applicationRepository;
-  final LoanRequestRepository loanRequestRepository;
+  final LoanPlanRepository loanPlanRepository;
   final TransactionRepository transactionRepository;
 
   @Override
@@ -49,16 +49,16 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<Transaction> {
   @Override
   protected Object doExecute(Transaction transaction) {
     log.info("All approvals received for transaction: {}", transaction.getId());
-    var request = JsonParser.convert(transaction.getMetadata(), LoanRequestDTO.class);
+    var request = JsonParser.convert(transaction.getMetadata(), LoanPlanDTO.class);
     var applicationId = transaction.getApplicationId();
     var application =
         applicationRepository
             .findById(applicationId)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, applicationId));
     log.info("Executing loan request: {}", request);
-    var entity = loanRequestMapper.toEntity(request);
+    var entity = loanPlanMapper.toEntity(request);
     entity.setApplication(application);
-    loanRequestRepository.save(entity);
+    loanPlanRepository.save(entity);
     return ApproveResponse.builder()
         .transactionId(transaction.getId())
         .status(ApproveStatus.APPROVED)

@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import com.tsoftware.qtd.constants.EnumType.IncomeProofType;
 import java.time.ZonedDateTime;

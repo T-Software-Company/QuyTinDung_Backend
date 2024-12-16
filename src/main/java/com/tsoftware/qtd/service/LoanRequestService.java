@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.credit.LoanRequestDTO;
-import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
+import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import java.util.List;
 import java.util.UUID;
 

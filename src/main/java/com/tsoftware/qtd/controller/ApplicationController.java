@@ -4,13 +4,14 @@ import com.tsoftware.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
+import com.tsoftware.qtd.dto.application.ApplicationDTO;
+import com.tsoftware.qtd.dto.application.ApplicationRequest;
+import com.tsoftware.qtd.dto.application.ApplicationResponse;
+import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanResponse;
+import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
-import com.tsoftware.qtd.dto.credit.ApplicationRequest;
-import com.tsoftware.qtd.dto.credit.ApplicationResponse;
-import com.tsoftware.qtd.dto.credit.LoanPlanRequest;
-import com.tsoftware.qtd.dto.credit.LoanPlanResponse;
-import com.tsoftware.qtd.dto.credit.LoanRequestDTO;
-import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.AssetService;
 import com.tsoftware.qtd.service.LoanPlanService;
@@ -64,9 +65,8 @@ public class ApplicationController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<ApplicationResponse>> getById(@PathVariable UUID id) {
-    return ResponseEntity.ok(
-        new ApiResponse<>(HttpStatus.OK.value(), "Fetched", applicationService.getById(id)));
+  public ResponseEntity<ApplicationDTO> getById(@PathVariable UUID id) {
+    return ResponseEntity.ok(applicationService.getById(id));
   }
 
   @GetMapping
@@ -77,10 +77,10 @@ public class ApplicationController {
 
   @PostMapping("/{id}/loan-plan")
   public ResponseEntity<ApiResponse<LoanPlanResponse>> create(
-      @RequestBody LoanPlanRequest loanPlanRequest, @PathVariable UUID id) {
+      @RequestBody LoanPlanDTO loanPlanDTO, @PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            HttpStatus.OK.value(), "Created", loanplanService.create(loanPlanRequest, id)));
+            HttpStatus.OK.value(), "Created", loanplanService.create(loanPlanDTO, id)));
   }
 
   @PostMapping("/{id}/loan-request")
