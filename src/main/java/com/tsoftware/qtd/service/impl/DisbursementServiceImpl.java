@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.credit.DisbursementDto;
+import com.tsoftware.qtd.dto.application.DisbursementDto;
 import com.tsoftware.qtd.entity.Disbursement;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.DisbursementMapper;

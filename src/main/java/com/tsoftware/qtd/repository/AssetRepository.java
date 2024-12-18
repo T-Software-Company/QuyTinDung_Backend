@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AssetRepository
     extends JpaRepository<Asset, UUID>, JpaSpecificationExecutor<Asset> {
-  List<Asset> findByCreditId(UUID id);
+  List<Asset> findByApplicationId(UUID id);
 }

@@ -1,17 +1,20 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
-public class RatingFormulaDto {
-  private String name;
+public class LoanPurposeDocumentDto {
   private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;
   private String createdBy;
+  private String link;
+  private String name;
 }

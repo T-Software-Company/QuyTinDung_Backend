@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.credit.IncomeProofDto;
+import com.tsoftware.qtd.dto.application.IncomeProofDto;
 import com.tsoftware.qtd.entity.IncomeProof;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

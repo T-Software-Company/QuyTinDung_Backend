@@ -1,9 +1,21 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.constants.EnumType.ApplicationStep;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -22,9 +34,15 @@ import org.hibernate.annotations.Type;
 @SuperBuilder
 @Entity
 @Table
-public class Credit extends AbstractAuditEntity {
+public class Application extends AbstractAuditEntity {
 
   private BigDecimal amount;
+
+  @Enumerated(EnumType.STRING)
+  private ApplicationStep step;
+
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  List<TransactionEntity> transactions;
 
   @Temporal(TemporalType.TIMESTAMP)
   private ZonedDateTime startDate;
@@ -49,36 +67,36 @@ public class Credit extends AbstractAuditEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Customer customer;
 
-  @OneToOne(mappedBy = "credit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
   private LoanPlan loanPlan;
 
-  @OneToOne(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "application")
   private ValuationMeeting valuationMeeting;
 
-  @OneToOne(mappedBy = "credit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
   private LoanRequest loanRequest;
 
-  @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<Asset> assets;
 
-  @OneToOne(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "application")
   private AppraisalPlan appraisalPlan;
 
-  @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<DebtNotification> debtNotification;
 
-  @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<AssetRepossessionNotice> assetRepossessionNotices;
 
-  @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<Disbursement> disbursements;
 
-  @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<LoanRecordRelate> loanRecordRelates;
 
-  @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<LoanPurposeDocument> loanPurposeDocuments;
 
-  @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<LoanCollection> loanCollections;
 }

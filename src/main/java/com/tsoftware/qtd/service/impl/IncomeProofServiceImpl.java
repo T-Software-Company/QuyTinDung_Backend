@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.credit.IncomeProofDto;
+import com.tsoftware.qtd.dto.application.IncomeProofDto;
 import com.tsoftware.qtd.entity.IncomeProof;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.IncomeProofMapper;

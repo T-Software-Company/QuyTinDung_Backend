@@ -13,8 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface OnboardingWorkflowRepository
     extends JpaRepository<OnboardingWorkflowEntity, UUID>,
         JpaSpecificationExecutor<OnboardingWorkflowEntity> {
-  Set<OnboardingWorkflowEntity> findAllByTargetUuidAndWorkflowStatus(
-      UUID id, WorkflowStatus status);
+  Set<OnboardingWorkflowEntity> findAllByTargetIdAndWorkflowStatus(UUID id, WorkflowStatus status);
 
-  Optional<OnboardingWorkflowEntity> findByTargetUuid(UUID targetUuid);
+  Optional<OnboardingWorkflowEntity> findByTargetId(UUID targetUuid);
 }

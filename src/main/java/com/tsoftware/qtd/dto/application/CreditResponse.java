@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;

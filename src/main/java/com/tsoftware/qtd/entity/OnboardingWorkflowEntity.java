@@ -18,7 +18,7 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table
 public class OnboardingWorkflowEntity extends AbstractAuditEntity {
-  private UUID targetUuid;
+  private UUID targetId;
   private String currentStep;
   private String nextStep;
   private WorkflowStatus workflowStatus;
@@ -27,5 +27,7 @@ public class OnboardingWorkflowEntity extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
   private List<StepHistory> stepHistories;
 }

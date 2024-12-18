@@ -2,12 +2,12 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
-import com.tsoftware.qtd.entity.Credit;
+import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationMeeting;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.ValuationMeetingMapper;
-import com.tsoftware.qtd.repository.CreditRepository;
+import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.ValuationMeetingRepository;
 import com.tsoftware.qtd.service.ValuationMeetingService;
 import java.util.List;
@@ -23,18 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ValuationMeetingServiceImpl implements ValuationMeetingService {
 
   private final ValuationMeetingRepository valuationMeetingRepository;
-  private final CreditRepository creditRepository;
+  private final ApplicationRepository applicationRepository;
   private final ValuationMeetingMapper valuationMeetingMapper;
 
   @Override
   public ValuationMeetingResponse create(
       ValuationMeetingRequest valuationMeetingRequest, UUID creditId) {
     ValuationMeeting valuationMeeting = valuationMeetingMapper.toEntity(valuationMeetingRequest);
-    Credit credit =
-        creditRepository
+    Application application =
+        applicationRepository
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
-    valuationMeeting.setCredit(credit);
+    valuationMeeting.setApplication(application);
     return valuationMeetingMapper.toResponse(valuationMeetingRepository.save(valuationMeeting));
   }
 
@@ -101,7 +101,7 @@ public class ValuationMeetingServiceImpl implements ValuationMeetingService {
   public ValuationMeetingResponse getByCreditId(UUID creditId) {
     var valuationMeeting =
         valuationMeetingRepository
-            .findByCreditId(creditId)
+            .findByApplicationId(creditId)
             .orElseThrow(() -> new NotFoundException("ValuationMeeting not found"));
     return valuationMeetingMapper.toResponse(valuationMeeting);
   }

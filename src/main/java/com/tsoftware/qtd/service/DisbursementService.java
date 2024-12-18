@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.credit.DisbursementDto;
+import com.tsoftware.qtd.dto.application.DisbursementDto;
 import java.util.List;
 import java.util.UUID;
 

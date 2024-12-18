@@ -1,9 +1,11 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

@@ -27,5 +27,5 @@ public class LoanRecordRelate extends AbstractAuditEntity {
   private Map<String, Object> metadata;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Credit credit;
+  private Application application;
 }

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.configuration;
 
 import com.tsoftware.commonlib.executor.TransactionExecutorRegistry;
-import com.tsoftware.qtd.constants.EnumType.TransactionCategory;
+import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import java.util.Properties;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ public class TransactionExecutorConfig {
 
   private Properties getExecutorMappings() {
     Properties properties = new Properties();
-    properties.putAll(TransactionCategory.executorMap);
+    properties.putAll(TransactionType.executorMap);
     return properties;
   }
 }
