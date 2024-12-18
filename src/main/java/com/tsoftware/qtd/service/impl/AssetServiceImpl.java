@@ -6,8 +6,8 @@ import com.tsoftware.qtd.entity.Asset;
 import com.tsoftware.qtd.entity.LegalDocument;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.AssetMapper;
+import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.AssetRepository;
-import com.tsoftware.qtd.repository.CreditRepository;
 import com.tsoftware.qtd.repository.LegalDocumentRepository;
 import com.tsoftware.qtd.service.AssetService;
 import java.util.List;
@@ -25,7 +25,7 @@ public class AssetServiceImpl implements AssetService {
   private final AssetRepository assetRepository;
 
   private final AssetMapper assetMapper;
-  private final CreditRepository creditRepository;
+  private final ApplicationRepository applicationRepository;
   private final LegalDocumentRepository legalDocumentRepository;
 
   @Override
@@ -33,10 +33,10 @@ public class AssetServiceImpl implements AssetService {
     Asset asset = assetMapper.toEntity(assetRequest);
     List<LegalDocument> legalDocuments = asset.getLegalDocuments();
     var credit =
-        creditRepository
+        applicationRepository
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
-    asset.setCredit(credit);
+    asset.setApplication(credit);
     asset.setCustomer(credit.getCustomer());
     var assetSaved = assetRepository.save(asset);
     legalDocuments.forEach(
@@ -77,7 +77,7 @@ public class AssetServiceImpl implements AssetService {
 
   @Override
   public List<AssetResponse> getAssetsByCreditId(UUID id) {
-    return assetRepository.findByCreditId(id).stream()
+    return assetRepository.findByApplicationId(id).stream()
         .map(assetMapper::toResponse)
         .collect(Collectors.toList());
   }

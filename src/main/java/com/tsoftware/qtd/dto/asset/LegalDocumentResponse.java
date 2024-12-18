@@ -2,7 +2,9 @@ package com.tsoftware.qtd.dto.asset;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

@@ -98,7 +98,10 @@ t-software:
       create_customer:
         create_application: true
       create_application:
-        asset_valuation: true
+        loan_submit_approve: true
+      loan_submit_approve:
+        asset_valuation: loan_submit_approve == true
+        loan_submit_approve: true
       asset_valuation:
         appraisal_plan: true
       appraisal_plan:

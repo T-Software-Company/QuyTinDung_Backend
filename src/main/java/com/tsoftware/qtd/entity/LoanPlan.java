@@ -1,7 +1,12 @@
 package com.tsoftware.qtd.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -37,5 +42,5 @@ public class LoanPlan extends AbstractAuditEntity {
   private Customer customer;
 
   @OneToOne(fetch = FetchType.LAZY)
-  private Credit credit;
+  private Application application;
 }

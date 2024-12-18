@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ValuationMeetingRepository
     extends JpaRepository<ValuationMeeting, UUID>, JpaSpecificationExecutor<ValuationMeeting> {
-  Optional<ValuationMeeting> findByCreditId(UUID creditId);
+  Optional<ValuationMeeting> findByApplicationId(UUID creditId);
 }

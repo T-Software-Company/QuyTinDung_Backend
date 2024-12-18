@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.BorrowerType;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Builder
 @Setter
-public class LoanRequestRequest {
+public class LoanRequestDTO {
   @NotNull @NotBlank private String purpose;
   @NotNull @NotBlank private ZonedDateTime startDate;
 

@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.credit;
+package com.tsoftware.qtd.dto.application;
 
 import com.tsoftware.qtd.constants.EnumType.IncomeProofType;
 import java.time.ZonedDateTime;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class IncomeProofDto {
 
-  private UUID id;
+  UUID id;
   ZonedDateTime createdAt;
   ZonedDateTime updatedAt;
   String lastModifiedBy;

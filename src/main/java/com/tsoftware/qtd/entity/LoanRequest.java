@@ -41,7 +41,7 @@ public class LoanRequest extends AbstractAuditEntity {
   private LoanSecurityType loanSecurityType;
 
   @OneToOne(fetch = FetchType.LAZY)
-  private Credit credit;
+  private Application application;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Customer customer;

@@ -1,12 +1,12 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.credit.LoanPlanRequest;
-import com.tsoftware.qtd.dto.credit.LoanPlanResponse;
-import com.tsoftware.qtd.entity.Credit;
+import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanResponse;
+import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LoanPlanMapper;
-import com.tsoftware.qtd.repository.CreditRepository;
+import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.service.LoanPlanService;
 import java.util.List;
@@ -23,29 +23,29 @@ public class LoanPlanServiceImpl implements LoanPlanService {
 
   private final LoanPlanRepository loanplanRepository;
   private final LoanPlanMapper loanplanMapper;
-  private final CreditRepository creditRepository;
+  private final ApplicationRepository applicationRepository;
 
   @Override
-  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, UUID creditId) {
+  public LoanPlanResponse create(LoanPlanDTO loanplanDTO, UUID applicationId) {
 
-    LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
-    Credit credit =
-        creditRepository
-            .findById(creditId)
-            .orElseThrow(() -> new NotFoundException("Credit not found"));
-    loanplan.setCustomer(credit.getCustomer());
-    loanplan.setCredit(credit);
+    LoanPlan loanplan = loanplanMapper.toEntity(loanplanDTO);
+    Application application =
+        applicationRepository
+            .findById(applicationId)
+            .orElseThrow(() -> new NotFoundException("Application not found"));
+    loanplan.setCustomer(application.getCustomer());
+    loanplan.setApplication(application);
 
     return loanplanMapper.toDto(loanplanRepository.save(loanplan));
   }
 
   @Override
-  public LoanPlanResponse update(UUID id, LoanPlanRequest loanplanRequest) {
+  public LoanPlanResponse update(UUID id, LoanPlanDTO loanplanDTO) {
     LoanPlan loanplan =
         loanplanRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanPlan not found"));
-    loanplanMapper.updateEntity(loanplanRequest, loanplan);
+    loanplanMapper.updateEntity(loanplanDTO, loanplan);
     return loanplanMapper.toDto(loanplanRepository.save(loanplan));
   }
 

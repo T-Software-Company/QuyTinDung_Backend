@@ -30,5 +30,5 @@ public class Disbursement extends AbstractAuditEntity {
 
   @ManyToOne private Customer customer;
 
-  @ManyToOne private Credit credit;
+  @ManyToOne private Application application;
 }

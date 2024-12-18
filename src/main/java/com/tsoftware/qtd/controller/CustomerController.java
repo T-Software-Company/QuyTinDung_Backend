@@ -2,11 +2,10 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.credit.CreditRequest;
-import com.tsoftware.qtd.dto.credit.CreditResponse;
+import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
-import com.tsoftware.qtd.service.CreditService;
+import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.CustomerService;
 import com.tsoftware.qtd.service.impl.DocumentService;
 import java.util.List;
@@ -28,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController {
 
   private final CustomerService customerService;
-  private final CreditService creditService;
+  private final ApplicationService applicationService;
   private final DocumentService documentService;
 
   @WorkflowAPI
@@ -68,8 +67,9 @@ public class CustomerController {
   }
 
   @PostMapping("/{id}/credit")
-  public ResponseEntity<ApiResponse<CreditResponse>> create(
-      @RequestBody CreditRequest creditRequest, @PathVariable UUID id) throws Exception {
-    return ResponseEntity.ok(new ApiResponse<>(200, "Created", creditService.create(id)));
+  public ResponseEntity<?> create(
+      @RequestBody ApplicationRequest applicationRequest, @PathVariable UUID id) throws Exception {
+    return ResponseEntity.ok(
+        new ApiResponse<>(200, "Created", applicationService.create(applicationRequest)));
   }
 }

@@ -1,14 +1,22 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.credit.LoanRequestRequest;
-import com.tsoftware.qtd.dto.credit.LoanRequestResponse;
+import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.service.LoanRequestService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/loan-requests")
@@ -19,18 +27,16 @@ public class LoanRequestController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<LoanRequestResponse>> create(
-      @RequestBody LoanRequestRequest loanRequestRequest, @RequestParam UUID creditId)
-      throws Exception {
+      @RequestBody LoanRequestDTO loanRequestDTO, @RequestParam UUID creditId) throws Exception {
     return ResponseEntity.ok(
-        new ApiResponse<>(
-            1000, "Created", loanRequestService.create(loanRequestRequest, creditId)));
+        new ApiResponse<>(1000, "Created", loanRequestService.create(loanRequestDTO, creditId)));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<LoanRequestResponse>> update(
-      @PathVariable UUID id, @RequestBody LoanRequestRequest loanRequestRequest) {
+      @PathVariable UUID id, @RequestBody LoanRequestDTO loanRequestDTO) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", loanRequestService.update(id, loanRequestRequest)));
+        new ApiResponse<>(1000, "Updated", loanRequestService.update(id, loanRequestDTO)));
   }
 
   @DeleteMapping("/{id}")
