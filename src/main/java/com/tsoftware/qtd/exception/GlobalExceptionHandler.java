@@ -171,14 +171,17 @@ public class GlobalExceptionHandler {
     Pattern pattern = Pattern.compile("Detail: Key \\((.*?)\\)=\\((.*?)\\) already exists\\.");
     Matcher matcher = pattern.matcher(originalMessage);
 
-    String errorDetail = "Duplicate key value found.";
+    String message = "Duplicate key value found.";
+    Map<String, Object> error = null;
     if (matcher.find()) {
       String field = matcher.group(1); // "code"
       String value = matcher.group(2); // "string"
-      errorDetail = String.format("Field '%s' with value '%s' already exists.", field, value);
+      message = String.format("Field '%s' with value '%s' already exists.", field, value);
+      error = new HashMap<>();
+      error.put(field, message);
     }
     return ResponseEntity.badRequest()
-        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), errorDetail, null));
+        .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), message, error));
   }
 
   private ResponseEntity<ApiResponse<?>> getResponse(CommonError error, String message) {

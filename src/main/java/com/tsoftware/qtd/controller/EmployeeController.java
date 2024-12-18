@@ -134,7 +134,7 @@ public class EmployeeController {
             .build());
   }
 
-  @DeleteMapping("/delete")
+  @DeleteMapping
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<EmployeeResponse>> deleteEmployees(
       @RequestBody List<UUID> ids) {
