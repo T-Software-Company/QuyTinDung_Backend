@@ -44,7 +44,7 @@ public class EmployeeRequest {
   @IsEnum(enumClass = Role.class)
   List<String> roles;
 
-  List<GroupDto> groups;
+  List<@Valid GroupDto> groups;
 
   @NotNull @Past ZonedDateTime dayOfBirth;
 
