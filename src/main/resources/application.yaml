@@ -47,10 +47,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
-  data:
-    web:
-      pageable:
-        one-indexed-parameters: true
+#  data:
+#    web:
+#      pageable:
+#        one-indexed-parameters: true
   mail:
     host: ${HOST_MAIL}
     port: ${PORT_MAIL}
