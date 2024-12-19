@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,4 +23,5 @@ public class LoanPlanDTO {
   private String note;
   @NotNull @NotBlank private String loanTerm;
   private Map<String, Object> metadata;
+  private Set<String> assignees;
 }

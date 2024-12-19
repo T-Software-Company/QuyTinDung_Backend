@@ -70,6 +70,12 @@ public class Application extends AbstractAuditEntity {
   @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
   private LoanPlan loanPlan;
 
+  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
+  private FinancialInfo financialInfo;
+
+  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
+  private LoanAccount loanAccount;
+
   @OneToOne(mappedBy = "application")
   private ValuationMeeting valuationMeeting;
 
@@ -87,9 +93,6 @@ public class Application extends AbstractAuditEntity {
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<AssetRepossessionNotice> assetRepossessionNotices;
-
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
-  private List<Disbursement> disbursements;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<LoanRecordRelate> loanRecordRelates;

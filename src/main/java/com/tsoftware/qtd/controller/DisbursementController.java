@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.application.DisbursementDto;
+import com.tsoftware.qtd.dto.application.DisbursementDTO;
 import com.tsoftware.qtd.service.DisbursementService;
 import java.util.List;
 import java.util.UUID;
@@ -24,15 +24,15 @@ public class DisbursementController {
   private final DisbursementService disbursementService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<DisbursementDto>> create(
-      @RequestBody DisbursementDto disbursementDto) {
+  public ResponseEntity<ApiResponse<DisbursementDTO>> create(
+      @RequestBody DisbursementDTO disbursementDto) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Created", disbursementService.create(disbursementDto)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<DisbursementDto>> update(
-      @PathVariable UUID id, @RequestBody DisbursementDto disbursementDto) {
+  public ResponseEntity<ApiResponse<DisbursementDTO>> update(
+      @PathVariable UUID id, @RequestBody DisbursementDTO disbursementDto) {
     return ResponseEntity.ok(
         new ApiResponse<>(1000, "Updated", disbursementService.update(id, disbursementDto)));
   }
@@ -44,12 +44,12 @@ public class DisbursementController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<DisbursementDto>> getById(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<DisbursementDTO>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", disbursementService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<DisbursementDto>>> getAll() {
+  public ResponseEntity<ApiResponse<List<DisbursementDTO>>> getAll() {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", disbursementService.getAll()));
   }
 }

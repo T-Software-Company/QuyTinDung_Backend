@@ -19,6 +19,6 @@ public class TransactionController {
   @WorkflowAPI
   @PostMapping("/approve")
   public ResponseEntity<?> approveRequest(@RequestBody ApproveRequest approveRequest) {
-    return ResponseEntity.ok(transactionService.approve(approveRequest));
+    return ResponseEntity.ok(transactionService.approve(approveRequest.getPayload()));
   }
 }

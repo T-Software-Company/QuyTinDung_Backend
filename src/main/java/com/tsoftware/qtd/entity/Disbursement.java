@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.constants.EnumType.DisbursementStatus;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -15,20 +16,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Disbursement extends AbstractAuditEntity {
 
-  private BigDecimal loanLimit;
-  private BigDecimal amountReceived;
-  private BigDecimal currentOutstandingDebt;
+  private BigDecimal amount;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  private ZonedDateTime dateOfLoanReceipt;
+  private ZonedDateTime disbursementDate;
+  private String description;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  private ZonedDateTime loanTerm;
+  @Enumerated(EnumType.ORDINAL)
+  private DisbursementStatus status;
 
-  private BigDecimal interestRate;
-  private String repaymentSchedule;
-
-  @ManyToOne private Customer customer;
-
-  @ManyToOne private Application application;
+  @ManyToOne private LoanAccount loanAccount;
 }

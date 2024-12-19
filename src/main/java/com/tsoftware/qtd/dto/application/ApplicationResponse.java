@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ApplicationResponse extends AbstractWorkflowResponse {
+public class ApplicationResponse extends AbstractWorkflowResponse<Object> {
   private UUID applicationId;
   private List<UUID> transactionIds;
 }

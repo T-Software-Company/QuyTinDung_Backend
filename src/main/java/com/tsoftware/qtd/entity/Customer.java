@@ -72,7 +72,4 @@ public class Customer extends AbstractAuditEntity {
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<Asset> assets;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<Disbursement> disbursements;
 }

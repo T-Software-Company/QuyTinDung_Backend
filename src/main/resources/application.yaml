@@ -93,6 +93,9 @@ google:
       service-account: service-account.json
 
 t-software:
+  account:
+    format:
+      loan: LN****###**
   workflow:
     rules:
       create_customer:

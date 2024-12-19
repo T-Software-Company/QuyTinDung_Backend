@@ -2,15 +2,19 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.application.ApplicationRequest;
+import com.tsoftware.qtd.dto.PageResponse;
+import com.tsoftware.qtd.dto.customer.CustomerDTO;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
+import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.CustomerService;
 import com.tsoftware.qtd.service.impl.DocumentService;
-import java.util.List;
+import com.turkraft.springfilter.boot.Filter;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +38,7 @@ public class CustomerController {
   @PostMapping
   public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest customerRequest)
       throws Exception {
-    return ResponseEntity.ok(customerService.create(customerRequest));
+    return ResponseEntity.ok(customerService.create(customerRequest.getPayload()));
   }
 
   @WorkflowAPI
@@ -42,7 +46,8 @@ public class CustomerController {
   public ResponseEntity<ApiResponse<CustomerResponse>> update(
       @PathVariable UUID id, @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(200, "Updated", customerService.update(id, customerRequest)));
+        new ApiResponse<>(
+            200, "Updated", customerService.update(id, customerRequest.getPayload())));
   }
 
   @DeleteMapping("/{id}")
@@ -52,7 +57,7 @@ public class CustomerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<CustomerDTO>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(200, "Fetched", customerService.getById(id)));
   }
 
@@ -62,14 +67,8 @@ public class CustomerController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<CustomerResponse>>> getAll() {
-    return ResponseEntity.ok(new ApiResponse<>(200, "Fetched All", customerService.getAll()));
-  }
-
-  @PostMapping("/{id}/credit")
-  public ResponseEntity<?> create(
-      @RequestBody ApplicationRequest applicationRequest, @PathVariable UUID id) throws Exception {
-    return ResponseEntity.ok(
-        new ApiResponse<>(200, "Created", applicationService.create(applicationRequest)));
+  public ResponseEntity<PageResponse<CustomerDTO>> getAll(
+      @Filter Specification<Customer> spec, Pageable page) {
+    return ResponseEntity.ok(customerService.getAll(spec, page));
   }
 }

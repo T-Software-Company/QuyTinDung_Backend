@@ -1,10 +1,9 @@
-package com.tsoftware.qtd.dto;
+package com.tsoftware.qtd.dto.transaction;
 
 import com.tsoftware.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
+import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,16 +12,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Transaction extends AbstractTransaction {
-  // List of whom to approve this transaction
-  private List<String> approvers;
   private Integer requiredApprovals;
-  private UUID applicationId;
+  private ApplicationDTO application;
   private ApproveStatus status;
+  private List<ApproveDTO> approves;
 
   @Override
   public boolean isApproved() {
-    return Optional.ofNullable(approvers)
-        .map(approvers -> approvers.size() >= requiredApprovals)
-        .orElse(false);
+    return approves != null
+        && approves.stream()
+                .filter(approve -> ApproveStatus.APPROVED.equals(approve.getStatus()))
+                .count()
+            >= requiredApprovals;
   }
 }

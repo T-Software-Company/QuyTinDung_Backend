@@ -6,6 +6,7 @@ import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,4 +43,6 @@ public interface EmployeeService {
   void delete(UUID id);
 
   void delete(List<UUID> ids);
+
+  Set<Employee> findByUserIdIn(Set<String> assignees);
 }

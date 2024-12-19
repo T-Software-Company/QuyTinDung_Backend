@@ -1,7 +1,9 @@
 package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +14,19 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Entity(name = "financial_info")
+@Entity
+@Table
 public class FinancialInfo extends AbstractAuditEntity {
-  @NotNull private String jobTitle;
+  private String jobTitle;
   private String companyName;
   private String companyAddress;
-  @NotNull private Boolean hasMarried;
-  @NotNull private BigDecimal totalIncome;
+  private Boolean hasMarried;
+  private BigDecimal totalIncome;
   private BigDecimal monthlyExpense;
   private BigDecimal monthlySaving;
   private BigDecimal monthlyDebt;
   private BigDecimal monthlyLoanPayment;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  private Application application;
 }

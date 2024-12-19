@@ -1,16 +1,15 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.customer.CustomerRequest;
-import com.tsoftware.qtd.dto.customer.CustomerResponse;
+import com.tsoftware.qtd.dto.customer.CustomerDTO;
 import com.tsoftware.qtd.entity.Customer;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
-  Customer toEntity(CustomerRequest dto);
+  Customer toEntity(CustomerDTO dto);
 
-  CustomerResponse toResponse(Customer entity);
+  CustomerDTO toDTO(Customer entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(CustomerRequest dto, @MappingTarget Customer entity);
+  void updateEntity(CustomerDTO dto, @MappingTarget Customer entity);
 }

@@ -12,6 +12,7 @@ import com.tsoftware.qtd.dto.application.LoanPlanResponse;
 import com.tsoftware.qtd.dto.application.LoanRequestDTO;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
+import com.tsoftware.qtd.dto.loan.SignRequest;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.AssetService;
 import com.tsoftware.qtd.service.LoanPlanService;
@@ -46,7 +47,9 @@ public class ApplicationController {
   @PostMapping
   public ResponseEntity<?> create(@RequestBody ApplicationRequest applicationRequest)
       throws Exception {
-    return ResponseEntity.ok(applicationService.create(applicationRequest));
+    return ResponseEntity.ok(
+        applicationService.create(
+            applicationRequest.getTargetId(), applicationRequest.getPayload()));
   }
 
   @WorkflowAPI
@@ -55,7 +58,10 @@ public class ApplicationController {
       @PathVariable UUID id, @RequestBody ApplicationRequest applicationRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            HttpStatus.OK.value(), "Updated", applicationService.update(id, applicationRequest)));
+            HttpStatus.OK.value(),
+            "Updated",
+            applicationService.update(
+                applicationRequest.getTargetId(), applicationRequest.getPayload())));
   }
 
   @DeleteMapping("/{id}")
@@ -67,6 +73,11 @@ public class ApplicationController {
   @GetMapping("/{id}")
   public ResponseEntity<ApplicationDTO> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(applicationService.getById(id));
+  }
+
+  @PostMapping("/{id}/sign")
+  public ResponseEntity<?> sign(@PathVariable UUID id, @RequestBody SignRequest signRequest) {
+    return ResponseEntity.ok(applicationService.sign(id, signRequest.getPayload()));
   }
 
   @GetMapping
@@ -108,7 +119,7 @@ public class ApplicationController {
             valuationMeetingService.create(valuationMeetingRequest, id)));
   }
 
-  @GetMapping("/{id}/valuat ion-meeting")
+  @GetMapping("/{id}/valuation-meeting")
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> getByCreditId(
       @RequestBody ValuationMeetingRequest valuationMeetingRequest, @PathVariable UUID id) {
     return ResponseEntity.ok(

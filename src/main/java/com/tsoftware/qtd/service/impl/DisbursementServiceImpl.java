@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.application.DisbursementDto;
+import com.tsoftware.qtd.dto.application.DisbursementDTO;
 import com.tsoftware.qtd.entity.Disbursement;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.DisbursementMapper;
@@ -23,13 +23,13 @@ public class DisbursementServiceImpl implements DisbursementService {
   private final DisbursementMapper disbursementMapper;
 
   @Override
-  public DisbursementDto create(DisbursementDto disbursementDto) {
+  public DisbursementDTO create(DisbursementDTO disbursementDto) {
     Disbursement disbursement = disbursementMapper.toEntity(disbursementDto);
     return disbursementMapper.toDto(disbursementRepository.save(disbursement));
   }
 
   @Override
-  public DisbursementDto update(UUID id, DisbursementDto disbursementDto) {
+  public DisbursementDTO update(UUID id, DisbursementDTO disbursementDto) {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)
@@ -44,7 +44,7 @@ public class DisbursementServiceImpl implements DisbursementService {
   }
 
   @Override
-  public DisbursementDto getById(UUID id) {
+  public DisbursementDTO getById(UUID id) {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)
@@ -53,7 +53,7 @@ public class DisbursementServiceImpl implements DisbursementService {
   }
 
   @Override
-  public List<DisbursementDto> getAll() {
+  public List<DisbursementDTO> getAll() {
     return disbursementRepository.findAll().stream()
         .map(disbursementMapper::toDto)
         .collect(Collectors.toList());

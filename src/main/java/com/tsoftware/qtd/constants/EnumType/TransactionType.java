@@ -10,7 +10,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TransactionType {
   CREATE_LOAN_REQUEST("loanRequestExecutor"),
-  CREATE_LOAN_PLAN("loanPlanExecutor");
+  CREATE_LOAN_PLAN("loanPlanExecutor"),
+  CREATE_FINANCIAL_INFO("financialInfoExecutor"),
+  ;
   final String executor;
   public static final Map<String, String> executorMap =
       Arrays.stream(TransactionType.values())
