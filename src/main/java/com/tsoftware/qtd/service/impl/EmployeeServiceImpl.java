@@ -11,6 +11,7 @@ import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.KeycloakService;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -213,5 +214,10 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   public void delete(List<UUID> ids) {
     ids.forEach(this::delete);
+  }
+
+  @Override
+  public Set<Employee> findByUserIdIn(Set<String> assignees) {
+    return employeeRepository.findByUserIdIn(assignees);
   }
 }

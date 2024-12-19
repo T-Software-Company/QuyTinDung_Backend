@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.application.DisbursementDto;
+import com.tsoftware.qtd.dto.application.DisbursementDTO;
 import com.tsoftware.qtd.entity.Disbursement;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -9,10 +9,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface DisbursementMapper {
-  Disbursement toEntity(DisbursementDto dto);
+  Disbursement toEntity(DisbursementDTO dto);
 
-  DisbursementDto toDto(Disbursement entity);
+  DisbursementDTO toDto(Disbursement entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(DisbursementDto dto, @MappingTarget Disbursement entity);
+  void updateEntity(DisbursementDTO dto, @MappingTarget Disbursement entity);
 }

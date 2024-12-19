@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tsoftware.qtd.constants.EnumType.ApplicationStep;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
+import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -25,7 +26,10 @@ public class ApplicationDTO {
   private ZonedDateTime dueDate;
   private LoanStatus status;
   private LoanSecurityType loanSecurityType;
-  private String CustomerId;
+  //  private CustomerDTO customer;
+  private String customerId;
   private LoanPlanDTO loanPlan;
   private LoanRequestDTO loanRequest;
+  private FinancialInfoDTO financialInfo;
+  boolean canSign;
 }

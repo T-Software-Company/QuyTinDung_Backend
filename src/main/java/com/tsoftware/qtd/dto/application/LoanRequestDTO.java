@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,4 +38,6 @@ public class LoanRequestDTO {
 
   private String note;
   private Map<String, Object> metadata;
+
+  private Set<String> assignees;
 }

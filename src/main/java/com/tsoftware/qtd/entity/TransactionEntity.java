@@ -10,6 +10,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -38,13 +39,11 @@ public class TransactionEntity extends AbstractAuditEntity {
   private TransactionType type;
 
   private ZonedDateTime approvedAt;
-  private String approvedBy;
   private Integer requiredApprovals;
   private String PIC;
 
-  @Type(JsonType.class)
-  @Column(columnDefinition = "jsonb")
-  private List<String> approvers;
+  @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<Approve> approves;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")

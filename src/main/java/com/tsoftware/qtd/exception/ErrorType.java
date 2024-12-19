@@ -12,11 +12,13 @@ public enum ErrorType implements CommonError {
   ENTITY_NOT_FOUND(2, HttpStatus.NOT_FOUND, "Entity {} not found."),
   FAIL_TO_CALL_API(4, HttpStatus.INTERNAL_SERVER_ERROR, "Fail to call API {}."),
   RUN_ASYNC_FAIL(6, HttpStatus.INTERNAL_SERVER_ERROR, "Run async fail."),
-  DUPLICATED_REQUEST(8, HttpStatus.CONFLICT, "Duplicated request."),
+  DUPLICATED_REQUEST(8, HttpStatus.CONFLICT, "Duplicated request. {}"),
   METHOD_ARGUMENT_NOT_VALID(9, HttpStatus.BAD_REQUEST, "Method argument not valid: {}."),
   REQUEST_BODY_NOT_VALID(10, HttpStatus.BAD_REQUEST, "Request body not valid. {}"),
   FAIL_TO_CONVERT(11, HttpStatus.INTERNAL_SERVER_ERROR, "Fail to convert {} to {}."),
-  ;
+  ACCESS_DENIED(12, HttpStatus.FORBIDDEN, "Access denied. {}"),
+  APPLICATION_ALREADY_EXISTS(13, HttpStatus.BAD_REQUEST, "Existing in-progress application."),
+  CANNOT_SIGN(14, HttpStatus.BAD_REQUEST, "Cannot sign this application, please check again.");
 
   private final int code;
   private final HttpStatus httpStatus;

@@ -1,18 +1,21 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.customer.CustomerRequest;
+import com.tsoftware.qtd.dto.PageResponse;
+import com.tsoftware.qtd.dto.customer.CustomerDTO;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
-import java.util.List;
+import com.tsoftware.qtd.entity.Customer;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface CustomerService {
-  CustomerResponse create(CustomerRequest customerRequest) throws Exception;
+  CustomerResponse create(CustomerDTO customerDTO) throws Exception;
 
-  CustomerResponse update(UUID id, CustomerRequest customerRequest);
+  CustomerResponse update(UUID id, CustomerDTO customerDTO);
 
   void delete(UUID id);
 
-  CustomerResponse getById(UUID id);
+  CustomerDTO getById(UUID id);
 
-  List<CustomerResponse> getAll();
+  PageResponse<CustomerDTO> getAll(Specification<Customer> spec, Pageable page);
 }

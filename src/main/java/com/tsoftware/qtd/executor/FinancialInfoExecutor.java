@@ -5,12 +5,9 @@ import com.tsoftware.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.commonlib.util.JsonParser;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.dto.ApproveResponse;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
 import com.tsoftware.qtd.dto.transaction.ApproveDTO;
 import com.tsoftware.qtd.dto.transaction.Transaction;
-import com.tsoftware.qtd.mapper.LoanPlanMapper;
-import com.tsoftware.qtd.repository.ApplicationRepository;
-import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service("loanPlanExecutor")
+@Service("financialInfoExecutor")
 @RequiredArgsConstructor
-public class LoanPlanExecutor extends BaseTransactionExecutor<Transaction> {
-  final LoanPlanMapper loanPlanMapper;
-  final ApplicationRepository applicationRepository;
-  final LoanPlanRepository loanPlanRepository;
+public class FinancialInfoExecutor extends BaseTransactionExecutor<Transaction> {
+  final TransactionService transactionService;
   final ApplicationService applicationService;
-  private final TransactionService transactionService;
 
   @Override
   protected void preValidate(Transaction transaction) {
@@ -40,8 +34,8 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<Transaction> {
   @Override
   protected Object doExecute(Transaction transaction) {
     log.info("All approvals received for transaction: {}", transaction.getId());
-    var request = JsonParser.convert(transaction.getMetadata(), LoanPlanDTO.class);
-    applicationService.createOrUpdateLoanPlan(transaction.getApplication().getId(), request);
+    var data = JsonParser.convert(transaction.getMetadata(), FinancialInfoDTO.class);
+    applicationService.createOrUpdateFinancialInfo(transaction.getApplication().getId(), data);
     ApproveResponse response = new ApproveResponse();
     response.setData(
         ApproveDTO.builder()
