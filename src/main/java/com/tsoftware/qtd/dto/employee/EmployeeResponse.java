@@ -1,8 +1,8 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -30,11 +30,10 @@ public class EmployeeResponse {
   String firstName;
   String lastName;
   List<Role> roles;
-  ZonedDateTime dayOfBirth;
   String phone;
   AddressDto address;
+  IdentityInfoDTO identityInfo;
   String code;
-  Gender gender;
   Boolean enabled;
   Boolean isDeleted;
 }

@@ -7,10 +7,13 @@ import com.tsoftware.qtd.dto.customer.CustomerDTO;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
+import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
+import com.tsoftware.qtd.kcTransactionManager.KcTransactional.KcTransactionType;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.CustomerService;
 import com.tsoftware.qtd.service.impl.DocumentService;
 import com.turkraft.springfilter.boot.Filter;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +39,7 @@ public class CustomerController {
 
   @WorkflowAPI
   @PostMapping
+  @KcTransactional(KcTransactionType.CREATE_USER)
   public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest customerRequest)
       throws Exception {
     return ResponseEntity.ok(customerService.create(customerRequest.getPayload()));
@@ -53,6 +57,12 @@ public class CustomerController {
   @DeleteMapping("/{id}")
   public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
     customerService.delete(id);
+    return ResponseEntity.ok(new ApiResponse<>(200, "Deleted", null));
+  }
+
+  @DeleteMapping
+  public ResponseEntity<ApiResponse<Void>> deletes(@RequestBody List<UUID> ids) {
+    customerService.deletes(ids);
     return ResponseEntity.ok(new ApiResponse<>(200, "Deleted", null));
   }
 

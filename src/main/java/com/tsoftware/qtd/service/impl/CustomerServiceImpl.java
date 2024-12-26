@@ -16,7 +16,9 @@ import com.tsoftware.qtd.mapper.CustomerMapper;
 import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.service.CustomerService;
+import com.tsoftware.qtd.service.KeycloakService;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
   private final PageResponseMapper pageResponseMapper;
   private final DocumentService documentService;
   private final WorkflowServiceImpl workflowService;
+  private final KeycloakService keycloakService;
 
   @Override
   public CustomerResponse create(CustomerDTO customerDTO) throws Exception {
@@ -53,9 +56,12 @@ public class CustomerServiceImpl implements CustomerService {
         throw new WorkflowException(HttpStatus.CONFLICT.value(), "Customer already exists.");
       }
     }
+    var userId = keycloakService.createUser(customerDTO);
 
     Customer customer = customerMapper.toEntity(customerDTO);
     customer.setIsDeleted(false);
+    customer.setEnabled(true);
+    customer.setUserId(userId);
     Set<String> urls = getDocumentUrls(customerDTO);
     var entity = customerRepository.save(customer);
     documentService.signCustomerDocument(entity, urls);
@@ -145,5 +151,15 @@ public class CustomerServiceImpl implements CustomerService {
     } catch (Exception e) {
       throw new CommonException(ErrorType.METHOD_ARGUMENT_NOT_VALID, e.getMessage());
     }
+  }
+
+  @Override
+  public void deletes(List<UUID> ids) {
+    ids.forEach(this::delete);
+  }
+
+  @Override
+  public List<CustomerDTO> getAll() {
+    return customerRepository.findAll().stream().map(customerMapper::toDTO).toList();
   }
 }

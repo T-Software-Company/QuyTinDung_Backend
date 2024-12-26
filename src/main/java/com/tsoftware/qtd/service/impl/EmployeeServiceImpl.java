@@ -99,7 +99,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     employee.setLastName(request.getLastName());
     employee.setEmail(request.getEmail());
     employee.setPhone(request.getPhone());
-    employee.setDayOfBirth(request.getSetDayOfBirth());
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 

@@ -1,12 +1,11 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.validation.IsEnum;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +24,7 @@ public class EmployeeUpdateRequest {
   @NotBlank @Email String email;
 
   @Valid AddressDto address;
+  @Valid IdentityInfoDTO identityInfo;
 
   @NotBlank String firstName;
 
@@ -34,12 +34,6 @@ public class EmployeeUpdateRequest {
   List<String> roles;
 
   List<@Valid GroupDto> groups;
-
-  @NotNull @Past ZonedDateTime dayOfBirth;
-
-  @IsEnum(enumClass = Gender.class)
-  @NotNull
-  String gender;
 
   @NotNull @NotBlank String code;
 

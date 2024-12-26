@@ -2,6 +2,7 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Role;
+import com.tsoftware.qtd.dto.customer.CustomerDTO;
 import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.exception.*;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactionContext;
@@ -50,6 +51,27 @@ public class KeycloakServiceIml implements KeycloakService {
               group -> {
                 realmResource.users().get(finalUserId).joinGroup(group.getId());
               });
+      return userId;
+    } catch (Exception e) {
+      if (userId != null) {
+        deleteUser(userId);
+      }
+      throw e;
+    }
+  }
+
+  @Override
+  @KcTransactionContext(KcTransactional.KcTransactionType.CREATE_USER)
+  public String createUser(CustomerDTO customerDTO) {
+
+    var user = getUserRepresentation(customerDTO);
+    var res = realmResource.users().create(user);
+    if (res.getStatus() != 201) {
+      throw new KeycloakException(res.getStatus(), extractErrorMessage(res));
+    }
+    String userId = null;
+    try {
+      userId = res.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
       return userId;
     } catch (Exception e) {
       if (userId != null) {
@@ -382,6 +404,22 @@ public class KeycloakServiceIml implements KeycloakService {
     credential.setType(CredentialRepresentation.PASSWORD);
     credential.setTemporary(true);
     credential.setValue(employeeRequest.getPassword());
+    user.setCredentials(List.of(credential));
+    return user;
+  }
+
+  private static UserRepresentation getUserRepresentation(CustomerDTO customerDTO) {
+    var user = new UserRepresentation();
+    user.setUsername(customerDTO.getUsername());
+    user.setEmail(customerDTO.getEmail());
+    user.setFirstName(customerDTO.getFirstName());
+    user.setLastName(customerDTO.getLastName());
+    user.setEnabled(true);
+    user.setEmailVerified(false);
+    var credential = new CredentialRepresentation();
+    credential.setType(CredentialRepresentation.PASSWORD);
+    credential.setTemporary(true);
+    credential.setValue(customerDTO.getPassword());
     user.setCredentials(List.of(credential));
     return user;
   }

@@ -3,6 +3,7 @@ package com.tsoftware.qtd.dto.customer;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.LegalDocType;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
+import com.tsoftware.qtd.validation.IsEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -11,7 +12,6 @@ import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Builder
 @Getter
@@ -20,47 +20,39 @@ public class IdentityInfoDTO {
   // CMND CCCD
   @NotBlank String identifyId;
 
-  @NotBlank(message = "FULL_NAME_REQUIRED")
-  @Size(min = 3, max = 100, message = "FULL_NAME_SIZE")
+  @NotBlank
+  @Size(min = 3, max = 100)
   String fullName;
 
-  @NotBlank(message = "ETHNICITY_REQUIRED")
-  String ethnicity;
+  @NotBlank String ethnicity;
 
-  @NotBlank(message = "RELIGION_REQUIRED")
-  String religion;
+  @NotBlank String religion;
 
-  @NotNull(message = "GENDER_REQUIRED")
-  Gender gender;
+  @NotNull
+  @IsEnum(enumClass = Gender.class)
+  String gender;
 
-  @NotNull(message = "DATE_OF_BIRTH_REQUIRED")
-  @Past(message = "DATE_OF_BIRTH_MUST_BE_IN_PAST")
-  ZonedDateTime dateOfBirth;
+  @NotNull @Past ZonedDateTime dateOfBirth;
 
-  @NotBlank(message = "NATIONALITY_REQUIRED")
-  String nationality;
+  @NotBlank String nationality;
 
-  @NotBlank(message = "PLACE_OF_BIRTH_REQUIRED")
-  String placeOfBirth;
+  @NotBlank String placeOfBirth;
 
-  @NotBlank(message = "PERMANENT_ADDRESS_REQUIRED")
-  String permanentAddress;
+  @NotBlank String permanentAddress;
 
-  @NotNull(message = "ISSUE_DATE_REQUIRED")
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  ZonedDateTime issueDate;
+  @NotNull ZonedDateTime issueDate;
 
-  @NotNull(message = "EXPIRATION_DATE_REQUIRED")
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  ZonedDateTime expirationDate;
+  @NotNull ZonedDateTime expirationDate;
 
-  @NotBlank(message = "ISSUING_AUTHORITY_REQUIRED")
-  String issuingAuthority;
+  @NotBlank String issuingAuthority;
 
   @NotNull String frontPhotoUrl;
+
   @NotNull String backPhotoUrl;
 
-  @NotNull LegalDocType legalDocType;
+  @NotNull
+  @IsEnum(enumClass = LegalDocType.class)
+  String legalDocType;
 
   // Passport
   PassPortType passPortType;

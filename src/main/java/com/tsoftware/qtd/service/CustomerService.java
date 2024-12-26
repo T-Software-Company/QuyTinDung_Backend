@@ -4,6 +4,7 @@ import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.customer.CustomerDTO;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,4 +19,8 @@ public interface CustomerService {
   CustomerDTO getById(UUID id);
 
   PageResponse<CustomerDTO> getAll(Specification<Customer> spec, Pageable page);
+
+  void deletes(List<UUID> ids);
+
+  List<CustomerDTO> getAll();
 }

@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.Gender;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,21 +23,38 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Customer extends AbstractAuditEntity {
 
-  private String fullName;
+  @Column(unique = true, nullable = false)
+  private String userId;
+
+  @Column(unique = true, nullable = false)
+  private String username;
 
   @Column(unique = true)
+  private String code;
+
+  @Column(unique = true, nullable = false)
   private String email;
 
-  @Column(unique = true)
+  @Column(nullable = false)
+  private String firstName;
+
+  @Column(nullable = false)
+  private String lastName;
+
+  @Column(nullable = false)
   private String phone;
 
-  private String note;
+  @Column(nullable = false)
+  private Boolean enabled;
+
   private String signaturePhoto;
-  private Gender gender;
-  private String status;
+  private String note;
 
   @OneToOne(cascade = CascadeType.ALL)
   private Address address;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  private IdentityInfo identityInfo;
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<LoanPlan> loanPlans;
@@ -57,9 +73,6 @@ public class Customer extends AbstractAuditEntity {
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<RelationCustomer> relationCustomers;
-
-  @OneToOne(cascade = CascadeType.ALL)
-  private IdentityInfo identityInfo;
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<IncomeProof> incomeProofs;

@@ -39,7 +39,7 @@ public class Application extends AbstractAuditEntity {
   private BigDecimal amount;
 
   @Enumerated(EnumType.STRING)
-  private ApplicationStep step;
+  private ApplicationStep step; // ?
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   List<TransactionEntity> transactions;

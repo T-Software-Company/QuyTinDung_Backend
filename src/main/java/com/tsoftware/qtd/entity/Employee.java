@@ -1,8 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.Gender;
 import jakarta.persistence.*;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,20 +36,18 @@ public class Employee extends AbstractAuditEntity {
   private String lastName;
 
   @Column(nullable = false)
-  private ZonedDateTime dayOfBirth;
-
-  @Column(nullable = false)
   private String phone;
-
-  @Enumerated(EnumType.ORDINAL)
-  @Column(nullable = false)
-  private Gender gender;
 
   @Column(nullable = false)
   private Boolean enabled;
 
+  private String note;
+
   @OneToOne(cascade = CascadeType.ALL)
   private Address address;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  private IdentityInfo identityInfo;
 
   @ManyToMany private List<AppraisalPlan> appraisalPlans;
 

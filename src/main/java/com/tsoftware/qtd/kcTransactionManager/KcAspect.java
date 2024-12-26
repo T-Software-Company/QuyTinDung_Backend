@@ -3,10 +3,7 @@ package com.tsoftware.qtd.kcTransactionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -124,5 +121,11 @@ public class KcAspect {
     if (kcTransactional.value() == KcTransactional.KcTransactionType.REMOVE_ROLE_ON_USER) {
       kcUserTransactionManager.handleRemoveRoleRollback();
     }
+  }
+
+  @After(value = "@annotation(kcTransactional)")
+  public void postProcess(KcTransactional kcTransactional) {
+    KcGroupTransactionManager.clear();
+    KcUserTransactionManager.clear();
   }
 }
