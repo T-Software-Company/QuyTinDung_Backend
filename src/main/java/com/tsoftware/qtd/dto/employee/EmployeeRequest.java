@@ -1,14 +1,13 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.validation.IsEnum;
 import com.tsoftware.qtd.validation.Unique;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,27 +34,18 @@ public class EmployeeRequest {
 
   @NotBlank @Email String email;
 
-  @Valid AddressDto address;
+  @NotBlank
+  @Size(max = 15)
+  @Pattern(regexp = "^[0-9\\-\\+]{9,15}$")
+  String phone;
 
   @NotBlank String firstName;
-
   @NotBlank String lastName;
+  @Valid AddressDto address;
+  @Valid IdentityInfoDTO identityInfo;
 
   @IsEnum(enumClass = Role.class)
   List<String> roles;
 
   List<@Valid GroupDto> groups;
-
-  @NotNull @Past ZonedDateTime dayOfBirth;
-
-  @IsEnum(enumClass = Gender.class)
-  @NotNull
-  String gender;
-
-  @NotNull @NotBlank String code;
-
-  @NotBlank
-  @Size(max = 15)
-  @Pattern(regexp = "^[0-9\\-\\+]{9,15}$")
-  String phone;
 }
