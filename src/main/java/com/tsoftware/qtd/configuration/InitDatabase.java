@@ -49,7 +49,7 @@ public class InitDatabase implements CommandLineRunner {
     createAdmin();
     createEmployees();
     createGroups();
-    createCustomers();
+    // createCustomers();
   }
 
   private void createGroups() {
