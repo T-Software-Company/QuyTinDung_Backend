@@ -41,7 +41,4 @@ public class IdentityInfo extends AbstractAuditEntity {
   // Passport
   @Enumerated(EnumType.ORDINAL)
   PassPortType passPortType;
-
-  @OneToOne(mappedBy = "identityInfo", fetch = FetchType.LAZY)
-  private Customer customer;
 }

@@ -9,7 +9,6 @@ import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional.KcTransactionType;
-import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.CustomerService;
 import com.tsoftware.qtd.service.impl.DocumentService;
 import com.turkraft.springfilter.boot.Filter;
@@ -34,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController {
 
   private final CustomerService customerService;
-  private final ApplicationService applicationService;
   private final DocumentService documentService;
 
   @WorkflowAPI

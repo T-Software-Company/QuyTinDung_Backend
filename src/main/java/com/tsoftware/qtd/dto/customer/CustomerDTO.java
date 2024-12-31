@@ -2,7 +2,7 @@ package com.tsoftware.qtd.dto.customer;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tsoftware.qtd.dto.address.AddressDto;
-import com.tsoftware.qtd.repository.EmployeeRepository;
+import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.validation.Unique;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -24,7 +24,7 @@ public class CustomerDTO {
 
   @NotBlank
   @Size(min = 4)
-  @Unique(repositoryClass = EmployeeRepository.class, checkMethod = "existsByUsername")
+  @Unique(repositoryClass = CustomerRepository.class, checkMethod = "existsByUsername")
   String username;
 
   @NotBlank

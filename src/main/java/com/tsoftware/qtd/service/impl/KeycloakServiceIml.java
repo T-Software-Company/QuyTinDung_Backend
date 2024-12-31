@@ -255,17 +255,26 @@ public class KeycloakServiceIml implements KeycloakService {
   @Override
   @KcTransactionContext(KcTransactional.KcTransactionType.ADD_USER_TO_GROUP)
   public void addUserToGroup(String kcGroupId, String userId) {
-    var groupResource = realmResource.groups().group(kcGroupId);
-    var userRepresentation = realmResource.users().get(userId).toRepresentation();
-    groupResource.members().add(userRepresentation);
+    realmResource.users().get(userId).joinGroup(kcGroupId);
+  }
+
+  @Override
+  public void addUserToGroup(String kcGroupId, List<String> ids) {
+    ids.forEach(
+        id -> {
+          realmResource.users().get(id).joinGroup(kcGroupId);
+        });
+  }
+
+  @Override
+  public void removeUserOnGroup(String kcGroupId, List<String> ids) {
+    ids.forEach(id -> realmResource.users().get(id).leaveGroup(kcGroupId));
   }
 
   @Override
   @KcTransactionContext(KcTransactional.KcTransactionType.REMOVE_USER_ON_GROUP)
   public void removeUserOnGroup(String kcGroupId, String userId) {
-    var groupResource = realmResource.groups().group(kcGroupId);
-    var userRepresentation = realmResource.users().get(userId).toRepresentation();
-    groupResource.members().remove(userRepresentation);
+    realmResource.users().get(userId).leaveGroup(kcGroupId);
   }
 
   @Override

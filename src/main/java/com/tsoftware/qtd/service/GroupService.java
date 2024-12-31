@@ -22,7 +22,11 @@ public interface GroupService {
 
   void join(UUID groupId, UUID employeeId);
 
+  void join(UUID groupId, List<UUID> ids);
+
   void leave(UUID groupId, UUID employeeId);
+
+  void leave(UUID groupId, List<UUID> ids);
 
   void addRoles(UUID id, List<String> roles);
 
