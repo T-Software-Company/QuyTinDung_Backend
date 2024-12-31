@@ -31,7 +31,6 @@ public class LoanRequestServiceImpl implements LoanRequestService {
         applicationRepository
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
-    loanrequest.setCustomer(application.getCustomer());
     loanrequest.setApplication(application);
     application.setAmount(loanrequest.getAmount());
     application.setLoanSecurityType(loanrequest.getLoanSecurityType());

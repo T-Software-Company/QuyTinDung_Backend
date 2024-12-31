@@ -16,12 +16,6 @@ public class Approve extends AbstractAuditEntity {
 
   @ManyToOne private Employee approver;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private AppraisalReport appraisalReport;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private ValuationReport valuationReport;
-
   @Enumerated(EnumType.ORDINAL)
   private ApproveStatus status;
 

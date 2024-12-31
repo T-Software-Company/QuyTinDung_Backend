@@ -30,7 +30,10 @@ public class LoanAccount extends AbstractAuditEntity {
   private BigDecimal disbursedAmount;
   private BigDecimal interestRate;
   private Integer termInMonths;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime approvalDate;
+
   private LoanStatus status;
 
   @OneToMany(mappedBy = "loanAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.dto.appraisalPlan;
 
-import com.tsoftware.qtd.entity.*;
 import java.time.ZonedDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

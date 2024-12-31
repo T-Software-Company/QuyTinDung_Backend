@@ -23,10 +23,10 @@ public class Machinery extends AbstractAuditEntity {
   private String model;
   private String manufacturer;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime manufactureDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime purchaseDate;
 
   private String purchasePrice;
@@ -38,7 +38,4 @@ public class Machinery extends AbstractAuditEntity {
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private Asset asset;
 }

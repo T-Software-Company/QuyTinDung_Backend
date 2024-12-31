@@ -24,12 +24,20 @@ public class IdentityInfo extends AbstractAuditEntity {
   String ethnicity;
   String religion;
   Gender gender;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   ZonedDateTime dateOfBirth;
+
   String nationality;
   String placeOfBirth;
   String permanentAddress;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   ZonedDateTime issueDate;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   ZonedDateTime expirationDate;
+
   String issuingAuthority;
 
   @Enumerated(EnumType.ORDINAL)

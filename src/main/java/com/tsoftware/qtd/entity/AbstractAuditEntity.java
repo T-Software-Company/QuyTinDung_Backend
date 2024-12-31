@@ -34,8 +34,14 @@ public class AbstractAuditEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   protected UUID id;
 
-  @CreatedDate protected ZonedDateTime createdAt;
-  @LastModifiedDate protected ZonedDateTime updatedAt;
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+  @CreatedDate
+  protected ZonedDateTime createdAt;
+
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+  @LastModifiedDate
+  protected ZonedDateTime updatedAt;
+
   @LastModifiedBy protected String lastModifiedBy;
   @CreatedBy protected String createdBy;
 

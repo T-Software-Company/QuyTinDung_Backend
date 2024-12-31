@@ -25,8 +25,13 @@ import org.hibernate.annotations.Type;
 public class LoanRequest extends AbstractAuditEntity {
 
   private String purpose;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime startDate;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime endDate;
+
   private BigDecimal amount;
   private String note;
 
@@ -42,9 +47,6 @@ public class LoanRequest extends AbstractAuditEntity {
 
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Customer customer;
 
   @Enumerated(EnumType.ORDINAL)
   private AssetType loanCollateralType;

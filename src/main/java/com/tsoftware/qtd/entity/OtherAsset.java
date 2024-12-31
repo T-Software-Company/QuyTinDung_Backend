@@ -22,7 +22,4 @@ public class OtherAsset extends AbstractAuditEntity {
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private Asset asset;
 }

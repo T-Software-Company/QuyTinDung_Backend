@@ -28,15 +28,15 @@ public class Vehicle extends AbstractAuditEntity {
   private String loadCapacity;
   private Integer seatCapacity;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime registrationExpiryDate;
 
   private String licensePlateNumber;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime firstRegistrationDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime issueDate;
 
   private String registrationCertificateNumber;
@@ -47,7 +47,4 @@ public class Vehicle extends AbstractAuditEntity {
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private Asset asset;
 }

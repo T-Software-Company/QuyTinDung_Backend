@@ -23,7 +23,10 @@ public class LandAsset extends AbstractAuditEntity {
   private String address;
   private BigDecimal area;
   private String purpose;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime expirationDate;
+
   private String originOfUsage;
 
   @Type(JsonType.class)
@@ -32,9 +35,6 @@ public class LandAsset extends AbstractAuditEntity {
 
   @Enumerated(EnumType.ORDINAL)
   private TypeOfUse typeOfUse;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private Asset asset;
 
   @OneToOne(fetch = FetchType.EAGER)
   private OwnerInfo ownerInfo;

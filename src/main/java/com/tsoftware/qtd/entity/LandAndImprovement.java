@@ -26,7 +26,10 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private String address;
   private BigDecimal area;
   private String purpose;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime expirationDate;
+
   private String originOfUsage;
   private String typeOfHousing;
   private BigDecimal floorArea;
@@ -35,7 +38,10 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private Integer numberOfFloors;
   private Integer constructionYear;
   private String typeOfOwnership;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime ownershipTerm;
+
   private String notes;
   private String sharedFacilities;
   private String certificateNumber;
@@ -49,9 +55,6 @@ public class LandAndImprovement extends AbstractAuditEntity {
 
   @Enumerated(EnumType.ORDINAL)
   private TypeOfUse typeOfUse;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private Asset asset;
 
   @OneToOne(fetch = FetchType.EAGER)
   private OwnerInfo ownerInfo;

@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.asset;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;

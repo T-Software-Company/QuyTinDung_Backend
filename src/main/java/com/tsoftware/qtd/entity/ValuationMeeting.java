@@ -8,8 +8,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +33,10 @@ public class ValuationMeeting extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime startDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime endDate;
 
   @OneToMany(mappedBy = "valuationMeeting")

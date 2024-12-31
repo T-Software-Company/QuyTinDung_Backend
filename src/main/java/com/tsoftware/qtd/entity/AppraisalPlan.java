@@ -5,12 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +27,10 @@ import org.hibernate.annotations.Type;
 public class AppraisalPlan extends AbstractAuditEntity {
   private String address;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime startDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime endDate;
 
   @Type(JsonType.class)
@@ -44,21 +40,9 @@ public class AppraisalPlan extends AbstractAuditEntity {
   @ManyToMany(mappedBy = "appraisalPlans", fetch = FetchType.LAZY)
   private List<Employee> participants;
 
-  @OneToMany(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
-  private List<IncomeProof> incomeProof;
-
   @OneToOne(fetch = FetchType.LAZY)
   private AppraisalReport appraisalReport;
 
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Customer customer;
-
-  @OneToMany(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
-  private List<LoanPurposeDocument> loanPurposeDocuments;
-
-  @OneToOne(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
-  private ValuationReport valuationReport;
 }

@@ -37,7 +37,6 @@ public class AssetServiceImpl implements AssetService {
             .findById(creditId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     asset.setApplication(credit);
-    asset.setCustomer(credit.getCustomer());
     var assetSaved = assetRepository.save(asset);
     legalDocuments.forEach(
         l -> {

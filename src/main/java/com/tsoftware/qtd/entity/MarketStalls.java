@@ -26,10 +26,10 @@ public class MarketStalls extends AbstractAuditEntity {
   private String areaSize;
   private String rentPrice;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime rentStartDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime rentEndDate;
 
   private String location;
@@ -40,7 +40,4 @@ public class MarketStalls extends AbstractAuditEntity {
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private Asset asset;
 }
