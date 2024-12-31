@@ -48,9 +48,6 @@ public class LoanRequest extends AbstractAuditEntity {
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Customer customer;
-
   @Enumerated(EnumType.ORDINAL)
   private AssetType loanCollateralType;
 }

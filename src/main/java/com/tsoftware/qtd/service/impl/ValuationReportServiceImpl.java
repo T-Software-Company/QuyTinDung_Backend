@@ -76,10 +76,7 @@ public class ValuationReportServiceImpl implements ValuationReportService {
   @Override
   @Transactional
   public List<ApproveResponse> addApprove(UUID id, List<UUID> approverIds) {
-    var valuationReport =
-        valuationreportRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException("ValuationReport not found"));
+
     List<ApproveResponse> approveResponses = new ArrayList<>();
     approverIds.forEach(
         i ->
@@ -89,7 +86,6 @@ public class ValuationReportServiceImpl implements ValuationReportService {
                         Approve.builder()
                             .approver(Employee.builder().id(i).build())
                             .status(ApproveStatus.WAIT)
-                            .valuationReport(valuationReport)
                             .build()))));
     return approveResponses;
   }

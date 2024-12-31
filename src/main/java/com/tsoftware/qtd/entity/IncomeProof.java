@@ -24,14 +24,8 @@ public class IncomeProof extends AbstractAuditEntity {
   private Map<String, Object> metadata;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Customer customer;
+  private Application application;
 
   @Enumerated(EnumType.ORDINAL)
   private IncomeProofType incomeProofType;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private AppraisalPlan appraisalPlan;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private AppraisalReport appraisalReport;
 }

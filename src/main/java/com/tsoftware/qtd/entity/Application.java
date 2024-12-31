@@ -87,6 +87,9 @@ public class Application extends AbstractAuditEntity {
   private AppraisalPlan appraisalPlan;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
+  private List<IncomeProof> incomeProofs;
+
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<DebtNotification> debtNotification;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)

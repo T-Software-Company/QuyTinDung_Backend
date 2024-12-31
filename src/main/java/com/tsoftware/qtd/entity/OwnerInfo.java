@@ -2,8 +2,6 @@ package com.tsoftware.qtd.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import lombok.*;
@@ -24,13 +22,4 @@ public class OwnerInfo extends AbstractAuditEntity {
   private ZonedDateTime dayOfBirth;
 
   private String permanentAddress;
-
-  @OneToOne(mappedBy = "ownerInfo", fetch = FetchType.LAZY)
-  private LandAsset landAsset;
-
-  @OneToOne(mappedBy = "ownerInfo", fetch = FetchType.LAZY)
-  private LandAndImprovement landAndImprovement;
-
-  @OneToOne(mappedBy = "ownerInfo", fetch = FetchType.LAZY)
-  private Apartment apartment;
 }

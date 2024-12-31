@@ -56,9 +56,6 @@ public class LandAndImprovement extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private TypeOfUse typeOfUse;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  private Asset asset;
-
   @OneToOne(fetch = FetchType.EAGER)
   private OwnerInfo ownerInfo;
 

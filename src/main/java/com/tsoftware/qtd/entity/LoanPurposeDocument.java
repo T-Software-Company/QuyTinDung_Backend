@@ -29,7 +29,4 @@ public class LoanPurposeDocument extends AbstractAuditEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Application application;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private AppraisalPlan appraisalPlan;
 }

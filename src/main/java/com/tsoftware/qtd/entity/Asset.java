@@ -36,35 +36,29 @@ public class Asset extends AbstractAuditEntity {
 
   @ManyToOne private Application application;
 
-  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private Apartment apartment;
 
-  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private LandAndImprovement landAndImprovement;
 
-  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private Vehicle vehicle;
 
-  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private MarketStalls marketStalls;
 
-  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private Machinery machinery;
 
-  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private OtherAsset otherAsset;
 
-  @OneToOne(mappedBy = "asset", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private LandAsset landAsset;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private AppraisalPlan appraisalPlan;
-
-  @ManyToOne(fetch = FetchType.LAZY)
   private AssetRepossessionNotice assetRepossessionNotice;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Customer customer;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private ValuationMeeting valuationMeeting;

@@ -5,8 +5,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
@@ -42,21 +40,9 @@ public class AppraisalPlan extends AbstractAuditEntity {
   @ManyToMany(mappedBy = "appraisalPlans", fetch = FetchType.LAZY)
   private List<Employee> participants;
 
-  @OneToMany(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
-  private List<IncomeProof> incomeProof;
-
   @OneToOne(fetch = FetchType.LAZY)
   private AppraisalReport appraisalReport;
 
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Customer customer;
-
-  @OneToMany(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
-  private List<LoanPurposeDocument> loanPurposeDocuments;
-
-  @OneToOne(mappedBy = "appraisalPlan", fetch = FetchType.LAZY)
-  private ValuationReport valuationReport;
 }

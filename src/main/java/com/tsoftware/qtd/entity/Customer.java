@@ -57,32 +57,5 @@ public class Customer extends AbstractAuditEntity {
   private IdentityInfo identityInfo;
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<LoanPlan> loanPlans;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<Application> applications;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<LoanRequest> loanRequests;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<DebtNotification> debtNotifications;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<AssetRepossessionNotice> assetRepossessionNotices;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<RelationCustomer> relationCustomers;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<IncomeProof> incomeProofs;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<AppraisalReport> appraisalReports;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<AppraisalPlan> appraisalPlans;
-
-  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-  private List<Asset> assets;
 }
