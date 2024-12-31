@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
@@ -18,8 +19,10 @@ import lombok.experimental.SuperBuilder;
 public class OwnerInfo extends AbstractAuditEntity {
 
   private String fullName;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime dayOfBirth;
-  private String idCardNumber;
+
   private String permanentAddress;
 
   @OneToOne(mappedBy = "ownerInfo", fetch = FetchType.LAZY)

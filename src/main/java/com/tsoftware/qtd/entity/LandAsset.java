@@ -23,7 +23,10 @@ public class LandAsset extends AbstractAuditEntity {
   private String address;
   private BigDecimal area;
   private String purpose;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime expirationDate;
+
   private String originOfUsage;
 
   @Type(JsonType.class)

@@ -19,6 +19,8 @@ import org.hibernate.annotations.Type;
 public class AssetRepossessionNotice extends AbstractAuditEntity {
 
   private String message;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime repossessionDate;
 
   @Type(JsonType.class)

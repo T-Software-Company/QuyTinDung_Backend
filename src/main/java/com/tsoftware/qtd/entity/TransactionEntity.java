@@ -38,7 +38,9 @@ public class TransactionEntity extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private TransactionType type;
 
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime approvedAt;
+
   private Integer requiredApprovals;
   private String PIC;
 

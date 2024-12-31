@@ -25,10 +25,10 @@ public class LoanCollection extends AbstractAuditEntity {
   private BigDecimal amountPaid;
   private BigDecimal remainingAmount;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime dueDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime paymentDate;
 
   private String paymentMethod;
