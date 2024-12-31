@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -38,6 +39,9 @@ public class Application extends AbstractAuditEntity {
 
   @Enumerated(EnumType.STRING)
   private ApplicationStep step; // ?
+
+  @ManyToMany(mappedBy = "application", fetch = FetchType.LAZY)
+  private List<Employee> LoanProcessor;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   List<TransactionEntity> transactions;

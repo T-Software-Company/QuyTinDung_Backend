@@ -61,4 +61,7 @@ public class Employee extends AbstractAuditEntity {
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Role> roles;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  private List<Application> applicationsAssigned;
 }
