@@ -1,5 +1,8 @@
 package com.tsoftware.qtd.constants.EnumType;
 
+import lombok.Getter;
+
+@Getter
 public enum NotificationStatus {
   PENDING("Thông báo nợ đang chờ xử lý, chưa thanh toán"),
   PAID("Thông báo nợ đã được thanh toán đầy đủ"),

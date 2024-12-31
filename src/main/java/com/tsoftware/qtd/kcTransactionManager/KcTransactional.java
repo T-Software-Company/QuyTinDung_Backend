@@ -21,6 +21,8 @@ public @interface KcTransactional {
     ADD_ROLE_TO_GROUP,
     REMOVE_ROLE_ON_GROUP,
     ADD_USER_TO_GROUP,
-    REMOVE_USER_ON_GROUP
+    ADD_USERS_TO_GROUP,
+    REMOVE_USER_ON_GROUP,
+    REMOVE_USERS_ON_GROUP
   }
 }

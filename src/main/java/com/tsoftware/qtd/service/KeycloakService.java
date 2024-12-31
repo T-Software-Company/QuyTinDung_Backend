@@ -79,4 +79,8 @@ public interface KeycloakService {
 
   void resetRoles(
       UserRepresentation userRepresentation, List<RoleRepresentation> roleRepresentations);
+
+  void addUserToGroup(String kcGroupId, List<String> ids);
+
+  void removeUserOnGroup(String kcGroupId, List<String> ids);
 }

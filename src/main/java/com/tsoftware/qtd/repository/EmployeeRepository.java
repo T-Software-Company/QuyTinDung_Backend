@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.repository;
 
 import com.tsoftware.qtd.entity.Employee;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -18,4 +19,6 @@ public interface EmployeeRepository
   boolean existsByUsername(String username);
 
   Set<Employee> findByUserIdIn(Set<String> assignees);
+
+  List<Employee> findByIdIn(List<UUID> ids);
 }

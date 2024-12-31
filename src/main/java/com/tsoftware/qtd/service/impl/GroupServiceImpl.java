@@ -2,6 +2,7 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.GroupResponse;
+import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.Group;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.exception.SpringFilterBadRequestException;
@@ -11,6 +12,7 @@ import com.tsoftware.qtd.repository.GroupRepository;
 import com.tsoftware.qtd.repository.RoleRepository;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional()
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
 
@@ -91,8 +93,25 @@ public class GroupServiceImpl implements GroupService {
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     var employees = group.getEmployees();
     employees.add(employee);
+    group.setEmployees(new ArrayList<>(new HashSet<>(employees)));
     keycloakService.addUserToGroup(group.getKcGroupId(), employee.getUserId());
     groupRepository.save(group);
+  }
+
+  @Override
+  public void join(UUID groupId, List<UUID> ids) {
+    var group =
+        groupRepository
+            .findById(groupId)
+            .orElseThrow(() -> new NotFoundException("Group not found"));
+    var employees = employeeRepository.findByIdIn(ids);
+
+    var employeesOnGroup = group.getEmployees();
+    employeesOnGroup.addAll(employees);
+    group.setEmployees(new ArrayList<>(employeesOnGroup.stream().distinct().toList()));
+    groupRepository.save(group);
+    keycloakService.addUserToGroup(
+        group.getKcGroupId(), employeesOnGroup.stream().map(Employee::getUserId).toList());
   }
 
   @Override
@@ -107,8 +126,25 @@ public class GroupServiceImpl implements GroupService {
             .findById(employeeId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     employees.remove(employee);
+    group.setEmployees(new ArrayList<>(new HashSet<>(employees)));
     keycloakService.removeUserOnGroup(group.getKcGroupId(), employee.getUserId());
     groupRepository.save(group);
+  }
+
+  @Override
+  public void leave(UUID groupId, List<UUID> ids) {
+    var group =
+        groupRepository
+            .findById(groupId)
+            .orElseThrow(() -> new NotFoundException("Group not found"));
+    var employees = employeeRepository.findByIdIn(ids);
+
+    var employeesOnGroup = group.getEmployees();
+    employeesOnGroup.removeAll(employees);
+    group.setEmployees(new ArrayList<>(new HashSet<>(employeesOnGroup)));
+    groupRepository.save(group);
+    keycloakService.removeUserOnGroup(
+        group.getKcGroupId(), employeesOnGroup.stream().map(Employee::getUserId).toList());
   }
 
   @Override

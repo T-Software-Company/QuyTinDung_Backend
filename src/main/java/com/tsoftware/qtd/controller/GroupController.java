@@ -102,11 +102,26 @@ public class GroupController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/add-employees")
+  public ResponseEntity<ApiResponse<Void>> joinGroup(
+      @PathVariable @Valid @IsUUID String id, @RequestBody @Valid List<@IsUUID String> ids) {
+    groupService.join(UUID.fromString(id), ids.stream().map(UUID::fromString).toList());
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/remove-employee")
-  @KcTransactional(KcTransactional.KcTransactionType.REMOVE_USER_ON_GROUP)
   public ResponseEntity<ApiResponse<Void>> LeaveGroup(
       @PathVariable @Valid @IsUUID String id, @RequestParam @Valid @IsUUID String employeeId) {
     groupService.leave(UUID.fromString(id), UUID.fromString(employeeId));
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/{id}/remove-employees")
+  public ResponseEntity<ApiResponse<Void>> LeaveGroup(
+      @PathVariable @Valid @IsUUID String id, @RequestBody @Valid List<@IsUUID String> ids) {
+    groupService.leave(UUID.fromString(id), ids.stream().map(UUID::fromString).toList());
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Removed", null));
   }
 
