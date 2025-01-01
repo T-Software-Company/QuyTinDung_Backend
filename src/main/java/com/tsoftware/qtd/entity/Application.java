@@ -40,7 +40,7 @@ public class Application extends AbstractAuditEntity {
   @Enumerated(EnumType.STRING)
   private ApplicationStep step; // ?
 
-  @ManyToMany(mappedBy = "application", fetch = FetchType.LAZY)
+  @ManyToMany(mappedBy = "applicationsAssigned", fetch = FetchType.LAZY)
   private List<Employee> LoanProcessor;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
