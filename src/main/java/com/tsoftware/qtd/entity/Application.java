@@ -37,7 +37,7 @@ public class Application extends AbstractAuditEntity {
 
   private BigDecimal amount;
 
-  @Enumerated(EnumType.STRING)
+  @Enumerated(EnumType.ORDINAL)
   private ApplicationStep step; // ?
 
   @ManyToMany(mappedBy = "applicationsAssigned", fetch = FetchType.LAZY)

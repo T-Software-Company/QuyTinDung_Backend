@@ -7,7 +7,6 @@ import com.tsoftware.qtd.validation.IsEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Set;
 import lombok.Builder;
@@ -19,15 +18,14 @@ import lombok.Setter;
 @Setter
 public class LoanRequestDTO {
   @NotNull @NotBlank private String purpose;
-  @NotNull @NotBlank private ZonedDateTime startDate;
-
-  @NotNull @NotBlank private ZonedDateTime endDate;
 
   @NotNull @NotBlank private BigDecimal amount;
 
   @NotNull
   @IsEnum(enumClass = BorrowerType.class)
   private String borrowerType;
+
+  private String asset;
 
   @NotNull
   @IsEnum(enumClass = LoanSecurityType.class)
