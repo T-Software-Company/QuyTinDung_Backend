@@ -39,6 +39,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -206,10 +209,8 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public List<ApplicationResponse> getAll() {
-    return applicationRepository.findAll().stream()
-        .map(applicationMapper::toResponse)
-        .collect(Collectors.toList());
+  public Page<ApplicationResponse> getAll(Specification<Application> spec, Pageable page) {
+    return applicationRepository.findAll(spec, page).map(applicationMapper::toResponse);
   }
 
   @Override

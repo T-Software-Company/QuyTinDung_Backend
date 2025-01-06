@@ -13,14 +13,19 @@ import com.tsoftware.qtd.dto.application.LoanRequestDTO;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.dto.loan.SignRequest;
+import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.AssetService;
 import com.tsoftware.qtd.service.LoanPlanService;
 import com.tsoftware.qtd.service.LoanRequestService;
 import com.tsoftware.qtd.service.ValuationMeetingService;
+import com.turkraft.springfilter.boot.Filter;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -81,9 +86,11 @@ public class ApplicationController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<ApplicationResponse>>> getAll() {
+  public ResponseEntity<ApiResponse<Page<ApplicationResponse>>> getAll(
+      @Filter Specification<Application> spec, Pageable page) {
     return ResponseEntity.ok(
-        new ApiResponse<>(HttpStatus.OK.value(), "Fetched All", applicationService.getAll()));
+        new ApiResponse<>(
+            HttpStatus.OK.value(), "Fetched All", applicationService.getAll(spec, page)));
   }
 
   @PostMapping("/{id}/loan-plan")
