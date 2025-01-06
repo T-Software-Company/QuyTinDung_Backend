@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum BorrowerType {
   INDIVIDUAL("Cá nhân"),
-  CORPORATE("Doanh nghiệp");
+  ORGANIZATION("Tổ chức");
   private final String description;
 
   BorrowerType(String description) {

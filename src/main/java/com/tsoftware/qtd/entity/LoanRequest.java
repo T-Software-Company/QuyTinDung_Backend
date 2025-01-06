@@ -6,7 +6,6 @@ import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,14 +25,10 @@ public class LoanRequest extends AbstractAuditEntity {
 
   private String purpose;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
-  private ZonedDateTime startDate;
-
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
-  private ZonedDateTime endDate;
-
   private BigDecimal amount;
   private String note;
+  private String asset;
+  private String loanTerm;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
