@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.entity.Approve;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

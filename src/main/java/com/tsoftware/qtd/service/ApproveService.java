@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import java.util.List;
 import java.util.UUID;
 

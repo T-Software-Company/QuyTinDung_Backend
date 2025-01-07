@@ -2,7 +2,7 @@ package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.dto.customer.CustomerDTO;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.employee.*;
 import com.tsoftware.qtd.exception.*;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactionContext;
@@ -44,7 +44,7 @@ public class KeycloakServiceIml implements KeycloakService {
       userId = res.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
       var roles = employeeRequest.getRoles();
       var clientRoles = getClientRoles(roles);
-      realmResource.users().get(userId).roles().clientLevel(getClientIdOnDb()).add(clientRoles);
+      realmResource.users().get(userId).roles().clientLevel(getClientUUID()).add(clientRoles);
       String finalUserId = userId;
       getGroupsBy(employeeRequest.getGroups())
           .forEach(
@@ -62,9 +62,9 @@ public class KeycloakServiceIml implements KeycloakService {
 
   @Override
   @KcTransactionContext(KcTransactional.KcTransactionType.CREATE_USER)
-  public String createUser(CustomerDTO customerDTO) {
+  public String createUser(CustomerRequest customerRequest) {
 
-    var user = getUserRepresentation(customerDTO);
+    var user = getUserRepresentation(customerRequest);
     var res = realmResource.users().create(user);
     if (res.getStatus() != 201) {
       throw new KeycloakException(res.getStatus(), extractErrorMessage(res));
@@ -72,6 +72,8 @@ public class KeycloakServiceIml implements KeycloakService {
     String userId = null;
     try {
       userId = res.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+      var customerRole = getClientRoles(List.of(Role.CUSTOMER.name()));
+      realmResource.users().get(userId).roles().clientLevel(getClientUUID()).add(customerRole);
       return userId;
     } catch (Exception e) {
       if (userId != null) {
@@ -124,7 +126,7 @@ public class KeycloakServiceIml implements KeycloakService {
 
     removeRolesOnUser(userId);
     var clientRoles = getClientRoles(request.getRoles());
-    realmResource.users().get(userId).roles().clientLevel(getClientIdOnDb()).add(clientRoles);
+    realmResource.users().get(userId).roles().clientLevel(getClientUUID()).add(clientRoles);
     getGroupsBy(request.getGroups())
         .forEach(
             group -> {
@@ -188,7 +190,7 @@ public class KeycloakServiceIml implements KeycloakService {
       groupResource
           .group(groupId)
           .roles()
-          .clientLevel(getClientIdOnDb())
+          .clientLevel(getClientUUID())
           .add(getClientRoles(group.getRoles()));
       return groupId;
     } catch (Exception e) {
@@ -207,7 +209,7 @@ public class KeycloakServiceIml implements KeycloakService {
     groupRepresentation.setName(group.getName());
     groupResource.update(groupRepresentation);
     removeAllRolesOnGroup(kcGroupId);
-    groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(group.getRoles()));
+    groupResource.roles().clientLevel(getClientUUID()).add(getClientRoles(group.getRoles()));
   }
 
   @Override
@@ -221,14 +223,14 @@ public class KeycloakServiceIml implements KeycloakService {
   @KcTransactionContext(KcTransactional.KcTransactionType.ADD_ROLE_TO_GROUP)
   public void addRolesToGroup(String kcGroupId, List<String> roles) {
     var groupResource = realmResource.groups().group(kcGroupId);
-    groupResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
+    groupResource.roles().clientLevel(getClientUUID()).add(getClientRoles(roles));
   }
 
   @Override
   @KcTransactionContext(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_GROUP)
   public void removeRolesOnGroup(String kcGroupId, List<String> roles) {
     var groupResource = realmResource.groups().group(kcGroupId);
-    groupResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
+    groupResource.roles().clientLevel(getClientUUID()).remove(getClientRoles(roles));
   }
 
   @Override
@@ -238,7 +240,7 @@ public class KeycloakServiceIml implements KeycloakService {
 
   @Override
   public String createClientRole(Role role) {
-    var clientResource = realmResource.clients().get(getClientIdOnDb());
+    var clientResource = realmResource.clients().get(getClientUUID());
     var clientRolesResource = clientResource.roles();
     try {
       var roleRepresentationExists = clientRolesResource.get(role.name()).toRepresentation();
@@ -281,14 +283,14 @@ public class KeycloakServiceIml implements KeycloakService {
   @KcTransactionContext(KcTransactional.KcTransactionType.ADD_ROLE_TO_USER)
   public void addRolesToUser(String userId, List<String> roles) {
     var userResource = realmResource.users().get(userId);
-    userResource.roles().clientLevel(getClientIdOnDb()).add(getClientRoles(roles));
+    userResource.roles().clientLevel(getClientUUID()).add(getClientRoles(roles));
   }
 
   @Override
   @KcTransactionContext(KcTransactional.KcTransactionType.REMOVE_ROLE_ON_USER)
   public void removeRolesOnUser(String userId, List<String> roles) {
     var userResource = realmResource.users().get(userId);
-    userResource.roles().clientLevel(getClientIdOnDb()).remove(getClientRoles(roles));
+    userResource.roles().clientLevel(getClientUUID()).remove(getClientRoles(roles));
   }
 
   @Override
@@ -329,7 +331,7 @@ public class KeycloakServiceIml implements KeycloakService {
         .users()
         .get(userRepresentation.getId())
         .roles()
-        .clientLevel(getClientIdOnDb())
+        .clientLevel(getClientUUID())
         .add(roles);
     realmResource.users().get(userRepresentation.getId()).groups().addAll(groups);
   }
@@ -342,13 +344,13 @@ public class KeycloakServiceIml implements KeycloakService {
         .users()
         .get(userRepresentation.getId())
         .roles()
-        .clientLevel(getClientIdOnDb())
+        .clientLevel(getClientUUID())
         .add(roleRepresentations);
   }
 
   @Override
   public List<RoleRepresentation> getRolesByGroup(String id) {
-    return realmResource.groups().group(id).roles().clientLevel(getClientIdOnDb()).listAll();
+    return realmResource.groups().group(id).roles().clientLevel(getClientUUID()).listAll();
   }
 
   @Override
@@ -359,7 +361,7 @@ public class KeycloakServiceIml implements KeycloakService {
         .groups()
         .group(groupRepresentation.getId())
         .roles()
-        .clientLevel(getClientIdOnDb())
+        .clientLevel(getClientUUID())
         .add(roleRepresentations);
   }
 
@@ -375,7 +377,7 @@ public class KeycloakServiceIml implements KeycloakService {
     }
 
     var groupId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-    groupResource.group(groupId).roles().clientLevel(getClientIdOnDb()).add(roleRepresentations);
+    groupResource.group(groupId).roles().clientLevel(getClientUUID()).add(roleRepresentations);
     groupResource.group(groupId).members().addAll(userRepresentations);
   }
 
@@ -387,13 +389,13 @@ public class KeycloakServiceIml implements KeycloakService {
         .groups()
         .group(groupRepresentation.getId())
         .roles()
-        .clientLevel(getClientIdOnDb())
+        .clientLevel(getClientUUID())
         .add(roleRepresentations);
   }
 
   @Override
   public List<RoleRepresentation> getRolesByUser(String id) {
-    return realmResource.users().get(id).roles().clientLevel(getClientIdOnDb()).listAll();
+    return realmResource.users().get(id).roles().clientLevel(getClientUUID()).listAll();
   }
 
   private String extractErrorMessage(Response response) {
@@ -417,41 +419,41 @@ public class KeycloakServiceIml implements KeycloakService {
     return user;
   }
 
-  private static UserRepresentation getUserRepresentation(CustomerDTO customerDTO) {
+  private static UserRepresentation getUserRepresentation(CustomerRequest customerRequest) {
     var user = new UserRepresentation();
-    user.setUsername(customerDTO.getUsername());
-    user.setEmail(customerDTO.getEmail());
-    user.setFirstName(customerDTO.getFirstName());
-    user.setLastName(customerDTO.getLastName());
+    user.setUsername(customerRequest.getUsername());
+    user.setEmail(customerRequest.getEmail());
+    user.setFirstName(customerRequest.getFirstName());
+    user.setLastName(customerRequest.getLastName());
     user.setEnabled(true);
     user.setEmailVerified(false);
     var credential = new CredentialRepresentation();
     credential.setType(CredentialRepresentation.PASSWORD);
     credential.setTemporary(true);
-    credential.setValue(customerDTO.getPassword());
+    credential.setValue(customerRequest.getPassword());
     user.setCredentials(List.of(credential));
     return user;
   }
 
   private void removeRolesOnUser(String userId) {
     var userResource = realmResource.users().get(userId);
-    var clientRoles = userResource.roles().clientLevel(getClientIdOnDb()).listAll();
+    var clientRoles = userResource.roles().clientLevel(getClientUUID()).listAll();
     if (!clientRoles.isEmpty()) {
-      userResource.roles().clientLevel(getClientIdOnDb()).remove(clientRoles);
+      userResource.roles().clientLevel(getClientUUID()).remove(clientRoles);
     }
   }
 
   private void removeAllRolesOnGroup(String groupId) {
     var groupResource = realmResource.groups().group(groupId);
-    var clientRoles = groupResource.roles().clientLevel(getClientIdOnDb()).listAll();
+    var clientRoles = groupResource.roles().clientLevel(getClientUUID()).listAll();
     if (!clientRoles.isEmpty()) {
-      groupResource.roles().clientLevel(getClientIdOnDb()).remove(clientRoles);
+      groupResource.roles().clientLevel(getClientUUID()).remove(clientRoles);
     }
   }
 
   private List<RoleRepresentation> getClientRoles(List<String> roles) {
     if (roles == null) return Collections.emptyList();
-    var clientResource = realmResource.clients().get(getClientIdOnDb());
+    var clientResource = realmResource.clients().get(getClientUUID());
     return roles.stream()
         .map(
             role -> {
@@ -464,7 +466,7 @@ public class KeycloakServiceIml implements KeycloakService {
         .toList();
   }
 
-  private String getClientIdOnDb() {
+  private String getClientUUID() {
     var clientRepresentations = realmResource.clients().findByClientId(idpProperties.getClientId());
     return clientRepresentations.getFirst().getId();
   }

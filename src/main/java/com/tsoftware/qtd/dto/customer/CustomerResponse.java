@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.dto.customer;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tsoftware.commonlib.model.AbstractWorkflowResponse;
+import com.tsoftware.qtd.dto.AbstractResponse;
+import com.tsoftware.qtd.dto.address.AddressDto;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,5 +10,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CustomerResponse extends AbstractWorkflowResponse<CustomerDTO> {}
+public class CustomerResponse extends AbstractResponse {
+  UUID id;
+  String username;
+  String password;
+  String email;
+  String code;
+  String phone;
+  Boolean enabled;
+  String firstName;
+  String lastName;
+  AddressDto address;
+  IdentityInfoDTO identityInfo;
+  String signaturePhoto;
+}

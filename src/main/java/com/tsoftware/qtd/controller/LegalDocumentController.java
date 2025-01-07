@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.asset.LegalDocumentResponse;
 import com.tsoftware.qtd.service.LegalDocumentService;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.dto.customer.CustomerDTO;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
@@ -14,7 +14,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 public interface KeycloakService {
   String createUser(EmployeeRequest employeeRequest);
 
-  String createUser(CustomerDTO customerDTO);
+  String createUser(CustomerRequest customerRequest);
 
   void updateUser(ProfileRequest request, String userId);
 

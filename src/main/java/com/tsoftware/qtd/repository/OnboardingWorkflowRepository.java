@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.repository;
 
-import com.tsoftware.commonlib.constant.WorkflowStatus;
+import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.entity.OnboardingWorkflowEntity;
 import java.util.Optional;
 import java.util.Set;

@@ -4,7 +4,7 @@ import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.LegalDocType;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDto;
-import com.tsoftware.qtd.dto.customer.CustomerDTO;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
@@ -321,8 +321,8 @@ public class InitDatabase implements CommandLineRunner {
             "Long An",
             "Tiền Giang");
 
-    var customerDTO =
-        CustomerDTO.builder()
+    var customerResquest =
+        CustomerRequest.builder()
             .code(String.valueOf(UUID.randomUUID()))
             .username(username)
             .email(email)
@@ -357,6 +357,6 @@ public class InitDatabase implements CommandLineRunner {
                     .detail("Ngõ " + (random.nextInt(100) + 1))
                     .build())
             .build();
-    customerService.create(customerDTO);
+    customerService.create(customerResquest);
   }
 }

@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.loan;
 
-import com.tsoftware.commonlib.model.AbstractWorkflowResponse;
+import com.tsoftware.qtd.commonlib.model.AbstractWorkflowResponse;
 import lombok.Getter;
 import lombok.Setter;
 

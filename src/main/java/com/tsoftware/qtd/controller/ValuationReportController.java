@@ -1,9 +1,9 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
+import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.service.ValuationReportService;
 import java.util.List;
 import java.util.UUID;

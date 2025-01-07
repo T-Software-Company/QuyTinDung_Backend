@@ -1,12 +1,9 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.commonlib.constant.WorkflowStatus;
-import com.tsoftware.commonlib.context.WorkflowContext;
-import com.tsoftware.commonlib.exception.WorkflowException;
-import com.tsoftware.commonlib.model.Workflow;
-import com.tsoftware.commonlib.util.JsonParser;
+import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
+import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.PageResponse;
-import com.tsoftware.qtd.dto.customer.CustomerDTO;
+import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.exception.CommonException;
@@ -26,7 +23,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,45 +39,40 @@ public class CustomerServiceImpl implements CustomerService {
   private final KeycloakService keycloakService;
 
   @Override
-  public CustomerResponse create(CustomerDTO customerDTO) throws Exception {
+  public CustomerResponse create(CustomerRequest customerRequest) throws Exception {
     // if customer has been deleted, update it instead of creating a new one
     var existingCustomerOpt =
         customerRepository.findByIdentityInfoIdentifyId(
-            customerDTO.getIdentityInfo().getIdentifyId());
+            customerRequest.getIdentityInfo().getIdentifyId());
     if (existingCustomerOpt.isPresent()) {
       var customer = existingCustomerOpt.get();
       if (customer.getIsDeleted()) {
-        return update(customer.getId(), customerDTO);
+        return update(customer.getId(), customerRequest);
       } else {
-        throw new WorkflowException(HttpStatus.CONFLICT.value(), "Customer already exists.");
+        throw new CommonException(
+            ErrorType.DUPLICATED_REQUEST, customerRequest.getIdentityInfo().getIdentifyId());
       }
     }
-    var userId = keycloakService.createUser(customerDTO);
-
-    Customer customer = customerMapper.toEntity(customerDTO);
+    var userId = keycloakService.createUser(customerRequest);
+    Customer customer = customerMapper.toEntity(customerRequest);
     customer.setIsDeleted(false);
     customer.setEnabled(true);
     customer.setUserId(userId);
-    Set<String> urls = getDocumentUrls(customerDTO);
+    Set<String> urls = getDocumentUrls(customerRequest);
     var entity = customerRepository.save(customer);
     documentService.signCustomerDocument(entity, urls);
-    WorkflowContext.putMetadata(customer);
-    Workflow workflow = WorkflowContext.get();
-    workflow.setTargetId(entity.getId());
-    CustomerResponse response = new CustomerResponse();
-    response.setData(customerMapper.toDTO(entity));
-    return response;
+    return customerMapper.toResponse(entity);
   }
 
-  private Set<String> getDocumentUrls(CustomerDTO customerDTO) {
+  private Set<String> getDocumentUrls(CustomerRequest customerRequest) {
     Set<String> urls = new HashSet<>();
-    if (!StringUtils.isBlank(customerDTO.getSignaturePhoto())) {
-      urls.add(customerDTO.getSignaturePhoto());
+    if (!StringUtils.isBlank(customerRequest.getSignaturePhoto())) {
+      urls.add(customerRequest.getSignaturePhoto());
     }
     var frontPhotoURL =
-        JsonParser.getValueByPath(customerDTO, "identityInfo.frontPhotoURL", String.class);
+        JsonParser.getValueByPath(customerRequest, "identityInfo.frontPhotoURL", String.class);
     var backPhotoURL =
-        JsonParser.getValueByPath(customerDTO, "identityInfo.backPhotoURL", String.class);
+        JsonParser.getValueByPath(customerRequest, "identityInfo.backPhotoURL", String.class);
     if (frontPhotoURL != null && backPhotoURL != null) {
       urls.add(frontPhotoURL);
       urls.add(backPhotoURL);
@@ -97,23 +88,19 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerResponse update(UUID id, CustomerDTO customerDTO) {
+  public CustomerResponse update(UUID id, CustomerRequest customerRequest) {
     Customer customer =
         customerRepository
             .findById(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
 
-    Set<String> urls = getDocumentUrls(customerDTO);
+    Set<String> urls = getDocumentUrls(customerRequest);
     customer.setIsDeleted(false);
-    customerMapper.updateEntity(customerDTO, customer);
+    customerMapper.updateEntity(customerRequest, customer);
     if (CollectionUtils.isNotEmpty(urls)) {
       documentService.signCustomerDocument(customer, urls);
     }
-    var result = customerMapper.toDTO(customerRepository.save(customer));
-    WorkflowContext.putMetadata(result);
-    CustomerResponse response = new CustomerResponse();
-    response.setData(result);
-    return response;
+    return customerMapper.toResponse(customerRepository.save(customer));
   }
 
   @Override
@@ -134,18 +121,18 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerDTO getById(UUID id) {
+  public CustomerResponse getById(UUID id) {
     Customer customer =
         customerRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Customer not found"));
-    return customerMapper.toDTO(customer);
+    return customerMapper.toResponse(customer);
   }
 
   @Override
-  public PageResponse<CustomerDTO> getAll(Specification<Customer> spec, Pageable page) {
+  public PageResponse<CustomerResponse> getAll(Specification<Customer> spec, Pageable page) {
     try {
-      var customerpage = customerRepository.findAll(spec, page).map(customerMapper::toDTO);
+      var customerpage = customerRepository.findAll(spec, page).map(customerMapper::toResponse);
       return pageResponseMapper.toPageResponse(customerpage);
 
     } catch (Exception e) {
@@ -159,7 +146,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public List<CustomerDTO> getAll() {
-    return customerRepository.findAll().stream().map(customerMapper::toDTO).toList();
+  public List<CustomerResponse> getAll() {
+    return customerRepository.findAll().stream().map(customerMapper::toResponse).toList();
   }
 }

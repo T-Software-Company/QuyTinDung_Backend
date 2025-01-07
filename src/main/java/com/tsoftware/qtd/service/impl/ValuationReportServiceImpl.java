@@ -1,9 +1,9 @@
 package com.tsoftware.qtd.service.impl;
 
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
-import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
+import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.entity.Approve;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationReport;

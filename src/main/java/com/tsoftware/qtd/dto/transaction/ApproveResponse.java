@@ -1,7 +1,6 @@
-package com.tsoftware.qtd.dto;
+package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.commonlib.model.AbstractWorkflowResponse;
-import com.tsoftware.qtd.dto.transaction.ApproveDTO;
+import com.tsoftware.qtd.commonlib.model.AbstractWorkflowResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

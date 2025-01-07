@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.commonlib.model.OnboardingWorkflow;
+import com.tsoftware.qtd.commonlib.model.OnboardingWorkflow;
 import com.tsoftware.qtd.dto.application.DisbursementDTO;
 import com.tsoftware.qtd.dto.application.LoanPlanDTO;
 import com.tsoftware.qtd.dto.application.LoanRequestDTO;

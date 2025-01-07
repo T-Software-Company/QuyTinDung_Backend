@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.Valuation;
 
-import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
+import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;

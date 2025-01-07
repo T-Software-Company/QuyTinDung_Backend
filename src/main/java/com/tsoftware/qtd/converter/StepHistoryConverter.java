@@ -1,8 +1,8 @@
 package com.tsoftware.qtd.converter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.tsoftware.commonlib.model.StepHistory;
-import com.tsoftware.commonlib.util.JsonParser;
+import com.tsoftware.qtd.commonlib.model.StepHistory;
+import com.tsoftware.qtd.commonlib.util.JsonParser;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.List;

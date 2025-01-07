@@ -1,13 +1,13 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.dto.ApproveResponse;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
+import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.mapper.PageResponseMapper;
