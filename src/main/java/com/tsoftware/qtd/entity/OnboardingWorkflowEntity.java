@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.commonlib.constant.WorkflowStatus;
-import com.tsoftware.commonlib.model.StepHistory;
+import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
+import com.tsoftware.qtd.commonlib.model.StepHistory;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

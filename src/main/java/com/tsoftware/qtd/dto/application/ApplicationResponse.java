@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.application;
 
-import com.tsoftware.commonlib.model.AbstractWorkflowResponse;
+import com.tsoftware.qtd.commonlib.model.AbstractWorkflowResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.Builder;

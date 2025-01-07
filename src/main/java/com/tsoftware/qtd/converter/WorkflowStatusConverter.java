@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.converter;
 
-import com.tsoftware.commonlib.constant.WorkflowStatus;
+import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import org.springframework.stereotype.Component;

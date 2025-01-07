@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.annotation.WorkflowAPI;
-import com.tsoftware.qtd.dto.ApproveRequest;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.dto.transaction.ApproveRequest;
 import com.tsoftware.qtd.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

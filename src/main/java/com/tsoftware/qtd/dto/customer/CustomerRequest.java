@@ -1,11 +1,45 @@
 package com.tsoftware.qtd.dto.customer;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.tsoftware.commonlib.model.AbstractWorkflowRequest;
+import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.repository.CustomerRepository;
+import com.tsoftware.qtd.validation.Unique;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import java.util.UUID;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class CustomerRequest extends AbstractWorkflowRequest<CustomerDTO> {}
+@Builder
+public class CustomerRequest {
+  UUID id;
+
+  @NotBlank
+  @Size(min = 4)
+  @Unique(repositoryClass = CustomerRepository.class, checkMethod = "existsByUsername")
+  String username;
+
+  @NotBlank
+  @Size(min = 6)
+  String password;
+
+  @NotBlank @Email String email;
+  String code;
+
+  @NotBlank
+  @Size(max = 15)
+  @Pattern(regexp = "^[0-9\\-\\+]{9,15}$")
+  String phone;
+
+  Boolean enabled;
+  @NotBlank String firstName;
+  @NotBlank String lastName;
+  @Valid AddressDto address;
+  @Valid IdentityInfoDTO identityInfo;
+  String signaturePhoto;
+}

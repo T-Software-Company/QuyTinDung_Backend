@@ -1,8 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.commonlib.constant.WorkflowStatus;
-import com.tsoftware.commonlib.model.OnboardingWorkflow;
-import com.tsoftware.commonlib.service.WorkflowStorage;
+import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
+import com.tsoftware.qtd.commonlib.model.OnboardingWorkflow;
+import com.tsoftware.qtd.commonlib.service.WorkflowStorage;
 import com.tsoftware.qtd.entity.OnboardingWorkflowEntity;
 import com.tsoftware.qtd.mapper.DtoMapper;
 import com.tsoftware.qtd.repository.OnboardingWorkflowRepository;

@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.configuration;
 
-import com.tsoftware.commonlib.executor.TransactionExecutorRegistry;
+import com.tsoftware.qtd.commonlib.executor.TransactionExecutorRegistry;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import java.util.Properties;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;

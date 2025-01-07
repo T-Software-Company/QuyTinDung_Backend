@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.commonlib.util.RandomUtil;
+import com.tsoftware.qtd.commonlib.util.RandomUtil;
 import com.tsoftware.qtd.constants.EnumType.DisbursementStatus;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import com.tsoftware.qtd.constants.EnumType.RepaymentStatus;

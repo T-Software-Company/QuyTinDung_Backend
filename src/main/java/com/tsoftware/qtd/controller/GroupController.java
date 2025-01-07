@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.employee.GroupRequest;

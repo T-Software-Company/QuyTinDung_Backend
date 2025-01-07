@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.commonlib.model.AbstractTransaction;
+import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import java.util.List;

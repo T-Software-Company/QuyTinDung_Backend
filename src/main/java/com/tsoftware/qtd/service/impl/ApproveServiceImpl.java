@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.ApproveResponse;
+import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.entity.Approve;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.ApproveMapper;

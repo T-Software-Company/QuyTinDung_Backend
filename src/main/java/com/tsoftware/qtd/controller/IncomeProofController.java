@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.application.IncomeProofDto;
 import com.tsoftware.qtd.service.IncomeProofService;
 import java.util.List;

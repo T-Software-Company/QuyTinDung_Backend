@@ -1,9 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.annotation.WorkflowAPI;
-import com.tsoftware.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.PageResponse;
-import com.tsoftware.qtd.dto.customer.CustomerDTO;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
 import com.tsoftware.qtd.entity.Customer;
@@ -11,6 +9,7 @@ import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional.KcTransactionType;
 import com.tsoftware.qtd.service.CustomerService;
 import com.tsoftware.qtd.service.impl.DocumentService;
+import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
 import java.util.List;
 import java.util.UUID;
@@ -35,21 +34,20 @@ public class CustomerController {
   private final CustomerService customerService;
   private final DocumentService documentService;
 
-  @WorkflowAPI
   @PostMapping
   @KcTransactional(KcTransactionType.CREATE_USER)
   public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest customerRequest)
       throws Exception {
-    return ResponseEntity.ok(customerService.create(customerRequest.getPayload()));
+    return ResponseEntity.ok(customerService.create(customerRequest));
   }
 
-  @WorkflowAPI
   @PutMapping("/{id}")
+  @KcTransactional(KcTransactionType.UPDATE_USER)
   public ResponseEntity<ApiResponse<CustomerResponse>> update(
-      @PathVariable UUID id, @RequestBody CustomerRequest customerRequest) {
+      @PathVariable @IsUUID String id, @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            200, "Updated", customerService.update(id, customerRequest.getPayload())));
+            200, "Updated", customerService.update(UUID.fromString(id), customerRequest)));
   }
 
   @DeleteMapping("/{id}")
@@ -65,7 +63,7 @@ public class CustomerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerDTO>> getById(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(200, "Fetched", customerService.getById(id)));
   }
 
@@ -75,7 +73,7 @@ public class CustomerController {
   }
 
   @GetMapping
-  public ResponseEntity<PageResponse<CustomerDTO>> getAll(
+  public ResponseEntity<PageResponse<CustomerResponse>> getAll(
       @Filter Specification<Customer> spec, Pageable page) {
     return ResponseEntity.ok(customerService.getAll(spec, page));
   }

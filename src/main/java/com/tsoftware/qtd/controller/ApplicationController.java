@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
-import com.tsoftware.commonlib.annotation.WorkflowAPI;
-import com.tsoftware.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
