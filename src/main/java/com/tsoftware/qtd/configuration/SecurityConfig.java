@@ -29,7 +29,7 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/api-docs", "/api-docs/**", "/swagger-ui/**")
                     .permitAll()
-                    .requestMatchers(HttpMethod.POST, "/customers")
+                    .requestMatchers(HttpMethod.POST, "/customers", "/documents/upload")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
