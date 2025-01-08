@@ -13,7 +13,6 @@ import lombok.Setter;
 public class CustomerResponse extends AbstractResponse {
   UUID id;
   String username;
-  String password;
   String email;
   String code;
   String phone;
