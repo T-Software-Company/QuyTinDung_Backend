@@ -23,6 +23,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -148,5 +149,14 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
   public List<CustomerResponse> getAll() {
     return customerRepository.findAll().stream().map(customerMapper::toResponse).toList();
+  }
+
+  @Override
+  public CustomerResponse getProfile() {
+    var id = SecurityContextHolder.getContext().getAuthentication().getName();
+    return customerMapper.toResponse(
+        customerRepository
+            .findByUserId(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id)));
   }
 }
