@@ -63,7 +63,6 @@ public class KeycloakServiceIml implements KeycloakService {
   @Override
   @KcTransactionContext(KcTransactional.KcTransactionType.CREATE_USER)
   public String createUser(CustomerRequest customerRequest) {
-
     var user = getUserRepresentation(customerRequest);
     var res = realmResource.users().create(user);
     if (res.getStatus() != 201) {

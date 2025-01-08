@@ -9,19 +9,24 @@ import jakarta.persistence.Table;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@SuperBuilder
 @Entity
 @Table
+@EqualsAndHashCode(callSuper = true)
 public class OnboardingWorkflowEntity extends AbstractAuditEntity {
   private UUID targetId;
-  private String currentStep;
-  private String nextStep;
+  private String PIC;
+  private List<String> nextSteps;
   private WorkflowStatus workflowStatus;
+  private WorkflowStep workflowStep;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")

@@ -2,11 +2,15 @@ package com.tsoftware.qtd.dto;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
+@NoArgsConstructor
 public abstract class AbstractResponse {
   private UUID id;
   private ZonedDateTime createdAt;

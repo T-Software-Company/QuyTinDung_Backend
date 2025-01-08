@@ -29,14 +29,12 @@ public class CustomerRequest {
   String password;
 
   @NotBlank @Email String email;
-  String code;
 
   @NotBlank
   @Size(max = 15)
   @Pattern(regexp = "^[0-9\\-\\+]{9,15}$")
   String phone;
 
-  Boolean enabled;
   @NotBlank String firstName;
   @NotBlank String lastName;
   @Valid AddressDto address;
