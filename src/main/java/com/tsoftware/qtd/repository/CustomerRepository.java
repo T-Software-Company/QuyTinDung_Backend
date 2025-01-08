@@ -13,4 +13,6 @@ public interface CustomerRepository
   Optional<Customer> findByIdentityInfoIdentifyId(String identifyId);
 
   Optional<Customer> findByUserId(String id);
+
+  boolean existsByUsername(String username);
 }
