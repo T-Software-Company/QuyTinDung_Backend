@@ -23,4 +23,6 @@ public interface CustomerService {
   void deletes(List<UUID> ids);
 
   List<CustomerResponse> getAll();
+
+  CustomerResponse getProfile();
 }

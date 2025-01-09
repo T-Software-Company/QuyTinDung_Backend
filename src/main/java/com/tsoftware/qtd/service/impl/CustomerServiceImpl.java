@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
@@ -23,6 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +35,6 @@ public class CustomerServiceImpl implements CustomerService {
   private final CustomerMapper customerMapper;
   private final PageResponseMapper pageResponseMapper;
   private final DocumentService documentService;
-  private final WorkflowServiceImpl workflowService;
   private final KeycloakService keycloakService;
 
   @Override
@@ -111,13 +110,6 @@ public class CustomerServiceImpl implements CustomerService {
             .orElseThrow(() -> new NotFoundException("Customer not found"));
     customer.setIsDeleted(true);
     customerRepository.save(customer);
-    workflowService
-        .getByStatus(customer.getId(), WorkflowStatus.INPROGRESS)
-        .forEach(
-            workflow -> {
-              workflow.setWorkflowStatus(WorkflowStatus.EXPIRED);
-              workflowService.save(workflow);
-            });
   }
 
   @Override
@@ -148,5 +140,15 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
   public List<CustomerResponse> getAll() {
     return customerRepository.findAll().stream().map(customerMapper::toResponse).toList();
+  }
+
+  @Override
+  public CustomerResponse getProfile() {
+
+    var id = SecurityContextHolder.getContext().getAuthentication().getName();
+    return customerMapper.toResponse(
+        customerRepository
+            .findByUserId(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id)));
   }
 }

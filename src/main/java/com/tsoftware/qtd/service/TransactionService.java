@@ -3,8 +3,9 @@ package com.tsoftware.qtd.service;
 import com.tsoftware.qtd.commonlib.executor.TransactionExecutorRegistry;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.dto.transaction.ApproveDTO;
+import com.tsoftware.qtd.dto.transaction.ApproveRequest;
 import com.tsoftware.qtd.dto.transaction.ApproveResponse;
-import com.tsoftware.qtd.dto.transaction.Transaction;
+import com.tsoftware.qtd.dto.transaction.TransactionDTO;
 import com.tsoftware.qtd.entity.TransactionEntity;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
@@ -27,38 +28,38 @@ public class TransactionService {
   final TransactionRepository repository;
   final DtoMapper mapper;
 
-  public Object approve(ApproveDTO approveRequest) {
-    Transaction transaction =
+  public Object approve(ApproveRequest approveRequest) {
+    var transactionDTO =
         repository
             .findById(approveRequest.getTransactionId())
-            .map(mapper::toDomain)
+            .map(mapper::toDTO)
             .orElseThrow(
                 () ->
                     new CommonException(
                         ErrorType.ENTITY_NOT_FOUND, approveRequest.getTransactionId()));
     if (ApproveStatus.REJECTED.equals(approveRequest.getStatus())) {
-      transaction.setStatus(ApproveStatus.REJECTED);
-      repository.save(mapper.toEntity(transaction));
+      transactionDTO.setStatus(ApproveStatus.REJECTED);
+      repository.save(mapper.toEntity(transactionDTO));
       ApproveResponse response = new ApproveResponse();
-      response.setData(
-          ApproveDTO.builder()
-              .transactionId(transaction.getId())
-              .status(ApproveStatus.REJECTED)
-              .build());
+      //      response.setData(
+      //          ApproveDTO.builder()
+      //              .transactionId(transactionDTO.getId())
+      //              .status(ApproveStatus.REJECTED)
+      //              .build());
       return response;
     }
-    return registry.getExecutor(transaction.getType()).execute(transaction);
+    return registry.getExecutor(transactionDTO.getType()).execute(transactionDTO);
   }
 
-  public void updateTransaction(Transaction transaction) {
+  public void updateTransaction(TransactionDTO transactionDTO) {
     TransactionEntity entity =
         repository
-            .findById(transaction.getId())
+            .findById(transactionDTO.getId())
             .orElseThrow(
-                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, transaction.getId()));
-    mapper.updateEntity(entity, transaction);
+                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, transactionDTO.getId()));
+    mapper.updateEntity(entity, transactionDTO);
 
-    List<ApproveDTO> approveDTOS = transaction.getApproves();
+    List<ApproveDTO> approveDTOS = transactionDTO.getApproves();
     entity
         .getApproves()
         .forEach(
@@ -70,17 +71,17 @@ public class TransactionService {
                     .findFirst()
                     .ifPresent(dto -> approve.setStatus(dto.getStatus())));
 
-    if (transaction.isApproved()) {
+    if (transactionDTO.isApproved()) {
       entity.setStatus(ApproveStatus.APPROVED);
       entity.setApprovedAt(ZonedDateTime.now());
     }
     repository.save(entity);
   }
 
-  public void validateTransaction(Transaction transaction) {
+  public void validateTransaction(TransactionDTO transactionDTO) {
     var userId = RequestUtil.getUserId();
     boolean hasPermission =
-        transaction.getApproves().stream()
+        transactionDTO.getApproves().stream()
             .anyMatch(
                 approve -> {
                   var employee = approve.getApprover();
@@ -88,20 +89,21 @@ public class TransactionService {
                 });
     if (!hasPermission) {
       throw new CommonException(
-          ErrorType.ACCESS_DENIED, "You don't have permission to approve this transaction.");
+          ErrorType.ACCESS_DENIED, "You don't have permission to approve this transactionDTO.");
     }
 
-    if (transaction.isApproved()) {
-      throw new CommonException(ErrorType.DUPLICATED_REQUEST, "Transaction is already approved.");
+    if (transactionDTO.isApproved()) {
+      throw new CommonException(
+          ErrorType.DUPLICATED_REQUEST, "TransactionDTO is already approved.");
     }
   }
 
-  public Transaction processApproval(Transaction transaction) {
+  public TransactionDTO processApproval(TransactionDTO transactionDTO) {
     var userId = RequestUtil.getUserId();
-    var approvers = Optional.ofNullable(transaction.getApproves()).orElse(new ArrayList<>());
+    var approvers = Optional.ofNullable(transactionDTO.getApproves()).orElse(new ArrayList<>());
     approvers.stream()
         .filter(approve -> userId.equals(approve.getApprover().getUserId()))
         .forEach(approve -> approve.setStatus(ApproveStatus.APPROVED));
-    return transaction;
+    return transactionDTO;
   }
 }

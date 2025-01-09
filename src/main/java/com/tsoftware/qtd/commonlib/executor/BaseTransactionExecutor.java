@@ -4,7 +4,7 @@ import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class BaseTransactionExecutor<T extends AbstractTransaction>
+public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
     implements TransactionExecutor<T> {
 
   @Override
@@ -15,7 +15,7 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction>
       var resolvedTransaction = processApproval(transaction);
       Object result = "Approved";
       if (resolvedTransaction.isApproved()) {
-        log.info("Transaction already approved: {}", transaction.getId());
+        log.info("TransactionDTO already approved: {}", transaction.getId());
         result = doExecute(transaction);
       }
       postExecute(transaction);

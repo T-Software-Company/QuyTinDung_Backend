@@ -8,10 +8,7 @@ import com.tsoftware.qtd.dto.application.ApplicationResponse;
 import com.tsoftware.qtd.dto.application.LoanPlanDTO;
 import com.tsoftware.qtd.dto.application.LoanRequestDTO;
 import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
-import com.tsoftware.qtd.dto.loan.SignRequestDetail;
-import com.tsoftware.qtd.dto.loan.SignResponse;
-import com.tsoftware.qtd.dto.loan.SignResponseDetail;
-import com.tsoftware.qtd.dto.transaction.Transaction;
+import com.tsoftware.qtd.dto.transaction.TransactionDTO;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.Approve;
 import com.tsoftware.qtd.entity.FinancialInfo;
@@ -59,7 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   @Transactional
-  public ApplicationResponse create(UUID customerId, ApplicationDTO applicationRequest) {
+  public ApplicationResponse create(UUID customerId) {
     var customer =
         customerRepository
             .findById(customerId)
@@ -69,7 +66,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     if (currentApplication.stream()
         .filter(app -> !app.getIsDeleted())
         .anyMatch(app -> LoanStatus.CREATING.equals(app.getStatus()))) {
-      throw new CommonException(ErrorType.APPLICATION_ALREADY_EXISTS);
+      throw new CommonException(ErrorType.HAS_APPLICATION_IN_PROGRESS);
     }
 
     Application application = Application.builder().status(LoanStatus.CREATING).build();
@@ -194,7 +191,10 @@ public class ApplicationServiceImpl implements ApplicationService {
           transactions.stream()
               .map(mapper::toDomain)
               .collect(
-                  Collectors.toMap(Transaction::getType, Transaction::isApproved, (a, b) -> a || b))
+                  Collectors.toMap(
+                      TransactionDTO::getType,
+                      com.tsoftware.qtd.dto.transaction.TransactionDTO::isApproved,
+                      (a, b) -> a || b))
               .values()
               .stream()
               .allMatch(Boolean.TRUE::equals);
@@ -250,29 +250,5 @@ public class ApplicationServiceImpl implements ApplicationService {
     entity.setApplication(application);
     application.setLoanRequest(entity);
     applicationRepository.save(application);
-  }
-
-  @Override
-  public SignResponse sign(UUID id, SignRequestDetail signRequestDetail) {
-    var application = getById(id);
-    if (!application.isCanSign()) {
-      throw new CommonException(ErrorType.CANNOT_SIGN);
-    }
-
-    var entity =
-        applicationRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException("Application not found"));
-    entity.setStatus(LoanStatus.SIGNED);
-    applicationRepository.save(entity);
-
-    var loan = loanService.createLoanAccount(entity, signRequestDetail);
-    SignResponse response = new SignResponse();
-    response.setData(
-        SignResponseDetail.builder()
-            .loanId(loan.getId())
-            .accountNumber(loan.getAccountNumber())
-            .build());
-    return response;
   }
 }

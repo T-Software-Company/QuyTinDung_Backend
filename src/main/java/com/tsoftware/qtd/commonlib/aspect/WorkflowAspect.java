@@ -1,17 +1,15 @@
 package com.tsoftware.qtd.commonlib.aspect;
 
-import static com.tsoftware.qtd.commonlib.service.WorkflowService.UNKNOWN_STEP;
-
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.commonlib.model.OnboardingWorkflow;
 import com.tsoftware.qtd.commonlib.model.Workflow;
 import com.tsoftware.qtd.commonlib.service.WorkflowService;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -21,18 +19,15 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class WorkflowAspect {
 
-  @Autowired private WorkflowService workflowService;
-
-  @Autowired private BeanFactory beanFactory;
+  private final WorkflowService workflowService;
 
   @Pointcut("execution(public * *(..))")
   public void publicMethod() {}
@@ -57,7 +52,7 @@ public class WorkflowAspect {
     if (workflow != null) {
       WorkflowContext.putMetadata(workflow.getCurrentStep(), response);
       workflow.setNextStep(workflowService.calculateNextStep(workflow));
-      workflowService.save(workflow, workflow.getWorkflowStatus());
+      workflowService.save(workflow);
     }
   }
 
@@ -66,7 +61,7 @@ public class WorkflowAspect {
     Workflow workflow = WorkflowContext.get();
     if (workflow != null) {
       WorkflowContext.putMetadata("error", ex.getMessage());
-      workflowService.save(workflow, workflow.getWorkflowStatus());
+      workflowService.save(workflow);
     }
   }
 
@@ -90,15 +85,13 @@ public class WorkflowAspect {
 
   private void updateWorkflowStep(Workflow workflow) {
     if (StringUtils.isNotBlank(workflow.getCurrentStep())
-        && StringUtils.isBlank(workflow.getNextStep())
-        && UNKNOWN_STEP.equalsIgnoreCase(workflow.getCurrentStep())) {
+        && StringUtils.isBlank(workflow.getNextStep())) {
       workflow.setCurrentStep(workflow.getNextStep());
     }
   }
 
   private Workflow initWorkflow(UUID targetTargetUuid) {
-    Workflow workflow =
-        OnboardingWorkflow.builder().targetId(targetTargetUuid).metadata(new HashMap<>()).build();
+    Workflow workflow = workflowService.init();
     workflow.setCurrentStep(workflowService.calculateNextStep(workflow));
     workflow.setWorkflowStatus(WorkflowStatus.INPROGRESS);
     workflow.setMetadata(new HashMap<>());

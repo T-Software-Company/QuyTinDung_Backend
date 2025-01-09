@@ -9,7 +9,6 @@ import com.tsoftware.qtd.commonlib.util.JsonParser;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
 public final class WorkflowContext {
   private static final ThreadLocal<Workflow> context = new ThreadLocal<>();
 

@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tsoftware.qtd.constants.EnumType.ApplicationStep;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
@@ -21,7 +20,6 @@ import lombok.Setter;
 public class ApplicationDTO {
   private UUID id;
   private BigDecimal amount;
-  private ApplicationStep step;
   private ZonedDateTime startDate;
   private ZonedDateTime dueDate;
   private LoanStatus status;

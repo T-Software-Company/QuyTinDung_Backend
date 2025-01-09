@@ -73,11 +73,11 @@ public class DocumentService {
         documentRepository
             .findById(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
-    return dtoMapper.toDto(document);
+    return dtoMapper.toDTO(document);
   }
 
   public List<DocumentDTO> getDocumentBelongToCustomer(UUID customerId) {
-    return documentRepository.findByCustomerId(customerId).stream().map(dtoMapper::toDto).toList();
+    return documentRepository.findByCustomerId(customerId).stream().map(dtoMapper::toDTO).toList();
   }
 
   public InputStream replace(Object object, InputStream templateFile, int depth) throws Exception {

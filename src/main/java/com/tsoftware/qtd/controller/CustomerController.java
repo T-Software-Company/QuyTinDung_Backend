@@ -11,12 +11,14 @@ import com.tsoftware.qtd.service.CustomerService;
 import com.tsoftware.qtd.service.impl.DocumentService;
 import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,15 +38,15 @@ public class CustomerController {
 
   @PostMapping
   @KcTransactional(KcTransactionType.CREATE_USER)
-  public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest customerRequest)
-      throws Exception {
+  public ResponseEntity<CustomerResponse> create(
+      @Valid @RequestBody CustomerRequest customerRequest) throws Exception {
     return ResponseEntity.ok(customerService.create(customerRequest));
   }
 
   @PutMapping("/{id}")
   @KcTransactional(KcTransactionType.UPDATE_USER)
   public ResponseEntity<ApiResponse<CustomerResponse>> update(
-      @PathVariable @IsUUID String id, @RequestBody CustomerRequest customerRequest) {
+      @PathVariable @Valid @IsUUID String id, @Valid @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             200, "Updated", customerService.update(UUID.fromString(id), customerRequest)));
@@ -76,5 +78,11 @@ public class CustomerController {
   public ResponseEntity<PageResponse<CustomerResponse>> getAll(
       @Filter Specification<Customer> spec, Pageable page) {
     return ResponseEntity.ok(customerService.getAll(spec, page));
+  }
+
+  @GetMapping("/profile")
+  @PreAuthorize("hasRole('CUSTOMER')")
+  public ResponseEntity<ApiResponse<CustomerResponse>> getProfile() {
+    return ResponseEntity.ok(new ApiResponse<>(200, "Fetched", customerService.getProfile()));
   }
 }

@@ -6,11 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class AbstractTransaction {
+public abstract class AbstractTransaction<T extends Enum<?>> {
   private UUID id;
   private String PIC;
-  private String type;
-  private UUID customerId;
+  private T type;
   private Object metadata;
 
   public abstract boolean isApproved();

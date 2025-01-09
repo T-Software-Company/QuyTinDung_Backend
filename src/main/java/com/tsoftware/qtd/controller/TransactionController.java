@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionController {
   final TransactionService transactionService;
 
-  @WorkflowAPI
+  @WorkflowAPI(step = "")
   @PostMapping("/approve")
   public ResponseEntity<?> approveRequest(@RequestBody ApproveRequest approveRequest) {
-    return ResponseEntity.ok(transactionService.approve(approveRequest.getPayload()));
+    return ResponseEntity.ok(transactionService.approve(approveRequest));
   }
 }

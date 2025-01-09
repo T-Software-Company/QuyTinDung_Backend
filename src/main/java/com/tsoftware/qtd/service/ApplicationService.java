@@ -5,8 +5,6 @@ import com.tsoftware.qtd.dto.application.ApplicationResponse;
 import com.tsoftware.qtd.dto.application.LoanPlanDTO;
 import com.tsoftware.qtd.dto.application.LoanRequestDTO;
 import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
-import com.tsoftware.qtd.dto.loan.SignRequestDetail;
-import com.tsoftware.qtd.dto.loan.SignResponse;
 import com.tsoftware.qtd.entity.Application;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -14,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface ApplicationService {
-  ApplicationResponse create(UUID customerId, ApplicationDTO applicationRequest) throws Exception;
+  ApplicationResponse create(UUID customerId) throws Exception;
 
   ApplicationResponse update(UUID id, ApplicationDTO applicationRequest);
 
@@ -29,6 +27,4 @@ public interface ApplicationService {
   void createOrUpdateLoanPlan(UUID applicationId, LoanPlanDTO loanPlanDTO);
 
   void createOrUpdateLoanRequest(UUID applicationId, LoanRequestDTO loanRequestDTO);
-
-  SignResponse sign(UUID id, SignRequestDetail signRequestDetail);
 }
