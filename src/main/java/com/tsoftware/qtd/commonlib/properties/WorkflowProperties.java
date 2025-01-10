@@ -1,0 +1,31 @@
+package com.tsoftware.qtd.commonlib.properties;
+
+import java.util.ArrayList;
+import java.util.List;
+import lombok.*;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Getter
+@Setter
+@Component
+@ConfigurationProperties(prefix = "workflow.rules")
+public class WorkflowProperties {
+
+  private List<WorkflowDefinition> onboarding;
+
+  @Getter
+  @Setter
+  public static class WorkflowDefinition {
+    private String step;
+    private List<String> dependencies = new ArrayList<>();
+    private List<NextStepRule> nextSteps = new ArrayList<>();
+  }
+
+  @Getter
+  @Setter
+  public static class NextStepRule {
+    private String step;
+    private String condition;
+  }
+}

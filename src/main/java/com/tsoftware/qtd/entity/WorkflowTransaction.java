@@ -29,7 +29,7 @@ import org.hibernate.annotations.Type;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class TransactionEntity extends AbstractAuditEntity {
+public class WorkflowTransaction extends AbstractAuditEntity {
   private UUID customerId;
 
   @Enumerated(EnumType.ORDINAL)

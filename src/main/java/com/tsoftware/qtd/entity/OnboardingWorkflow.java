@@ -1,11 +1,9 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
-import com.tsoftware.qtd.commonlib.model.StepHistory;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,18 +19,22 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table
 @EqualsAndHashCode(callSuper = true)
-public class OnboardingWorkflowEntity extends AbstractAuditEntity {
+public class OnboardingWorkflow extends AbstractAuditEntity {
   private UUID targetId;
-  private String PIC;
-  private List<String> nextSteps;
+  private List<String> nextStep;
   private WorkflowStatus workflowStatus;
-  private WorkflowStep workflowStep;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  private ZonedDateTime startTime;
+
+  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  private ZonedDateTime endTime;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Type(JsonType.class)
-  @Column(columnDefinition = "jsonb")
+  @Column
+  @OneToMany(mappedBy = "onboardingWorkflow", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<StepHistory> stepHistories;
 }

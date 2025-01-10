@@ -44,7 +44,7 @@ public class Application extends AbstractAuditEntity {
   private List<Employee> LoanProcessor;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  List<TransactionEntity> transactions;
+  List<WorkflowTransaction> transactions;
 
   @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime startDate;

@@ -5,7 +5,7 @@ import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.LoanRequestDTO;
 import com.tsoftware.qtd.dto.transaction.ApproveResponse;
-import com.tsoftware.qtd.dto.transaction.TransactionDTO;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.mapper.DtoMapper;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("loanRequestExecutor")
 @RequiredArgsConstructor
-public class LoanRequestExecutor extends BaseTransactionExecutor<TransactionDTO> {
+public class LoanRequestExecutor extends BaseTransactionExecutor<WorkflowTransactionDTO> {
   final DtoMapper dtoMapper;
   final LoanRequestMapper loanRequestMapper;
   final ApplicationRepository applicationRepository;
@@ -26,32 +26,35 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<TransactionDTO>
   final TransactionService transactionService;
 
   @Override
-  protected void preValidate(TransactionDTO transactionDTO) {
-    transactionService.validateTransaction(transactionDTO);
+  protected void preValidate(WorkflowTransactionDTO workflowTransactionDTO) {
+    transactionService.validateTransaction(workflowTransactionDTO);
   }
 
   @Override
-  protected TransactionDTO processApproval(TransactionDTO transactionDTO) {
-    return transactionService.processApproval(transactionDTO);
+  protected WorkflowTransactionDTO processApproval(WorkflowTransactionDTO workflowTransactionDTO) {
+    return transactionService.processApproval(workflowTransactionDTO);
   }
 
   @Override
-  protected Object doExecute(TransactionDTO transactionDTO) {
-    log.info("All approvals received for transactionDTO: {}", transactionDTO.getId());
-    var request = JsonParser.convert(transactionDTO.getMetadata(), LoanRequestDTO.class);
-    applicationService.createOrUpdateLoanRequest(transactionDTO.getApplication().getId(), request);
+  protected Object doExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+    log.info(
+        "All approvals received for workflowTransactionDTO: {}", workflowTransactionDTO.getId());
+    var request = JsonParser.convert(workflowTransactionDTO.getMetadata(), LoanRequestDTO.class);
+    applicationService.createOrUpdateLoanRequest(
+        workflowTransactionDTO.getApplication().getId(), request);
     ApproveResponse response = new ApproveResponse();
     //    response.setData(
     //        ApproveDTO.builder()
-    //            .transactionId(transactionDTO.getId())
+    //            .transactionId(workflowTransactionDTO.getId())
     //            .status(ApproveStatus.APPROVED)
     //            .build());
     return response;
   }
 
   @Override
-  protected void postExecute(TransactionDTO transactionDTO) {
-    transactionService.updateTransaction(transactionDTO);
-    WorkflowContext.putMetadata(transactionDTO.getId().toString(), transactionDTO.getStatus());
+  protected void postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+    transactionService.updateTransaction(workflowTransactionDTO);
+    WorkflowContext.putMetadata(
+        workflowTransactionDTO.getId().toString(), workflowTransactionDTO.getStatus());
   }
 }

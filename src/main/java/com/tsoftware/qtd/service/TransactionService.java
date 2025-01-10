@@ -5,8 +5,8 @@ import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.dto.transaction.ApproveDTO;
 import com.tsoftware.qtd.dto.transaction.ApproveRequest;
 import com.tsoftware.qtd.dto.transaction.ApproveResponse;
-import com.tsoftware.qtd.dto.transaction.TransactionDTO;
-import com.tsoftware.qtd.entity.TransactionEntity;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
+import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.DtoMapper;
@@ -51,15 +51,17 @@ public class TransactionService {
     return registry.getExecutor(transactionDTO.getType()).execute(transactionDTO);
   }
 
-  public void updateTransaction(TransactionDTO transactionDTO) {
-    TransactionEntity entity =
+  public void updateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {
+    WorkflowTransaction entity =
         repository
-            .findById(transactionDTO.getId())
+            .findById(workflowTransactionDTO.getId())
             .orElseThrow(
-                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, transactionDTO.getId()));
-    mapper.updateEntity(entity, transactionDTO);
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, workflowTransactionDTO.getId()));
+    mapper.updateEntity(entity, workflowTransactionDTO);
 
-    List<ApproveDTO> approveDTOS = transactionDTO.getApproves();
+    List<ApproveDTO> approveDTOS = workflowTransactionDTO.getApproves();
     entity
         .getApproves()
         .forEach(
@@ -71,17 +73,17 @@ public class TransactionService {
                     .findFirst()
                     .ifPresent(dto -> approve.setStatus(dto.getStatus())));
 
-    if (transactionDTO.isApproved()) {
+    if (workflowTransactionDTO.isApproved()) {
       entity.setStatus(ApproveStatus.APPROVED);
       entity.setApprovedAt(ZonedDateTime.now());
     }
     repository.save(entity);
   }
 
-  public void validateTransaction(TransactionDTO transactionDTO) {
+  public void validateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {
     var userId = RequestUtil.getUserId();
     boolean hasPermission =
-        transactionDTO.getApproves().stream()
+        workflowTransactionDTO.getApproves().stream()
             .anyMatch(
                 approve -> {
                   var employee = approve.getApprover();
@@ -89,21 +91,23 @@ public class TransactionService {
                 });
     if (!hasPermission) {
       throw new CommonException(
-          ErrorType.ACCESS_DENIED, "You don't have permission to approve this transactionDTO.");
+          ErrorType.ACCESS_DENIED,
+          "You don't have permission to approve this workflowTransactionDTO.");
     }
 
-    if (transactionDTO.isApproved()) {
+    if (workflowTransactionDTO.isApproved()) {
       throw new CommonException(
-          ErrorType.DUPLICATED_REQUEST, "TransactionDTO is already approved.");
+          ErrorType.DUPLICATED_REQUEST, "WorkflowTransactionDTO is already approved.");
     }
   }
 
-  public TransactionDTO processApproval(TransactionDTO transactionDTO) {
+  public WorkflowTransactionDTO processApproval(WorkflowTransactionDTO workflowTransactionDTO) {
     var userId = RequestUtil.getUserId();
-    var approvers = Optional.ofNullable(transactionDTO.getApproves()).orElse(new ArrayList<>());
+    var approvers =
+        Optional.ofNullable(workflowTransactionDTO.getApproves()).orElse(new ArrayList<>());
     approvers.stream()
         .filter(approve -> userId.equals(approve.getApprover().getUserId()))
         .forEach(approve -> approve.setStatus(ApproveStatus.APPROVED));
-    return transactionDTO;
+    return workflowTransactionDTO;
   }
 }

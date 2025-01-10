@@ -47,10 +47,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
-#  data:
-#    web:
-#      pageable:
-#        one-indexed-parameters: true
+  #  data:
+  #    web:
+  #      pageable:
+  #        one-indexed-parameters: true
   mail:
     host: ${HOST_MAIL}
     port: ${PORT_MAIL}
@@ -111,3 +111,62 @@ t-software:
         appraisal_approval: true
       appraisal_approval:
         appraisal_report: true
+
+workflow:
+  rules:
+    onboarding:
+      - step: init
+        dependencies: []
+        nextSteps:
+          - step: loan-request
+            condition: "true"
+          - step: loan-plan
+            condition: "true"
+
+      - step: loan-request
+        dependencies:
+          - init
+        nextSteps:
+          - step: financial-info
+            condition: "true"
+
+      - step: loan-plan
+        dependencies:
+          - init
+        nextSteps:
+          - step: financial-info
+            condition: "true"
+
+      - step: financial-info
+        dependencies:
+          - loan-request
+          - loan-plan
+        nextSteps:
+          - step: asset-collateral
+            condition: "true"
+          - step: credit-rating
+            condition: "${workflow.metadata['creditScore'] >= 700}"
+
+      - step: asset-collateral
+        dependencies:
+          - financial-info
+        nextSteps:
+          - step: valuation
+            condition: "true"
+
+      - step: valuation
+        dependencies:
+          - asset-collateral
+        nextSteps: []
+
+      - step: credit-rating
+        dependencies:
+          - financial-info
+        nextSteps:
+          - step: appraisal-report
+            condition: "true"
+
+      - step: appraisal-report
+        dependencies:
+          - credit-rating
+        nextSteps: []

@@ -10,5 +10,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface WorkflowAPI {
-  String step();
+  String step() default "init";
+
+  Action action() default Action.DEFAULT;
+
+  enum Action {
+    APPROVE,
+    DEFAULT
+  }
 }

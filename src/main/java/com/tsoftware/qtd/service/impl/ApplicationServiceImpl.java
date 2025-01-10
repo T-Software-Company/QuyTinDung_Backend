@@ -8,13 +8,13 @@ import com.tsoftware.qtd.dto.application.ApplicationResponse;
 import com.tsoftware.qtd.dto.application.LoanPlanDTO;
 import com.tsoftware.qtd.dto.application.LoanRequestDTO;
 import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
-import com.tsoftware.qtd.dto.transaction.TransactionDTO;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.Approve;
 import com.tsoftware.qtd.entity.FinancialInfo;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.entity.LoanRequest;
-import com.tsoftware.qtd.entity.TransactionEntity;
+import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -71,10 +71,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     Application application = Application.builder().status(LoanStatus.CREATING).build();
     application.setCustomer(customer);
-    List<TransactionEntity> transactions = new ArrayList<>();
+    List<WorkflowTransaction> transactions = new ArrayList<>();
 
     if (Objects.nonNull(applicationRequest.getLoanRequest())) {
-      TransactionEntity loanRequestTransaction =
+      WorkflowTransaction loanRequestTransaction =
           buildTransactionEntity(
               TransactionType.CREATE_LOAN_REQUEST,
               applicationRequest.getLoanRequest(),
@@ -86,7 +86,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     if (Objects.nonNull(applicationRequest.getLoanPlan())) {
-      TransactionEntity loanPlanTransaction =
+      WorkflowTransaction loanPlanTransaction =
           buildTransactionEntity(
               TransactionType.CREATE_LOAN_PLAN,
               applicationRequest.getLoanPlan(),
@@ -98,7 +98,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     if (Objects.nonNull(applicationRequest.getFinancialInfo())) {
-      TransactionEntity financialInfoTransaction =
+      WorkflowTransaction financialInfoTransaction =
           buildTransactionEntity(
               TransactionType.CREATE_FINANCIAL_INFO,
               applicationRequest.getFinancialInfo(),
@@ -115,11 +115,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     return ApplicationResponse.builder()
         .applicationId(application.getId())
         .transactionIds(
-            transactions.stream().map(TransactionEntity::getId).collect(Collectors.toList()))
+            transactions.stream().map(WorkflowTransaction::getId).collect(Collectors.toList()))
         .build();
   }
 
-  TransactionEntity buildTransactionEntity(
+  WorkflowTransaction buildTransactionEntity(
       TransactionType type,
       Object metadata,
       UUID customerId,
@@ -127,7 +127,7 @@ public class ApplicationServiceImpl implements ApplicationService {
       int requiredApprovals) {
 
     var entity =
-        TransactionEntity.builder()
+        WorkflowTransaction.builder()
             .PIC(RequestUtil.getUserId())
             .metadata(metadata)
             .status(ApproveStatus.WAIT)
@@ -184,7 +184,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Application not found"));
     ApplicationDTO response = applicationMapper.toDTO(application);
-    List<TransactionEntity> transactions = application.getTransactions();
+    List<WorkflowTransaction> transactions = application.getTransactions();
 
     if (CollectionUtils.isNotEmpty(transactions)) {
       boolean fullApproved =
@@ -192,8 +192,8 @@ public class ApplicationServiceImpl implements ApplicationService {
               .map(mapper::toDomain)
               .collect(
                   Collectors.toMap(
-                      TransactionDTO::getType,
-                      com.tsoftware.qtd.dto.transaction.TransactionDTO::isApproved,
+                      WorkflowTransactionDTO::getType,
+                      WorkflowTransactionDTO::isApproved,
                       (a, b) -> a || b))
               .values()
               .stream()

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.repository;
 
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
-import com.tsoftware.qtd.entity.OnboardingWorkflowEntity;
+import com.tsoftware.qtd.entity.OnboardingWorkflow;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -11,9 +11,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OnboardingWorkflowRepository
-    extends JpaRepository<OnboardingWorkflowEntity, UUID>,
-        JpaSpecificationExecutor<OnboardingWorkflowEntity> {
-  Set<OnboardingWorkflowEntity> findAllByTargetIdAndWorkflowStatus(UUID id, WorkflowStatus status);
+    extends JpaRepository<OnboardingWorkflow, UUID>, JpaSpecificationExecutor<OnboardingWorkflow> {
+  Set<OnboardingWorkflow> findAllByTargetIdAndWorkflowStatus(UUID id, WorkflowStatus status);
 
-  Optional<OnboardingWorkflowEntity> findByTargetId(UUID targetUuid);
+  Optional<OnboardingWorkflow> findByTargetId(UUID targetUuid);
 }
