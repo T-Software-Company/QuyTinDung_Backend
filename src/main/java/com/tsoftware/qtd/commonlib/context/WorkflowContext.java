@@ -3,11 +3,8 @@ package com.tsoftware.qtd.commonlib.context;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.model.Workflow;
-import com.tsoftware.qtd.commonlib.util.JsonParser;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public final class WorkflowContext {
   private static final ThreadLocal<Workflow<?>> context = new ThreadLocal<>();
@@ -24,12 +21,7 @@ public final class WorkflowContext {
     context.remove();
   }
 
-  public static void putMetadata(Object obj) {
-    var map = JsonParser.convert(obj, Map.class);
-    if (get() == null) return;
-    if (get().getMetadata() == null) return;
-    get().getMetadata().putAll(map);
-  }
+  public static void putMetadata(Object obj) {}
 
   private static void setValueWithCreateMissingNode(
       DocumentContext context, String path, Object value) {
@@ -46,24 +38,6 @@ public final class WorkflowContext {
   }
 
   public static void putMetadata(String key, Object value) {
-    if (get() == null) return;
-    if (get().getMetadata() == null) return;
-    setValueWithCreateMissingNode(JsonPath.parse(get().getMetadata()), key, value);
-  }
-
-  public static Object getMetadata(String key) {
-    if (get() == null) return null;
-    if (get().getMetadata() == null) return null;
-    DocumentContext context = JsonPath.parse(get().getMetadata());
-    try {
-      return context.read(key);
-    } catch (PathNotFoundException e) {
-      return null;
-    }
-  }
-
-  public static void setStatus(WorkflowStatus status) {
-    if (get() == null) return;
-    get().setWorkflowStatus(status);
+    setValueWithCreateMissingNode(JsonPath.parse(get()), key, value);
   }
 }

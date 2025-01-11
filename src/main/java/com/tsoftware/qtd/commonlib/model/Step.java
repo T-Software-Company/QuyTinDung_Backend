@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.commonlib.model;
 
+import com.tsoftware.qtd.commonlib.constant.StepType;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ public abstract class Step {
   private ZonedDateTime endTime;
   private List<String> nextSteps;
   private WorkflowStatus status;
+  private StepType type;
   private String transactionId;
   private Map<String, Object> metadata;
 }

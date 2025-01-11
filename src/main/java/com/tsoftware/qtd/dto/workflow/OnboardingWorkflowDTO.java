@@ -17,7 +17,7 @@ public class OnboardingWorkflowDTO implements Workflow<StepHistoryDTO> {
   private UUID targetId;
   private List<String> nextSteps;
   private List<String> currentSteps;
-  private WorkflowStatus workflowStatus;
+  private WorkflowStatus status;
   private ZonedDateTime startTime;
   private ZonedDateTime endTime;
   private String createdBy;

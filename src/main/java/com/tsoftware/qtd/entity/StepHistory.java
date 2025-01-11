@@ -1,10 +1,9 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.commonlib.constant.StepType;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,13 @@ public class StepHistory extends AbstractAuditEntity {
   private ZonedDateTime endTime;
 
   private List<String> nextSteps;
+
+  @Enumerated(EnumType.ORDINAL)
+  private StepType type;
+
+  @Enumerated(EnumType.ORDINAL)
   private WorkflowStatus status;
+
   private String transactionId;
 
   @Type(JsonType.class)

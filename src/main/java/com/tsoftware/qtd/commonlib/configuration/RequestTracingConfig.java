@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.commonlib.config;
+package com.tsoftware.qtd.commonlib.configuration;
 
 import static com.tsoftware.qtd.commonlib.constant.BaseConstant.TRACE_ID;
 

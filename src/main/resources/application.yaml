@@ -117,56 +117,63 @@ workflow:
     onboarding:
       - step: init
         dependencies: []
-        nextSteps:
+        nextStepRules:
           - step: loan-request
             condition: "true"
           - step: loan-plan
             condition: "true"
 
       - step: loan-request
+        type: DEFAULT
         dependencies:
           - init
-        nextSteps:
+        nextStepRules:
           - step: financial-info
             condition: "true"
 
       - step: loan-plan
+        type: DEFAULT
         dependencies:
           - init
-        nextSteps:
+        nextStepRules:
           - step: financial-info
             condition: "true"
 
       - step: financial-info
+        type: DEFAULT
         dependencies:
           - loan-request
           - loan-plan
-        nextSteps:
+        nextStepRules:
           - step: asset-collateral
             condition: "true"
           - step: credit-rating
             condition: "${workflow.metadata['creditScore'] >= 700}"
 
       - step: asset-collateral
+        type: DEFAULT
         dependencies:
           - financial-info
-        nextSteps:
+        nextStepRules:
           - step: valuation
             condition: "true"
 
       - step: valuation
+        type: DEFAULT
         dependencies:
           - asset-collateral
-        nextSteps: []
+        nextStepRules: []
 
       - step: credit-rating
+        type: DEFAULT
         dependencies:
           - financial-info
-        nextSteps:
+        nextStepRules:
           - step: appraisal-report
             condition: "true"
 
       - step: appraisal-report
+        type: DEFAULT
         dependencies:
           - credit-rating
-        nextSteps: []
+        nextStepRules: []

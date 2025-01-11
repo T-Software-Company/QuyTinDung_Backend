@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
+import com.tsoftware.qtd.commonlib.constant.StepType;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.Step;
@@ -8,10 +9,16 @@ import com.tsoftware.qtd.commonlib.properties.WorkflowProperties;
 import com.tsoftware.qtd.commonlib.service.WorkflowService;
 import com.tsoftware.qtd.commonlib.util.CollectionUtils;
 import com.tsoftware.qtd.dto.workflow.OnboardingWorkflowDTO;
+import com.tsoftware.qtd.dto.workflow.StepHistoryDTO;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
+import com.tsoftware.qtd.mapper.OnboardingWorkflowMapper;
+import com.tsoftware.qtd.repository.OnboardingWorkflowRepository;
+import com.tsoftware.qtd.util.RequestUtil;
+import java.time.ZonedDateTime;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.Expression;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,17 +28,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class WorkflowServiceImpl implements WorkflowService {
-
+  private final OnboardingWorkflowRepository onboardingWorkflowRepository;
   private final WorkflowProperties workflowProperties;
+  private final OnboardingWorkflowMapper onboardingWorkflowMapper;
 
   @Override
-  public Workflow<?> getByTargetIdAndStatus(UUID targetId, WorkflowStatus status) {
-    return null;
+  public List<Workflow<?>> getByTargetIdAndStatus(UUID targetId, WorkflowStatus status) {
+    var onboardingWorkflow = onboardingWorkflowRepository.findByTargetIdAndStatus(targetId, status);
+    List<Workflow<?>> workflows = new ArrayList<>();
+    onboardingWorkflow.forEach(workflow -> workflows.add(onboardingWorkflowMapper.toDTO(workflow)));
+    return workflows;
   }
 
   @Override
   public Workflow<?> getByTransactionId(UUID transactionId) {
-    return null;
+    var onboardingWorkflow =
+        onboardingWorkflowRepository
+            .findByStepTransactionId()
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, transactionId));
+    return onboardingWorkflowMapper.toDTO(onboardingWorkflow);
   }
 
   @Override
@@ -41,76 +56,103 @@ public class WorkflowServiceImpl implements WorkflowService {
 
   @Override
   public Workflow<?> init(UUID targetId) {
-    return OnboardingWorkflowDTO.builder().build();
+    var step =
+        StepHistoryDTO.builder()
+            .name(workflowProperties.getOnboarding().getFirst().getStep())
+            .status(WorkflowStatus.INPROGRESS)
+            .startTime(ZonedDateTime.now())
+            .type(StepType.DEFAULT)
+            .build();
+    return OnboardingWorkflowDTO.builder()
+        .targetId(targetId)
+        .status(WorkflowStatus.INPROGRESS)
+        .startTime(ZonedDateTime.now())
+        .steps(new ArrayList<>(List.of(step)))
+        .createdBy(RequestUtil.getUserId())
+        .build();
   }
 
   @Override
   public Workflow<?> get(UUID id) {
-    return null;
+    var onboardingWorkflow =
+        onboardingWorkflowRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
+    return onboardingWorkflowMapper.toDTO(onboardingWorkflow);
   }
 
   @Override
-  public void validateStep(Workflow<?> workflow, String step) {
+  public void validateNextStep(Workflow<?> workflow, String nextStep) {
     var nextStepRule =
-        CollectionUtils.findFirst(workflowProperties.getOnboarding(), s -> s.getStep().equals(step))
+        CollectionUtils.findFirst(
+                workflowProperties.getOnboarding(), s -> s.getStep().equals(nextStep))
             .orElseThrow(
                 () ->
                     new WorkflowException(
                         HttpStatus.BAD_REQUEST.value(),
                         "Invalid step (step not in workflow definition)"));
     workflow.getNextSteps().stream()
-        .filter(s -> s.equals(step))
+        .filter(s -> s.equals(nextStep))
         .findFirst()
         .orElseThrow(
             () ->
                 new WorkflowException(
                     HttpStatus.BAD_REQUEST.value(), "Invalid step (step not in next steps)"));
-    var dependencySteps =
+    var dependencyStepsOfNextStep =
         nextStepRule.getDependencies().stream()
             .map(
-                s ->
-                    CollectionUtils.findFirst(workflow.getSteps(), st -> st.getName().equals(s))
+                stepName ->
+                    CollectionUtils.findFirst(
+                            workflow.getSteps(), st -> st.getName().equals(stepName))
                         .orElseThrow(
                             () ->
                                 new WorkflowException(
                                     HttpStatus.BAD_REQUEST.value(),
-                                    "Invalid step (step not in workflow definition)")));
-    dependencySteps.forEach(
-        s -> {
-          if (!WorkflowStatus.COMPLETED.equals(s.getStatus())) {
+                                    "Invalid step (no dependence step "
+                                        + stepName
+                                        + "  in workflow )")));
+    dependencyStepsOfNextStep.forEach(
+        st -> {
+          if (!WorkflowStatus.COMPLETED.equals(st.getStatus())) {
             throw new WorkflowException(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Dependency step not completed ("
-                    + s.getName()
+                    + st.getName()
                     + ":"
-                    + s.getStatus().getShortname()
+                    + st.getStatus().getShortname()
                     + ")");
           }
         });
   }
 
   @Override
-  public List<String> calculateNextSteps(Step step) {
-    return workflowProperties.getOnboarding().stream()
-        .filter(workflowDefinition -> workflowDefinition.getStep().equals(step.getName()))
-        .findFirst()
-        .orElseThrow(
-            () -> new WorkflowException(HttpStatus.BAD_REQUEST.value(), "step rule not found"))
-        .getNextSteps()
-        .stream()
-        .filter(nextStepRule -> evaluateCondition(nextStepRule.getCondition(), step.getMetadata()))
-        .map(WorkflowProperties.NextStepRule::getStep)
-        .toList();
+  public void calculateSteps(Workflow<?> workflow, String stepName) {
+    var nextSteps =
+        workflowProperties.getOnboarding().stream()
+            .filter(workflowDefinition -> workflowDefinition.getStep().equals(stepName))
+            .findFirst()
+            .orElseThrow(
+                () -> new WorkflowException(HttpStatus.BAD_REQUEST.value(), "Step rule not found"))
+            .getNextStepRules()
+            .stream()
+            .filter(nextStepRule -> evaluateCondition(nextStepRule.getCondition(), workflow))
+            .map(WorkflowProperties.NextStepRule::getStep)
+            .toList();
+    var steps = workflow.getSteps();
+    var step =
+        CollectionUtils.findFirst(steps, st -> st.getName().equals(stepName))
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
+    step.setNextSteps(nextSteps);
+    workflow.setCurrentSteps(steps.stream().map(Step::getName).toList());
+    workflow.setNextSteps(
+        steps.stream().flatMap(st -> st.getNextSteps().stream()).distinct().toList());
   }
 
-  private boolean evaluateCondition(String condition, Map<String, Object> metadata) {
-    if (condition == null || condition.isEmpty()) {
+  private boolean evaluateCondition(Expression condition, Object object) {
+    if (condition == null) {
       return true;
     }
-    ExpressionParser parser = new SpelExpressionParser();
-    var context = new StandardEvaluationContext();
-    context.setVariable("stepMetadata", metadata);
-    var exp = parser.parseExpression(condition);
-    return Boolean.TRUE.equals(exp.getValue(context, Boolean.class));
+    var context = new StandardEvaluationContext(object);
+    return Boolean.TRUE.equals(condition.getValue(context, Boolean.class));
   }
 }

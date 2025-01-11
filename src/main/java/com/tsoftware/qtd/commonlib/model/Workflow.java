@@ -19,9 +19,9 @@ public interface Workflow<T extends Step> {
 
   void setNextSteps(List<String> value);
 
-  WorkflowStatus getWorkflowStatus();
+  WorkflowStatus getStatus();
 
-  void setWorkflowStatus(WorkflowStatus value);
+  void setStatus(WorkflowStatus value);
 
   ZonedDateTime getStartTime();
 

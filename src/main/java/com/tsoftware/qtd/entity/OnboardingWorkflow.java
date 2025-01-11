@@ -22,7 +22,9 @@ import org.hibernate.annotations.Type;
 public class OnboardingWorkflow extends AbstractAuditEntity {
   private UUID targetId;
   private List<String> nextStep;
-  private WorkflowStatus workflowStatus;
+
+  @Enumerated(EnumType.ORDINAL)
+  private WorkflowStatus status;
 
   @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime startTime;
