@@ -11,6 +11,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -155,5 +161,60 @@ public class JsonParser {
     final var jsonNode = objectMapper.valueToTree(object);
     ((ObjectNode) jsonNode).putPOJO(fieldName, obj);
     return objectMapper.treeToValue(jsonNode, object.getClass());
+  }
+
+  public static void put(Object context, String path, Object value) {
+    setValueWithCreateMissingNode(JsonPath.parse(context), path, value, true);
+  }
+
+  public static void put(Object context, String path, Object value, boolean overwrite) {
+    setValueWithCreateMissingNode(JsonPath.parse(context), path, value, overwrite);
+  }
+
+  private static void setValueWithCreateMissingNode(
+      DocumentContext context, String path, Object value, boolean overwrite) {
+
+    if (path == null || path.trim().isEmpty()) {
+      context.set("$", value);
+      return;
+    }
+
+    int pos = path.lastIndexOf('.');
+    String parent = (pos == -1) ? "$" : path.substring(0, pos);
+    String child = path.substring(pos + 1);
+
+    try {
+      context.read(parent);
+    } catch (PathNotFoundException e) {
+      setValueWithCreateMissingNode(context, parent, new LinkedHashMap<>(), overwrite);
+    }
+
+    // Handle array paths like "field.nestField[0]"
+    if (child.matches(".+\\[\\d+]")) {
+      String arrayName = child.substring(0, child.indexOf("["));
+      int index = Integer.parseInt(child.substring(child.indexOf("[") + 1, child.indexOf("]")));
+
+      List<Object> array;
+      try {
+        array = context.read(parent + "." + arrayName);
+      } catch (PathNotFoundException e) {
+        array = new ArrayList<>();
+        context.put(parent, arrayName, array);
+      }
+      if (overwrite) {
+        // Handle cases where array index is not continuous or array size is smaller than index
+        while (array.size() <= index) {
+          array.add(new LinkedHashMap<>()); // Add missing elements as needed
+        }
+        array.set(index, value);
+      } else {
+        array.add(value);
+      }
+      context.set(parent + "." + arrayName, array);
+    } else {
+      if (overwrite) {
+        context.put(parent, child, value);
+      }
+    }
   }
 }

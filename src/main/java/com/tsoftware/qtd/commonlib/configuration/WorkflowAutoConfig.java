@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.commonlib.configuration;
 
+import com.tsoftware.qtd.commonlib.constant.StepType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.context.ApplicationContext;
@@ -33,6 +34,19 @@ public class WorkflowAutoConfig {
     public Expression convert(Boolean b) {
       ExpressionParser parser = new SpelExpressionParser();
       return parser.parseExpression(b.toString());
+    }
+  }
+
+  @Component
+  @ConfigurationPropertiesBinding
+  public static class StepTypeConverter implements Converter<String, StepType> {
+
+    @Override
+    public StepType convert(@NonNull String source) {
+      if (source.isBlank()) {
+        return StepType.DEFAULT;
+      }
+      return StepType.valueOf(source.toUpperCase());
     }
   }
 

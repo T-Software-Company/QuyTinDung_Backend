@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.CustomerResponse;
@@ -68,10 +67,8 @@ public class CustomerServiceImpl implements CustomerService {
     if (!StringUtils.isBlank(customerRequest.getSignaturePhoto())) {
       urls.add(customerRequest.getSignaturePhoto());
     }
-    var frontPhotoURL =
-        JsonParser.getValueByPath(customerRequest, "identityInfo.frontPhotoURL", String.class);
-    var backPhotoURL =
-        JsonParser.getValueByPath(customerRequest, "identityInfo.backPhotoURL", String.class);
+    var frontPhotoURL = customerRequest.getIdentityInfo().getFrontPhotoUrl();
+    var backPhotoURL = customerRequest.getIdentityInfo().getBackPhotoUrl();
     if (frontPhotoURL != null && backPhotoURL != null) {
       urls.add(frontPhotoURL);
       urls.add(backPhotoURL);

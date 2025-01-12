@@ -1,10 +1,6 @@
 package com.tsoftware.qtd.commonlib.context;
 
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
 import com.tsoftware.qtd.commonlib.model.Workflow;
-import java.util.LinkedHashMap;
 
 public final class WorkflowContext {
   private static final ThreadLocal<Workflow<?>> context = new ThreadLocal<>();
@@ -19,25 +15,5 @@ public final class WorkflowContext {
 
   public static void clear() {
     context.remove();
-  }
-
-  public static void putMetadata(Object obj) {}
-
-  private static void setValueWithCreateMissingNode(
-      DocumentContext context, String path, Object value) {
-    int pos = path.lastIndexOf('.');
-    String parent = (pos == -1) ? "$" : path.substring(0, pos);
-    String child = path.substring(pos + 1);
-    try {
-      context.read(parent); // EX if parent missing
-    } catch (PathNotFoundException e) {
-      setValueWithCreateMissingNode(
-          context, parent, new LinkedHashMap<>()); // (recursively) Create missing parent
-    }
-    context.put(parent, child, value);
-  }
-
-  public static void putMetadata(String key, Object value) {
-    setValueWithCreateMissingNode(JsonPath.parse(get()), key, value);
   }
 }

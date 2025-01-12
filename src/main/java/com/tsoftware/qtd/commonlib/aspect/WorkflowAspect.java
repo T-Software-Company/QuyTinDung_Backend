@@ -9,6 +9,8 @@ import com.tsoftware.qtd.commonlib.model.Workflow;
 import com.tsoftware.qtd.commonlib.properties.WorkflowProperties;
 import com.tsoftware.qtd.commonlib.service.WorkflowService;
 import com.tsoftware.qtd.commonlib.util.CollectionUtils;
+import com.tsoftware.qtd.commonlib.util.JsonParser;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -54,32 +56,27 @@ public class WorkflowAspect {
 
     // approve action
     if (action.equals(WorkflowAPI.Action.APPROVE)) {
-      var transactionId =
-          Arrays.stream(joinPoint.getArgs())
-              .filter(arg -> arg instanceof UUID)
-              .map(arg -> (UUID) arg)
-              .findFirst()
-              .orElseThrow(
-                  () ->
-                      new WorkflowException(
-                          HttpStatus.NOT_FOUND.value(), "Transaction id not found"));
+      var transactionId = getTransactionId(joinPoint);
       var workflow = workflowService.getByTransactionId(transactionId);
       WorkflowContext.set(workflow);
       return;
     }
 
     // process next step
-    var workflow =
-        workflowService.getByTargetIdAndStatus(targetId, WorkflowStatus.INPROGRESS).getFirst();
+    var workflows = workflowService.getByTargetIdAndStatus(targetId, WorkflowStatus.INPROGRESS);
+    if (workflows.isEmpty()) {
+      throw new WorkflowException(
+          HttpStatus.NOT_FOUND.value(), "Work flow not found (targetId: " + targetId + ")");
+    }
+    var workflow = workflows.getFirst();
     workflowService.validateNextStep(workflow, step);
     WorkflowContext.set(workflow);
   }
 
   @AfterReturning(value = "@annotation(WorkflowAPI)", returning = "response")
-  private void afterReturnWorkflow(JoinPoint joinPoint, Object response, WorkflowAPI workflowAPI) {
+  private void afterReturnWorkflow(Object response, WorkflowAPI workflowAPI) {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
-    var targetId = getTargetId(joinPoint);
     if (response instanceof ApiResponse<?> apiResponse) {
       response = apiResponse.getResult();
     }
@@ -88,25 +85,29 @@ public class WorkflowAspect {
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(
                 () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
-    Map<String, Object> metadata = new Hashtable<>();
-    step.setMetadata();
+    step.setEndTime(ZonedDateTime.now());
+    Map<String, Object> metadata = step.getMetadata();
+    JsonParser.put(metadata, "histories[0].response", response, false);
+    this.finalProcess(workflow, step.getName());
+    workflowService.save(workflow);
   }
 
   @AfterThrowing(value = "@annotation(WorkflowAPI)", throwing = "ex")
-  private void afterThrowWorkflow(JoinPoint joinPoint, Throwable ex) {
-    //    Workflow<?> workflow = WorkflowContext.get();
-    //    if (workflow != null) {
-    //      WorkflowContext.putMetadata("error", ex.getMessage());
-    //      workflowService.save(workflow);
-    //    }
+  private void afterThrowWorkflow(Throwable ex, WorkflowAPI workflowAPI) {
+    Workflow<?> workflow = WorkflowContext.get();
+    var stepName = workflowAPI.step();
+    var step =
+        CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
+            .orElseThrow(
+                () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
+    step.setEndTime(ZonedDateTime.now());
+    Map<String, Object> metadata = step.getMetadata();
+    //    JsonParser.put(metadata,"histories[0].",response,false);
+    workflowService.save(workflow);
   }
 
   @After(value = "@annotation(WorkflowAPI)")
-  public void afterWorkflow(JoinPoint joinPoint) {
-    Workflow<?> workflow = WorkflowContext.get();
-    if (workflow != null) {
-      workflowService.save(workflow);
-    }
+  public void afterWorkflow() {
     WorkflowContext.clear();
   }
 
@@ -116,5 +117,20 @@ public class WorkflowAspect {
         .map(arg -> (UUID) arg)
         .findFirst()
         .orElse(UUID.randomUUID());
+  }
+
+  private UUID getTransactionId(JoinPoint joinPoint) {
+    return Arrays.stream(joinPoint.getArgs())
+        .filter(arg -> arg instanceof UUID)
+        .map(arg -> (UUID) arg)
+        .findFirst()
+        .orElseThrow(
+            () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Transaction id not found"));
+  }
+
+  private void finalProcess(Workflow<?> workflow, String step) {
+    workflowService.calculateCurrentSteps(workflow);
+    workflowService.calculateNextSteps(workflow, step);
+    workflowService.calculateStatus(workflow, step);
   }
 }

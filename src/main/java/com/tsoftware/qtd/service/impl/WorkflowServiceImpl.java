@@ -17,6 +17,7 @@ import com.tsoftware.qtd.repository.OnboardingWorkflowRepository;
 import com.tsoftware.qtd.util.RequestUtil;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -45,7 +46,11 @@ public class WorkflowServiceImpl implements WorkflowService {
     var onboardingWorkflow =
         onboardingWorkflowRepository
             .findByStepTransactionId()
-            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, transactionId));
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND,
+                        "(findByStepTransactionId: " + transactionId + ")"));
     return onboardingWorkflowMapper.toDTO(onboardingWorkflow);
   }
 
@@ -61,6 +66,8 @@ public class WorkflowServiceImpl implements WorkflowService {
             .name(workflowProperties.getOnboarding().getFirst().getStep())
             .status(WorkflowStatus.INPROGRESS)
             .startTime(ZonedDateTime.now())
+            .metadata(new HashMap<>())
+            .nextSteps(new ArrayList<>())
             .type(StepType.DEFAULT)
             .build();
     return OnboardingWorkflowDTO.builder()
@@ -68,6 +75,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         .status(WorkflowStatus.INPROGRESS)
         .startTime(ZonedDateTime.now())
         .steps(new ArrayList<>(List.of(step)))
+        .nextSteps(new ArrayList<>())
         .createdBy(RequestUtil.getUserId())
         .build();
   }
@@ -126,7 +134,27 @@ public class WorkflowServiceImpl implements WorkflowService {
   }
 
   @Override
-  public void calculateSteps(Workflow<?> workflow, String stepName) {
+  public void calculateStatus(Workflow<?> workflow, String stepName) {
+    //    var step =
+    // CollectionUtils.findFirst(workflow.getSteps(),s->s.getName().equals(stepName)).orElseThrow(()->new CommonException(ErrorType.ENTITY_NOT_FOUND,stepName));
+    //    step.setStatus(WorkflowStatus.COMPLETED);
+  }
+
+  @Override
+  public void calculateCurrentSteps(Workflow<?> workflow) {
+    var steps = workflow.getSteps();
+    var currentSteps = steps.stream().map(Step::getName).collect(Collectors.toList());
+    workflowProperties
+        .getOnboarding()
+        .forEach(
+            workflowDefinition ->
+                workflowDefinition.getDependencies().forEach(currentSteps::remove));
+    workflow.setCurrentSteps(currentSteps);
+  }
+
+  @Override
+  public void calculateNextSteps(Workflow<?> workflow, String stepName) {
+    var steps = workflow.getSteps();
     var nextSteps =
         workflowProperties.getOnboarding().stream()
             .filter(workflowDefinition -> workflowDefinition.getStep().equals(stepName))
@@ -138,14 +166,15 @@ public class WorkflowServiceImpl implements WorkflowService {
             .filter(nextStepRule -> evaluateCondition(nextStepRule.getCondition(), workflow))
             .map(WorkflowProperties.NextStepRule::getStep)
             .toList();
-    var steps = workflow.getSteps();
     var step =
         CollectionUtils.findFirst(steps, st -> st.getName().equals(stepName))
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
     step.setNextSteps(nextSteps);
-    workflow.setCurrentSteps(steps.stream().map(Step::getName).toList());
     workflow.setNextSteps(
-        steps.stream().flatMap(st -> st.getNextSteps().stream()).distinct().toList());
+        steps.stream()
+            .flatMap(st -> st.getNextSteps().stream())
+            .distinct()
+            .collect(Collectors.toList()));
   }
 
   private boolean evaluateCondition(Expression condition, Object object) {

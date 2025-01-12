@@ -3,7 +3,9 @@ package com.tsoftware.qtd.commonlib.util;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class CollectionUtils {
 
   /**
