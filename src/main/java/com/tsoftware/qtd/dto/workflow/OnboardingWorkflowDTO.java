@@ -14,6 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OnboardingWorkflowDTO implements Workflow<StepHistoryDTO> {
+  private UUID id;
   private UUID targetId;
   private List<String> nextSteps;
   private List<String> currentSteps;

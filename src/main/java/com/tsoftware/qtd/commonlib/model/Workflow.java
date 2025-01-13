@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface Workflow<T extends Step> {
+  UUID getId();
+
+  void setId(UUID value);
+
   UUID getTargetId();
 
   void setTargetId(UUID value);

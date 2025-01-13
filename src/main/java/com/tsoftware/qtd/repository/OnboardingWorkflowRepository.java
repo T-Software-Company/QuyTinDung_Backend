@@ -14,7 +14,5 @@ public interface OnboardingWorkflowRepository
     extends JpaRepository<OnboardingWorkflow, UUID>, JpaSpecificationExecutor<OnboardingWorkflow> {
   List<OnboardingWorkflow> findByTargetIdAndStatus(UUID id, WorkflowStatus status);
 
-  Optional<OnboardingWorkflow> findByTargetId(UUID targetUuid);
-
-  Optional<OnboardingWorkflow> findByStepTransactionId();
+  Optional<OnboardingWorkflow> findByStepTransactionId(UUID id);
 }

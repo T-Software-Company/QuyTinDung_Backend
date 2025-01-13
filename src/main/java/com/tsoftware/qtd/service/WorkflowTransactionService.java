@@ -1,10 +1,10 @@
 package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.commonlib.executor.TransactionExecutorRegistry;
+import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
+import com.tsoftware.qtd.commonlib.service.TransactionService;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.dto.transaction.ApproveDTO;
-import com.tsoftware.qtd.dto.transaction.ApproveRequest;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
@@ -16,6 +16,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,30 +25,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TransactionService {
+public class WorkflowTransactionService implements TransactionService {
   final TransactionExecutorRegistry registry;
   final TransactionRepository repository;
   final DtoMapper mapper;
 
-  public Object approve(ApproveRequest approveRequest) {
+  public Object approve(UUID id, ApproveStatus status) {
     var transactionDTO =
         repository
-            .findById(approveRequest.getTransactionId())
+            .findById(id)
             .map(mapper::toDTO)
-            .orElseThrow(
-                () ->
-                    new CommonException(
-                        ErrorType.ENTITY_NOT_FOUND, approveRequest.getTransactionId()));
-    if (ApproveStatus.REJECTED.equals(approveRequest.getStatus())) {
-      transactionDTO.setStatus(ApproveStatus.REJECTED);
-      repository.save(mapper.toEntity(transactionDTO));
-      ApproveResponse response = new ApproveResponse();
-      //      response.setData(
-      //          ApproveDTO.builder()
-      //              .transactionId(transactionDTO.getId())
-      //              .status(ApproveStatus.REJECTED)
-      //              .build());
-      return response;
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
+    var userId = RequestUtil.getUserId();
+
+    var approves =
+        transactionDTO.getApproves().stream()
+            .filter(approve -> userId.equals(approve.getApprover().getUserId()))
+            .collect(Collectors.toList());
+    if (approves.isEmpty()) {
+      throw new CommonException(
+          ErrorType.ACCESS_DENIED, "You don't have permission to approve this workflow .");
+    } else {
+      approves.forEach(approve -> approve.setStatus(status));
     }
     return registry.getExecutor(transactionDTO.getType()).execute(transactionDTO);
   }
@@ -109,5 +109,12 @@ public class TransactionService {
         .filter(approve -> userId.equals(approve.getApprover().getUserId()))
         .forEach(approve -> approve.setStatus(ApproveStatus.APPROVED));
     return workflowTransactionDTO;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T extends AbstractTransaction<?>> T create(T transaction) {
+    var t = repository.save(mapper.toEntity((WorkflowTransactionDTO) transaction));
+    return (T) mapper.toDTO(t);
   }
 }

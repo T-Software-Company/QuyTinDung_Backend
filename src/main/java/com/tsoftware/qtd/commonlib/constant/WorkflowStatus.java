@@ -9,7 +9,7 @@ public enum WorkflowStatus {
   INPROGRESS("inprogress"),
   DENIED("denied"),
   COMPLETED("completed"),
-  EXPIRED("expired");
+  CANCELLED("cancelled");
 
   final String shortname;
 

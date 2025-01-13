@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface WorkflowAPI {
-  String step() default "init";
+  String step() default "unknown";
 
   Action action() default Action.DEFAULT;
 

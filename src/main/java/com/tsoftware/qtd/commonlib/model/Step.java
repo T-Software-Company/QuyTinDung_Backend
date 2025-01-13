@@ -5,6 +5,7 @@ import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,6 @@ public abstract class Step {
   private List<String> nextSteps;
   private WorkflowStatus status;
   private StepType type;
-  private String transactionId;
+  private UUID transactionId;
   private Map<String, Object> metadata;
 }

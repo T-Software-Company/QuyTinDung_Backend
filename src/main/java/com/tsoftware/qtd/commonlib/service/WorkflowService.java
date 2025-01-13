@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.commonlib.service;
 
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
+import com.tsoftware.qtd.commonlib.model.Step;
 import com.tsoftware.qtd.commonlib.model.Workflow;
 import java.util.List;
 import java.util.UUID;
@@ -14,9 +15,11 @@ public interface WorkflowService {
 
   Workflow<?> init(UUID targetId);
 
+  <T extends Step> T initStep(String stepName);
+
   Workflow<?> get(UUID id);
 
-  void validateNextStep(Workflow<?> workflow, String nextStep);
+  void validateStep(Workflow<?> workflow, String nextStep);
 
   void calculateStatus(Workflow<?> workflow, String stepName);
 

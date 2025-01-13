@@ -45,7 +45,7 @@ public class WorkflowServiceImpl implements WorkflowService {
   public Workflow<?> getByTransactionId(UUID transactionId) {
     var onboardingWorkflow =
         onboardingWorkflowRepository
-            .findByStepTransactionId()
+            .findByStepTransactionId(transactionId)
             .orElseThrow(
                 () ->
                     new CommonException(
@@ -56,20 +56,13 @@ public class WorkflowServiceImpl implements WorkflowService {
 
   @Override
   public Workflow<?> save(Workflow<?> workflow) {
-    return null;
+    var onboardingWorkflow = onboardingWorkflowMapper.toEntity((OnboardingWorkflowDTO) workflow);
+    return onboardingWorkflowMapper.toDTO(onboardingWorkflowRepository.save(onboardingWorkflow));
   }
 
   @Override
   public Workflow<?> init(UUID targetId) {
-    var step =
-        StepHistoryDTO.builder()
-            .name(workflowProperties.getOnboarding().getFirst().getStep())
-            .status(WorkflowStatus.INPROGRESS)
-            .startTime(ZonedDateTime.now())
-            .metadata(new HashMap<>())
-            .nextSteps(new ArrayList<>())
-            .type(StepType.DEFAULT)
-            .build();
+    var step = this.initStep(workflowProperties.getOnboarding().getFirst().getStep());
     return OnboardingWorkflowDTO.builder()
         .targetId(targetId)
         .status(WorkflowStatus.INPROGRESS)
@@ -77,6 +70,23 @@ public class WorkflowServiceImpl implements WorkflowService {
         .steps(new ArrayList<>(List.of(step)))
         .nextSteps(new ArrayList<>())
         .createdBy(RequestUtil.getUserId())
+        .build();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public StepHistoryDTO initStep(String stepName) {
+    return StepHistoryDTO.builder()
+        .name(stepName)
+        .status(WorkflowStatus.INPROGRESS)
+        .startTime(ZonedDateTime.now())
+        .metadata(new HashMap<>())
+        .nextSteps(new ArrayList<>())
+        .type(
+            CollectionUtils.findFirst(
+                    workflowProperties.getOnboarding(), s -> s.getStep().equals(stepName))
+                .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName))
+                .getType())
         .build();
   }
 
@@ -90,7 +100,7 @@ public class WorkflowServiceImpl implements WorkflowService {
   }
 
   @Override
-  public void validateNextStep(Workflow<?> workflow, String nextStep) {
+  public void validateStep(Workflow<?> workflow, String nextStep) {
     var nextStepRule =
         CollectionUtils.findFirst(
                 workflowProperties.getOnboarding(), s -> s.getStep().equals(nextStep))
@@ -99,13 +109,17 @@ public class WorkflowServiceImpl implements WorkflowService {
                     new WorkflowException(
                         HttpStatus.BAD_REQUEST.value(),
                         "Invalid step (step not in workflow definition)"));
-    workflow.getNextSteps().stream()
+    var steps = new ArrayList<>(workflow.getCurrentSteps());
+    steps.addAll(workflow.getNextSteps());
+    steps.stream()
         .filter(s -> s.equals(nextStep))
         .findFirst()
         .orElseThrow(
             () ->
                 new WorkflowException(
-                    HttpStatus.BAD_REQUEST.value(), "Invalid step (step not in next steps)"));
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Invalid step (step not in current steps or next steps)"));
+
     var dependencyStepsOfNextStep =
         nextStepRule.getDependencies().stream()
             .map(
@@ -135,9 +149,24 @@ public class WorkflowServiceImpl implements WorkflowService {
 
   @Override
   public void calculateStatus(Workflow<?> workflow, String stepName) {
-    //    var step =
-    // CollectionUtils.findFirst(workflow.getSteps(),s->s.getName().equals(stepName)).orElseThrow(()->new CommonException(ErrorType.ENTITY_NOT_FOUND,stepName));
-    //    step.setStatus(WorkflowStatus.COMPLETED);
+    var step =
+        CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
+    if (step.getType().equals(StepType.DEFAULT)) {
+      step.setStatus(WorkflowStatus.COMPLETED);
+    } else {
+      step.setStatus(WorkflowStatus.INPROGRESS);
+    }
+    var isFinalStep =
+        workflow.getSteps().stream()
+            .anyMatch(
+                st -> st.getName().equals(workflowProperties.getOnboarding().getLast().getStep()));
+    var stepsIsCompleted =
+        workflow.getSteps().stream()
+            .allMatch(st -> WorkflowStatus.COMPLETED.equals(st.getStatus()));
+    if (isFinalStep && stepsIsCompleted) {
+      workflow.setStatus(WorkflowStatus.COMPLETED);
+    }
   }
 
   @Override

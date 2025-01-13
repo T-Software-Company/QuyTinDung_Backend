@@ -16,7 +16,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApproveDTO {
   private UUID id;
-  private UUID transactionId;
   private EmployeeResponse approver;
   private ApproveStatus status;
 }

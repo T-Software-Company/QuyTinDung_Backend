@@ -47,10 +47,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
-  #  data:
-  #    web:
-  #      pageable:
-  #        one-indexed-parameters: true
+
   mail:
     host: ${HOST_MAIL}
     port: ${PORT_MAIL}
@@ -62,8 +59,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
-
 
 idp:
   server-url: ${IDP_URL}
@@ -84,33 +79,11 @@ logging:
   pattern:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} [%clr(%X{TraceId}){yellow}] %m%n%wex"
 
-
-
 google:
   cloud:
     storage:
       bucket-name: qtd_tsoftware
       service-account: service-account.json
-
-t-software:
-  account:
-    format:
-      loan: LN****###**
-  workflow:
-    rules:
-      create_customer:
-        create_application: true
-      create_application:
-        loan_submit_approve: true
-      loan_submit_approve:
-        asset_valuation: loan_submit_approve == true
-        loan_submit_approve: true
-      asset_valuation:
-        appraisal_plan: true
-      appraisal_plan:
-        appraisal_approval: true
-      appraisal_approval:
-        appraisal_report: true
 
 workflow:
   rules:
@@ -148,7 +121,7 @@ workflow:
           - step: asset-collateral
             condition: "true"
           - step: credit-rating
-            condition: "${workflow.metadata['creditScore'] >= 700}"
+            condition: "true"
 
       - step: asset-collateral
         type: DEFAULT

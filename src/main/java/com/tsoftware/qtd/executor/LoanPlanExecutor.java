@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.executor;
 
-import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.LoanPlanDTO;
@@ -10,7 +9,7 @@ import com.tsoftware.qtd.mapper.LoanPlanMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.service.ApplicationService;
-import com.tsoftware.qtd.service.TransactionService;
+import com.tsoftware.qtd.service.WorkflowTransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,16 +22,16 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactio
   final ApplicationRepository applicationRepository;
   final LoanPlanRepository loanPlanRepository;
   final ApplicationService applicationService;
-  private final TransactionService transactionService;
+  private final WorkflowTransactionService workflowTransactionService;
 
   @Override
   protected void preValidate(WorkflowTransactionDTO workflowTransactionDTO) {
-    transactionService.validateTransaction(workflowTransactionDTO);
+    workflowTransactionService.validateTransaction(workflowTransactionDTO);
   }
 
   @Override
   protected WorkflowTransactionDTO processApproval(WorkflowTransactionDTO workflowTransactionDTO) {
-    return transactionService.processApproval(workflowTransactionDTO);
+    return workflowTransactionService.processApproval(workflowTransactionDTO);
   }
 
   @Override
@@ -53,8 +52,6 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactio
 
   @Override
   protected void postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
-    transactionService.updateTransaction(workflowTransactionDTO);
-    WorkflowContext.putMetadata(
-        workflowTransactionDTO.getId().toString(), workflowTransactionDTO.getStatus());
+    workflowTransactionService.updateTransaction(workflowTransactionDTO);
   }
 }

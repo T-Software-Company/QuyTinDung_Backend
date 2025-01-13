@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor
-@NoArgsConstructor
 public abstract class AbstractResponse {
   private UUID id;
   private ZonedDateTime createdAt;

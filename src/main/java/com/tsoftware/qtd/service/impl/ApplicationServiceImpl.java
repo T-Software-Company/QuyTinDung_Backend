@@ -1,20 +1,14 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
-import com.tsoftware.qtd.constants.EnumType.LoanStatus;
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import com.tsoftware.qtd.dto.application.ApplicationResponse;
 import com.tsoftware.qtd.dto.application.LoanPlanDTO;
 import com.tsoftware.qtd.dto.application.LoanRequestDTO;
 import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
-import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.entity.Application;
-import com.tsoftware.qtd.entity.Approve;
 import com.tsoftware.qtd.entity.FinancialInfo;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.entity.LoanRequest;
-import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -25,17 +19,9 @@ import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.LoanService;
-import com.tsoftware.qtd.util.RequestUtil;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -57,104 +43,7 @@ public class ApplicationServiceImpl implements ApplicationService {
   @Override
   @Transactional
   public ApplicationResponse create(UUID customerId) {
-    var customer =
-        customerRepository
-            .findById(customerId)
-            .orElseThrow(() -> new NotFoundException("Customer not found."));
-
-    var currentApplication = applicationRepository.findByCustomerId(customerId);
-    if (currentApplication.stream()
-        .filter(app -> !app.getIsDeleted())
-        .anyMatch(app -> LoanStatus.CREATING.equals(app.getStatus()))) {
-      throw new CommonException(ErrorType.HAS_APPLICATION_IN_PROGRESS);
-    }
-
-    Application application = Application.builder().status(LoanStatus.CREATING).build();
-    application.setCustomer(customer);
-    List<WorkflowTransaction> transactions = new ArrayList<>();
-
-    if (Objects.nonNull(applicationRequest.getLoanRequest())) {
-      WorkflowTransaction loanRequestTransaction =
-          buildTransactionEntity(
-              TransactionType.CREATE_LOAN_REQUEST,
-              applicationRequest.getLoanRequest(),
-              customerId,
-              applicationRequest.getLoanRequest().getAssignees(),
-              1);
-      loanRequestTransaction.setApplication(application);
-      transactions.add(loanRequestTransaction);
-    }
-
-    if (Objects.nonNull(applicationRequest.getLoanPlan())) {
-      WorkflowTransaction loanPlanTransaction =
-          buildTransactionEntity(
-              TransactionType.CREATE_LOAN_PLAN,
-              applicationRequest.getLoanPlan(),
-              customerId,
-              applicationRequest.getLoanRequest().getAssignees(),
-              1);
-      loanPlanTransaction.setApplication(application);
-      transactions.add(loanPlanTransaction);
-    }
-
-    if (Objects.nonNull(applicationRequest.getFinancialInfo())) {
-      WorkflowTransaction financialInfoTransaction =
-          buildTransactionEntity(
-              TransactionType.CREATE_FINANCIAL_INFO,
-              applicationRequest.getFinancialInfo(),
-              customerId,
-              applicationRequest.getLoanRequest().getAssignees(),
-              1);
-      financialInfoTransaction.setApplication(application);
-      transactions.add(financialInfoTransaction);
-    }
-
-    application.setTransactions(transactions);
-
-    applicationRepository.save(application);
-    return ApplicationResponse.builder()
-        .applicationId(application.getId())
-        .transactionIds(
-            transactions.stream().map(WorkflowTransaction::getId).collect(Collectors.toList()))
-        .build();
-  }
-
-  WorkflowTransaction buildTransactionEntity(
-      TransactionType type,
-      Object metadata,
-      UUID customerId,
-      Set<String> assignees,
-      int requiredApprovals) {
-
-    var entity =
-        WorkflowTransaction.builder()
-            .PIC(RequestUtil.getUserId())
-            .metadata(metadata)
-            .status(ApproveStatus.WAIT)
-            .type(type)
-            .customerId(customerId)
-            .requiredApprovals(requiredApprovals)
-            .createdAt(ZonedDateTime.now())
-            .metadata(metadata)
-            .build();
-
-    if (CollectionUtils.isEmpty(assignees)) {
-      assignees = Set.of(RequestUtil.getUserId());
-    }
-    List<Approve> approves =
-        employeeService.findByUserIdIn(assignees).stream()
-            .map(
-                employee ->
-                    (Approve)
-                        Approve.builder()
-                            .approver(employee)
-                            .status(ApproveStatus.WAIT)
-                            .transaction(entity)
-                            .build())
-            .toList();
-
-    entity.setApproves(approves);
-    return entity;
+    return null;
   }
 
   @Override
@@ -183,29 +72,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         applicationRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Application not found"));
-    ApplicationDTO response = applicationMapper.toDTO(application);
-    List<WorkflowTransaction> transactions = application.getTransactions();
 
-    if (CollectionUtils.isNotEmpty(transactions)) {
-      boolean fullApproved =
-          transactions.stream()
-              .map(mapper::toDomain)
-              .collect(
-                  Collectors.toMap(
-                      WorkflowTransactionDTO::getType,
-                      WorkflowTransactionDTO::isApproved,
-                      (a, b) -> a || b))
-              .values()
-              .stream()
-              .allMatch(Boolean.TRUE::equals);
-      boolean fulDocument =
-          Objects.nonNull(application.getFinancialInfo())
-              && Objects.nonNull(application.getLoanPlan())
-              && Objects.nonNull(application.getLoanRequest());
-      response.setCanSign(fullApproved && fulDocument);
-    }
-
-    return response;
+    return applicationMapper.toDTO(application);
   }
 
   @Override

@@ -21,7 +21,8 @@ import org.hibernate.annotations.Type;
 @EqualsAndHashCode(callSuper = true)
 public class OnboardingWorkflow extends AbstractAuditEntity {
   private UUID targetId;
-  private List<String> nextStep;
+  private List<String> nextSteps;
+  private List<String> currentSteps;
 
   @Enumerated(EnumType.ORDINAL)
   private WorkflowStatus status;
