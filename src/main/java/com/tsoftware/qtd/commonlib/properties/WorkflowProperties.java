@@ -20,6 +20,7 @@ public class WorkflowProperties {
   @Setter
   public static class WorkflowDefinition {
     private String step;
+    private Expression extractStatus;
     private StepType type;
     private List<String> dependencies = new ArrayList<>();
     private List<NextStepRule> nextStepRules = new ArrayList<>();

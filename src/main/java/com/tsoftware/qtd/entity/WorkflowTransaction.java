@@ -14,7 +14,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,7 +29,6 @@ import org.hibernate.annotations.Type;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class WorkflowTransaction extends AbstractAuditEntity {
-  private UUID customerId;
 
   @Enumerated(EnumType.ORDINAL)
   private ApproveStatus status;

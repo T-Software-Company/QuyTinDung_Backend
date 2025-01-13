@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.commonlib.constant.StepType;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.Step;
@@ -34,11 +33,13 @@ public class WorkflowServiceImpl implements WorkflowService {
   private final OnboardingWorkflowMapper onboardingWorkflowMapper;
 
   @Override
-  public List<Workflow<?>> getByTargetIdAndStatus(UUID targetId, WorkflowStatus status) {
-    var onboardingWorkflow = onboardingWorkflowRepository.findByTargetIdAndStatus(targetId, status);
-    List<Workflow<?>> workflows = new ArrayList<>();
-    onboardingWorkflow.forEach(workflow -> workflows.add(onboardingWorkflowMapper.toDTO(workflow)));
-    return workflows;
+  public Workflow<?> getByTargetId(UUID targetId) {
+    var onboardingWorkflow =
+        onboardingWorkflowRepository
+            .findByTargetId(targetId)
+            .orElseThrow(
+                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, "targetId: " + targetId));
+    return onboardingWorkflowMapper.toDTO(onboardingWorkflow);
   }
 
   @Override
@@ -152,11 +153,16 @@ public class WorkflowServiceImpl implements WorkflowService {
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
-    if (step.getType().equals(StepType.DEFAULT)) {
-      step.setStatus(WorkflowStatus.COMPLETED);
-    } else {
-      step.setStatus(WorkflowStatus.INPROGRESS);
-    }
+    step.setStatus(
+        this.handleStatusWithExpression(
+            workflow,
+            CollectionUtils.findFirst(
+                    workflowProperties.getOnboarding(), t -> t.getStep().equals(stepName))
+                .orElseThrow(
+                    () ->
+                        new WorkflowException(
+                            HttpStatus.NOT_FOUND.value(), "Step not found in rules"))
+                .getExtractStatus()));
     var isFinalStep =
         workflow.getSteps().stream()
             .anyMatch(
@@ -212,5 +218,13 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
     var context = new StandardEvaluationContext(object);
     return Boolean.TRUE.equals(condition.getValue(context, Boolean.class));
+  }
+
+  private WorkflowStatus handleStatusWithExpression(Object object, Expression condition) {
+    if (condition == null) {
+      return WorkflowStatus.INPROGRESS;
+    }
+    var context = new StandardEvaluationContext(object);
+    return condition.getValue(context, WorkflowStatus.class);
   }
 }

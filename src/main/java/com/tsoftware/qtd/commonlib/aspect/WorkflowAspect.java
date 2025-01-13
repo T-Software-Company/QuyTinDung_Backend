@@ -1,9 +1,10 @@
 package com.tsoftware.qtd.commonlib.aspect;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
 import com.tsoftware.qtd.commonlib.annotation.TransactionId;
+import com.tsoftware.qtd.commonlib.annotation.TryTransactionId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
-import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
@@ -43,9 +44,15 @@ public class WorkflowAspect {
   private final WorkflowService workflowService;
   private final WorkflowProperties workflowProperties;
 
-  @AfterReturning(value = "@annotation(TryTransactionId)", returning = "response")
-  public void afterTryTransactionId(AbstractTransaction<?> response) {
-    WorkflowContext.setTransactionId(response.getId());
+  @AfterReturning(
+      value = "@annotation(TryTransactionId)",
+      returning = "response",
+      argNames = "response,tryTransactionId")
+  public void afterTryTransactionId(
+      AbstractTransaction<?> response, TryTransactionId tryTransactionId)
+      throws JsonProcessingException {
+    var path = tryTransactionId.path();
+    WorkflowContext.setTransactionId(JsonParser.getValueByPath(response, path, UUID.class));
   }
 
   @Before(value = "@annotation(WorkflowAPI)", argNames = "joinPoint,workflowAPI")
@@ -91,7 +98,7 @@ public class WorkflowAspect {
       this.processAfterThrowWithApprove(joinPoint, workflow, ex);
       return;
     }
-    this.processAfterThrowWithDefault(joinPoint, workflow, stepName, ex);
+    this.processAfterThrowWithDefault(workflow, stepName, ex);
   }
 
   @After(value = "@annotation(WorkflowAPI)")
@@ -103,10 +110,6 @@ public class WorkflowAspect {
     var targetId = getTargetId(joinPoint);
     // init workflow
     if (stepName.equals(workflowProperties.getOnboarding().getFirst().getStep())) {
-      var workflows = workflowService.getByTargetIdAndStatus(targetId, WorkflowStatus.INPROGRESS);
-      if (!workflows.isEmpty()) {
-        throw new WorkflowException(HttpStatus.CONFLICT.value(), "Has been in progress");
-      }
       var workflow = workflowService.init(targetId);
       var step = workflow.getSteps().getFirst();
       var request = this.extractRequest(joinPoint);
@@ -115,12 +118,7 @@ public class WorkflowAspect {
       return;
     }
     // process next step
-    var workflows = workflowService.getByTargetIdAndStatus(targetId, WorkflowStatus.INPROGRESS);
-    if (workflows.isEmpty()) {
-      throw new WorkflowException(
-          HttpStatus.NOT_FOUND.value(), "Work flow not found (targetId: " + targetId + ")");
-    }
-    var workflow = workflows.getFirst();
+    var workflow = workflowService.getByTargetId(targetId);
     workflowService.validateStep(workflow, stepName);
     var request = this.extractRequest(joinPoint);
     workflow.getSteps().add(workflowService.initStep(stepName));
@@ -178,8 +176,7 @@ public class WorkflowAspect {
     workflowService.save(workflow);
   }
 
-  private void processAfterThrowWithDefault(
-      JoinPoint joinPoint, Workflow<?> workflow, String stepName, Throwable ex) {
+  private void processAfterThrowWithDefault(Workflow<?> workflow, String stepName, Throwable ex) {
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(

@@ -32,12 +32,14 @@ public class JsonParser {
           .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
           .build();
 
-  public static <T> T getValueByPath(Object obj, String path, Class<T> tClass) {
+  public static <T> T getValueByPath(Object obj, String path, Class<T> tClass)
+      throws JsonProcessingException {
     return getValueByPath(mapper, obj, path, tClass);
   }
 
   public static <T> T getValueByPath(
-      ObjectMapper objectMapper, Object obj, String path, Class<T> tClass) {
+      ObjectMapper objectMapper, Object obj, String path, Class<T> tClass)
+      throws JsonProcessingException {
     try {
       // Convert the object to a JsonNode
       JsonNode rootNode = objectMapper.valueToTree(obj);
@@ -66,7 +68,7 @@ public class JsonParser {
     } catch (Exception e) {
       // Handle or log the exception as needed
       log.error("Error while getting value by path: {}", e.getMessage());
-      return null;
+      throw e;
     }
   }
 

@@ -4,7 +4,6 @@ import com.tsoftware.qtd.commonlib.executor.TransactionExecutorRegistry;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.commonlib.service.TransactionService;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
-import com.tsoftware.qtd.dto.transaction.ApproveDTO;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
@@ -14,10 +13,8 @@ import com.tsoftware.qtd.repository.TransactionRepository;
 import com.tsoftware.qtd.util.RequestUtil;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,12 +38,16 @@ public class WorkflowTransactionService implements TransactionService {
     var approves =
         transactionDTO.getApproves().stream()
             .filter(approve -> userId.equals(approve.getApprover().getUserId()))
-            .collect(Collectors.toList());
+            .toList();
     if (approves.isEmpty()) {
       throw new CommonException(
           ErrorType.ACCESS_DENIED, "You don't have permission to approve this workflow .");
     } else {
       approves.forEach(approve -> approve.setStatus(status));
+    }
+    if (transactionDTO.isApproved()) {
+      transactionDTO.setStatus(ApproveStatus.APPROVED);
+      transactionDTO.setApprovedAt(ZonedDateTime.now());
     }
     return registry.getExecutor(transactionDTO.getType()).execute(transactionDTO);
   }
@@ -60,23 +61,6 @@ public class WorkflowTransactionService implements TransactionService {
                     new CommonException(
                         ErrorType.ENTITY_NOT_FOUND, workflowTransactionDTO.getId()));
     mapper.updateEntity(entity, workflowTransactionDTO);
-
-    List<ApproveDTO> approveDTOS = workflowTransactionDTO.getApproves();
-    entity
-        .getApproves()
-        .forEach(
-            approve ->
-                approveDTOS.stream()
-                    .filter(
-                        dto ->
-                            dto.getApprover().getUserId().equals(approve.getApprover().getUserId()))
-                    .findFirst()
-                    .ifPresent(dto -> approve.setStatus(dto.getStatus())));
-
-    if (workflowTransactionDTO.isApproved()) {
-      entity.setStatus(ApproveStatus.APPROVED);
-      entity.setApprovedAt(ZonedDateTime.now());
-    }
     repository.save(entity);
   }
 
