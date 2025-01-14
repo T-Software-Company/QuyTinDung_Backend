@@ -4,7 +4,9 @@ import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,8 @@ public class WorkflowTransactionDTO extends AbstractTransaction<TransactionType>
   private ApplicationDTO application;
   private ApproveStatus status;
   private List<ApproveDTO> approves;
+  private ZonedDateTime approvedAt;
+  private UUID referenceId;
 
   @Override
   public boolean isApproved() {

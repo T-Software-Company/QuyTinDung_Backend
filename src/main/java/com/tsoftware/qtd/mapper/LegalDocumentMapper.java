@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface LegalDocumentMapper {
   LegalDocument toEntity(LegalDocumentResponse dto);
 
-  LegalDocumentResponse toDto(LegalDocument entity);
+  LegalDocumentResponse toDTO(LegalDocument entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(LegalDocumentResponse dto, @MappingTarget LegalDocument entity);

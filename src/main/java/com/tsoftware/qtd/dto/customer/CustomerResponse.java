@@ -2,7 +2,6 @@ package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.dto.AbstractResponse;
 import com.tsoftware.qtd.dto.address.AddressDto;
-import java.util.UUID;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -12,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerResponse extends AbstractResponse {
-  UUID id;
   String username;
   String email;
   String code;

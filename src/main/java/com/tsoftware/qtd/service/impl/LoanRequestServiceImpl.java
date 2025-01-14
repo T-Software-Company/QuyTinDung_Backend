@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;
@@ -25,11 +26,20 @@ public class LoanRequestServiceImpl implements LoanRequestService {
   private final ApplicationRepository applicationRepository;
 
   @Override
-  public LoanRequestResponse create(LoanRequestDTO loanRequestDTO, UUID creditId) {
-    com.tsoftware.qtd.entity.LoanRequest loanrequest = loanrequestMapper.toEntity(loanRequestDTO);
+  public WorkflowTransactionResponse request(
+      LoanRequestRequest loanRequestRequest, UUID applicationId) {
+    var application = applicationRepository.findById(applicationId);
+
+    return null;
+  }
+
+  @Override
+  public LoanRequestResponse create(LoanRequestRequest loanRequestRequest, UUID applicationId) {
+    com.tsoftware.qtd.entity.LoanRequest loanrequest =
+        loanrequestMapper.toEntity(loanRequestRequest);
     Application application =
         applicationRepository
-            .findById(creditId)
+            .findById(applicationId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     loanrequest.setApplication(application);
     application.setAmount(loanrequest.getAmount());
@@ -39,12 +49,12 @@ public class LoanRequestServiceImpl implements LoanRequestService {
   }
 
   @Override
-  public LoanRequestResponse update(UUID id, LoanRequestDTO loanRequestDTO) {
+  public LoanRequestResponse update(UUID id, LoanRequestRequest loanRequestRequest) {
     com.tsoftware.qtd.entity.LoanRequest loanrequest =
         loanrequestRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanRequest not found"));
-    loanrequestMapper.updateEntity(loanRequestDTO, loanrequest);
+    loanrequestMapper.updateEntity(loanRequestRequest, loanrequest);
     var credit = loanrequest.getApplication();
     credit.setAmount(loanrequest.getAmount());
     credit.setLoanSecurityType(loanrequest.getLoanSecurityType());

@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface ApartmentMapper {
   Apartment toEntity(ApartmentDto dto);
 
-  ApartmentDto toDto(Apartment entity);
+  ApartmentDto toDTO(Apartment entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(ApartmentDto dto, @MappingTarget Apartment entity);

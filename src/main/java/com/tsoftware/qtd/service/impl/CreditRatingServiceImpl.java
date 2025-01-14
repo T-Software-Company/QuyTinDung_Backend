@@ -25,7 +25,7 @@ public class CreditRatingServiceImpl implements CreditRatingService {
   @Override
   public CreditRatingDto create(CreditRatingDto creditratingDto) {
     CreditRating creditrating = creditratingMapper.toEntity(creditratingDto);
-    return creditratingMapper.toDto(creditratingRepository.save(creditrating));
+    return creditratingMapper.toDTO(creditratingRepository.save(creditrating));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class CreditRatingServiceImpl implements CreditRatingService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("CreditRating not found"));
     creditratingMapper.updateEntity(creditratingDto, creditrating);
-    return creditratingMapper.toDto(creditratingRepository.save(creditrating));
+    return creditratingMapper.toDTO(creditratingRepository.save(creditrating));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class CreditRatingServiceImpl implements CreditRatingService {
         creditratingRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("CreditRating not found"));
-    return creditratingMapper.toDto(creditrating);
+    return creditratingMapper.toDTO(creditrating);
   }
 
   @Override
   public List<CreditRatingDto> getAll() {
     return creditratingRepository.findAll().stream()
-        .map(creditratingMapper::toDto)
+        .map(creditratingMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

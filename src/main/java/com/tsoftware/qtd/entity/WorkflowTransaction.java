@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,19 +37,21 @@ public class WorkflowTransaction extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private TransactionType type;
 
+  private UUID referenceId;
+
   @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime approvedAt;
 
   private Integer requiredApprovals;
   private String PIC;
 
-  @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Approve> approves;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Object metadata;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY)
   private Application application;
 }

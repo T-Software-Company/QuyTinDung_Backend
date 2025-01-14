@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanPlanResponse;
 import com.tsoftware.qtd.service.LoanPlanService;
 import java.util.List;
@@ -26,16 +26,16 @@ public class LoanPlanController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<LoanPlanResponse>> create(
-      @RequestBody LoanPlanDTO loanPlanDTO, @PathVariable UUID creditId) throws Exception {
+      @RequestBody LoanPlanRequest loanPlanRequest, @PathVariable UUID creditId) throws Exception {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", loanplanService.create(loanPlanDTO, creditId)));
+        new ApiResponse<>(1000, "Created", loanplanService.create(loanPlanRequest, creditId)));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<LoanPlanResponse>> update(
-      @PathVariable UUID id, @RequestBody LoanPlanDTO loanPlanDTO) {
+      @PathVariable UUID id, @RequestBody LoanPlanRequest loanPlanRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", loanplanService.update(id, loanPlanDTO)));
+        new ApiResponse<>(1000, "Updated", loanplanService.update(id, loanPlanRequest)));
   }
 
   @DeleteMapping("/{id}")

@@ -26,7 +26,7 @@ public class LandAndImprovementServiceImpl implements LandAndImprovementService 
   public LandAndImprovementDto create(LandAndImprovementDto landandimprovementDto) {
     LandAndImprovement landandimprovement =
         landandimprovementMapper.toEntity(landandimprovementDto);
-    return landandimprovementMapper.toDto(landandimprovementRepository.save(landandimprovement));
+    return landandimprovementMapper.toDTO(landandimprovementRepository.save(landandimprovement));
   }
 
   @Override
@@ -36,7 +36,7 @@ public class LandAndImprovementServiceImpl implements LandAndImprovementService 
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LandAndImprovement not found"));
     landandimprovementMapper.updateEntity(landandimprovementDto, landandimprovement);
-    return landandimprovementMapper.toDto(landandimprovementRepository.save(landandimprovement));
+    return landandimprovementMapper.toDTO(landandimprovementRepository.save(landandimprovement));
   }
 
   @Override
@@ -50,13 +50,13 @@ public class LandAndImprovementServiceImpl implements LandAndImprovementService 
         landandimprovementRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LandAndImprovement not found"));
-    return landandimprovementMapper.toDto(landandimprovement);
+    return landandimprovementMapper.toDTO(landandimprovement);
   }
 
   @Override
   public List<LandAndImprovementDto> getAll() {
     return landandimprovementRepository.findAll().stream()
-        .map(landandimprovementMapper::toDto)
+        .map(landandimprovementMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

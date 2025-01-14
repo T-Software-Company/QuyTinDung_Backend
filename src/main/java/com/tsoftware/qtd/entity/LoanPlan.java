@@ -4,7 +4,6 @@ import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -37,9 +36,6 @@ public class LoanPlan extends AbstractAuditEntity {
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Customer customer;
 
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;

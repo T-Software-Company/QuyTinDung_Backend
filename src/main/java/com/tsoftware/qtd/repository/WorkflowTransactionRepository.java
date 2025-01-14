@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TransactionRepository
+public interface WorkflowTransactionRepository
     extends JpaRepository<WorkflowTransaction, UUID>,
         JpaSpecificationExecutor<WorkflowTransaction> {}

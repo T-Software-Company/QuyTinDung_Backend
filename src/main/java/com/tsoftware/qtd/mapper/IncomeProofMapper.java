@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface IncomeProofMapper {
   IncomeProof toEntity(IncomeProofDto dto);
 
-  IncomeProofDto toDto(IncomeProof entity);
+  IncomeProofDto toDTO(IncomeProof entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(IncomeProofDto dto, @MappingTarget IncomeProof entity);

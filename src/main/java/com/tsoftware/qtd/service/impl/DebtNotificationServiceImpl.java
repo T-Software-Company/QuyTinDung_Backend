@@ -25,7 +25,7 @@ public class DebtNotificationServiceImpl implements DebtNotificationService {
   @Override
   public DebtNotificationDto create(DebtNotificationDto debtnotificationDto) {
     DebtNotification debtnotification = debtnotificationMapper.toEntity(debtnotificationDto);
-    return debtnotificationMapper.toDto(debtnotificationRepository.save(debtnotification));
+    return debtnotificationMapper.toDTO(debtnotificationRepository.save(debtnotification));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class DebtNotificationServiceImpl implements DebtNotificationService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("DebtNotification not found"));
     debtnotificationMapper.updateEntity(debtnotificationDto, debtnotification);
-    return debtnotificationMapper.toDto(debtnotificationRepository.save(debtnotification));
+    return debtnotificationMapper.toDTO(debtnotificationRepository.save(debtnotification));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class DebtNotificationServiceImpl implements DebtNotificationService {
         debtnotificationRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("DebtNotification not found"));
-    return debtnotificationMapper.toDto(debtnotification);
+    return debtnotificationMapper.toDTO(debtnotification);
   }
 
   @Override
   public List<DebtNotificationDto> getAll() {
     return debtnotificationRepository.findAll().stream()
-        .map(debtnotificationMapper::toDto)
+        .map(debtnotificationMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

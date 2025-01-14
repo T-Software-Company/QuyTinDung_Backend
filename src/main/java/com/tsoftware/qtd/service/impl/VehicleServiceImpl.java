@@ -25,7 +25,7 @@ public class VehicleServiceImpl implements VehicleService {
   @Override
   public VehicleDto create(VehicleDto vehicleDto) {
     Vehicle vehicle = vehicleMapper.toEntity(vehicleDto);
-    return vehicleMapper.toDto(vehicleRepository.save(vehicle));
+    return vehicleMapper.toDTO(vehicleRepository.save(vehicle));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class VehicleServiceImpl implements VehicleService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Vehicle not found"));
     vehicleMapper.updateEntity(vehicleDto, vehicle);
-    return vehicleMapper.toDto(vehicleRepository.save(vehicle));
+    return vehicleMapper.toDTO(vehicleRepository.save(vehicle));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Vehicle not found"));
-    return vehicleMapper.toDto(vehicle);
+    return vehicleMapper.toDTO(vehicle);
   }
 
   @Override
   public List<VehicleDto> getAll() {
     return vehicleRepository.findAll().stream()
-        .map(vehicleMapper::toDto)
+        .map(vehicleMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

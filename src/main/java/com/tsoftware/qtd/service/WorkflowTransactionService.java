@@ -9,7 +9,7 @@ import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.DtoMapper;
-import com.tsoftware.qtd.repository.TransactionRepository;
+import com.tsoftware.qtd.repository.WorkflowTransactionRepository;
 import com.tsoftware.qtd.util.RequestUtil;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class WorkflowTransactionService implements TransactionService {
   final TransactionExecutorRegistry registry;
-  final TransactionRepository repository;
+  final WorkflowTransactionRepository repository;
   final DtoMapper mapper;
 
-  public Object approve(UUID id, ApproveStatus status) {
+  public WorkflowTransactionDTO approve(UUID id, ApproveStatus status) {
     var transactionDTO =
         repository
             .findById(id)
@@ -49,10 +49,11 @@ public class WorkflowTransactionService implements TransactionService {
       transactionDTO.setStatus(ApproveStatus.APPROVED);
       transactionDTO.setApprovedAt(ZonedDateTime.now());
     }
-    return registry.getExecutor(transactionDTO.getType()).execute(transactionDTO);
+    return (WorkflowTransactionDTO)
+        registry.getExecutor(transactionDTO.getType()).execute(transactionDTO);
   }
 
-  public void updateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {
+  public WorkflowTransactionDTO updateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {
     WorkflowTransaction entity =
         repository
             .findById(workflowTransactionDTO.getId())
@@ -61,7 +62,7 @@ public class WorkflowTransactionService implements TransactionService {
                     new CommonException(
                         ErrorType.ENTITY_NOT_FOUND, workflowTransactionDTO.getId()));
     mapper.updateEntity(entity, workflowTransactionDTO);
-    repository.save(entity);
+    return mapper.toDTO(repository.save(entity));
   }
 
   public void validateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {

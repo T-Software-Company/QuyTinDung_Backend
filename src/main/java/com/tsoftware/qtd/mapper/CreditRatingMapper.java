@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface CreditRatingMapper {
   CreditRating toEntity(CreditRatingDto dto);
 
-  CreditRatingDto toDto(CreditRating entity);
+  CreditRatingDto toDTO(CreditRating entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(CreditRatingDto dto, @MappingTarget CreditRating entity);

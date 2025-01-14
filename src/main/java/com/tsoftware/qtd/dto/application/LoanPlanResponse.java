@@ -1,23 +1,17 @@
 package com.tsoftware.qtd.dto.application;
 
+import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.Map;
-import java.util.UUID;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Setter
 @Getter
-@Builder
-public class LoanPlanResponse {
-  private UUID id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
-
+@Setter
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class LoanPlanResponse extends AbstractResponse {
   private String loanNeeds;
   private BigDecimal totalCapitalRequirement;
   private BigDecimal ownCapital;

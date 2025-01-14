@@ -25,7 +25,7 @@ public class ApartmentServiceImpl implements ApartmentService {
   @Override
   public ApartmentDto create(ApartmentDto apartmentDto) {
     Apartment apartment = apartmentMapper.toEntity(apartmentDto);
-    return apartmentMapper.toDto(apartmentRepository.save(apartment));
+    return apartmentMapper.toDTO(apartmentRepository.save(apartment));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Apartment not found"));
     apartmentMapper.updateEntity(apartmentDto, apartment);
-    return apartmentMapper.toDto(apartmentRepository.save(apartment));
+    return apartmentMapper.toDTO(apartmentRepository.save(apartment));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class ApartmentServiceImpl implements ApartmentService {
         apartmentRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Apartment not found"));
-    return apartmentMapper.toDto(apartment);
+    return apartmentMapper.toDTO(apartment);
   }
 
   @Override
   public List<ApartmentDto> getAll() {
     return apartmentRepository.findAll().stream()
-        .map(apartmentMapper::toDto)
+        .map(apartmentMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

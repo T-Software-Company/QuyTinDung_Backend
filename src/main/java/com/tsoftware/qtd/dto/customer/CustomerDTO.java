@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.dto.customer;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import jakarta.validation.constraints.*;
 import java.util.UUID;
@@ -15,7 +14,6 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerDTO {
   UUID id;
   String username;

@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface LandAssetMapper {
   LandAsset toEntity(LandAssetDto dto);
 
-  LandAssetDto toDto(LandAsset entity);
+  LandAssetDto toDTO(LandAsset entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(LandAssetDto dto, @MappingTarget LandAsset entity);

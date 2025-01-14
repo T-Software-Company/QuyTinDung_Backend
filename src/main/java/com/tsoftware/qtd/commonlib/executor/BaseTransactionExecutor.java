@@ -8,19 +8,17 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
     implements TransactionExecutor<T> {
 
   @Override
-  public Object execute(T transaction) {
+  public T execute(T transaction) {
     log.info("Starting execution for transaction: {}", transaction.getId());
     try {
       preValidate(transaction);
       var resolvedTransaction = processApproval(transaction);
-      Object result = "Approved";
       if (resolvedTransaction.isApproved()) {
+        doExecute(transaction);
         log.info("WorkflowTransactionDTO already approved: {}", transaction.getId());
-        result = doExecute(transaction);
       }
-      postExecute(transaction);
       log.info("Completed execution for transaction: {}", transaction.getId());
-      return result;
+      return postExecute(transaction);
     } catch (Exception e) {
       log.error("Error executing transaction: {}", transaction.getId(), e);
       callBackWhenFall(transaction);
@@ -30,13 +28,13 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
 
   protected abstract T processApproval(T transaction);
 
-  protected abstract Object doExecute(T transaction);
+  protected abstract void doExecute(T transaction);
 
   protected void preValidate(T transaction) {
     // Default validation logic
   }
 
-  protected abstract void postExecute(T transaction);
+  protected abstract T postExecute(T transaction);
 
   protected void callBackWhenFall(T transaction) {
     // Default pre-execution logic

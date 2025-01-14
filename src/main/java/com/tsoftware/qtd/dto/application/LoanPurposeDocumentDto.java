@@ -2,13 +2,14 @@ package com.tsoftware.qtd.dto.application;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoanPurposeDocumentDto {
   private UUID id;
   private ZonedDateTime createdAt;

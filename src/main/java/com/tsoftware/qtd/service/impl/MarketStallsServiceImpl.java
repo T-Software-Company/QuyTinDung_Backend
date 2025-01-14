@@ -25,7 +25,7 @@ public class MarketStallsServiceImpl implements MarketStallsService {
   @Override
   public MarketStallsDto create(MarketStallsDto marketstallsDto) {
     MarketStalls marketstalls = marketstallsMapper.toEntity(marketstallsDto);
-    return marketstallsMapper.toDto(marketstallsRepository.save(marketstalls));
+    return marketstallsMapper.toDTO(marketstallsRepository.save(marketstalls));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class MarketStallsServiceImpl implements MarketStallsService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("MarketStalls not found"));
     marketstallsMapper.updateEntity(marketstallsDto, marketstalls);
-    return marketstallsMapper.toDto(marketstallsRepository.save(marketstalls));
+    return marketstallsMapper.toDTO(marketstallsRepository.save(marketstalls));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class MarketStallsServiceImpl implements MarketStallsService {
         marketstallsRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("MarketStalls not found"));
-    return marketstallsMapper.toDto(marketstalls);
+    return marketstallsMapper.toDTO(marketstalls);
   }
 
   @Override
   public List<MarketStallsDto> getAll() {
     return marketstallsRepository.findAll().stream()
-        .map(marketstallsMapper::toDto)
+        .map(marketstallsMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

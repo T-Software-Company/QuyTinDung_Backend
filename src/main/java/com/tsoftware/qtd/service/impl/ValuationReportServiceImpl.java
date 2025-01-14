@@ -81,7 +81,7 @@ public class ValuationReportServiceImpl implements ValuationReportService {
     approverIds.forEach(
         i ->
             approveResponses.add(
-                approveMapper.toDto(
+                approveMapper.toDTO(
                     approveRepository.save(
                         Approve.builder()
                             .approver(Employee.builder().id(i).build())

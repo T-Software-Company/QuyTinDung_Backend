@@ -25,7 +25,7 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
   @Override
   public LegalDocumentResponse create(LegalDocumentResponse legaldocumentResponse) {
     LegalDocument legaldocument = legaldocumentMapper.toEntity(legaldocumentResponse);
-    return legaldocumentMapper.toDto(legaldocumentRepository.save(legaldocument));
+    return legaldocumentMapper.toDTO(legaldocumentRepository.save(legaldocument));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LegalDocument not found"));
     legaldocumentMapper.updateEntity(legaldocumentResponse, legaldocument);
-    return legaldocumentMapper.toDto(legaldocumentRepository.save(legaldocument));
+    return legaldocumentMapper.toDTO(legaldocumentRepository.save(legaldocument));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class LegalDocumentServiceImpl implements LegalDocumentService {
         legaldocumentRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LegalDocument not found"));
-    return legaldocumentMapper.toDto(legaldocument);
+    return legaldocumentMapper.toDTO(legaldocument);
   }
 
   @Override
   public List<LegalDocumentResponse> getAll() {
     return legaldocumentRepository.findAll().stream()
-        .map(legaldocumentMapper::toDto)
+        .map(legaldocumentMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

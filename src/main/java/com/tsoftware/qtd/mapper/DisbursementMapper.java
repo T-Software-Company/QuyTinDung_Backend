@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface DisbursementMapper {
   Disbursement toEntity(DisbursementDTO dto);
 
-  DisbursementDTO toDto(Disbursement entity);
+  DisbursementDTO toDTO(Disbursement entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(DisbursementDTO dto, @MappingTarget Disbursement entity);

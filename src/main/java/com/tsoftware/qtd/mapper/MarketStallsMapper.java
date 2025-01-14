@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface MarketStallsMapper {
   MarketStalls toEntity(MarketStallsDto dto);
 
-  MarketStallsDto toDto(MarketStalls entity);
+  MarketStallsDto toDTO(MarketStalls entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(MarketStallsDto dto, @MappingTarget MarketStalls entity);

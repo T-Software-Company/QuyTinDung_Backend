@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface OtherAssetMapper {
   OtherAsset toEntity(OtherAssetDto dto);
 
-  OtherAssetDto toDto(OtherAsset entity);
+  OtherAssetDto toDTO(OtherAsset entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(OtherAssetDto dto, @MappingTarget OtherAsset entity);

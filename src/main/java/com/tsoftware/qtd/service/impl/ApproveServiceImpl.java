@@ -25,7 +25,7 @@ public class ApproveServiceImpl implements ApproveService {
   @Override
   public ApproveResponse create(ApproveResponse approveResponse) {
     Approve approve = approveMapper.toEntity(approveResponse);
-    return approveMapper.toDto(approveRepository.save(approve));
+    return approveMapper.toDTO(approveRepository.save(approve));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class ApproveServiceImpl implements ApproveService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Approve not found"));
     approveMapper.updateEntity(approveResponse, approve);
-    return approveMapper.toDto(approveRepository.save(approve));
+    return approveMapper.toDTO(approveRepository.save(approve));
   }
 
   @Override
@@ -49,19 +49,19 @@ public class ApproveServiceImpl implements ApproveService {
         approveRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Approve not found"));
-    return approveMapper.toDto(approve);
+    return approveMapper.toDTO(approve);
   }
 
   @Override
   public List<ApproveResponse> getAll() {
     return approveRepository.findAll().stream()
-        .map(approveMapper::toDto)
+        .map(approveMapper::toDTO)
         .collect(Collectors.toList());
   }
 
   @Override
   public List<ApproveResponse> getByApproverId(UUID id) {
     var approves = approveRepository.findByApproverId(id);
-    return approves.stream().map(approveMapper::toDto).collect(Collectors.toList());
+    return approves.stream().map(approveMapper::toDTO).collect(Collectors.toList());
   }
 }

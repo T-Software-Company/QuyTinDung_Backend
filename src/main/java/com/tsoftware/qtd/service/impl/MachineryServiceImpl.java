@@ -25,7 +25,7 @@ public class MachineryServiceImpl implements MachineryService {
   @Override
   public MachineryDto create(MachineryDto machineryDto) {
     Machinery machinery = machineryMapper.toEntity(machineryDto);
-    return machineryMapper.toDto(machineryRepository.save(machinery));
+    return machineryMapper.toDTO(machineryRepository.save(machinery));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class MachineryServiceImpl implements MachineryService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Machinery not found"));
     machineryMapper.updateEntity(machineryDto, machinery);
-    return machineryMapper.toDto(machineryRepository.save(machinery));
+    return machineryMapper.toDTO(machineryRepository.save(machinery));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class MachineryServiceImpl implements MachineryService {
         machineryRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Machinery not found"));
-    return machineryMapper.toDto(machinery);
+    return machineryMapper.toDTO(machinery);
   }
 
   @Override
   public List<MachineryDto> getAll() {
     return machineryRepository.findAll().stream()
-        .map(machineryMapper::toDto)
+        .map(machineryMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

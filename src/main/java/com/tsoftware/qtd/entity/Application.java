@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.ApplicationStep;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -26,25 +25,25 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@SuperBuilder
 @Entity
 @Table
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Application extends AbstractAuditEntity {
 
   private BigDecimal amount;
 
-  @Enumerated(EnumType.ORDINAL)
-  private ApplicationStep step; // ?
+  //  @Enumerated(EnumType.ORDINAL)
+  //  private ApplicationStep step; // ?
 
   @ManyToMany(mappedBy = "applicationsAssigned", fetch = FetchType.LAZY)
-  private List<Employee> LoanProcessor;
+  private List<Employee> loanProcessors;
 
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  List<WorkflowTransaction> transactions;
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
+  private List<WorkflowTransaction> transactions;
 
   @Column(columnDefinition = "TIME WITH TIME ZONE")
   private ZonedDateTime startDate;

@@ -1,14 +1,17 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionResponse;
 import java.util.List;
 import java.util.UUID;
 
 public interface LoanRequestService {
-  LoanRequestResponse create(LoanRequestDTO loanRequestDTO, UUID creditId);
+  WorkflowTransactionResponse request(LoanRequestRequest loanRequestRequest, UUID applicationId);
 
-  LoanRequestResponse update(UUID id, LoanRequestDTO loanRequestDTO);
+  LoanRequestResponse create(LoanRequestRequest loanRequestRequest, UUID applicationId);
+
+  LoanRequestResponse update(UUID id, LoanRequestRequest loanRequestRequest);
 
   void delete(UUID id);
 

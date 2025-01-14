@@ -10,7 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(
     componentModel = "spring",
-    uses = {LoanPlanMapper.class, LoanRequestMapper.class})
+    uses = {LoanPlanMapper.class, LoanRequestMapper.class, EmployeeMapper.class})
 public interface ApplicationMapper {
   Application toEntity(ApplicationDTO dto);
 

@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface DebtNotificationMapper {
   DebtNotification toEntity(DebtNotificationDto dto);
 
-  DebtNotificationDto toDto(DebtNotification entity);
+  DebtNotificationDto toDTO(DebtNotification entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(DebtNotificationDto dto, @MappingTarget DebtNotification entity);

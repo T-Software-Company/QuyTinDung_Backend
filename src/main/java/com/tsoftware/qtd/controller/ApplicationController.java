@@ -6,9 +6,9 @@ import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import com.tsoftware.qtd.dto.application.ApplicationResponse;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanPlanResponse;
-import com.tsoftware.qtd.dto.application.LoanRequestDTO;
+import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.entity.Application;
@@ -69,18 +69,18 @@ public class ApplicationController {
 
   @PostMapping("/{id}/loan-plan")
   public ResponseEntity<ApiResponse<LoanPlanResponse>> create(
-      @RequestBody LoanPlanDTO loanPlanDTO, @PathVariable UUID id) {
+      @RequestBody LoanPlanRequest loanPlanRequest, @PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            HttpStatus.OK.value(), "Created", loanplanService.create(loanPlanDTO, id)));
+            HttpStatus.OK.value(), "Created", loanplanService.create(loanPlanRequest, id)));
   }
 
   @PostMapping("/{id}/loan-request")
   public ResponseEntity<ApiResponse<LoanRequestResponse>> create(
-      @RequestBody LoanRequestDTO loanRequestDTO, @PathVariable UUID id) {
+      @RequestBody LoanRequestRequest loanRequestRequest, @PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            HttpStatus.OK.value(), "Created", loanRequestService.create(loanRequestDTO, id)));
+            HttpStatus.OK.value(), "Created", loanRequestService.create(loanRequestRequest, id)));
   }
 
   @GetMapping("/{id}/assets")

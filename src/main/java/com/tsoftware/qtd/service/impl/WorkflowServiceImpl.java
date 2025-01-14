@@ -46,12 +46,12 @@ public class WorkflowServiceImpl implements WorkflowService {
   public Workflow<?> getByTransactionId(UUID transactionId) {
     var onboardingWorkflow =
         onboardingWorkflowRepository
-            .findByStepTransactionId(transactionId)
+            .findByStepHistoriesTransactionId(transactionId)
             .orElseThrow(
                 () ->
                     new CommonException(
                         ErrorType.ENTITY_NOT_FOUND,
-                        "(findByStepTransactionId: " + transactionId + ")"));
+                        "(findByStepHistoriesTransactionId: " + transactionId + ")"));
     return onboardingWorkflowMapper.toDTO(onboardingWorkflow);
   }
 

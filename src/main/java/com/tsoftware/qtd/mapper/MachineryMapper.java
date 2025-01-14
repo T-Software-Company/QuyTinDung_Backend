@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface MachineryMapper {
   Machinery toEntity(MachineryDto dto);
 
-  MachineryDto toDto(Machinery entity);
+  MachineryDto toDTO(Machinery entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(MachineryDto dto, @MappingTarget Machinery entity);

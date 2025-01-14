@@ -97,7 +97,6 @@ workflow:
             condition: "true"
 
       - step: loan-request
-        type: DEFAULT
         dependencies:
           - init
         nextStepRules:
@@ -105,7 +104,6 @@ workflow:
             condition: "true"
 
       - step: loan-plan
-        type: DEFAULT
         dependencies:
           - init
         nextStepRules:
@@ -113,7 +111,6 @@ workflow:
             condition: "true"
 
       - step: financial-info
-        type: DEFAULT
         dependencies:
           - loan-request
           - loan-plan

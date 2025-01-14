@@ -25,7 +25,7 @@ public class IncomeProofServiceImpl implements IncomeProofService {
   @Override
   public IncomeProofDto create(IncomeProofDto incomeproofDto) {
     IncomeProof incomeproof = incomeproofMapper.toEntity(incomeproofDto);
-    return incomeproofMapper.toDto(incomeproofRepository.save(incomeproof));
+    return incomeproofMapper.toDTO(incomeproofRepository.save(incomeproof));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class IncomeProofServiceImpl implements IncomeProofService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("IncomeProof not found"));
     incomeproofMapper.updateEntity(incomeproofDto, incomeproof);
-    return incomeproofMapper.toDto(incomeproofRepository.save(incomeproof));
+    return incomeproofMapper.toDTO(incomeproofRepository.save(incomeproof));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class IncomeProofServiceImpl implements IncomeProofService {
         incomeproofRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("IncomeProof not found"));
-    return incomeproofMapper.toDto(incomeproof);
+    return incomeproofMapper.toDTO(incomeproof);
   }
 
   @Override
   public List<IncomeProofDto> getAll() {
     return incomeproofRepository.findAll().stream()
-        .map(incomeproofMapper::toDto)
+        .map(incomeproofMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

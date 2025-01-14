@@ -83,14 +83,14 @@ public class ${ENTITY_NAME}ServiceImpl implements ${ENTITY_NAME}Service {
     @Override
     public ${ENTITY_NAME}Dto create(${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto) {
         $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Mapper.toEntity(${ENTITY_LOWER}Dto);
-        return ${ENTITY_LOWER}Mapper.toDto(${ENTITY_LOWER}Repository.save(${ENTITY_LOWER}));
+        return ${ENTITY_LOWER}Mapper.toDTO(${ENTITY_LOWER}Repository.save(${ENTITY_LOWER}));
     }
 
     @Override
     public ${ENTITY_NAME}Dto update(UUID id, ${ENTITY_NAME}Dto ${ENTITY_LOWER}Dto) {
         $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new NotFoundException("${ENTITY_NAME} not found"));
         ${ENTITY_LOWER}Mapper.updateEntity(${ENTITY_LOWER}Dto, ${ENTITY_LOWER});
-        return ${ENTITY_LOWER}Mapper.toDto(${ENTITY_LOWER}Repository.save(${ENTITY_LOWER}));
+        return ${ENTITY_LOWER}Mapper.toDTO(${ENTITY_LOWER}Repository.save(${ENTITY_LOWER}));
     }
 
     @Override
@@ -101,13 +101,13 @@ public class ${ENTITY_NAME}ServiceImpl implements ${ENTITY_NAME}Service {
     @Override
     public ${ENTITY_NAME}Dto getById(UUID id) {
         $ENTITY_NAME ${ENTITY_LOWER} = ${ENTITY_LOWER}Repository.findById(id).orElseThrow(() -> new NotFoundException("${ENTITY_NAME} not found"));
-        return ${ENTITY_LOWER}Mapper.toDto(${ENTITY_LOWER});
+        return ${ENTITY_LOWER}Mapper.toDTO(${ENTITY_LOWER});
     }
 
     @Override
     public List<${ENTITY_NAME}Dto> getAll() {
         return ${ENTITY_LOWER}Repository.findAll().stream()
-                .map(${ENTITY_LOWER}Mapper::toDto)
+                .map(${ENTITY_LOWER}Mapper::toDTO)
                 .collect(Collectors.toList());
     }
 }
@@ -130,7 +130,7 @@ import $PACKAGE_PATH.entity.$ENTITY_NAME;
 @Mapper(componentModel = "spring")
 public interface ${ENTITY_NAME}Mapper {
     ${ENTITY_NAME} toEntity(${ENTITY_NAME}Dto dto);
-    ${ENTITY_NAME}Dto toDto(${ENTITY_NAME} entity);
+    ${ENTITY_NAME}Dto toDTO(${ENTITY_NAME} entity);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntity(${ENTITY_NAME}Dto dto, @MappingTarget ${ENTITY_NAME} entity);
 }

@@ -5,10 +5,13 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class RatingCriterionDto {
   private UUID id;
   private ZonedDateTime createdAt;

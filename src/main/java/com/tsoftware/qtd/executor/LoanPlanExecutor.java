@@ -2,13 +2,10 @@ package com.tsoftware.qtd.executor;
 
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
+import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.mapper.LoanPlanMapper;
-import com.tsoftware.qtd.repository.ApplicationRepository;
-import com.tsoftware.qtd.repository.LoanPlanRepository;
-import com.tsoftware.qtd.service.ApplicationService;
+import com.tsoftware.qtd.service.LoanPlanService;
 import com.tsoftware.qtd.service.WorkflowTransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactionDTO> {
   final LoanPlanMapper loanPlanMapper;
-  final ApplicationRepository applicationRepository;
-  final LoanPlanRepository loanPlanRepository;
-  final ApplicationService applicationService;
+  private final LoanPlanService loanPlanService;
   private final WorkflowTransactionService workflowTransactionService;
 
   @Override
@@ -35,23 +30,16 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactio
   }
 
   @Override
-  protected Object doExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+  protected void doExecute(WorkflowTransactionDTO workflowTransactionDTO) {
     log.info(
         "All approvals received for workflowTransactionDTO: {}", workflowTransactionDTO.getId());
-    var request = JsonParser.convert(workflowTransactionDTO.getMetadata(), LoanPlanDTO.class);
-    applicationService.createOrUpdateLoanPlan(
-        workflowTransactionDTO.getApplication().getId(), request);
-    ApproveResponse response = new ApproveResponse();
-    //    response.setData(
-    //        ApproveDTO.builder()
-    //            .transactionId(workflowTransactionDTO.getId())
-    //            .status(ApproveStatus.APPROVED)
-    //            .build());
-    return response;
+    var request = JsonParser.convert(workflowTransactionDTO.getMetadata(), LoanPlanRequest.class);
+    var result = loanPlanService.create(request, request.getApplication().getId());
+    workflowTransactionDTO.setReferenceId(result.getId());
   }
 
   @Override
-  protected void postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
-    workflowTransactionService.updateTransaction(workflowTransactionDTO);
+  protected WorkflowTransactionDTO postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+    return workflowTransactionService.updateTransaction(workflowTransactionDTO);
   }
 }

@@ -9,14 +9,16 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
 @Setter
-public class LoanRequestDTO {
+@SuperBuilder
+@AllArgsConstructor
+public class LoanRequestRequest {
   @NotNull @NotBlank private String purpose;
 
   @NotNull @NotBlank private BigDecimal amount;
@@ -36,6 +38,6 @@ public class LoanRequestDTO {
 
   private String note;
   private Map<String, Object> metadata;
-
   private Set<String> assignees;
+  private ApplicationDTO application;
 }

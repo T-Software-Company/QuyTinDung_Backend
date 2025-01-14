@@ -3,13 +3,14 @@ package com.tsoftware.qtd.dto.application;
 import com.tsoftware.qtd.constants.EnumType.RatingLevel;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class CreditRatingDto {
   private String id;
   private ZonedDateTime createdAt;
@@ -17,6 +18,5 @@ public class CreditRatingDto {
   private String lastModifiedBy;
   private String createdBy;
   private BigDecimal score;
-
   private RatingLevel ratingLevel;
 }

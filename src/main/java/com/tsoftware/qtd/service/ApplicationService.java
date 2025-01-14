@@ -1,10 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.application.ApplicationDTO;
-import com.tsoftware.qtd.dto.application.ApplicationResponse;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
-import com.tsoftware.qtd.dto.application.LoanRequestDTO;
-import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
+import com.tsoftware.qtd.dto.application.*;
 import com.tsoftware.qtd.entity.Application;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -21,10 +17,4 @@ public interface ApplicationService {
   ApplicationDTO getById(UUID id);
 
   Page<ApplicationResponse> getAll(Specification<Application> spec, Pageable page);
-
-  void createOrUpdateFinancialInfo(UUID applicationId, FinancialInfoDTO data);
-
-  void createOrUpdateLoanPlan(UUID applicationId, LoanPlanDTO loanPlanDTO);
-
-  void createOrUpdateLoanRequest(UUID applicationId, LoanRequestDTO loanRequestDTO);
 }

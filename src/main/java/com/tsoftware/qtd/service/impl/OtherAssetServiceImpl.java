@@ -25,7 +25,7 @@ public class OtherAssetServiceImpl implements OtherAssetService {
   @Override
   public OtherAssetDto create(OtherAssetDto otherassetDto) {
     OtherAsset otherasset = otherassetMapper.toEntity(otherassetDto);
-    return otherassetMapper.toDto(otherassetRepository.save(otherasset));
+    return otherassetMapper.toDTO(otherassetRepository.save(otherasset));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class OtherAssetServiceImpl implements OtherAssetService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("OtherAsset not found"));
     otherassetMapper.updateEntity(otherassetDto, otherasset);
-    return otherassetMapper.toDto(otherassetRepository.save(otherasset));
+    return otherassetMapper.toDTO(otherassetRepository.save(otherasset));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class OtherAssetServiceImpl implements OtherAssetService {
         otherassetRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("OtherAsset not found"));
-    return otherassetMapper.toDto(otherasset);
+    return otherassetMapper.toDTO(otherasset);
   }
 
   @Override
   public List<OtherAssetDto> getAll() {
     return otherassetRepository.findAll().stream()
-        .map(otherassetMapper::toDto)
+        .map(otherassetMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

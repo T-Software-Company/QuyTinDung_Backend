@@ -25,7 +25,7 @@ public class LandAssetServiceImpl implements LandAssetService {
   @Override
   public LandAssetDto create(LandAssetDto landassetDto) {
     LandAsset landasset = landassetMapper.toEntity(landassetDto);
-    return landassetMapper.toDto(landassetRepository.save(landasset));
+    return landassetMapper.toDTO(landassetRepository.save(landasset));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class LandAssetServiceImpl implements LandAssetService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LandAsset not found"));
     landassetMapper.updateEntity(landassetDto, landasset);
-    return landassetMapper.toDto(landassetRepository.save(landasset));
+    return landassetMapper.toDTO(landassetRepository.save(landasset));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class LandAssetServiceImpl implements LandAssetService {
         landassetRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LandAsset not found"));
-    return landassetMapper.toDto(landasset);
+    return landassetMapper.toDTO(landasset);
   }
 
   @Override
   public List<LandAssetDto> getAll() {
     return landassetRepository.findAll().stream()
-        .map(landassetMapper::toDto)
+        .map(landassetMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service.impl;
 
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanPlanResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.LoanPlan;
@@ -26,27 +26,26 @@ public class LoanPlanServiceImpl implements LoanPlanService {
   private final ApplicationRepository applicationRepository;
 
   @Override
-  public LoanPlanResponse create(LoanPlanDTO loanplanDTO, UUID applicationId) {
+  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, UUID applicationId) {
 
-    LoanPlan loanplan = loanplanMapper.toEntity(loanplanDTO);
+    LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
     Application application =
         applicationRepository
             .findById(applicationId)
             .orElseThrow(() -> new NotFoundException("Application not found"));
-    loanplan.setCustomer(application.getCustomer());
     loanplan.setApplication(application);
 
-    return loanplanMapper.toDto(loanplanRepository.save(loanplan));
+    return loanplanMapper.toDTO(loanplanRepository.save(loanplan));
   }
 
   @Override
-  public LoanPlanResponse update(UUID id, LoanPlanDTO loanplanDTO) {
+  public LoanPlanResponse update(UUID id, LoanPlanRequest loanplanRequest) {
     LoanPlan loanplan =
         loanplanRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanPlan not found"));
-    loanplanMapper.updateEntity(loanplanDTO, loanplan);
-    return loanplanMapper.toDto(loanplanRepository.save(loanplan));
+    loanplanMapper.updateEntity(loanplanRequest, loanplan);
+    return loanplanMapper.toDTO(loanplanRepository.save(loanplan));
   }
 
   @Override
@@ -60,13 +59,13 @@ public class LoanPlanServiceImpl implements LoanPlanService {
         loanplanRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanPlan not found"));
-    return loanplanMapper.toDto(loanplan);
+    return loanplanMapper.toDTO(loanplan);
   }
 
   @Override
   public List<LoanPlanResponse> getAll() {
     return loanplanRepository.findAll().stream()
-        .map(loanplanMapper::toDto)
+        .map(loanplanMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

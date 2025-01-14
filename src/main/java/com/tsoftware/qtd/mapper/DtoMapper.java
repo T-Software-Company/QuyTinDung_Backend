@@ -1,9 +1,9 @@
 package com.tsoftware.qtd.mapper;
 
 import com.tsoftware.qtd.dto.application.DisbursementDTO;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
-import com.tsoftware.qtd.dto.application.LoanRequestDTO;
-import com.tsoftware.qtd.dto.customer.FinancialInfoDTO;
+import com.tsoftware.qtd.dto.application.FinancialInfoDTO;
+import com.tsoftware.qtd.dto.application.LoanPlanRequest;
+import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.document.DocumentDTO;
 import com.tsoftware.qtd.dto.loan.RepaymentScheduleDTO;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
@@ -45,10 +45,10 @@ public interface DtoMapper {
   void updateEntity(@MappingTarget FinancialInfo entity, FinancialInfoDTO financialInfoDTO);
 
   @Mapping(target = "id", ignore = true)
-  void updateEntity(@MappingTarget LoanPlan entity, LoanPlanDTO loanPlanDTO);
+  void updateEntity(@MappingTarget LoanPlan entity, LoanPlanRequest loanPlanRequest);
 
   @Mapping(target = "id", ignore = true)
-  void updateEntity(@MappingTarget LoanRequest entity, LoanRequestDTO loanRequestDTO);
+  void updateEntity(@MappingTarget LoanRequest entity, LoanRequestRequest loanRequestRequest);
 
   List<DisbursementDTO> toListDisbursement(List<Disbursement> disbursements);
 

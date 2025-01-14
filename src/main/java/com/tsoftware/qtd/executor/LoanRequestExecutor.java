@@ -2,13 +2,10 @@ package com.tsoftware.qtd.executor;
 
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
-import com.tsoftware.qtd.dto.application.LoanRequestDTO;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
+import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
-import com.tsoftware.qtd.mapper.DtoMapper;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;
-import com.tsoftware.qtd.repository.ApplicationRepository;
-import com.tsoftware.qtd.service.ApplicationService;
+import com.tsoftware.qtd.service.LoanRequestService;
 import com.tsoftware.qtd.service.WorkflowTransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +15,8 @@ import org.springframework.stereotype.Service;
 @Service("loanRequestExecutor")
 @RequiredArgsConstructor
 public class LoanRequestExecutor extends BaseTransactionExecutor<WorkflowTransactionDTO> {
-  final DtoMapper dtoMapper;
   final LoanRequestMapper loanRequestMapper;
-  final ApplicationRepository applicationRepository;
-  final ApplicationService applicationService;
+  private final LoanRequestService loanRequestService;
   final WorkflowTransactionService workflowTransactionService;
 
   @Override
@@ -35,23 +30,16 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<WorkflowTransac
   }
 
   @Override
-  protected Object doExecute(WorkflowTransactionDTO workflowTransactionDTO) {
-    log.info(
-        "All approvals received for workflowTransactionDTO: {}", workflowTransactionDTO.getId());
-    var request = JsonParser.convert(workflowTransactionDTO.getMetadata(), LoanRequestDTO.class);
-    applicationService.createOrUpdateLoanRequest(
-        workflowTransactionDTO.getApplication().getId(), request);
-    ApproveResponse response = new ApproveResponse();
-    //    response.setData(
-    //        ApproveDTO.builder()
-    //            .transactionId(workflowTransactionDTO.getId())
-    //            .status(ApproveStatus.APPROVED)
-    //            .build());
-    return response;
+  protected void doExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+    log.info("All approvals received for workflowTransaction: {}", workflowTransactionDTO.getId());
+    var request =
+        JsonParser.convert(workflowTransactionDTO.getMetadata(), LoanRequestRequest.class);
+    var result = loanRequestService.create(request, request.getApplication().getId());
+    workflowTransactionDTO.setReferenceId(result.getId());
   }
 
   @Override
-  protected void postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
-    workflowTransactionService.updateTransaction(workflowTransactionDTO);
+  protected WorkflowTransactionDTO postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+    return workflowTransactionService.updateTransaction(workflowTransactionDTO);
   }
 }

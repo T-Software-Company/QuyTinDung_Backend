@@ -25,7 +25,7 @@ public class DisbursementServiceImpl implements DisbursementService {
   @Override
   public DisbursementDTO create(DisbursementDTO disbursementDto) {
     Disbursement disbursement = disbursementMapper.toEntity(disbursementDto);
-    return disbursementMapper.toDto(disbursementRepository.save(disbursement));
+    return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class DisbursementServiceImpl implements DisbursementService {
             .findById(id)
             .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
     disbursementMapper.updateEntity(disbursementDto, disbursement);
-    return disbursementMapper.toDto(disbursementRepository.save(disbursement));
+    return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
   }
 
   @Override
@@ -49,13 +49,13 @@ public class DisbursementServiceImpl implements DisbursementService {
         disbursementRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
-    return disbursementMapper.toDto(disbursement);
+    return disbursementMapper.toDTO(disbursement);
   }
 
   @Override
   public List<DisbursementDTO> getAll() {
     return disbursementRepository.findAll().stream()
-        .map(disbursementMapper::toDto)
+        .map(disbursementMapper::toDTO)
         .collect(Collectors.toList());
   }
 }

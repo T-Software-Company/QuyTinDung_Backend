@@ -19,6 +19,5 @@ public class Approve extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private ApproveStatus status;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private WorkflowTransaction transaction;
+  @ManyToOne private WorkflowTransaction transaction;
 }

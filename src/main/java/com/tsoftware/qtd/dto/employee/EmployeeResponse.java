@@ -1,29 +1,20 @@
 package com.tsoftware.qtd.dto.employee;
 
 import com.tsoftware.qtd.constants.EnumType.Role;
+import com.tsoftware.qtd.dto.AbstractResponse;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
-import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class EmployeeResponse {
-  private UUID id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
+@SuperBuilder
+public class EmployeeResponse extends AbstractResponse {
+
   String userId;
   String email;
   String username;
@@ -35,5 +26,4 @@ public class EmployeeResponse {
   IdentityInfoDTO identityInfo;
   String code;
   Boolean enabled;
-  Boolean isDeleted;
 }

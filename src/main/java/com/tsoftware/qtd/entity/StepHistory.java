@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -33,7 +34,7 @@ public class StepHistory extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private WorkflowStatus status;
 
-  private String transactionId;
+  private UUID transactionId;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
