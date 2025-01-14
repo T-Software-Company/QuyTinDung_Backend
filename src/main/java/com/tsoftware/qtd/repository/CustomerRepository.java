@@ -12,5 +12,7 @@ public interface CustomerRepository
     extends JpaRepository<Customer, UUID>, JpaSpecificationExecutor<Customer> {
   Optional<Customer> findByIdentityInfoIdentifyId(String identifyId);
 
+  Optional<Customer> findByUsername(String username);
+
   Optional<Customer> findByUserId(String id);
 }

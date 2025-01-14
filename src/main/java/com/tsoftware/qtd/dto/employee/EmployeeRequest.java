@@ -21,11 +21,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Unique(
+    repositoryClass = EmployeeRepository.class,
+    fields = {"username"})
 public class EmployeeRequest {
 
   @NotBlank
   @Size(min = 4)
-  @Unique(repositoryClass = EmployeeRepository.class, checkMethod = "existsByUsername")
   String username;
 
   @NotBlank

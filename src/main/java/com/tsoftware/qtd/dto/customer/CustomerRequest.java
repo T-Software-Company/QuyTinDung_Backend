@@ -13,13 +13,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@Unique(
+    repositoryClass = CustomerRepository.class,
+    fields = {"username"})
 public class CustomerRequest {
   UUID id;
 
   @NotNull
   @NotBlank
   @Size(min = 4)
-  @Unique(repositoryClass = CustomerRepository.class, checkMethod = "existsByUsername")
   String username;
 
   @NotNull
