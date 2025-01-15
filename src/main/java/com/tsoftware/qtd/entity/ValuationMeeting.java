@@ -33,10 +33,10 @@ public class ValuationMeeting extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime startDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime endDate;
 
   @OneToMany(mappedBy = "valuationMeeting")

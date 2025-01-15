@@ -17,6 +17,7 @@ import com.jayway.jsonpath.PathNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -201,7 +202,6 @@ public class JsonParser {
         array = context.read(parent + "." + arrayName);
       } catch (PathNotFoundException e) {
         array = new ArrayList<>();
-        context.put(parent, arrayName, array);
       }
       if (overwrite) {
         // Handle cases where array index is not continuous or array size is smaller than index
@@ -212,9 +212,10 @@ public class JsonParser {
       } else {
         array.add(value);
       }
-      context.set(parent + "." + arrayName, array);
+      context.put(parent, arrayName, array);
     } else {
-      if (overwrite) {
+
+      if (overwrite || ((Map<?, ?>) context.read(parent)).isEmpty()) {
         context.put(parent, child, value);
       }
     }

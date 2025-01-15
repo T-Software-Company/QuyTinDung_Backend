@@ -18,7 +18,7 @@ public class OwnerInfo extends AbstractAuditEntity {
 
   private String fullName;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime dayOfBirth;
 
   private String permanentAddress;

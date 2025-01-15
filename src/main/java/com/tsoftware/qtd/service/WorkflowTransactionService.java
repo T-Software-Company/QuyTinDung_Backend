@@ -1,9 +1,9 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.commonlib.executor.TransactionExecutorRegistry;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.commonlib.service.TransactionService;
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
@@ -41,7 +41,7 @@ public class WorkflowTransactionService implements TransactionService {
             .toList();
     if (approves.isEmpty()) {
       throw new CommonException(
-          ErrorType.ACCESS_DENIED, "You don't have permission to approve this workflow .");
+          ErrorType.ACCESS_DENIED, "You don't have permission to approve this workflow.");
     } else {
       approves.forEach(approve -> approve.setStatus(status));
     }

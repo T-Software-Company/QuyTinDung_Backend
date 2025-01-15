@@ -7,17 +7,23 @@ import com.tsoftware.qtd.commonlib.model.Workflow;
 import com.tsoftware.qtd.commonlib.properties.WorkflowProperties;
 import com.tsoftware.qtd.commonlib.service.WorkflowService;
 import com.tsoftware.qtd.commonlib.util.CollectionUtils;
+import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.workflow.OnboardingWorkflowDTO;
+import com.tsoftware.qtd.dto.workflow.OnboardingWorkflowResponse;
 import com.tsoftware.qtd.dto.workflow.StepHistoryDTO;
+import com.tsoftware.qtd.entity.OnboardingWorkflow;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.OnboardingWorkflowMapper;
+import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.repository.OnboardingWorkflowRepository;
 import com.tsoftware.qtd.util.RequestUtil;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.http.HttpStatus;
@@ -31,6 +37,14 @@ public class WorkflowServiceImpl implements WorkflowService {
   private final OnboardingWorkflowRepository onboardingWorkflowRepository;
   private final WorkflowProperties workflowProperties;
   private final OnboardingWorkflowMapper onboardingWorkflowMapper;
+  private final PageResponseMapper pageResponseMapper;
+
+  public PageResponse<OnboardingWorkflowResponse> getAll(
+      Specification<OnboardingWorkflow> spec, Pageable page) {
+    var onboardingWorkflowPage =
+        onboardingWorkflowRepository.findAll(spec, page).map(onboardingWorkflowMapper::toResponse);
+    return pageResponseMapper.toPageResponse(onboardingWorkflowPage);
+  }
 
   @Override
   public Workflow<?> getByTargetId(UUID targetId) {
@@ -46,7 +60,7 @@ public class WorkflowServiceImpl implements WorkflowService {
   public Workflow<?> getByTransactionId(UUID transactionId) {
     var onboardingWorkflow =
         onboardingWorkflowRepository
-            .findByStepHistoriesTransactionId(transactionId)
+            .findByStepsTransactionId(transactionId)
             .orElseThrow(
                 () ->
                     new CommonException(
@@ -58,37 +72,43 @@ public class WorkflowServiceImpl implements WorkflowService {
   @Override
   public Workflow<?> save(Workflow<?> workflow) {
     var onboardingWorkflow = onboardingWorkflowMapper.toEntity((OnboardingWorkflowDTO) workflow);
-    return onboardingWorkflowMapper.toDTO(onboardingWorkflowRepository.save(onboardingWorkflow));
+    var wf = onboardingWorkflowRepository.save(onboardingWorkflow);
+    wf.getSteps().forEach(step -> step.setOnboardingWorkflow(onboardingWorkflow));
+    return onboardingWorkflowMapper.toDTO(wf);
   }
 
   @Override
-  public Workflow<?> init(UUID targetId) {
-    var step = this.initStep(workflowProperties.getOnboarding().getFirst().getStep());
-    return OnboardingWorkflowDTO.builder()
-        .targetId(targetId)
-        .status(WorkflowStatus.INPROGRESS)
-        .startTime(ZonedDateTime.now())
-        .steps(new ArrayList<>(List.of(step)))
-        .nextSteps(new ArrayList<>())
-        .createdBy(RequestUtil.getUserId())
-        .build();
+  public Workflow<?> init() {
+    var workflow =
+        OnboardingWorkflowDTO.builder()
+            .status(WorkflowStatus.INPROGRESS)
+            .startTime(ZonedDateTime.now())
+            .steps(new ArrayList<>())
+            .nextSteps(new ArrayList<>())
+            .createdBy(RequestUtil.getUserId())
+            .build();
+    var step =
+        (StepHistoryDTO) this.initStep(workflowProperties.getOnboarding().getFirst().getStep());
+    workflow.getSteps().add(step);
+    return workflow;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public StepHistoryDTO initStep(String stepName) {
-    return StepHistoryDTO.builder()
-        .name(stepName)
-        .status(WorkflowStatus.INPROGRESS)
-        .startTime(ZonedDateTime.now())
-        .metadata(new HashMap<>())
-        .nextSteps(new ArrayList<>())
-        .type(
-            CollectionUtils.findFirst(
-                    workflowProperties.getOnboarding(), s -> s.getStep().equals(stepName))
-                .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName))
-                .getType())
-        .build();
+  public <T extends Step> T initStep(String stepName) {
+    return (T)
+        StepHistoryDTO.builder()
+            .name(stepName)
+            .status(WorkflowStatus.INPROGRESS)
+            .startTime(ZonedDateTime.now())
+            .metadata(new HashMap<>())
+            .nextSteps(new ArrayList<>())
+            .type(
+                CollectionUtils.findFirst(
+                        workflowProperties.getOnboarding(), s -> s.getStep().equals(stepName))
+                    .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName))
+                    .getType())
+            .build();
   }
 
   @Override
@@ -178,12 +198,15 @@ public class WorkflowServiceImpl implements WorkflowService {
   @Override
   public void calculateCurrentSteps(Workflow<?> workflow) {
     var steps = workflow.getSteps();
-    var currentSteps = steps.stream().map(Step::getName).collect(Collectors.toList());
+    var currentSteps = steps.stream().map(Step::getName).distinct().collect(Collectors.toList());
     workflowProperties
         .getOnboarding()
         .forEach(
-            workflowDefinition ->
-                workflowDefinition.getDependencies().forEach(currentSteps::remove));
+            workflowDefinition -> {
+              if (currentSteps.contains(workflowDefinition.getStep())) {
+                workflowDefinition.getDependencies().forEach(currentSteps::remove);
+              }
+            });
     workflow.setCurrentSteps(currentSteps);
   }
 
@@ -200,6 +223,7 @@ public class WorkflowServiceImpl implements WorkflowService {
             .stream()
             .filter(nextStepRule -> evaluateCondition(nextStepRule.getCondition(), workflow))
             .map(WorkflowProperties.NextStepRule::getStep)
+            .distinct()
             .toList();
     var step =
         CollectionUtils.findFirst(steps, st -> st.getName().equals(stepName))

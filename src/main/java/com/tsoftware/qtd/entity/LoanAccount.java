@@ -31,7 +31,7 @@ public class LoanAccount extends AbstractAuditEntity {
   private BigDecimal interestRate;
   private Integer termInMonths;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime approvalDate;
 
   private LoanStatus status;

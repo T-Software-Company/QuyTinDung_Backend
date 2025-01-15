@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import java.util.UUID;
 import lombok.AllArgsConstructor;

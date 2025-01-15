@@ -4,6 +4,7 @@ import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.BorrowerType;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.validation.IsEnum;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -39,5 +40,5 @@ public class LoanRequestRequest {
   private String note;
   private Map<String, Object> metadata;
   private Set<String> assignees;
-  private ApplicationDTO application;
+  @Valid private ApplicationRequest application;
 }

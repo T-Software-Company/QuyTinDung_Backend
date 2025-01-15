@@ -123,7 +123,6 @@ public class CustomerServiceImpl implements CustomerService {
     try {
       var customerpage = customerRepository.findAll(spec, page).map(customerMapper::toResponse);
       return pageResponseMapper.toPageResponse(customerpage);
-
     } catch (Exception e) {
       throw new CommonException(ErrorType.METHOD_ARGUMENT_NOT_VALID, e.getMessage());
     }

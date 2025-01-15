@@ -29,14 +29,14 @@ public class LoanRequestController {
   private final LoanRequestService loanRequestService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<LoanRequestResponse>> create(
+  public ResponseEntity<?> create(
       @RequestBody @Valid LoanRequestRequest loanRequestRequest,
       @Valid @IsUUID @RequestParam String applicationId) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             HttpStatus.CREATED.value(),
             "Created",
-            loanRequestService.create(loanRequestRequest, UUID.fromString(applicationId))));
+            loanRequestService.request(loanRequestRequest, UUID.fromString(applicationId))));
   }
 
   @PutMapping("/{id}")

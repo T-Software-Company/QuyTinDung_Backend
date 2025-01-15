@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface LoanRequestService {
-  WorkflowTransactionResponse request(LoanRequestRequest loanRequestRequest, UUID applicationId);
+  WorkflowTransactionResponse request(LoanRequestRequest loanRequestRequest);
 
   LoanRequestResponse create(LoanRequestRequest loanRequestRequest, UUID applicationId);
 

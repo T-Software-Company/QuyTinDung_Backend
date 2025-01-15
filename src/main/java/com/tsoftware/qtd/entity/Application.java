@@ -45,10 +45,10 @@ public class Application extends AbstractAuditEntity {
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<WorkflowTransaction> transactions;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime startDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime dueDate;
 
   private BigDecimal interestRate;

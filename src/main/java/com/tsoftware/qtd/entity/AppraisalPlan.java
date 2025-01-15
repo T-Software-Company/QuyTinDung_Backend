@@ -27,10 +27,10 @@ import org.hibernate.annotations.Type;
 public class AppraisalPlan extends AbstractAuditEntity {
   private String address;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime startDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime endDate;
 
   @Type(JsonType.class)

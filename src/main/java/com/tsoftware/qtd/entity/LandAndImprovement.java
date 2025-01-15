@@ -27,7 +27,7 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private BigDecimal area;
   private String purpose;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime expirationDate;
 
   private String originOfUsage;
@@ -39,7 +39,7 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private Integer constructionYear;
   private String typeOfOwnership;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime ownershipTerm;
 
   private String notes;

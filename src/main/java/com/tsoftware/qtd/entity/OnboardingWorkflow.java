@@ -18,7 +18,6 @@ import org.hibernate.annotations.Type;
 @SuperBuilder
 @Entity
 @Table
-@EqualsAndHashCode(callSuper = true)
 public class OnboardingWorkflow extends AbstractAuditEntity {
   private UUID targetId;
   private List<String> nextSteps;
@@ -27,17 +26,16 @@ public class OnboardingWorkflow extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private WorkflowStatus status;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime startTime;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime endTime;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @Column
   @OneToMany(mappedBy = "onboardingWorkflow", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private List<StepHistory> stepHistories;
+  private List<StepHistory> steps;
 }

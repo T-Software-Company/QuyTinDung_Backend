@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

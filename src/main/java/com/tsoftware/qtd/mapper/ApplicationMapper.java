@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
+import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import com.tsoftware.qtd.dto.application.ApplicationResponse;
 import com.tsoftware.qtd.entity.Application;
 import org.mapstruct.BeanMapping;
@@ -17,6 +18,8 @@ public interface ApplicationMapper {
   ApplicationResponse toResponse(Application entity);
 
   ApplicationDTO toDTO(Application entity);
+
+  ApplicationDTO toDTO(ApplicationRequest entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(ApplicationDTO dto, @MappingTarget Application entity);

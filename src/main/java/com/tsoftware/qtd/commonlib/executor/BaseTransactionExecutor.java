@@ -21,7 +21,7 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
       return postExecute(transaction);
     } catch (Exception e) {
       log.error("Error executing transaction: {}", transaction.getId(), e);
-      callBackWhenFall(transaction);
+      callBackWhenFall(transaction, e);
       throw e;
     }
   }
@@ -36,7 +36,7 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
 
   protected abstract T postExecute(T transaction);
 
-  protected void callBackWhenFall(T transaction) {
+  protected void callBackWhenFall(T transaction, Exception e) {
     // Default pre-execution logic
   }
 }

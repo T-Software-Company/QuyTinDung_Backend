@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.service.WorkflowTransactionService;
 import com.tsoftware.qtd.validation.IsEnum;
 import com.tsoftware.qtd.validation.IsUUID;

@@ -22,6 +22,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 @Slf4j
@@ -38,6 +39,23 @@ public class GlobalExceptionHandler {
     apiResponse.setMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 
     return ResponseEntity.internalServerError().body(apiResponse);
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ResponseEntity<ApiResponse<Void>> handleNoResourceFoundException(
+      NoResourceFoundException exception) {
+    log.error(
+        "No resource found: {}, HTTP Method: {}",
+        exception.getResourcePath(),
+        exception.getHttpMethod());
+
+    ApiResponse<Void> response =
+        ApiResponse.<Void>builder()
+            .message("Resource not found: " + exception.getResourcePath())
+            .code(HttpStatus.NOT_FOUND.value())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 
   @ExceptionHandler(value = KeycloakException.class)

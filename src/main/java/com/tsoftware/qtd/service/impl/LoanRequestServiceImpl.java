@@ -1,14 +1,20 @@
 package com.tsoftware.qtd.service.impl;
 
+import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.mapper.ApplicationMapper;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;
+import com.tsoftware.qtd.mapper.WorkflowTransactionMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.LoanRequestRepository;
+import com.tsoftware.qtd.repository.WorkflowTransactionRepository;
 import com.tsoftware.qtd.service.LoanRequestService;
+import com.tsoftware.qtd.util.RequestUtil;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,13 +30,23 @@ public class LoanRequestServiceImpl implements LoanRequestService {
   private final LoanRequestRepository loanrequestRepository;
   private final LoanRequestMapper loanrequestMapper;
   private final ApplicationRepository applicationRepository;
+  private final ApplicationMapper applicationMapper;
+  private final WorkflowTransactionMapper workflowTransactionMapper;
+  private final WorkflowTransactionRepository workflowTransactionRepository;
 
   @Override
-  public WorkflowTransactionResponse request(
-      LoanRequestRequest loanRequestRequest, UUID applicationId) {
-    var application = applicationRepository.findById(applicationId);
+  public WorkflowTransactionResponse request(LoanRequestRequest loanRequestRequest) {
+    var transaction =
+        WorkflowTransactionDTO.builder()
+            .application(applicationMapper.toDTO(loanRequestRequest.getApplication()))
+            .PIC(RequestUtil.getUserId())
+            .type(TransactionType.CREATE_LOAN_REQUEST)
+            .approves(null)
+            .metadata(loanRequestRequest)
+            .build(); // wip
 
-    return null;
+    var saved = workflowTransactionRepository.save(workflowTransactionMapper.toEntity(transaction));
+    return workflowTransactionMapper.toResponse(saved);
   }
 
   @Override

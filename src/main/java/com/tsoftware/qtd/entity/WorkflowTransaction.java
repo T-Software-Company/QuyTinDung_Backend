@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
@@ -39,7 +39,7 @@ public class WorkflowTransaction extends AbstractAuditEntity {
 
   private UUID referenceId;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime approvedAt;
 
   private Integer requiredApprovals;

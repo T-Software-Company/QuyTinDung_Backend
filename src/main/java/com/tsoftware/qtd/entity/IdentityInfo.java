@@ -25,17 +25,17 @@ public class IdentityInfo extends AbstractAuditEntity {
   String religion;
   Gender gender;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   ZonedDateTime dateOfBirth;
 
   String nationality;
   String placeOfBirth;
   String permanentAddress;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   ZonedDateTime issueDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   ZonedDateTime expirationDate;
 
   String issuingAuthority;

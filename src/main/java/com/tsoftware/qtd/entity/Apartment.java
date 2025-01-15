@@ -25,7 +25,7 @@ public class Apartment extends AbstractAuditEntity {
   private BigDecimal area;
   private String purpose;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime expirationDate;
 
   private String originOfUsage;
@@ -34,7 +34,7 @@ public class Apartment extends AbstractAuditEntity {
   private BigDecimal floorArea;
   private String typeOfOwnership;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime ownershipTerm;
 
   private String notes;
@@ -43,7 +43,7 @@ public class Apartment extends AbstractAuditEntity {
   private String certificateBookNumber;
   private String issuingAuthority;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime issueDate;
 
   @Type(JsonType.class)

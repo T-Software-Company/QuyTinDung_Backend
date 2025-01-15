@@ -65,8 +65,10 @@ public class CustomerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable UUID id) {
-    return ResponseEntity.ok(new ApiResponse<>(200, "Fetched", customerService.getById(id)));
+  public ResponseEntity<ApiResponse<CustomerResponse>> getById(
+      @PathVariable @Valid @IsUUID String id) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(200, "Fetched", customerService.getById(UUID.fromString(id))));
   }
 
   @GetMapping("/{id}/documents")

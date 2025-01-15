@@ -18,7 +18,7 @@ public class Disbursement extends AbstractAuditEntity {
 
   private BigDecimal amount;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime disbursementDate;
 
   private String description;

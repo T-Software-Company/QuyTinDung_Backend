@@ -8,7 +8,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
@@ -17,13 +19,16 @@ import org.hibernate.annotations.Type;
 @Getter
 @Setter
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table
 public class StepHistory extends AbstractAuditEntity {
   private String name;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime startTime;
 
-  @Column(columnDefinition = "TIME WITH TIMEZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime endTime;
 
   private List<String> nextSteps;
@@ -40,5 +45,7 @@ public class StepHistory extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @ManyToOne private OnboardingWorkflow onboardingWorkflow;
+  @JoinColumn(nullable = false)
+  @ManyToOne
+  private OnboardingWorkflow onboardingWorkflow;
 }

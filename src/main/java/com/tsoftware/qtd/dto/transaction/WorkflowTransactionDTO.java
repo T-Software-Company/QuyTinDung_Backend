@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.transaction;
 
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import java.time.ZonedDateTime;
@@ -28,10 +28,14 @@ public class WorkflowTransactionDTO extends AbstractTransaction<TransactionType>
 
   @Override
   public boolean isApproved() {
-    return approves != null
-        && approves.stream()
-                .filter(approve -> ApproveStatus.APPROVED.equals(approve.getStatus()))
-                .count()
-            >= requiredApprovals;
+    var result =
+        approves != null
+            && approves.stream()
+                    .filter(approve -> ApproveStatus.APPROVED.equals(approve.getStatus()))
+                    .count()
+                >= requiredApprovals;
+    this.status = result ? ApproveStatus.APPROVED : ApproveStatus.REJECTED;
+    this.approvedAt = result ? ZonedDateTime.now() : null;
+    return result;
   }
 }

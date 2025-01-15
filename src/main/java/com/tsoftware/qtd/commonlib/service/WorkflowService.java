@@ -11,7 +11,7 @@ public interface WorkflowService {
 
   Workflow<?> save(Workflow<?> workflow);
 
-  Workflow<?> init(UUID targetId);
+  Workflow<?> init();
 
   <T extends Step> T initStep(String stepName);
 

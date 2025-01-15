@@ -7,6 +7,7 @@ public final class WorkflowContext {
   private static final ThreadLocal<Workflow<?>> context = new ThreadLocal<>();
 
   private static final ThreadLocal<UUID> transactionId = new ThreadLocal<>();
+  private static final ThreadLocal<UUID> initTargetId = new ThreadLocal<>();
 
   public static UUID getTransactionId() {
     return transactionId.get();
@@ -14,6 +15,14 @@ public final class WorkflowContext {
 
   public static void setTransactionId(UUID transactionId) {
     WorkflowContext.transactionId.set(transactionId);
+  }
+
+  public static UUID getInitTargetId() {
+    return initTargetId.get();
+  }
+
+  public static void setInitTargetId(UUID initTargetId) {
+    WorkflowContext.initTargetId.set(initTargetId);
   }
 
   public static Workflow<?> getWorkflow() {
@@ -27,5 +36,6 @@ public final class WorkflowContext {
   public static void clear() {
     context.remove();
     transactionId.remove();
+    initTargetId.remove();
   }
 }

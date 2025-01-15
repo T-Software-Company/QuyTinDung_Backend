@@ -28,15 +28,15 @@ public class Vehicle extends AbstractAuditEntity {
   private String loadCapacity;
   private Integer seatCapacity;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime registrationExpiryDate;
 
   private String licensePlateNumber;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime firstRegistrationDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime issueDate;
 
   private String registrationCertificateNumber;

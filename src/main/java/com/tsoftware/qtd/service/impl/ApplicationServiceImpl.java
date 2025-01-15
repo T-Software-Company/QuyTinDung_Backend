@@ -1,5 +1,7 @@
 package com.tsoftware.qtd.service.impl;
 
+import com.tsoftware.qtd.commonlib.annotation.TryInitTargetId;
+import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import com.tsoftware.qtd.dto.application.*;
 import com.tsoftware.qtd.entity.*;
 import com.tsoftware.qtd.exception.CommonException;
@@ -33,16 +35,28 @@ public class ApplicationServiceImpl implements ApplicationService {
 
   @Override
   @Transactional
+  @TryInitTargetId
   public ApplicationResponse create(UUID customerId) {
     var customer =
         customerRepository
             .findById(customerId)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, customerId));
-    List<Employee> loanProcessors = new ArrayList<>();
-    employeeRepository.findByUserId(RequestUtil.getUserId()).ifPresent(loanProcessors::add);
-    var application =
-        Application.builder().loanProcessors(loanProcessors).customer(customer).build();
-    return applicationMapper.toResponse(applicationRepository.save(application));
+    var applicationInProgress =
+        applicationRepository.findByCustomerIdAndStatusIn(
+            customerId, List.of(LoanStatus.CREATING, LoanStatus.ACTIVE));
+    if (applicationInProgress.isEmpty()) {
+      List<Employee> loanProcessors = new ArrayList<>();
+      employeeRepository.findByUserId(RequestUtil.getUserId()).ifPresent(loanProcessors::add);
+      var application =
+          Application.builder()
+              .status(LoanStatus.CREATING)
+              .loanProcessors(loanProcessors)
+              .customer(customer)
+              .build();
+      return applicationMapper.toResponse(applicationRepository.save(application));
+    }
+    throw new CommonException(
+        ErrorType.HAS_APPLICATION_IN_PROGRESS, "application", "customer: " + customerId);
   }
 
   @Override

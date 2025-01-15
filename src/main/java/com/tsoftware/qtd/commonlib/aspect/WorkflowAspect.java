@@ -1,10 +1,7 @@
 package com.tsoftware.qtd.commonlib.aspect;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.tsoftware.qtd.commonlib.annotation.TargetId;
-import com.tsoftware.qtd.commonlib.annotation.TransactionId;
-import com.tsoftware.qtd.commonlib.annotation.TryTransactionId;
-import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.annotation.*;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
@@ -45,7 +42,7 @@ public class WorkflowAspect {
   private final WorkflowProperties workflowProperties;
 
   @AfterReturning(
-      value = "@annotation(TryTransactionId)",
+      value = "@annotation(tryTransactionId)",
       returning = "response",
       argNames = "response,tryTransactionId")
   public void afterTryTransactionId(
@@ -55,8 +52,18 @@ public class WorkflowAspect {
     WorkflowContext.setTransactionId(JsonParser.getValueByPath(response, path, UUID.class));
   }
 
-  @Before(value = "@annotation(WorkflowAPI)", argNames = "joinPoint,workflowAPI")
-  private void beforeProceedWorkflow(JoinPoint joinPoint, WorkflowAPI workflowAPI) {
+  @AfterReturning(
+      value = "@annotation(tryInitTargetId)",
+      returning = "response",
+      argNames = "response,tryInitTargetId")
+  public void afterTryInitTargetId(Object response, TryInitTargetId tryInitTargetId)
+      throws JsonProcessingException {
+    var path = tryInitTargetId.path();
+    WorkflowContext.setInitTargetId(JsonParser.getValueByPath(response, path, UUID.class));
+  }
+
+  @Before(value = "@annotation(workflowAPI)", argNames = "joinPoint,workflowAPI")
+  public void beforeProceedWorkflow(JoinPoint joinPoint, WorkflowAPI workflowAPI) {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
 
@@ -69,7 +76,7 @@ public class WorkflowAspect {
   }
 
   @AfterReturning(
-      value = "@annotation(WorkflowAPI)",
+      value = "@annotation(workflowAPI)",
       returning = "response",
       argNames = "joinPoint,response,workflowAPI")
   private void afterReturnWorkflow(JoinPoint joinPoint, Object response, WorkflowAPI workflowAPI) {
@@ -87,7 +94,7 @@ public class WorkflowAspect {
   }
 
   @AfterThrowing(
-      value = "@annotation(WorkflowAPI)",
+      value = "@annotation(workflowAPI)",
       throwing = "ex",
       argNames = "joinPoint,ex,workflowAPI")
   private void afterThrowWorkflow(JoinPoint joinPoint, Throwable ex, WorkflowAPI workflowAPI) {
@@ -101,16 +108,15 @@ public class WorkflowAspect {
     this.processAfterThrowWithDefault(workflow, stepName, ex);
   }
 
-  @After(value = "@annotation(WorkflowAPI)")
+  @After(value = "@annotation(workflowAPI)")
   public void afterWorkflow() {
     WorkflowContext.clear();
   }
 
   private void processBeforeWithDefault(JoinPoint joinPoint, String stepName) {
-    var targetId = getTargetId(joinPoint);
     // init workflow
     if (stepName.equals(workflowProperties.getOnboarding().getFirst().getStep())) {
-      var workflow = workflowService.init(targetId);
+      var workflow = workflowService.init();
       var step = workflow.getSteps().getFirst();
       var request = this.extractRequest(joinPoint);
       JsonParser.put(step.getMetadata(), "histories[0].request", request, false);
@@ -118,6 +124,7 @@ public class WorkflowAspect {
       return;
     }
     // process next step
+    var targetId = getTargetId(joinPoint);
     var workflow = workflowService.getByTargetId(targetId);
     workflowService.validateStep(workflow, stepName);
     var request = this.extractRequest(joinPoint);
@@ -155,6 +162,9 @@ public class WorkflowAspect {
     step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
     JsonParser.put(metadata, "histories[0].response", response, false);
+    if (stepName.equals(workflowProperties.getOnboarding().getFirst().getStep())) {
+      workflow.setTargetId(WorkflowContext.getInitTargetId());
+    }
     this.finalProcess(workflow, step.getName());
     workflowService.save(workflow);
   }
@@ -224,7 +234,7 @@ public class WorkflowAspect {
         }
       }
     }
-    return UUID.randomUUID();
+    throw new WorkflowException(HttpStatus.NOT_FOUND.value(), "Target id not try");
   }
 
   private UUID getTransactionId(JoinPoint joinPoint) {

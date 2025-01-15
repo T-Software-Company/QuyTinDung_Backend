@@ -26,10 +26,10 @@ public class MarketStalls extends AbstractAuditEntity {
   private String areaSize;
   private String rentPrice;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime rentStartDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime rentEndDate;
 
   private String location;

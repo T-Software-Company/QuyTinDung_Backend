@@ -18,13 +18,13 @@ public class TransferInfo extends AbstractAuditEntity {
 
   private String fullName;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime dayOfBirth;
 
   private String idCardNumber;
   private String permanentAddress;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime transferDate;
 
   private String transferRecordNumber;
