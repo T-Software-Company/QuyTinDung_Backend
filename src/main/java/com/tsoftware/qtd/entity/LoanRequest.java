@@ -6,6 +6,7 @@ import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,5 +45,5 @@ public class LoanRequest extends AbstractAuditEntity {
   private Application application;
 
   @Enumerated(EnumType.ORDINAL)
-  private AssetType loanCollateralType;
+  private List<AssetType> loanCollateralTypes;
 }

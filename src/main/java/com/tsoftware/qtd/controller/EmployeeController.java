@@ -10,7 +10,6 @@ import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
-import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.ApproveService;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.GroupService;
@@ -26,7 +25,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -53,7 +51,6 @@ public class EmployeeController {
   EmployeeService employeeService;
   ApproveService approveService;
   private final GroupService groupService;
-  private final PageResponseMapper pageResponseMapper;
   private final KeycloakService keycloakService;
 
   @PostMapping
@@ -74,12 +71,9 @@ public class EmployeeController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAll(
       @Filter Specification<Employee> spec, Pageable page) {
-    Page<EmployeeResponse> employeesPage = employeeService.getAll(spec, page);
-    var pageResponse = pageResponseMapper.toPageResponse(employeesPage);
-
     return ResponseEntity.ok(
         ApiResponse.<PageResponse<EmployeeResponse>>builder()
-            .result(pageResponse)
+            .result(employeeService.getAll(spec, page))
             .code(HttpStatus.OK.value())
             .build());
   }

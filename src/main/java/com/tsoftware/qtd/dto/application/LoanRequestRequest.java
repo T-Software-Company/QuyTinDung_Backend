@@ -8,8 +8,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 public class LoanRequestRequest {
   @NotNull @NotBlank private String purpose;
 
-  @NotNull @NotBlank private BigDecimal amount;
+  @NotNull private BigDecimal amount;
 
   @NotNull
   @IsEnum(enumClass = BorrowerType.class)
@@ -34,11 +34,11 @@ public class LoanRequestRequest {
   @IsEnum(enumClass = LoanSecurityType.class)
   private String loanSecurityType;
 
+  @NotNull
   @IsEnum(enumClass = AssetType.class)
-  private String loanCollateralType;
+  private List<String> loanCollateralTypes;
 
   private String note;
   private Map<String, Object> metadata;
-  private Set<String> assignees;
-  @Valid private ApplicationRequest application;
+  @NotNull @Valid private ApplicationRequest application;
 }

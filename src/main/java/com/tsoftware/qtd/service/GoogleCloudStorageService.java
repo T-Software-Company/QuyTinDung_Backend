@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.service.impl;
+package com.tsoftware.qtd.service;
 
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.Blob;

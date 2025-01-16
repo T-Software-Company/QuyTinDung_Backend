@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.service.impl;
+package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class WorkflowServiceImpl implements WorkflowService {
+public class OnboardingWorkflowService implements WorkflowService {
   private final OnboardingWorkflowRepository onboardingWorkflowRepository;
   private final WorkflowProperties workflowProperties;
   private final OnboardingWorkflowMapper onboardingWorkflowMapper;
@@ -72,9 +72,8 @@ public class WorkflowServiceImpl implements WorkflowService {
   @Override
   public Workflow<?> save(Workflow<?> workflow) {
     var onboardingWorkflow = onboardingWorkflowMapper.toEntity((OnboardingWorkflowDTO) workflow);
-    var wf = onboardingWorkflowRepository.save(onboardingWorkflow);
-    wf.getSteps().forEach(step -> step.setOnboardingWorkflow(onboardingWorkflow));
-    return onboardingWorkflowMapper.toDTO(wf);
+    onboardingWorkflow.getSteps().forEach(step -> step.setOnboardingWorkflow(onboardingWorkflow));
+    return onboardingWorkflowMapper.toDTO(onboardingWorkflowRepository.save(onboardingWorkflow));
   }
 
   @Override

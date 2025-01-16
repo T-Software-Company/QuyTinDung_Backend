@@ -15,4 +15,6 @@ public interface CustomerRepository
   Optional<Customer> findByUsername(String username);
 
   Optional<Customer> findByUserId(String id);
+
+  boolean existsByEmail(String email);
 }

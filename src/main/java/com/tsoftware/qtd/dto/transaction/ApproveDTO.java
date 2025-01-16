@@ -16,6 +16,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApproveDTO {
   private UUID id;
+  private String comment;
   private EmployeeResponse approver;
   private ApproveStatus status;
+  private WorkflowTransactionRequest transaction;
+  private GroupApproveRequest groupApprove;
+  private RoleApproveRequest roleApprove;
 }

@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorType implements CommonError {
   UNEXPECTED(0, HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error. {}"),
-  CHECKSUM_INVALID(1, HttpStatus.BAD_REQUEST, "Checksum is invalid."),
+  CHECKSUM_INVALID(1, HttpStatus.BAD_REQUEST, "Checksum is invalid. {}"),
   ENTITY_NOT_FOUND(2, HttpStatus.NOT_FOUND, "Entity {} not found."),
   FAIL_TO_CALL_API(4, HttpStatus.INTERNAL_SERVER_ERROR, "Fail to call API {}."),
   RUN_ASYNC_FAIL(6, HttpStatus.INTERNAL_SERVER_ERROR, "Run async fail."),

@@ -6,6 +6,7 @@ import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -22,7 +23,7 @@ public class LoanRequestResponse extends AbstractResponse {
   private BigDecimal amount;
   private BorrowerType borrowerType;
   private LoanSecurityType loanSecurityType;
-  private AssetType loanCollateralType;
+  private List<AssetType> loanCollateralTypes;
   private String note;
   private Map<String, Object> metadata;
   private ApplicationDTO application;

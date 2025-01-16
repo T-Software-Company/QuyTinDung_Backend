@@ -2,7 +2,7 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.constants.EnumType.DocumentType;
 import com.tsoftware.qtd.dto.document.DocumentDTO;
-import com.tsoftware.qtd.service.impl.DocumentService;
+import com.tsoftware.qtd.service.DocumentService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

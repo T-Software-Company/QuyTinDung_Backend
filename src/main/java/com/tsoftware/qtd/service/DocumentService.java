@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.service.impl;
+package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.constants.EnumType.DocumentType;
 import com.tsoftware.qtd.dto.document.DocumentDTO;

@@ -1,17 +1,55 @@
 package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.dto.application.DisbursementDTO;
+import com.tsoftware.qtd.entity.Disbursement;
+import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.mapper.DisbursementMapper;
+import com.tsoftware.qtd.repository.DisbursementRepository;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface DisbursementService {
-  DisbursementDTO create(DisbursementDTO disbursementDto);
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class DisbursementService {
 
-  DisbursementDTO update(UUID id, DisbursementDTO disbursementDto);
+  private final DisbursementRepository disbursementRepository;
 
-  void delete(UUID id);
+  private final DisbursementMapper disbursementMapper;
 
-  DisbursementDTO getById(UUID id);
+  public DisbursementDTO create(DisbursementDTO disbursementDto) {
+    Disbursement disbursement = disbursementMapper.toEntity(disbursementDto);
+    return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
+  }
 
-  List<DisbursementDTO> getAll();
+  public DisbursementDTO update(UUID id, DisbursementDTO disbursementDto) {
+    Disbursement disbursement =
+        disbursementRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
+    disbursementMapper.updateEntity(disbursementDto, disbursement);
+    return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
+  }
+
+  public void delete(UUID id) {
+    disbursementRepository.deleteById(id);
+  }
+
+  public DisbursementDTO getById(UUID id) {
+    Disbursement disbursement =
+        disbursementRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
+    return disbursementMapper.toDTO(disbursement);
+  }
+
+  public List<DisbursementDTO> getAll() {
+    return disbursementRepository.findAll().stream()
+        .map(disbursementMapper::toDTO)
+        .collect(Collectors.toList());
+  }
 }

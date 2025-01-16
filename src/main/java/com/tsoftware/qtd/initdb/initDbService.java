@@ -1,58 +1,73 @@
-package com.tsoftware.qtd.configuration;
+package com.tsoftware.qtd.initdb;
 
+import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.LegalDocType;
 import com.tsoftware.qtd.constants.EnumType.Role;
+import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.address.AddressDto;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
-import com.tsoftware.qtd.repository.EmployeeRepository;
-import com.tsoftware.qtd.repository.RoleRepository;
-import com.tsoftware.qtd.service.CustomerService;
-import com.tsoftware.qtd.service.EmployeeService;
-import com.tsoftware.qtd.service.GroupService;
-import com.tsoftware.qtd.service.KeycloakService;
+import com.tsoftware.qtd.dto.setting.ApproveSettingRequest;
+import com.tsoftware.qtd.repository.*;
+import com.tsoftware.qtd.service.*;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Configuration
+@Component
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
-public class InitDatabase implements CommandLineRunner {
+public class initDbService {
   private final Keycloak keycloak;
   private final EmployeeRepository employeeRepository;
-
   private final EmployeeService employeeService;
   private final IdpProperties idpProperties;
-
   private final KeycloakService keycloakService;
   private final RoleRepository roleRepository;
   private final GroupService groupService;
   private final CustomerService customerService;
+  private final GroupRepository groupRepository;
+  private final ApproveSettingService approveSettingService;
+  private final CustomerRepository customerRepository;
+  private final ApproveSettingRepository approveSettingRepository;
 
-  @Override
-  @Transactional
-  public void run(String... args) throws Exception {
-    createRoles();
-    createAdmin();
-    createEmployees();
-    createGroups();
-    createCustomers();
+  public void createApproveSetting() {
+
+    var group = groupRepository.findAll().getFirst();
+    if (approveSettingRepository
+        .findByTransactionType(TransactionType.CREATE_LOAN_REQUEST)
+        .isEmpty()) {
+      var request =
+          ApproveSettingRequest.builder()
+              .groupApproveSettings(
+                  List.of(
+                      ApproveSettingRequest.GroupApproveSettingRequest.builder()
+                          .requiredPercentage(50)
+                          .groupId(group.getId())
+                          .build()))
+              .roleApproveSettings(
+                  List.of(
+                      ApproveSettingRequest.RoleApproveSettingRequest.builder()
+                          .requiredCount(1)
+                          .role(Role.ADMIN.name())
+                          .build()))
+              .transactionType(TransactionType.CREATE_LOAN_REQUEST.name())
+              .name("create loan request")
+              .build();
+      approveSettingService.create(request);
+    }
   }
 
-  private void createGroups() {
+  public void createGroups() {
     var groupsResource = keycloak.realm(idpProperties.getRealm()).groups();
     if (!groupsResource.groups().isEmpty()) {
       return;
@@ -72,7 +87,7 @@ public class InitDatabase implements CommandLineRunner {
     groupService.create(groupRequest1);
   }
 
-  private void createAdmin() {
+  public void createAdmin() {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
 
     if (!employeeRepository.existsByEmail("admin@gmail.com")
@@ -136,7 +151,7 @@ public class InitDatabase implements CommandLineRunner {
     }
   }
 
-  private void createEmployee(String email, String username, String firstName, String lastName) {
+  public void createEmployee(String email, String username, String firstName, String lastName) {
     var userResource = keycloak.realm(idpProperties.getRealm()).users();
 
     if (!employeeRepository.existsByEmail(email)
@@ -232,7 +247,7 @@ public class InitDatabase implements CommandLineRunner {
     }
   }
 
-  private void createRoles() {
+  public void createRoles() {
     Arrays.stream(Role.values())
         .forEach(
             role -> {
@@ -248,7 +263,7 @@ public class InitDatabase implements CommandLineRunner {
             });
   }
 
-  private void createCustomers() throws Exception {
+  public void createCustomers() throws Exception {
     var all = customerService.getAll();
     if (all.size() > 1) {
       return;
@@ -272,8 +287,13 @@ public class InitDatabase implements CommandLineRunner {
     }
   }
 
-  private void createCustomer(String firstName, String lastName, String email, String username)
-      throws Exception {
+  public void createCustomer(String firstName, String lastName, String email, String username) {
+    var userResource = keycloak.realm(idpProperties.getRealm()).users();
+
+    if (customerRepository.existsByEmail(email)
+        || !userResource.searchByEmail(email, true).isEmpty()) {
+      return;
+    }
     var random = new Random();
 
     // Generate random identity info

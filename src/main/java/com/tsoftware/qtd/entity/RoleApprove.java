@@ -1,0 +1,32 @@
+package com.tsoftware.qtd.entity;
+
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.constants.EnumType.Role;
+import jakarta.persistence.*;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@SuperBuilder
+@Entity
+@Table
+public class RoleApprove extends AbstractAuditEntity {
+  @Enumerated(EnumType.ORDINAL)
+  private Role role;
+
+  private Integer requiredCount;
+
+  @OneToMany(mappedBy = "roleApprove")
+  private List<Approve> currentApproves;
+
+  private ApproveStatus status;
+
+  @ManyToOne private WorkflowTransaction transaction;
+}

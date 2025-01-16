@@ -2,7 +2,6 @@ package com.tsoftware.qtd.exception;
 
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.turkraft.springfilter.parser.InvalidSyntaxException;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,22 +93,23 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HandlerMethodValidationException.class)
   protected ResponseEntity<ApiResponse<?>> handleHandlerMethodValidationException(
       HandlerMethodValidationException ex) {
-
-    List<String> errors =
-        ex.getAllErrors().stream()
-            .map(
-                error -> {
-                  if (error instanceof FieldError fieldError) {
-                    return fieldError.getField() + " " + fieldError.getDefaultMessage();
-                  }
-                  return error.getDefaultMessage();
-                })
-            .toList();
+    Map<String, Object> errors = new HashMap<>();
+    final Integer[] index = {0};
+    ex.getAllErrors()
+        .forEach(
+            error -> {
+              if (error instanceof FieldError fieldError) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+              } else {
+                errors.put("unknow_error" + index[0], ex.getMessage());
+                index[0] = index[0] + 1;
+              }
+            });
 
     return ResponseEntity.badRequest()
         .body(
             new ApiResponse<>(
-                HttpStatus.BAD_REQUEST.value(), INVALID_REQUEST_INFORMATION_MESSAGE, errors));
+                ErrorType.CHECKSUM_INVALID.getCode(), INVALID_REQUEST_INFORMATION_MESSAGE, errors));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -121,13 +121,13 @@ public class GlobalExceptionHandler {
         .getFieldErrors()
         .forEach(
             error -> {
-              addNestedFieldError(errors, error.getField(), error.getDefaultMessage());
+              errors.put(error.getField(), error.getDefaultMessage());
             });
     return ResponseEntity.badRequest()
         .body(
             ApiResponse.<Map<String, Object>>builder()
                 .message(INVALID_REQUEST_INFORMATION_MESSAGE)
-                .code(HttpStatus.BAD_REQUEST.value())
+                .code(ErrorType.CHECKSUM_INVALID.getCode())
                 .result(errors)
                 .build());
   }
@@ -151,16 +151,6 @@ public class GlobalExceptionHandler {
       HttpRequestMethodNotSupportedException e) {
     return ResponseEntity.badRequest()
         .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
-  }
-
-  @ExceptionHandler(SpringFilterBadRequestException.class)
-  public ResponseEntity<ApiResponse<Object>> handleSpringFilterBadRequestException(
-      SpringFilterBadRequestException e, HttpServletRequest request) {
-    String filter = request.getParameter("filter");
-    return ResponseEntity.badRequest()
-        .body(
-            new ApiResponse<>(
-                HttpStatus.BAD_REQUEST.value(), "String filter is bad: " + filter, null));
   }
 
   @ExceptionHandler(InvalidSyntaxException.class)

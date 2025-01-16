@@ -8,7 +8,7 @@ import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional.KcTransactionType;
 import com.tsoftware.qtd.service.CustomerService;
-import com.tsoftware.qtd.service.impl.DocumentService;
+import com.tsoftware.qtd.service.DocumentService;
 import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
@@ -39,7 +39,7 @@ public class CustomerController {
   @PostMapping
   @KcTransactional(KcTransactionType.CREATE_USER)
   public ResponseEntity<CustomerResponse> create(
-      @Valid @RequestBody CustomerRequest customerRequest) throws Exception {
+      @Valid @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(customerService.create(customerRequest));
   }
 
