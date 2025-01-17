@@ -1,5 +1,7 @@
 package com.tsoftware.qtd.commonlib.aspect;
 
+import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tsoftware.qtd.commonlib.annotation.*;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
@@ -11,6 +13,7 @@ import com.tsoftware.qtd.commonlib.properties.WorkflowProperties;
 import com.tsoftware.qtd.commonlib.service.WorkflowService;
 import com.tsoftware.qtd.commonlib.util.CollectionUtils;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
+import com.tsoftware.qtd.commonlib.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -27,6 +30,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -67,7 +71,7 @@ public class WorkflowAspect {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
 
-    if (action.equals(WorkflowAPI.Action.APPROVE)) {
+    if (action) {
       this.processBeforeWithApprove(joinPoint);
       return;
     }
@@ -86,7 +90,7 @@ public class WorkflowAspect {
       response = apiResponse.getResult();
     }
     Workflow<?> workflow = WorkflowContext.getWorkflow();
-    if (action.equals(WorkflowAPI.Action.APPROVE)) {
+    if (action) {
       this.processAfterWithApprove(joinPoint, workflow, response);
       return;
     }
@@ -101,7 +105,7 @@ public class WorkflowAspect {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
     Workflow<?> workflow = WorkflowContext.getWorkflow();
-    if (action.equals(WorkflowAPI.Action.APPROVE)) {
+    if (action) {
       this.processAfterThrowWithApprove(joinPoint, workflow, ex);
       return;
     }
@@ -128,7 +132,10 @@ public class WorkflowAspect {
     var workflow = workflowService.getByTargetId(targetId);
     workflowService.validateStep(workflow, stepName);
     var request = this.extractRequest(joinPoint);
-    workflow.getSteps().add(workflowService.initStep(stepName));
+    var steps = workflow.getSteps();
+    if (CollectionUtils.findFirst(steps, s -> s.getName().equals(stepName)).isEmpty()) {
+      steps.add(workflowService.initStep(stepName));
+    }
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(
@@ -159,13 +166,13 @@ public class WorkflowAspect {
             .orElseThrow(
                 () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
     step.setTransactionId(WorkflowContext.getTransactionId());
-    step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
-    JsonParser.put(metadata, "histories[0].response", response, false);
+    JsonParser.put(metadata, "histories[0].response", getBodyFromResponse(response), false);
     if (stepName.equals(workflowProperties.getOnboarding().getFirst().getStep())) {
       workflow.setTargetId(WorkflowContext.getInitTargetId());
     }
     this.finalProcess(workflow, step.getName());
+
     workflowService.save(workflow);
   }
 
@@ -181,7 +188,7 @@ public class WorkflowAspect {
                         "Step not found(transactionId:" + transactionId + ")"));
     step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
-    JsonParser.put(metadata, "histories[0].response", response, false);
+    JsonParser.put(metadata, "histories[0].response", getBodyFromResponse(response), false);
     this.finalProcess(workflow, step.getName());
     workflowService.save(workflow);
   }
@@ -237,6 +244,18 @@ public class WorkflowAspect {
     throw new WorkflowException(HttpStatus.NOT_FOUND.value(), "Target id not try");
   }
 
+  private Object getBodyFromResponse(Object responseEntity) {
+    var result = new HashMap<>();
+    var response = ((ResponseEntity<?>) responseEntity).getBody();
+    if (response instanceof ApiResponse<?> apiResponse) {
+      response = apiResponse.getResult();
+    }
+    if (response != null) {
+      result.put(StringUtils.lowercaseFirstLetter(response.getClass().getSimpleName()), response);
+    }
+    return result;
+  }
+
   private UUID getTransactionId(JoinPoint joinPoint) {
     MethodSignature signature = (MethodSignature) joinPoint.getSignature();
     Method method = signature.getMethod();
@@ -270,7 +289,13 @@ public class WorkflowAspect {
     String[] argNames = codeSignature.getParameterNames();
     Object[] argValues = joinPoint.getArgs();
     for (int i = 0; i < argNames.length; i++) {
-      argsMap.put(argNames[i], argValues[i]);
+      var key =
+          argValues[i] == null
+                  || isPrimitiveOrWrapper(argValues[i].getClass())
+                  || argValues[i].getClass().getSimpleName().isEmpty()
+              ? argNames[i]
+              : StringUtils.lowercaseFirstLetter(argValues[i].getClass().getSimpleName());
+      argsMap.put(key, argValues[i]);
     }
     ServletRequestAttributes requestAttributes =
         (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

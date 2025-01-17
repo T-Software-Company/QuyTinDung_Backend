@@ -12,10 +12,5 @@ import java.lang.annotation.Target;
 public @interface WorkflowAPI {
   String step() default "unknown";
 
-  Action action() default Action.DEFAULT;
-
-  enum Action {
-    APPROVE,
-    DEFAULT
-  }
+  boolean action() default false;
 }

@@ -23,7 +23,6 @@ public class ApplicationDTO {
   private LoanStatus status;
   private LoanSecurityType loanSecurityType;
   private CustomerDTO customer;
-  private String customerId;
   private LoanPlanRequest loanPlan;
   private LoanRequestRequest loanRequest;
   private FinancialInfoDTO financialInfo;

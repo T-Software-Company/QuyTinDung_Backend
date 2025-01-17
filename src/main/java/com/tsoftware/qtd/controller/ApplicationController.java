@@ -4,7 +4,6 @@ import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
-import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import com.tsoftware.qtd.dto.application.ApplicationResponse;
 import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanPlanResponse;
@@ -55,7 +54,7 @@ public class ApplicationController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApplicationDTO> getById(@PathVariable UUID id) {
+  public ResponseEntity<?> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(applicationService.getById(id));
   }
 

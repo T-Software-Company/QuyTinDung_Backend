@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.commonlib.constant.StepType;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.Step;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.expression.BeanResolver;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,7 @@ public class OnboardingWorkflowService implements WorkflowService {
   private final WorkflowProperties workflowProperties;
   private final OnboardingWorkflowMapper onboardingWorkflowMapper;
   private final PageResponseMapper pageResponseMapper;
+  private final BeanResolver beanFactoryResolver;
 
   public PageResponse<OnboardingWorkflowResponse> getAll(
       Specification<OnboardingWorkflow> spec, Pageable page) {
@@ -88,6 +91,7 @@ public class OnboardingWorkflowService implements WorkflowService {
             .build();
     var step =
         (StepHistoryDTO) this.initStep(workflowProperties.getOnboarding().getFirst().getStep());
+    step.setType(StepType.DEFAULT);
     workflow.getSteps().add(step);
     return workflow;
   }
@@ -172,16 +176,20 @@ public class OnboardingWorkflowService implements WorkflowService {
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
-    step.setStatus(
+    var status =
         this.handleStatusWithExpression(
-            workflow,
+            (StepHistoryDTO) step,
             CollectionUtils.findFirst(
                     workflowProperties.getOnboarding(), t -> t.getStep().equals(stepName))
                 .orElseThrow(
                     () ->
                         new WorkflowException(
                             HttpStatus.NOT_FOUND.value(), "Step not found in rules"))
-                .getExtractStatus()));
+                .getExtractStatus());
+    step.setStatus(status);
+    if (WorkflowStatus.COMPLETED.equals(status)) {
+      step.setEndTime(ZonedDateTime.now());
+    }
     var isFinalStep =
         workflow.getSteps().stream()
             .anyMatch(
@@ -192,6 +200,7 @@ public class OnboardingWorkflowService implements WorkflowService {
     if (isFinalStep && stepsIsCompleted) {
       workflow.setStatus(WorkflowStatus.COMPLETED);
     }
+    workflow.setStatus(WorkflowStatus.INPROGRESS);
   }
 
   @Override
@@ -228,11 +237,14 @@ public class OnboardingWorkflowService implements WorkflowService {
         CollectionUtils.findFirst(steps, st -> st.getName().equals(stepName))
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
     step.setNextSteps(nextSteps);
-    workflow.setNextSteps(
+    var workflowNextSteps =
         steps.stream()
             .flatMap(st -> st.getNextSteps().stream())
             .distinct()
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
+    var currentSteps = workflow.getCurrentSteps();
+    workflowNextSteps.removeAll(currentSteps);
+    workflow.setNextSteps(workflowNextSteps);
   }
 
   private boolean evaluateCondition(Expression condition, Object object) {
@@ -243,11 +255,13 @@ public class OnboardingWorkflowService implements WorkflowService {
     return Boolean.TRUE.equals(condition.getValue(context, Boolean.class));
   }
 
-  private WorkflowStatus handleStatusWithExpression(Object object, Expression condition) {
+  private WorkflowStatus handleStatusWithExpression(StepHistoryDTO step, Expression condition) {
     if (condition == null) {
-      return WorkflowStatus.INPROGRESS;
+      return WorkflowStatus.COMPLETED;
     }
-    var context = new StandardEvaluationContext(object);
+    var context = new StandardEvaluationContext();
+    context.setVariable("step", step);
+    context.setBeanResolver(beanFactoryResolver);
     return condition.getValue(context, WorkflowStatus.class);
   }
 }

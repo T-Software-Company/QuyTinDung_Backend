@@ -18,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class Step {
+  private UUID id;
   private String name;
   private ZonedDateTime startTime;
   private ZonedDateTime endTime;

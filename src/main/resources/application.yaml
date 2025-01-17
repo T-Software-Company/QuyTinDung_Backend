@@ -95,59 +95,76 @@ workflow:
             condition: "true"
           - step: loan-plan
             condition: "true"
+          - step: create-financial-info
+            condition: "true"
 
-      - step: loan-request
-        extractStatus: "#speLConfig.extractStatus(#root.steps.?[#this.name == 'loan-request'][0].histories)"
+      - step: create-loan-request
+        extractStatus: "@speLConfig.extractStatus(#step)"
         type: action
         dependencies:
           - init
         nextStepRules:
-          - step: financial-info
+          - step: add-asset-collateral
+            condition: "#root.steps.?[#this.name == 'create-loan-request'][0].histories[-1].response.workflowTransactionResponse.metadata.amount > 50000000"
+          - step: create-credit-rating
             condition: "true"
 
-      - step: loan-plan
+      - step: create-loan-plan
         type: action
-        extractStatus: "#speLConfig.extractStatus(#root.steps.?[#this.name == 'loan-plan'][0].histories)"
+        extractStatus: "@speLConfig.extractStatus(#step)"
         dependencies:
           - init
         nextStepRules:
-          - step: financial-info
+          - step: create-credit-rating
             condition: "true"
 
-      - step: financial-info
+      - step: create-financial-info
+        type: action
+        extractStatus: "@speLConfig.extractStatus(#step)"
         dependencies:
-          - loan-request
-          - loan-plan
+          - init
         nextStepRules:
-          - step: asset-collateral
-            condition: "true"
-          - step: credit-rating
+          - step: create-credit-rating
             condition: "true"
 
-      - step: asset-collateral
-        type: DEFAULT
+      - step: add-asset-collateral
         dependencies:
           - financial-info
+          - create-loan-plan
+          - create-loan-request
         nextStepRules:
-          - step: valuation
+          - step: create-valuation-meting
             condition: "true"
 
-      - step: valuation
-        type: DEFAULT
+      - step: create-valuation-meting
         dependencies:
-          - asset-collateral
-        nextStepRules: []
+          -  add-asset-collateral
+        nextStepRules:
+          - step: create-valuation-report
+            condition: "true"
 
-      - step: credit-rating
-        type: DEFAULT
+      - step: create-valuation-report
+        type: action
+        extractStatus: "@speLConfig.extractStatus(#step)"
+        dependencies:
+          - create-valuation-meting
+        nextStepRules:
+          - step: create-appraisal-meting
+            condition: "true"
+
+      - step: create-credit-rating
         dependencies:
           - financial-info
+          - create-loan-plan
+          - create-loan-request
         nextStepRules:
-          - step: appraisal-report
+          - step: create-appraisal-meting
             condition: "true"
 
-      - step: appraisal-report
-        type: DEFAULT
+      - step:  create-appraisal-meting
         dependencies:
-          - credit-rating
-        nextStepRules: []
+          - create-credit-rating
+          - create-valuation-report
+        nextStepRules:
+          - step: create-appraisal-report
+            condition: "true"

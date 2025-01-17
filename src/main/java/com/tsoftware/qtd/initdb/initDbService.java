@@ -41,7 +41,6 @@ public class initDbService {
   private final ApproveSettingRepository approveSettingRepository;
 
   public void createApproveSetting() {
-
     var group = groupRepository.findAll().getFirst();
     if (approveSettingRepository
         .findByTransactionType(TransactionType.CREATE_LOAN_REQUEST)

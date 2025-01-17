@@ -86,13 +86,52 @@ public class WorkflowTransactionService implements TransactionService {
 
   public void validateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {
     var userId = RequestUtil.getUserId();
+    // Check permission in Approves
     boolean hasPermission =
-        workflowTransactionDTO.getApproves().stream()
+        Optional.ofNullable(workflowTransactionDTO.getApproves()).orElse(new ArrayList<>()).stream()
             .anyMatch(
                 approve -> {
                   var employee = approve.getApprover();
                   return userId.equals(employee.getUserId());
                 });
+
+    // If you don't have permission, check in GroupApproves
+    if (!hasPermission) {
+      hasPermission =
+          Optional.ofNullable(workflowTransactionDTO.getGroupApproves())
+              .orElse(new ArrayList<>())
+              .stream()
+              .flatMap(
+                  groupApprove ->
+                      Optional.ofNullable(groupApprove.getCurrentApproves())
+                          .orElse(new ArrayList<>())
+                          .stream())
+              .anyMatch(
+                  approve -> {
+                    var employee = approve.getApprover();
+                    return userId.equals(employee.getUserId());
+                  });
+    }
+
+    // If don't have permission, check in RoleApproves
+    if (!hasPermission) {
+      hasPermission =
+          Optional.ofNullable(workflowTransactionDTO.getRoleApproves())
+              .orElse(new ArrayList<>())
+              .stream()
+              .flatMap(
+                  roleApprove ->
+                      Optional.ofNullable(roleApprove.getCurrentApproves())
+                          .orElse(new ArrayList<>())
+                          .stream())
+              .anyMatch(
+                  approve -> {
+                    var employee = approve.getApprover();
+                    return userId.equals(employee.getUserId());
+                  });
+    }
+
+    // If there are no permission at all list
     if (!hasPermission) {
       throw new CommonException(
           ErrorType.ACCESS_DENIED,
@@ -164,6 +203,7 @@ public class WorkflowTransactionService implements TransactionService {
                           WorkflowTransactionRequest.builder().id(transaction.getId()).build())
                       .groupId(groupApproveSetting.getId())
                       .requiredPercentage(groupApproveSetting.getRequiredPercentage())
+                      .status(ApproveStatus.WAIT)
                       .currentApproves(approves)
                       .transaction(
                           WorkflowTransactionRequest.builder().id(transaction.getId()).build())
@@ -187,6 +227,7 @@ public class WorkflowTransactionService implements TransactionService {
                     var approve =
                         ApproveDTO.builder()
                             .approver(employeeMapper.toEmployeeResponse(employee))
+                            .status(ApproveStatus.WAIT)
                             .build();
                     approves.add(approve);
                   });
@@ -197,6 +238,7 @@ public class WorkflowTransactionService implements TransactionService {
                       .role(roleApproveSetting.getRole())
                       .currentApproves(approves)
                       .requiredCount(roleApproveSetting.getRequiredCount())
+                      .status(ApproveStatus.WAIT)
                       .build());
             });
     return roleApproves;

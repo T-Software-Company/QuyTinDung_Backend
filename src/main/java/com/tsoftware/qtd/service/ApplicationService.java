@@ -75,13 +75,13 @@ public class ApplicationService {
     applicationRepository.save(application);
   }
 
-  public ApplicationDTO getById(UUID id) {
+  public ApplicationResponse getById(UUID id) {
     Application application =
         applicationRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Application not found"));
 
-    return applicationMapper.toDTO(application);
+    return applicationMapper.toResponse(application);
   }
 
   public Page<ApplicationResponse> getAll(Specification<Application> spec, Pageable page) {

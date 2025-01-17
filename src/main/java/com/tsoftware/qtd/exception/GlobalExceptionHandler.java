@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.exception;
 
+import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.turkraft.springfilter.parser.InvalidSyntaxException;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -55,6 +57,30 @@ public class GlobalExceptionHandler {
             .build();
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
+
+  @ExceptionHandler(MissingServletRequestParameterException.class)
+  public ResponseEntity<ApiResponse<Void>> handleMissingServletRequestParameterException(
+      MissingServletRequestParameterException exception) {
+
+    ApiResponse<Void> response =
+        ApiResponse.<Void>builder()
+            .message("Missing: " + exception.getParameterName() + " parameter")
+            .code(HttpStatus.BAD_REQUEST.value())
+            .build();
+
+    return ResponseEntity.badRequest().body(response);
+  }
+
+  @ExceptionHandler(WorkflowException.class)
+  public ResponseEntity<ApiResponse<Void>> handleWorkflowException(WorkflowException exception) {
+    ApiResponse<Void> response =
+        ApiResponse.<Void>builder()
+            .message(exception.getMessage())
+            .code(exception.getStatus())
+            .build();
+
+    return ResponseEntity.badRequest().body(response);
   }
 
   @ExceptionHandler(value = KeycloakException.class)

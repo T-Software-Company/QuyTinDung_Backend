@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public abstract class AbstractTransaction<T extends Enum<?>> {
   private UUID id;
-  private String PIC;
+  private String createdBy;
   private T type;
   private Object metadata;
   private ApproveStatus status;

@@ -25,7 +25,7 @@ public class LoanRequestController {
   private final LoanRequestService loanRequestService;
 
   @PostMapping
-  @WorkflowAPI(step = "loan-request")
+  @WorkflowAPI(step = "create-loan")
   public ResponseEntity<?> create(
       @RequestBody @Valid LoanRequestRequest loanRequestRequest,
       @Valid @IsUUID @TargetId @RequestParam String applicationId) {

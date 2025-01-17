@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class WorkflowTransactionController {
   private final WorkflowTransactionService workflowTransactionService;
 
-  @WorkflowAPI(action = WorkflowAPI.Action.APPROVE)
+  @WorkflowAPI(action = true)
   @PostMapping("{id}/approve")
   public ResponseEntity<?> approveRequest(
       @PathVariable @Valid @IsUUID String id,

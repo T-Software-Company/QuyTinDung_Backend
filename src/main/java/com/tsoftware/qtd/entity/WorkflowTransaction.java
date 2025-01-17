@@ -42,8 +42,6 @@ public class WorkflowTransaction extends AbstractAuditEntity {
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime approvedAt;
 
-  private String PIC;
-
   @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Approve> approves;
 

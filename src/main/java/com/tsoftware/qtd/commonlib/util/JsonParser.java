@@ -214,8 +214,13 @@ public class JsonParser {
       }
       context.put(parent, arrayName, array);
     } else {
-
-      if (overwrite || ((Map<?, ?>) context.read(parent)).isEmpty()) {
+      var obj = (Map<?, ?>) context.read(parent);
+      if (overwrite || obj.isEmpty()) {
+        context.put(parent, child, value);
+      }
+      try {
+        context.read(parent + "." + child);
+      } catch (PathNotFoundException e) {
         context.put(parent, child, value);
       }
     }
