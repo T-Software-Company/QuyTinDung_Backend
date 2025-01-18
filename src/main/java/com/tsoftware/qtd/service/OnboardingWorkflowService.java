@@ -145,18 +145,8 @@ public class OnboardingWorkflowService implements WorkflowService {
                     "Invalid step (step not in current steps or next steps)"));
 
     var dependencyStepsOfNextStep =
-        nextStepRule.getDependencies().stream()
-            .map(
-                stepName ->
-                    CollectionUtils.findFirst(
-                            workflow.getSteps(), st -> st.getName().equals(stepName))
-                        .orElseThrow(
-                            () ->
-                                new WorkflowException(
-                                    HttpStatus.BAD_REQUEST.value(),
-                                    "Invalid step (no dependence step "
-                                        + stepName
-                                        + "  in workflow )")));
+        workflow.getSteps().stream()
+            .filter(st -> nextStepRule.getDependencies().contains(st.getName()));
     dependencyStepsOfNextStep.forEach(
         st -> {
           if (!WorkflowStatus.COMPLETED.equals(st.getStatus())) {
@@ -221,6 +211,9 @@ public class OnboardingWorkflowService implements WorkflowService {
   @Override
   public void calculateNextSteps(Workflow<?> workflow, String stepName) {
     var steps = workflow.getSteps();
+    var step =
+        CollectionUtils.findFirst(steps, st -> st.getName().equals(stepName))
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
     var nextSteps =
         workflowProperties.getOnboarding().stream()
             .filter(workflowDefinition -> workflowDefinition.getStep().equals(stepName))
@@ -229,13 +222,13 @@ public class OnboardingWorkflowService implements WorkflowService {
                 () -> new WorkflowException(HttpStatus.BAD_REQUEST.value(), "Step rule not found"))
             .getNextStepRules()
             .stream()
-            .filter(nextStepRule -> evaluateCondition(nextStepRule.getCondition(), workflow))
+            .filter(
+                nextStepRule ->
+                    evaluateCondition((StepHistoryDTO) step, nextStepRule.getCondition()))
             .map(WorkflowProperties.NextStepRule::getStep)
             .distinct()
             .toList();
-    var step =
-        CollectionUtils.findFirst(steps, st -> st.getName().equals(stepName))
-            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
+
     step.setNextSteps(nextSteps);
     var workflowNextSteps =
         steps.stream()
@@ -247,11 +240,13 @@ public class OnboardingWorkflowService implements WorkflowService {
     workflow.setNextSteps(workflowNextSteps);
   }
 
-  private boolean evaluateCondition(Expression condition, Object object) {
+  private boolean evaluateCondition(StepHistoryDTO step, Expression condition) {
     if (condition == null) {
       return true;
     }
-    var context = new StandardEvaluationContext(object);
+    var context = new StandardEvaluationContext();
+    context.setVariable("step", step);
+    context.setBeanResolver(beanFactoryResolver);
     return Boolean.TRUE.equals(condition.getValue(context, Boolean.class));
   }
 

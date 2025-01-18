@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.employee;
 
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.ZonedDateTime;
@@ -20,7 +20,7 @@ public class ProfileRequest {
 
   @NotBlank @Email String email;
 
-  @Valid AddressDto address;
+  @Valid AddressDTO address;
 
   @NotBlank String firstName;
 

@@ -3,11 +3,11 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
-import com.tsoftware.qtd.exception.CommonException;
-import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.service.LoanRequestService;
+import com.tsoftware.qtd.util.ValidationUtils;
 import com.tsoftware.qtd.validation.IsUUID;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,13 +25,11 @@ public class LoanRequestController {
   private final LoanRequestService loanRequestService;
 
   @PostMapping
-  @WorkflowAPI(step = "create-loan")
+  @WorkflowAPI(step = WorkflowStep.CREATE_LOAN_REQUEST, action = WorkflowAPI.WorkflowAction.CREATE)
   public ResponseEntity<?> create(
       @RequestBody @Valid LoanRequestRequest loanRequestRequest,
       @Valid @IsUUID @TargetId @RequestParam String applicationId) {
-    if (!applicationId.equals(loanRequestRequest.getApplication().getId())) {
-      throw new CommonException(ErrorType.CHECKSUM_INVALID, applicationId);
-    }
+    ValidationUtils.validateEqual(applicationId, loanRequestRequest.getApplication().getId());
     return ResponseEntity.ok(
         new ApiResponse<>(
             HttpStatus.CREATED.value(), "Created", loanRequestService.request(loanRequestRequest)));

@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class VehicleDto {
+public class VehicleDTO {
 
   String ownerName;
   String address;

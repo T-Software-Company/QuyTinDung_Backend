@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class LandAssetDto {
+public class LandAssetDTO {
 
   private String plotNumber;
   private String mapNumber;

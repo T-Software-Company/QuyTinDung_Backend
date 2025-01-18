@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class AddressDto {
+public class AddressDTO {
 
   @NotNull @NotBlank private String country;
   private String cityProvince;

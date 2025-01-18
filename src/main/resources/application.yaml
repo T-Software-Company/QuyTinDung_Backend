@@ -91,9 +91,9 @@ workflow:
       - step: init
         dependencies: []
         nextStepRules:
-          - step: loan-request
+          - step: create-loan-request
             condition: "true"
-          - step: loan-plan
+          - step: create-loan-plan
             condition: "true"
           - step: create-financial-info
             condition: "true"
@@ -105,7 +105,7 @@ workflow:
           - init
         nextStepRules:
           - step: add-asset-collateral
-            condition: "#root.steps.?[#this.name == 'create-loan-request'][0].histories[-1].response.workflowTransactionResponse.metadata.amount > 50000000"
+            condition: "@speLConfig.resolveAddAssetCollateralStep(#step)"
           - step: create-credit-rating
             condition: "true"
 

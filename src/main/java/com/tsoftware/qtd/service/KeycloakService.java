@@ -449,8 +449,8 @@ public class KeycloakService {
         .collect(Collectors.toList());
   }
 
-  private List<GroupRepresentation> getGroupsBy(List<GroupDto> groups) {
+  private List<GroupRepresentation> getGroupsBy(List<GroupDTO> groups) {
     if (groups == null) return Collections.emptyList();
-    return getGroupsByIds(groups.stream().map(GroupDto::getKcGroupId).collect(Collectors.toList()));
+    return getGroupsByIds(groups.stream().map(GroupDTO::getKcGroupId).collect(Collectors.toList()));
   }
 }

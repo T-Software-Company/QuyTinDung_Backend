@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.employee;
 
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.validation.IsEnum;
@@ -43,11 +43,11 @@ public class EmployeeRequest {
 
   @NotBlank String firstName;
   @NotBlank String lastName;
-  @Valid AddressDto address;
+  @Valid AddressDTO address;
   @Valid IdentityInfoDTO identityInfo;
 
   @IsEnum(enumClass = Role.class)
   List<String> roles;
 
-  List<@Valid GroupDto> groups;
+  List<@Valid GroupDTO> groups;
 }

@@ -17,7 +17,6 @@ import com.jayway.jsonpath.PathNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -167,15 +166,11 @@ public class JsonParser {
   }
 
   public static void put(Object context, String path, Object value) {
-    setValueWithCreateMissingNode(JsonPath.parse(context), path, value, true);
-  }
-
-  public static void put(Object context, String path, Object value, boolean overwrite) {
-    setValueWithCreateMissingNode(JsonPath.parse(context), path, value, overwrite);
+    setValueWithCreateMissingNode(JsonPath.parse(context), path, value);
   }
 
   private static void setValueWithCreateMissingNode(
-      DocumentContext context, String path, Object value, boolean overwrite) {
+      DocumentContext context, String path, Object value) {
 
     if (path == null || path.trim().isEmpty()) {
       context.set("$", value);
@@ -189,7 +184,7 @@ public class JsonParser {
     try {
       context.read(parent);
     } catch (PathNotFoundException e) {
-      setValueWithCreateMissingNode(context, parent, new LinkedHashMap<>(), overwrite);
+      setValueWithCreateMissingNode(context, parent, new LinkedHashMap<>());
     }
 
     // Handle array paths like "field.nestField[0]"
@@ -203,26 +198,14 @@ public class JsonParser {
       } catch (PathNotFoundException e) {
         array = new ArrayList<>();
       }
-      if (overwrite) {
-        // Handle cases where array index is not continuous or array size is smaller than index
-        while (array.size() <= index) {
-          array.add(new LinkedHashMap<>()); // Add missing elements as needed
-        }
-        array.set(index, value);
-      } else {
-        array.add(value);
+      // Handle cases where array index is not continuous or array size is smaller than index
+      while (array.size() <= index) {
+        array.add(new LinkedHashMap<>()); // Add missing elements as needed
       }
+      array.set(index, value);
       context.put(parent, arrayName, array);
     } else {
-      var obj = (Map<?, ?>) context.read(parent);
-      if (overwrite || obj.isEmpty()) {
-        context.put(parent, child, value);
-      }
-      try {
-        context.read(parent + "." + child);
-      } catch (PathNotFoundException e) {
-        context.put(parent, child, value);
-      }
+      context.put(parent, child, value);
     }
   }
 }

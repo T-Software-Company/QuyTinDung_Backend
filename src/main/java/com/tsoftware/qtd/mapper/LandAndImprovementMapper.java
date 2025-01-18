@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.asset.LandAndImprovementDto;
+import com.tsoftware.qtd.dto.asset.LandAndImprovementDTO;
 import com.tsoftware.qtd.entity.LandAndImprovement;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -9,10 +9,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface LandAndImprovementMapper {
-  LandAndImprovement toEntity(LandAndImprovementDto dto);
+  LandAndImprovement toEntity(LandAndImprovementDTO dto);
 
-  LandAndImprovementDto toDTO(LandAndImprovement entity);
+  LandAndImprovementDTO toDTO(LandAndImprovement entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(LandAndImprovementDto dto, @MappingTarget LandAndImprovement entity);
+  void updateEntity(LandAndImprovementDTO dto, @MappingTarget LandAndImprovement entity);
 }

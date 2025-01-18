@@ -1,21 +1,22 @@
-package com.tsoftware.qtd.dto.assetRepossessionNotice;
+package com.tsoftware.qtd.dto.application;
 
+import com.tsoftware.qtd.constants.EnumType.IncomeProofType;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+@Builder
 @Getter
 @Setter
-@Builder
-public class AssetRepossessionNoticeDto {
+public class IncomeProofDTO {
 
   UUID id;
   ZonedDateTime createdAt;
   ZonedDateTime updatedAt;
   String lastModifiedBy;
   String createdBy;
-  String message;
-  ZonedDateTime repossessionDate;
+  String link;
+  IncomeProofType incomeProofType;
 }

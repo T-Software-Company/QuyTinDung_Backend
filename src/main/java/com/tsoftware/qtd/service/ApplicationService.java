@@ -32,7 +32,6 @@ public class ApplicationService {
   private final CustomerRepository customerRepository;
   private final EmployeeRepository employeeRepository;
 
-  @Transactional
   @TryInitTargetId
   public ApplicationResponse create(UUID customerId) {
     var customer =

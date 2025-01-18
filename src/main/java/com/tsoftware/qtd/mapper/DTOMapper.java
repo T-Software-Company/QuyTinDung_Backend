@@ -25,7 +25,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
     uses = {EmployeeMapper.class},
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
     nullValueCheckStrategy = org.mapstruct.NullValueCheckStrategy.ALWAYS)
-public interface DtoMapper {
+public interface DTOMapper {
 
   WorkflowTransaction toEntity(WorkflowTransactionDTO workflowTransactionDTO);
 

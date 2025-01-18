@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.LandAssetDto;
+import com.tsoftware.qtd.dto.asset.LandAssetDTO;
 import com.tsoftware.qtd.entity.LandAsset;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LandAssetMapper;
@@ -21,17 +21,17 @@ public class LandAssetService {
 
   private final LandAssetMapper landassetMapper;
 
-  public LandAssetDto create(LandAssetDto landassetDto) {
-    LandAsset landasset = landassetMapper.toEntity(landassetDto);
+  public LandAssetDTO create(LandAssetDTO landassetDTO) {
+    LandAsset landasset = landassetMapper.toEntity(landassetDTO);
     return landassetMapper.toDTO(landassetRepository.save(landasset));
   }
 
-  public LandAssetDto update(UUID id, LandAssetDto landassetDto) {
+  public LandAssetDTO update(UUID id, LandAssetDTO landassetDTO) {
     LandAsset landasset =
         landassetRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LandAsset not found"));
-    landassetMapper.updateEntity(landassetDto, landasset);
+    landassetMapper.updateEntity(landassetDTO, landasset);
     return landassetMapper.toDTO(landassetRepository.save(landasset));
   }
 
@@ -39,7 +39,7 @@ public class LandAssetService {
     landassetRepository.deleteById(id);
   }
 
-  public LandAssetDto getById(UUID id) {
+  public LandAssetDTO getById(UUID id) {
     LandAsset landasset =
         landassetRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class LandAssetService {
     return landassetMapper.toDTO(landasset);
   }
 
-  public List<LandAssetDto> getAll() {
+  public List<LandAssetDTO> getAll() {
     return landassetRepository.findAll().stream()
         .map(landassetMapper::toDTO)
         .collect(Collectors.toList());

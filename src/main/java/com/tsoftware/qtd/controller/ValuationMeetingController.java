@@ -41,9 +41,9 @@ public class ValuationMeetingController {
 
   //    @PostMapping
   //    public ResponseEntity<ApiResponse<ValuationMeetingResponse>> create(@RequestBody
-  // ValuationMeetingRequest valuationmeetingDto) {
+  // ValuationMeetingRequest valuationmeetingDTO) {
   //        return ResponseEntity.ok(new ApiResponse<>(1000, "Created",
-  // valuationMeetingService.create(valuationmeetingDto)));
+  // valuationMeetingService.create(valuationmeetingDTO)));
   //    }
 
   @PutMapping("/{id}")

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.application.IncomeProofDto;
+import com.tsoftware.qtd.dto.application.IncomeProofDTO;
 import com.tsoftware.qtd.service.IncomeProofService;
 import java.util.List;
 import java.util.UUID;
@@ -25,17 +25,17 @@ public class IncomeProofController {
   private final IncomeProofService incomeproofService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<IncomeProofDto>> create(
-      @RequestBody IncomeProofDto incomeproofDto) {
+  public ResponseEntity<ApiResponse<IncomeProofDTO>> create(
+      @RequestBody IncomeProofDTO incomeproofDTO) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", incomeproofService.create(incomeproofDto)));
+        new ApiResponse<>(1000, "Created", incomeproofService.create(incomeproofDTO)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<IncomeProofDto>> update(
-      @PathVariable UUID id, @RequestBody IncomeProofDto incomeproofDto) {
+  public ResponseEntity<ApiResponse<IncomeProofDTO>> update(
+      @PathVariable UUID id, @RequestBody IncomeProofDTO incomeproofDTO) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", incomeproofService.update(id, incomeproofDto)));
+        new ApiResponse<>(1000, "Updated", incomeproofService.update(id, incomeproofDTO)));
   }
 
   @DeleteMapping("/{id}")
@@ -45,12 +45,12 @@ public class IncomeProofController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<IncomeProofDto>> getById(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<IncomeProofDTO>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", incomeproofService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<IncomeProofDto>>> getAll() {
+  public ResponseEntity<ApiResponse<List<IncomeProofDTO>>> getAll() {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", incomeproofService.getAll()));
   }
 }

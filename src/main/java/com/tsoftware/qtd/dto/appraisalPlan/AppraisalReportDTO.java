@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.asset;
+package com.tsoftware.qtd.dto.appraisalPlan;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -9,14 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class OwnerInfoDto {
+public class AppraisalReportDTO {
   private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;
   private String lastModifiedBy;
   private String createdBy;
-  private String fullName;
-  private ZonedDateTime dayOfBirth;
-  private String idCardNumber;
-  private String permanentAddress;
 }

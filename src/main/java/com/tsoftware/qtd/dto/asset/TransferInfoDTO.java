@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class TransferInfoDto {
+public class TransferInfoDTO {
   private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;

@@ -7,6 +7,7 @@ import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
 import com.tsoftware.qtd.mapper.LoanPlanMapper;
 import com.tsoftware.qtd.service.LoanPlanService;
 import com.tsoftware.qtd.service.WorkflowTransactionService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactio
     log.info(
         "All approvals received for workflowTransactionDTO: {}", workflowTransactionDTO.getId());
     var request = JsonParser.convert(workflowTransactionDTO.getMetadata(), LoanPlanRequest.class);
-    var result = loanPlanService.create(request, request.getApplication().getId());
+    var result = loanPlanService.create(request, UUID.fromString(request.getApplication().getId()));
     workflowTransactionDTO.setReferenceId(result.getId());
   }
 

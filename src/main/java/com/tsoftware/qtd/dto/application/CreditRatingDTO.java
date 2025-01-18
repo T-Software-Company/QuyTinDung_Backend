@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class CreditRatingDto {
+public class CreditRatingDTO {
   private String id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;

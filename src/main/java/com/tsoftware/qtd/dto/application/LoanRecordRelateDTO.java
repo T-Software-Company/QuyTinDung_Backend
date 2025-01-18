@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class LoanPurposeDocumentDto {
+public class LoanRecordRelateDTO {
   private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;

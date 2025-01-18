@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.application.IncomeProofDto;
+import com.tsoftware.qtd.dto.application.IncomeProofDTO;
 import com.tsoftware.qtd.entity.IncomeProof;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.IncomeProofMapper;
@@ -21,17 +21,17 @@ public class IncomeProofService {
 
   private final IncomeProofMapper incomeproofMapper;
 
-  public IncomeProofDto create(IncomeProofDto incomeproofDto) {
-    IncomeProof incomeproof = incomeproofMapper.toEntity(incomeproofDto);
+  public IncomeProofDTO create(IncomeProofDTO incomeproofDTO) {
+    IncomeProof incomeproof = incomeproofMapper.toEntity(incomeproofDTO);
     return incomeproofMapper.toDTO(incomeproofRepository.save(incomeproof));
   }
 
-  public IncomeProofDto update(UUID id, IncomeProofDto incomeproofDto) {
+  public IncomeProofDTO update(UUID id, IncomeProofDTO incomeproofDTO) {
     IncomeProof incomeproof =
         incomeproofRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("IncomeProof not found"));
-    incomeproofMapper.updateEntity(incomeproofDto, incomeproof);
+    incomeproofMapper.updateEntity(incomeproofDTO, incomeproof);
     return incomeproofMapper.toDTO(incomeproofRepository.save(incomeproof));
   }
 
@@ -39,7 +39,7 @@ public class IncomeProofService {
     incomeproofRepository.deleteById(id);
   }
 
-  public IncomeProofDto getById(UUID id) {
+  public IncomeProofDTO getById(UUID id) {
     IncomeProof incomeproof =
         incomeproofRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class IncomeProofService {
     return incomeproofMapper.toDTO(incomeproof);
   }
 
-  public List<IncomeProofDto> getAll() {
+  public List<IncomeProofDTO> getAll() {
     return incomeproofRepository.findAll().stream()
         .map(incomeproofMapper::toDTO)
         .collect(Collectors.toList());

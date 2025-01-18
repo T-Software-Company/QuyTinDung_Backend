@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDto;
+import com.tsoftware.qtd.dto.debtNotification.DebtNotificationDTO;
 import com.tsoftware.qtd.entity.DebtNotification;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.DebtNotificationMapper;
@@ -21,17 +21,17 @@ public class DebtNotificationService {
 
   private final DebtNotificationMapper debtnotificationMapper;
 
-  public DebtNotificationDto create(DebtNotificationDto debtnotificationDto) {
-    DebtNotification debtnotification = debtnotificationMapper.toEntity(debtnotificationDto);
+  public DebtNotificationDTO create(DebtNotificationDTO debtnotificationDTO) {
+    DebtNotification debtnotification = debtnotificationMapper.toEntity(debtnotificationDTO);
     return debtnotificationMapper.toDTO(debtnotificationRepository.save(debtnotification));
   }
 
-  public DebtNotificationDto update(UUID id, DebtNotificationDto debtnotificationDto) {
+  public DebtNotificationDTO update(UUID id, DebtNotificationDTO debtnotificationDTO) {
     DebtNotification debtnotification =
         debtnotificationRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("DebtNotification not found"));
-    debtnotificationMapper.updateEntity(debtnotificationDto, debtnotification);
+    debtnotificationMapper.updateEntity(debtnotificationDTO, debtnotification);
     return debtnotificationMapper.toDTO(debtnotificationRepository.save(debtnotification));
   }
 
@@ -39,7 +39,7 @@ public class DebtNotificationService {
     debtnotificationRepository.deleteById(id);
   }
 
-  public DebtNotificationDto getById(UUID id) {
+  public DebtNotificationDTO getById(UUID id) {
     DebtNotification debtnotification =
         debtnotificationRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class DebtNotificationService {
     return debtnotificationMapper.toDTO(debtnotification);
   }
 
-  public List<DebtNotificationDto> getAll() {
+  public List<DebtNotificationDTO> getAll() {
     return debtnotificationRepository.findAll().stream()
         .map(debtnotificationMapper::toDTO)
         .collect(Collectors.toList());

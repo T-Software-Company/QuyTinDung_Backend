@@ -7,7 +7,7 @@ import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.entity.Document;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
-import com.tsoftware.qtd.mapper.DtoMapper;
+import com.tsoftware.qtd.mapper.DTOMapper;
 import com.tsoftware.qtd.repository.DocumentRepository;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -40,7 +40,7 @@ public class DocumentService {
 
   private final GoogleCloudStorageService storageService;
   private final DocumentRepository documentRepository;
-  private final DtoMapper dtoMapper;
+  private final DTOMapper dtoMapper;
 
   public DocumentDTO upload(MultipartFile file, DocumentType type) {
     validateFile(file);

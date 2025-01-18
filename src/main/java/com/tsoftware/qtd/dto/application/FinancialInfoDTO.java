@@ -1,8 +1,6 @@
 package com.tsoftware.qtd.dto.application;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +22,5 @@ public class FinancialInfoDTO {
   private BigDecimal monthlySaving;
   private BigDecimal monthlyDebt;
   private BigDecimal monthlyLoanPayment;
-  private Set<String> assignees;
-  private List<String> files;
   private ApplicationDTO application;
 }

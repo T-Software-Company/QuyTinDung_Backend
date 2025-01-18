@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.MachineryDto;
+import com.tsoftware.qtd.dto.asset.MachineryDTO;
 import com.tsoftware.qtd.entity.Machinery;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.MachineryMapper;
@@ -21,17 +21,17 @@ public class MachineryService {
 
   private final MachineryMapper machineryMapper;
 
-  public MachineryDto create(MachineryDto machineryDto) {
-    Machinery machinery = machineryMapper.toEntity(machineryDto);
+  public MachineryDTO create(MachineryDTO machineryDTO) {
+    Machinery machinery = machineryMapper.toEntity(machineryDTO);
     return machineryMapper.toDTO(machineryRepository.save(machinery));
   }
 
-  public MachineryDto update(UUID id, MachineryDto machineryDto) {
+  public MachineryDTO update(UUID id, MachineryDTO machineryDTO) {
     Machinery machinery =
         machineryRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Machinery not found"));
-    machineryMapper.updateEntity(machineryDto, machinery);
+    machineryMapper.updateEntity(machineryDTO, machinery);
     return machineryMapper.toDTO(machineryRepository.save(machinery));
   }
 
@@ -39,7 +39,7 @@ public class MachineryService {
     machineryRepository.deleteById(id);
   }
 
-  public MachineryDto getById(UUID id) {
+  public MachineryDTO getById(UUID id) {
     Machinery machinery =
         machineryRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class MachineryService {
     return machineryMapper.toDTO(machinery);
   }
 
-  public List<MachineryDto> getAll() {
+  public List<MachineryDTO> getAll() {
     return machineryRepository.findAll().stream()
         .map(machineryMapper::toDTO)
         .collect(Collectors.toList());

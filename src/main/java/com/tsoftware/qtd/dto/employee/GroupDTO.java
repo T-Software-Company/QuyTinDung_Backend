@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class GroupDto {
+public class GroupDTO {
   @NotNull @IsUUID private String id;
   @NotNull @IsUUID private String kcGroupId;
 }

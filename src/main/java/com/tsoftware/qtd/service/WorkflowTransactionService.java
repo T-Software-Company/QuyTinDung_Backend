@@ -1,20 +1,17 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.commonlib.annotation.TryTransactionId;
 import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.commonlib.executor.TransactionExecutorRegistry;
-import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
-import com.tsoftware.qtd.commonlib.service.TransactionService;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.PageResponse;
+import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import com.tsoftware.qtd.dto.transaction.*;
 import com.tsoftware.qtd.entity.ApproveSetting;
 import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
-import com.tsoftware.qtd.mapper.DtoMapper;
-import com.tsoftware.qtd.mapper.EmployeeMapper;
-import com.tsoftware.qtd.mapper.PageResponseMapper;
-import com.tsoftware.qtd.mapper.WorkflowTransactionMapper;
+import com.tsoftware.qtd.mapper.*;
 import com.tsoftware.qtd.repository.ApproveSettingRepository;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.WorkflowTransactionRepository;
@@ -33,21 +30,45 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class WorkflowTransactionService implements TransactionService {
+public class WorkflowTransactionService {
   private final TransactionExecutorRegistry registry;
   private final WorkflowTransactionRepository repository;
-  private final DtoMapper mapper;
+  private final DTOMapper mapper;
   private final WorkflowTransactionMapper workflowTransactionMapper;
   private final ApproveSettingRepository approveSettingRepository;
   private final EmployeeRepository employeeRepository;
   private final EmployeeMapper employeeMapper;
   private final PageResponseMapper pageResponseMapper;
+  private final ApplicationMapper applicationMapper;
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T extends AbstractTransaction<?>> T create(T transaction) {
-    var t = repository.save(mapper.toEntity((WorkflowTransactionDTO) transaction));
-    return (T) mapper.toDTO(t);
+  @TryTransactionId
+  public WorkflowTransactionResponse create(
+      Object object, ApplicationRequest applicationRequest, TransactionType type) {
+    var exists =
+        repository.existsByApplicationIdAndType(UUID.fromString(applicationRequest.getId()), type);
+    if (exists) {
+      throw new CommonException(
+          ErrorType.HAS_APPLICATION_IN_PROGRESS,
+          "application: " + applicationRequest.getId(),
+          type.name());
+    }
+    var transaction =
+        WorkflowTransactionDTO.builder()
+            .application(applicationMapper.toDTO(applicationRequest))
+            .type(type)
+            .status(ApproveStatus.WAIT)
+            .metadata(object)
+            .build();
+    this.calculateApproves(transaction, type);
+    var entity = workflowTransactionMapper.toEntity(transaction);
+    Optional.ofNullable(entity.getGroupApproves())
+        .ifPresent(stef -> stef.forEach(groupApprove -> groupApprove.setTransaction(entity)));
+    Optional.ofNullable(entity.getRoleApproves())
+        .ifPresent(stef -> stef.forEach(roleApprove -> roleApprove.setTransaction(entity)));
+    Optional.ofNullable(entity.getApproves())
+        .ifPresent(stef -> stef.forEach(approve -> approve.setTransaction(entity)));
+    var saved = repository.save(entity);
+    return workflowTransactionMapper.toResponse(saved);
   }
 
   public WorkflowTransactionDTO approve(UUID id, ApproveStatus status) {

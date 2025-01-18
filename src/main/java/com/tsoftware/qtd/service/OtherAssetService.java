@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.OtherAssetDto;
+import com.tsoftware.qtd.dto.asset.OtherAssetDTO;
 import com.tsoftware.qtd.entity.OtherAsset;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.OtherAssetMapper;
@@ -21,17 +21,17 @@ public class OtherAssetService {
 
   private final OtherAssetMapper otherassetMapper;
 
-  public OtherAssetDto create(OtherAssetDto otherassetDto) {
-    OtherAsset otherasset = otherassetMapper.toEntity(otherassetDto);
+  public OtherAssetDTO create(OtherAssetDTO otherassetDTO) {
+    OtherAsset otherasset = otherassetMapper.toEntity(otherassetDTO);
     return otherassetMapper.toDTO(otherassetRepository.save(otherasset));
   }
 
-  public OtherAssetDto update(UUID id, OtherAssetDto otherassetDto) {
+  public OtherAssetDTO update(UUID id, OtherAssetDTO otherassetDTO) {
     OtherAsset otherasset =
         otherassetRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("OtherAsset not found"));
-    otherassetMapper.updateEntity(otherassetDto, otherasset);
+    otherassetMapper.updateEntity(otherassetDTO, otherasset);
     return otherassetMapper.toDTO(otherassetRepository.save(otherasset));
   }
 
@@ -39,7 +39,7 @@ public class OtherAssetService {
     otherassetRepository.deleteById(id);
   }
 
-  public OtherAssetDto getById(UUID id) {
+  public OtherAssetDTO getById(UUID id) {
     OtherAsset otherasset =
         otherassetRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class OtherAssetService {
     return otherassetMapper.toDTO(otherasset);
   }
 
-  public List<OtherAssetDto> getAll() {
+  public List<OtherAssetDTO> getAll() {
     return otherassetRepository.findAll().stream()
         .map(otherassetMapper::toDTO)
         .collect(Collectors.toList());

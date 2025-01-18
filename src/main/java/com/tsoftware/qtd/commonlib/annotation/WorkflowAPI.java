@@ -5,6 +5,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Documented
 @Target(ElementType.METHOD)
@@ -12,5 +14,23 @@ import java.lang.annotation.Target;
 public @interface WorkflowAPI {
   String step() default "unknown";
 
-  boolean action() default false;
+  WorkflowAction action() default WorkflowAction.CREATE;
+
+  @Getter
+  @RequiredArgsConstructor
+  enum WorkflowAction {
+    CREATE("create"),
+    UPDATE("update"),
+    APPROVE("approve");
+    private final String value;
+
+    public static WorkflowAction fromValue(String value) {
+      for (WorkflowAction action : WorkflowAction.values()) {
+        if (action.value.equals(value)) {
+          return action;
+        }
+      }
+      return null;
+    }
+  }
 }

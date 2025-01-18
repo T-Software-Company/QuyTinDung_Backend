@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.asset.MachineryDto;
+import com.tsoftware.qtd.dto.asset.MachineryDTO;
 import com.tsoftware.qtd.entity.Machinery;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -9,10 +9,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface MachineryMapper {
-  Machinery toEntity(MachineryDto dto);
+  Machinery toEntity(MachineryDTO dto);
 
-  MachineryDto toDTO(Machinery entity);
+  MachineryDTO toDTO(Machinery entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(MachineryDto dto, @MappingTarget Machinery entity);
+  void updateEntity(MachineryDTO dto, @MappingTarget Machinery entity);
 }

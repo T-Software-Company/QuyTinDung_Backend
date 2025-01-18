@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.customer;
 
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +15,6 @@ public class RelationCustomerDTO {
   private String identityId;
   private String phone;
   private String email;
-  private AddressDto permanentAddress;
-  private AddressDto currentAddress;
+  private AddressDTO permanentAddress;
+  private AddressDTO currentAddress;
 }

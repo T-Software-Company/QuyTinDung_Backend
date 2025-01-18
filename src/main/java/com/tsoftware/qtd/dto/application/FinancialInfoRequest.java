@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 import lombok.*;
 
 @Getter
@@ -24,7 +23,6 @@ public class FinancialInfoRequest {
   private BigDecimal monthlySaving;
   private BigDecimal monthlyDebt;
   private BigDecimal monthlyLoanPayment;
-  private Set<String> assignees;
   private List<String> files;
-  @Valid private ApplicationRequest application;
+  @NotNull @Valid private ApplicationRequest application;
 }

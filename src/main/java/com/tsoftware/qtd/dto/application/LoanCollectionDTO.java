@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class LoanCollectionDto {
+public class LoanCollectionDTO {
   private UUID id;
   private ZonedDateTime createdAt;
   private ZonedDateTime updatedAt;

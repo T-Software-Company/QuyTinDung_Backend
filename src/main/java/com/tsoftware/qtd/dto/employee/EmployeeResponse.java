@@ -2,7 +2,7 @@ package com.tsoftware.qtd.dto.employee;
 
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.AbstractResponse;
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import java.util.List;
 import lombok.*;
@@ -22,7 +22,7 @@ public class EmployeeResponse extends AbstractResponse {
   String lastName;
   List<Role> roles;
   String phone;
-  AddressDto address;
+  AddressDTO address;
   IdentityInfoDTO identityInfo;
   String code;
   Boolean enabled;

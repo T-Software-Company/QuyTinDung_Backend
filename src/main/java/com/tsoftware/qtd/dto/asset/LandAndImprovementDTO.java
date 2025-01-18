@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.asset;
 
 import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
@@ -9,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ApartmentDto {
+public class LandAndImprovementDTO {
 
   private String plotNumber;
   private String mapNumber;
@@ -19,8 +18,11 @@ public class ApartmentDto {
   private ZonedDateTime expirationDate;
   private String originOfUsage;
   private String typeOfHousing;
-  private String Name;
   private BigDecimal floorArea;
+  private String ancillaryFloorArea;
+  private String structureType;
+  private Integer numberOfFloors;
+  private Integer constructionYear;
   private String typeOfOwnership;
   private ZonedDateTime ownershipTerm;
   private String notes;
@@ -28,8 +30,7 @@ public class ApartmentDto {
   private String certificateNumber;
   private String certificateBookNumber;
   private String issuingAuthority;
-  private ZonedDateTime issueDate;
+  private String issueDate;
 
-  @Enumerated(EnumType.ORDINAL)
   private TypeOfUse typeOfUse;
 }

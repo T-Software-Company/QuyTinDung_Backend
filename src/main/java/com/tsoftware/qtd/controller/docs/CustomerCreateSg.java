@@ -54,7 +54,7 @@ import org.springframework.web.multipart.MultipartFile;
                                   implementation = MultipartFile.class,
                                   description = "Signature photo file")),
 
-                      // AddressDto fields
+                      // AddressDTO fields
                       @SchemaProperty(
                           name = "address.country",
                           schema = @Schema(type = "string", description = "Country")),

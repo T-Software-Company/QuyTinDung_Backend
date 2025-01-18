@@ -3,6 +3,7 @@ package com.tsoftware.qtd.commonlib.aspect;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jayway.jsonpath.JsonPath;
 import com.tsoftware.qtd.commonlib.annotation.*;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
@@ -71,12 +72,14 @@ public class WorkflowAspect {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
 
-    if (action) {
+    if (action.equals(WorkflowAPI.WorkflowAction.CREATE)) {
+      this.processBeforeWithCreate(joinPoint, stepName);
+      return;
+    }
+    if (action.equals(WorkflowAPI.WorkflowAction.APPROVE)) {
       this.processBeforeWithApprove(joinPoint);
       return;
     }
-
-    this.processBeforeWithDefault(joinPoint, stepName);
   }
 
   @AfterReturning(
@@ -90,11 +93,13 @@ public class WorkflowAspect {
       response = apiResponse.getResult();
     }
     Workflow<?> workflow = WorkflowContext.getWorkflow();
-    if (action) {
+    if (action.equals(WorkflowAPI.WorkflowAction.CREATE)) {
+      this.processAfterWithCreate(workflow, stepName, response);
+    }
+    if (action.equals(WorkflowAPI.WorkflowAction.APPROVE)) {
       this.processAfterWithApprove(joinPoint, workflow, response);
       return;
     }
-    this.processAfterWithDefault(workflow, stepName, response);
   }
 
   @AfterThrowing(
@@ -105,11 +110,13 @@ public class WorkflowAspect {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
     Workflow<?> workflow = WorkflowContext.getWorkflow();
-    if (action) {
+    if (action.equals(WorkflowAPI.WorkflowAction.CREATE)) {
+      this.processAfterThrowWithCreate(workflow, stepName, ex);
+    }
+    if (action.equals(WorkflowAPI.WorkflowAction.APPROVE)) {
       this.processAfterThrowWithApprove(joinPoint, workflow, ex);
       return;
     }
-    this.processAfterThrowWithDefault(workflow, stepName, ex);
   }
 
   @After(value = "@annotation(workflowAPI)")
@@ -117,13 +124,15 @@ public class WorkflowAspect {
     WorkflowContext.clear();
   }
 
-  private void processBeforeWithDefault(JoinPoint joinPoint, String stepName) {
+  private void processBeforeWithCreate(JoinPoint joinPoint, String stepName) {
     // init workflow
     if (stepName.equals(workflowProperties.getOnboarding().getFirst().getStep())) {
       var workflow = workflowService.init();
       var step = workflow.getSteps().getFirst();
       var request = this.extractRequest(joinPoint);
-      JsonParser.put(step.getMetadata(), "histories[0].request", request, false);
+      var metadata = step.getMetadata();
+      JsonParser.put(metadata, "histories[0].request", request);
+      JsonParser.put(metadata, "histories[0].action", WorkflowAPI.WorkflowAction.CREATE.getValue());
       WorkflowContext.set(workflow);
       return;
     }
@@ -140,7 +149,10 @@ public class WorkflowAspect {
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(
                 () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
-    JsonParser.put(step.getMetadata(), "histories[0].request", request, false);
+    var metadata = step.getMetadata();
+    var histories = metadata.get("histories");
+    var index = histories == null ? 0 : JsonPath.parse(histories).read("$.length()", Integer.class);
+    JsonParser.put(metadata, "histories[" + index + "].request", request);
     WorkflowContext.set(workflow);
   }
 
@@ -156,18 +168,23 @@ public class WorkflowAspect {
                         HttpStatus.NOT_FOUND.value(),
                         "Step not found(transactionId:" + transactionId + ")"));
     var request = this.extractRequest(joinPoint);
-    JsonParser.put(step.getMetadata(), "histories[0].request", request, false);
+    var metadata = step.getMetadata();
+    var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class);
+    JsonParser.put(metadata, "histories[" + index + "].request", request);
+    JsonParser.put(
+        metadata, "histories[" + index + "].action", WorkflowAPI.WorkflowAction.APPROVE.getValue());
     WorkflowContext.set(workflow);
   }
 
-  private void processAfterWithDefault(Workflow<?> workflow, String stepName, Object response) {
+  private void processAfterWithCreate(Workflow<?> workflow, String stepName, Object response) {
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(
                 () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
     step.setTransactionId(WorkflowContext.getTransactionId());
     Map<String, Object> metadata = step.getMetadata();
-    JsonParser.put(metadata, "histories[0].response", getBodyFromResponse(response), false);
+    var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
+    JsonParser.put(metadata, "histories[" + index + "].response", getBodyFromResponse(response));
     if (stepName.equals(workflowProperties.getOnboarding().getFirst().getStep())) {
       workflow.setTargetId(WorkflowContext.getInitTargetId());
     }
@@ -188,19 +205,21 @@ public class WorkflowAspect {
                         "Step not found(transactionId:" + transactionId + ")"));
     step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
-    JsonParser.put(metadata, "histories[0].response", getBodyFromResponse(response), false);
+    var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
+    JsonParser.put(metadata, "histories[" + index + "].response", getBodyFromResponse(response));
     this.finalProcess(workflow, step.getName());
     workflowService.save(workflow);
   }
 
-  private void processAfterThrowWithDefault(Workflow<?> workflow, String stepName, Throwable ex) {
+  private void processAfterThrowWithCreate(Workflow<?> workflow, String stepName, Throwable ex) {
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(
                 () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
     step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
-    JsonParser.put(metadata, "histories[0].error", ex.getMessage(), false);
+    var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
+    JsonParser.put(metadata, "histories[" + index + "].error", ex.getMessage());
     this.finalProcess(workflow, step.getName());
     workflowService.save(workflow);
   }
@@ -218,7 +237,8 @@ public class WorkflowAspect {
                         "Step not found(transactionId:" + transactionId + ")"));
     step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
-    JsonParser.put(metadata, "histories[0].error", ex.getMessage(), false);
+    var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
+    JsonParser.put(metadata, "histories[" + index + "].error", ex.getMessage());
     this.finalProcess(workflow, step.getName());
     workflowService.save(workflow);
   }

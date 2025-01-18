@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class MarketStallsDto {
+public class MarketStallsDTO {
 
   private String stallName;
   private String ownerName;

@@ -15,7 +15,7 @@ import com.tsoftware.qtd.entity.LoanAccount;
 import com.tsoftware.qtd.entity.RepaymentSchedule;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
-import com.tsoftware.qtd.mapper.DtoMapper;
+import com.tsoftware.qtd.mapper.DTOMapper;
 import com.tsoftware.qtd.repository.LoanAccountRepository;
 import com.tsoftware.qtd.validation.BulkDisbursementValidator;
 import jakarta.annotation.Resource;
@@ -43,7 +43,7 @@ public class LoanService {
   @Resource LoanAccountRepository loanAccountRepository;
 
   @Resource BulkDisbursementValidator validator;
-  @Resource DtoMapper mapper;
+  @Resource DTOMapper mapper;
 
   public Disbursement createDisbursement(LoanAccount loan) {
 

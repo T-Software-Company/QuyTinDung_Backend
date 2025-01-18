@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.customer;
 
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import com.tsoftware.qtd.repository.CustomerRepository;
 import com.tsoftware.qtd.validation.Unique;
 import jakarta.validation.Valid;
@@ -41,7 +41,7 @@ public class CustomerRequest {
   Boolean enabled;
   @NotNull @NotBlank String firstName;
   @NotNull @NotBlank String lastName;
-  @Valid AddressDto address;
+  @Valid AddressDTO address;
   @Valid IdentityInfoDTO identityInfo;
   @NotNull @NotBlank String signaturePhoto;
 }

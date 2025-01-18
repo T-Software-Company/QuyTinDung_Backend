@@ -3,7 +3,6 @@ package com.tsoftware.qtd.dto.application;
 import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 import lombok.*;
 
 @Getter
@@ -21,6 +20,5 @@ public class FinancialInfoResponse extends AbstractResponse {
   private BigDecimal monthlySaving;
   private BigDecimal monthlyDebt;
   private BigDecimal monthlyLoanPayment;
-  private Set<String> assignees;
   private List<String> files;
 }

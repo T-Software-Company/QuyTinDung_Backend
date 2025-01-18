@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AppraisalPlanDto {
+public class AppraisalPlanDTO {
   private String address;
   private ZonedDateTime startDate;
   private ZonedDateTime endDate;

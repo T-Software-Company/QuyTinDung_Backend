@@ -5,7 +5,7 @@ import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.LegalDocType;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
@@ -41,18 +41,11 @@ public class initDbService {
   private final ApproveSettingRepository approveSettingRepository;
 
   public void createApproveSetting() {
-    var group = groupRepository.findAll().getFirst();
     if (approveSettingRepository
         .findByTransactionType(TransactionType.CREATE_LOAN_REQUEST)
         .isEmpty()) {
       var request =
           ApproveSettingRequest.builder()
-              .groupApproveSettings(
-                  List.of(
-                      ApproveSettingRequest.GroupApproveSettingRequest.builder()
-                          .requiredPercentage(50)
-                          .groupId(group.getId())
-                          .build()))
               .roleApproveSettings(
                   List.of(
                       ApproveSettingRequest.RoleApproveSettingRequest.builder()
@@ -61,6 +54,38 @@ public class initDbService {
                           .build()))
               .transactionType(TransactionType.CREATE_LOAN_REQUEST.name())
               .name("create loan request")
+              .build();
+      approveSettingService.create(request);
+    }
+    if (approveSettingRepository
+        .findByTransactionType(TransactionType.CREATE_LOAN_PLAN)
+        .isEmpty()) {
+      var request =
+          ApproveSettingRequest.builder()
+              .roleApproveSettings(
+                  List.of(
+                      ApproveSettingRequest.RoleApproveSettingRequest.builder()
+                          .requiredCount(1)
+                          .role(Role.ADMIN.name())
+                          .build()))
+              .transactionType(TransactionType.CREATE_LOAN_PLAN.name())
+              .name("create loan plan")
+              .build();
+      approveSettingService.create(request);
+    }
+    if (approveSettingRepository
+        .findByTransactionType(TransactionType.CREATE_FINANCIAL_INFO)
+        .isEmpty()) {
+      var request =
+          ApproveSettingRequest.builder()
+              .roleApproveSettings(
+                  List.of(
+                      ApproveSettingRequest.RoleApproveSettingRequest.builder()
+                          .requiredCount(1)
+                          .role(Role.ADMIN.name())
+                          .build()))
+              .transactionType(TransactionType.CREATE_FINANCIAL_INFO.name())
+              .name("create financial info")
               .build();
       approveSettingService.create(request);
     }
@@ -112,7 +137,7 @@ public class initDbService {
                       .expirationDate(ZonedDateTime.now().plusYears(10))
                       .build())
               .address(
-                  AddressDto.builder()
+                  AddressDTO.builder()
                       .country("Việt Nam")
                       .cityProvince("Hồ Chí Minh")
                       .district("Quận 1")
@@ -233,7 +258,7 @@ public class initDbService {
                       .ethnicity("Kinh")
                       .build())
               .address(
-                  AddressDto.builder()
+                  AddressDTO.builder()
                       .country("Việt Nam")
                       .cityProvince("Hồ Chí Minh")
                       .wardOrCommune("Phường " + (random.nextInt(20) + 1))
@@ -367,7 +392,7 @@ public class initDbService {
                     .ethnicity("Kinh")
                     .build())
             .address(
-                AddressDto.builder()
+                AddressDTO.builder()
                     .country("Việt Nam")
                     .cityProvince("Hồ Chí Minh")
                     .wardOrCommune("Phường " + (random.nextInt(20) + 1))

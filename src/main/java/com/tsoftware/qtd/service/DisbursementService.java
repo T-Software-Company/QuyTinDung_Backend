@@ -21,17 +21,17 @@ public class DisbursementService {
 
   private final DisbursementMapper disbursementMapper;
 
-  public DisbursementDTO create(DisbursementDTO disbursementDto) {
-    Disbursement disbursement = disbursementMapper.toEntity(disbursementDto);
+  public DisbursementDTO create(DisbursementDTO disbursementDTO) {
+    Disbursement disbursement = disbursementMapper.toEntity(disbursementDTO);
     return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
   }
 
-  public DisbursementDTO update(UUID id, DisbursementDTO disbursementDto) {
+  public DisbursementDTO update(UUID id, DisbursementDTO disbursementDTO) {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)
-            .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
-    disbursementMapper.updateEntity(disbursementDto, disbursement);
+            .orElseThrow(() -> new NotFoundException("DisbursementDTO not found"));
+    disbursementMapper.updateEntity(disbursementDTO, disbursement);
     return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
   }
 
@@ -43,7 +43,7 @@ public class DisbursementService {
     Disbursement disbursement =
         disbursementRepository
             .findById(id)
-            .orElseThrow(() -> new NotFoundException("DisbursementDto not found"));
+            .orElseThrow(() -> new NotFoundException("DisbursementDTO not found"));
     return disbursementMapper.toDTO(disbursement);
   }
 

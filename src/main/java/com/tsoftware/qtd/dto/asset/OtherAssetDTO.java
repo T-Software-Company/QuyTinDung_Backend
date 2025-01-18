@@ -9,7 +9,7 @@ import org.hibernate.annotations.Type;
 @Getter
 @Setter
 @Builder
-public class OtherAssetDto {
+public class OtherAssetDTO {
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")

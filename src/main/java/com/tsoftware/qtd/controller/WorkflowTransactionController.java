@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class WorkflowTransactionController {
   private final WorkflowTransactionService workflowTransactionService;
 
-  @WorkflowAPI(action = true)
+  @WorkflowAPI(action = WorkflowAPI.WorkflowAction.APPROVE)
   @PostMapping("{id}/approve")
   public ResponseEntity<?> approveRequest(
       @PathVariable @Valid @IsUUID String id,
@@ -33,7 +33,6 @@ public class WorkflowTransactionController {
   @GetMapping
   public ResponseEntity<?> getAll(
       @Filter Specification<WorkflowTransaction> spec, Pageable pageable) {
-
     return ResponseEntity.ok(workflowTransactionService.getAll(spec, pageable));
   }
 }

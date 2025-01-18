@@ -1,7 +1,9 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanPlanResponse;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -22,17 +24,21 @@ public class LoanPlanService {
 
   private final LoanPlanRepository loanplanRepository;
   private final LoanPlanMapper loanplanMapper;
+  private final WorkflowTransactionService workflowTransactionService;
   private final ApplicationRepository applicationRepository;
 
-  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, UUID applicationId) {
+  public WorkflowTransactionResponse request(LoanPlanRequest loanPlanRequest) {
+    return workflowTransactionService.create(
+        loanPlanRequest, loanPlanRequest.getApplication(), TransactionType.CREATE_LOAN_PLAN);
+  }
 
+  public LoanPlanResponse create(LoanPlanRequest loanplanRequest, UUID applicationId) {
     LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
     Application application =
         applicationRepository
             .findById(applicationId)
             .orElseThrow(() -> new NotFoundException("Application not found"));
     loanplan.setApplication(application);
-
     return loanplanMapper.toDTO(loanplanRepository.save(loanplan));
   }
 

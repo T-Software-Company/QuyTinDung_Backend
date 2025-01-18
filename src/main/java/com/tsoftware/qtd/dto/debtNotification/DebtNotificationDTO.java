@@ -1,6 +1,6 @@
-package com.tsoftware.qtd.dto.application;
+package com.tsoftware.qtd.dto.debtNotification;
 
-import com.tsoftware.qtd.constants.EnumType.IncomeProofType;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.Builder;
@@ -10,13 +10,13 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class IncomeProofDto {
+public class DebtNotificationDTO {
 
   UUID id;
   ZonedDateTime createdAt;
   ZonedDateTime updatedAt;
   String lastModifiedBy;
   String createdBy;
-  String link;
-  IncomeProofType incomeProofType;
+  BigDecimal amount;
+  String message;
 }

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.application;
 
 import com.tsoftware.qtd.dto.AbstractResponse;
-import com.tsoftware.qtd.dto.employee.EmployeeResponse;
+import com.tsoftware.qtd.dto.employee.EmployeeSimpleResponse;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @RequiredArgsConstructor
 public class ApplicationResponse extends AbstractResponse {
   private BigDecimal amount;
-  private List<EmployeeResponse> loanProcessors;
+  private List<EmployeeSimpleResponse> loanProcessors;
   private ZonedDateTime startDate;
   private ZonedDateTime dueDate;
   private BigDecimal interestRate;
