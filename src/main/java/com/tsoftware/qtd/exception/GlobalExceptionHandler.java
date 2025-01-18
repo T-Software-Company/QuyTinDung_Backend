@@ -3,9 +3,7 @@ package com.tsoftware.qtd.exception;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.turkraft.springfilter.parser.InvalidSyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -120,18 +117,13 @@ public class GlobalExceptionHandler {
   protected ResponseEntity<ApiResponse<?>> handleHandlerMethodValidationException(
       HandlerMethodValidationException ex) {
     Map<String, Object> errors = new HashMap<>();
-    final Integer[] index = {0};
-    ex.getAllErrors()
+    ex.getAllValidationResults()
         .forEach(
-            error -> {
-              if (error instanceof FieldError fieldError) {
-                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
-              } else {
-                errors.put("unknow_error" + index[0], ex.getMessage());
-                index[0] = index[0] + 1;
-              }
+            result -> {
+              errors.put(
+                  result.getMethodParameter().getParameterName(),
+                  result.getResolvableErrors().getFirst().getDefaultMessage());
             });
-
     return ResponseEntity.badRequest()
         .body(
             new ApiResponse<>(
@@ -201,7 +193,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiResponse<?>> handleDataIntegrityViolationException(
       DataIntegrityViolationException ex) {
     String originalMessage = ex.getMessage();
-
+    // WIP we need check for specific
     Pattern pattern = Pattern.compile("Detail: Key \\((.*?)\\)=\\((.*?)\\) already exists\\.");
     Matcher matcher = pattern.matcher(originalMessage);
 
@@ -222,45 +214,5 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(
         ApiResponse.builder().code(error.getHttpStatus().value()).message(message).build(),
         error.getHttpStatus());
-  }
-
-  private void addNestedFieldError(Map<String, Object> errors, String field, String errorMessage) {
-    String[] parts = field.split("\\.");
-    Map<String, Object> current = errors;
-
-    for (int i = 0; i < parts.length; i++) {
-      String part = parts[i];
-      current = handleFieldPart(current, part, i == parts.length - 1, errorMessage);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private Map<String, Object> handleFieldPart(
-      Map<String, Object> current, String part, boolean isFinalField, String errorMessage) {
-
-    if (part.matches("\\w+\\[\\d+]")) {
-      String arrayKey = part.substring(0, part.indexOf("["));
-      int index = Integer.parseInt(part.substring(part.indexOf("[") + 1, part.indexOf("]")));
-
-      current.putIfAbsent(arrayKey, new ArrayList<>());
-      List<Object> array = (List<Object>) current.get(arrayKey);
-      while (array.size() <= index) {
-        array.add(new HashMap<>());
-      }
-
-      current = (Map<String, Object>) array.get(index);
-
-      if (isFinalField) {
-        array.set(index, errorMessage);
-      }
-    } else {
-      current.putIfAbsent(part, new HashMap<>());
-      if (isFinalField) {
-        current.put(part, errorMessage);
-      } else {
-        current = (Map<String, Object>) current.get(part);
-      }
-    }
-    return current;
   }
 }

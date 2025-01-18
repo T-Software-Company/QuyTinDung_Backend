@@ -2,7 +2,6 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.commonlib.annotation.TryTransactionId;
 import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
-import com.tsoftware.qtd.commonlib.executor.TransactionExecutorRegistry;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.application.ApplicationRequest;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class WorkflowTransactionService {
-  private final TransactionExecutorRegistry registry;
   private final WorkflowTransactionRepository repository;
   private final DTOMapper mapper;
   private final WorkflowTransactionMapper workflowTransactionMapper;
@@ -40,6 +39,7 @@ public class WorkflowTransactionService {
   private final EmployeeMapper employeeMapper;
   private final PageResponseMapper pageResponseMapper;
   private final ApplicationMapper applicationMapper;
+  private final ApplicationContext applicationContext;
 
   @TryTransactionId
   public WorkflowTransactionResponse create(
@@ -62,9 +62,25 @@ public class WorkflowTransactionService {
     this.calculateApproves(transaction, type);
     var entity = workflowTransactionMapper.toEntity(transaction);
     Optional.ofNullable(entity.getGroupApproves())
-        .ifPresent(stef -> stef.forEach(groupApprove -> groupApprove.setTransaction(entity)));
+        .ifPresent(
+            stef ->
+                stef.forEach(
+                    groupApprove -> {
+                      groupApprove.setTransaction(entity);
+                      groupApprove
+                          .getCurrentApproves()
+                          .forEach(approve -> approve.setGroupApprove(groupApprove));
+                    }));
     Optional.ofNullable(entity.getRoleApproves())
-        .ifPresent(stef -> stef.forEach(roleApprove -> roleApprove.setTransaction(entity)));
+        .ifPresent(
+            stef ->
+                stef.forEach(
+                    roleApprove -> {
+                      roleApprove.setTransaction(entity);
+                      roleApprove
+                          .getCurrentApproves()
+                          .forEach(approve -> approve.setRoleApprove(roleApprove));
+                    }));
     Optional.ofNullable(entity.getApproves())
         .ifPresent(stef -> stef.forEach(approve -> approve.setTransaction(entity)));
     var saved = repository.save(entity);
@@ -77,14 +93,16 @@ public class WorkflowTransactionService {
             .findById(id)
             .map(mapper::toDTO)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
-
-    return (WorkflowTransactionDTO)
-        registry.getExecutor(transactionDTO.getType()).execute(transactionDTO);
+    var executor = applicationContext.getBean(transactionDTO.getType().getExecutor());
+    return executor.execute(transactionDTO, status);
   }
 
   public PageResponse<WorkflowTransactionResponse> getAll(
       Specification<WorkflowTransaction> spec, Pageable pageable) {
     try {
+      var t = repository.findAll(spec, pageable);
+      t.forEach(
+          i -> i.getRoleApproves().forEach(ra -> ra.getCurrentApproves().forEach(a -> a.getId())));
       var transactions =
           repository.findAll(spec, pageable).map(workflowTransactionMapper::toResponse);
       return pageResponseMapper.toPageResponse(transactions);
@@ -160,20 +178,21 @@ public class WorkflowTransactionService {
     }
   }
 
-  public WorkflowTransactionDTO processApproval(WorkflowTransactionDTO workflowTransactionDTO) {
+  public WorkflowTransactionDTO processApproval(
+      WorkflowTransactionDTO workflowTransactionDTO, ApproveStatus status) {
     var userId = RequestUtil.getUserId();
     var approvers =
         Optional.ofNullable(workflowTransactionDTO.getApproves()).orElse(new ArrayList<>());
     approvers.stream()
         .filter(approve -> approve.getApprover().getUserId().equals(userId))
-        .forEach(approve -> approve.setStatus(ApproveStatus.APPROVED));
+        .forEach(approve -> approve.setStatus(status));
     var groupApproves =
         Optional.ofNullable(workflowTransactionDTO.getGroupApproves()).orElse(new ArrayList<>());
     groupApproves.forEach(
         groupApprove -> {
           Optional.ofNullable(groupApprove.getCurrentApproves()).orElse(new ArrayList<>()).stream()
               .filter(approve -> approve.getApprover().getUserId().equals(userId))
-              .forEach(approve -> approve.setStatus(ApproveStatus.APPROVED));
+              .forEach(approve -> approve.setStatus(status));
         });
     var roleApprovers =
         Optional.ofNullable(workflowTransactionDTO.getRoleApproves()).orElse(new ArrayList<>());
@@ -181,7 +200,7 @@ public class WorkflowTransactionService {
         roleApprove -> {
           Optional.ofNullable(roleApprove.getCurrentApproves()).orElse(new ArrayList<>()).stream()
               .filter(approve -> approve.getApprover().getUserId().equals(userId))
-              .forEach(approve -> approve.setStatus(ApproveStatus.APPROVED));
+              .forEach(approve -> approve.setStatus(status));
         });
 
     return workflowTransactionDTO;

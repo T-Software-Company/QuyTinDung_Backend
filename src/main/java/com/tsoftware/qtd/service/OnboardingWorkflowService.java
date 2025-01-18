@@ -91,7 +91,6 @@ public class OnboardingWorkflowService implements WorkflowService {
             .build();
     var step =
         (StepHistoryDTO) this.initStep(workflowProperties.getOnboarding().getFirst().getStep());
-    step.setType(StepType.DEFAULT);
     workflow.getSteps().add(step);
     return workflow;
   }
@@ -99,6 +98,13 @@ public class OnboardingWorkflowService implements WorkflowService {
   @Override
   @SuppressWarnings("unchecked")
   public <T extends Step> T initStep(String stepName) {
+    var type =
+        Optional.ofNullable(
+                CollectionUtils.findFirst(
+                        workflowProperties.getOnboarding(), s -> s.getStep().equals(stepName))
+                    .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName))
+                    .getType())
+            .orElse(StepType.DEFAULT);
     return (T)
         StepHistoryDTO.builder()
             .name(stepName)
@@ -106,11 +112,7 @@ public class OnboardingWorkflowService implements WorkflowService {
             .startTime(ZonedDateTime.now())
             .metadata(new HashMap<>())
             .nextSteps(new ArrayList<>())
-            .type(
-                CollectionUtils.findFirst(
-                        workflowProperties.getOnboarding(), s -> s.getStep().equals(stepName))
-                    .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName))
-                    .getType())
+            .type(type)
             .build();
   }
 

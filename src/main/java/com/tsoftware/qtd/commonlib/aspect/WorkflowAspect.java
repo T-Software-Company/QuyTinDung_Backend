@@ -5,9 +5,9 @@ import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.JsonPath;
 import com.tsoftware.qtd.commonlib.annotation.*;
+import com.tsoftware.qtd.commonlib.constant.StepType;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
-import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.commonlib.model.Workflow;
 import com.tsoftware.qtd.commonlib.properties.WorkflowProperties;
@@ -50,8 +50,7 @@ public class WorkflowAspect {
       value = "@annotation(tryTransactionId)",
       returning = "response",
       argNames = "response,tryTransactionId")
-  public void afterTryTransactionId(
-      AbstractTransaction<?> response, TryTransactionId tryTransactionId)
+  public void afterTryTransactionId(Object response, TryTransactionId tryTransactionId)
       throws JsonProcessingException {
     var path = tryTransactionId.path();
     WorkflowContext.setTransactionId(JsonParser.getValueByPath(response, path, UUID.class));
@@ -161,7 +160,7 @@ public class WorkflowAspect {
     var workflow = workflowService.getByTransactionId(transactionId);
     var step =
         CollectionUtils.findFirst(
-                workflow.getSteps(), s -> s.getTransactionId().equals(transactionId))
+                workflow.getSteps(), s -> transactionId.equals(s.getTransactionId()))
             .orElseThrow(
                 () ->
                     new WorkflowException(
@@ -177,11 +176,19 @@ public class WorkflowAspect {
   }
 
   private void processAfterWithCreate(Workflow<?> workflow, String stepName, Object response) {
+
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(
                 () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
-    step.setTransactionId(WorkflowContext.getTransactionId());
+    if (step.getType().equals(StepType.ACTION)) {
+      var transactionId = WorkflowContext.getTransactionId();
+      if (transactionId != null) {
+        step.setTransactionId(transactionId);
+      } else {
+        throw new WorkflowException(500, "Can't try transaction id ");
+      }
+    }
     Map<String, Object> metadata = step.getMetadata();
     var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
     JsonParser.put(metadata, "histories[" + index + "].response", getBodyFromResponse(response));
@@ -197,7 +204,7 @@ public class WorkflowAspect {
     var transactionId = this.getTransactionId(joinPoint);
     var step =
         CollectionUtils.findFirst(
-                workflow.getSteps(), s -> s.getTransactionId().equals(transactionId))
+                workflow.getSteps(), s -> transactionId.equals(s.getTransactionId()))
             .orElseThrow(
                 () ->
                     new WorkflowException(
@@ -229,7 +236,7 @@ public class WorkflowAspect {
     var transactionId = this.getTransactionId(joinPoint);
     var step =
         CollectionUtils.findFirst(
-                workflow.getSteps(), s -> s.getTransactionId().equals(transactionId))
+                workflow.getSteps(), s -> transactionId.equals(s.getTransactionId()))
             .orElseThrow(
                 () ->
                     new WorkflowException(
@@ -294,7 +301,7 @@ public class WorkflowAspect {
         }
       }
     }
-    throw new WorkflowException(HttpStatus.NOT_FOUND.value(), "Transaction id not found");
+    throw new WorkflowException(HttpStatus.NOT_FOUND.value(), "Can't try transaction id");
   }
 
   private void finalProcess(Workflow<?> workflow, String step) {

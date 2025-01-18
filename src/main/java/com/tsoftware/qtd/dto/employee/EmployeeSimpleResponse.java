@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class EmployeeSimpleResponse {
+  String id;
   String userId;
   String email;
   String username;

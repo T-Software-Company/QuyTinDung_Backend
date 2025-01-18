@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.executor;
 
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.FinancialInfoRequest;
@@ -24,8 +25,9 @@ public class FinancialInfoExecutor extends BaseTransactionExecutor<WorkflowTrans
   }
 
   @Override
-  protected WorkflowTransactionDTO processApproval(WorkflowTransactionDTO workflowTransactionDTO) {
-    return workflowTransactionService.processApproval(workflowTransactionDTO);
+  protected WorkflowTransactionDTO processApproval(
+      WorkflowTransactionDTO workflowTransactionDTO, ApproveStatus status) {
+    return workflowTransactionService.processApproval(workflowTransactionDTO, status);
   }
 
   @Override

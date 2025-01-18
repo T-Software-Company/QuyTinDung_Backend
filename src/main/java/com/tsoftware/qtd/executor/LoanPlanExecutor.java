@@ -1,10 +1,10 @@
 package com.tsoftware.qtd.executor;
 
+import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
-import com.tsoftware.qtd.mapper.LoanPlanMapper;
 import com.tsoftware.qtd.service.LoanPlanService;
 import com.tsoftware.qtd.service.WorkflowTransactionService;
 import java.util.UUID;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @Service("loanPlanExecutor")
 @RequiredArgsConstructor
 public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactionDTO> {
-  final LoanPlanMapper loanPlanMapper;
   private final LoanPlanService loanPlanService;
   private final WorkflowTransactionService workflowTransactionService;
 
@@ -26,8 +25,9 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactio
   }
 
   @Override
-  protected WorkflowTransactionDTO processApproval(WorkflowTransactionDTO workflowTransactionDTO) {
-    return workflowTransactionService.processApproval(workflowTransactionDTO);
+  protected WorkflowTransactionDTO processApproval(
+      WorkflowTransactionDTO workflowTransactionDTO, ApproveStatus status) {
+    return workflowTransactionService.processApproval(workflowTransactionDTO, status);
   }
 
   @Override

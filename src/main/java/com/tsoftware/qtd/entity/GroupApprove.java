@@ -21,7 +21,7 @@ public class GroupApprove extends AbstractAuditEntity {
   private UUID groupId;
   private Integer requiredPercentage;
 
-  @OneToMany(mappedBy = "groupApprove")
+  @OneToMany(mappedBy = "groupApprove", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Approve> currentApproves;
 
   private ApproveStatus status;

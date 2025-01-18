@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.controller;
 
+import com.tsoftware.qtd.commonlib.annotation.TargetId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.application.FinancialInfoRequest;
@@ -23,7 +24,7 @@ public class FinancialInfoController {
       action = WorkflowAPI.WorkflowAction.CREATE)
   public ResponseEntity<?> createFinancialInfo(
       @Valid @RequestBody FinancialInfoRequest financialInfoRequest,
-      @Valid @RequestParam @IsUUID String applicationId) {
+      @Valid @RequestParam @IsUUID @TargetId String applicationId) {
     ValidationUtils.validateEqual(financialInfoRequest.getApplication().getId(), applicationId);
     return ResponseEntity.ok(financialinfoService.request(financialInfoRequest));
   }

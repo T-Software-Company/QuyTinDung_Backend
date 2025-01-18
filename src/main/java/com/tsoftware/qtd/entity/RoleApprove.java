@@ -23,7 +23,7 @@ public class RoleApprove extends AbstractAuditEntity {
 
   private Integer requiredCount;
 
-  @OneToMany(mappedBy = "roleApprove")
+  @OneToMany(mappedBy = "roleApprove", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Approve> currentApproves;
 
   private ApproveStatus status;
