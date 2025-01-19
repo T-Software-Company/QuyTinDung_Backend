@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
-import com.tsoftware.qtd.dto.AbstractResponse;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.dto.employee.EmployeeSimpleResponse;
 import java.util.UUID;
 import lombok.Getter;
@@ -11,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApproveResponse extends AbstractResponse {
+public class ApproveResponse {
   private UUID id;
   private String comment;
-  private ApproveStatus status;
+  private ActionStatus status;
   private EmployeeSimpleResponse approver;
 }

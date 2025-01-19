@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.commonlib.executor;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,7 +9,7 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
     implements TransactionExecutor<T> {
 
   @Override
-  public T execute(T transaction, ApproveStatus status) {
+  public T execute(T transaction, ActionStatus status) {
     log.info("Starting execution for transaction: {}", transaction.getId());
     try {
       preValidate(transaction);
@@ -27,7 +27,7 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
     }
   }
 
-  protected abstract T processApproval(T transaction, ApproveStatus status);
+  protected abstract T processApproval(T transaction, ActionStatus status);
 
   protected abstract void doExecute(T transaction);
 

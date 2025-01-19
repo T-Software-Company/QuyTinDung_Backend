@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.commonlib.constant;
 
-public enum ApproveStatus {
+public enum ActionStatus {
   WAIT,
   APPROVED,
   REJECTED;

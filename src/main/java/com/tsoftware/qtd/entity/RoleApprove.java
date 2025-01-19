@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
 import java.util.List;
@@ -26,7 +26,7 @@ public class RoleApprove extends AbstractAuditEntity {
   @OneToMany(mappedBy = "roleApprove", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Approve> currentApproves;
 
-  private ApproveStatus status;
+  private ActionStatus status;
 
   @ManyToOne private WorkflowTransaction transaction;
 }

@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.executor;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
@@ -28,7 +28,7 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<WorkflowTransac
 
   @Override
   protected WorkflowTransactionDTO processApproval(
-      WorkflowTransactionDTO workflowTransactionDTO, ApproveStatus status) {
+      WorkflowTransactionDTO workflowTransactionDTO, ActionStatus status) {
     return workflowTransactionService.processApproval(workflowTransactionDTO, status);
   }
 

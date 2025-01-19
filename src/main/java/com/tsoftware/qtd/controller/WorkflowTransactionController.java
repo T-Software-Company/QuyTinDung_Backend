@@ -2,7 +2,7 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TransactionId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.entity.WorkflowTransaction;
 import com.tsoftware.qtd.service.WorkflowTransactionService;
 import com.tsoftware.qtd.validation.IsEnum;
@@ -26,9 +26,9 @@ public class WorkflowTransactionController {
   @PostMapping("{id}/approve")
   public ResponseEntity<?> approveRequest(
       @PathVariable @Valid @TransactionId @IsUUID String id,
-      @Valid @IsEnum(enumClass = ApproveStatus.class) @RequestParam String status) {
+      @Valid @IsEnum(enumClass = ActionStatus.class) @RequestParam String status) {
     return ResponseEntity.ok(
-        workflowTransactionService.approve(UUID.fromString(id), ApproveStatus.valueOf(status)));
+        workflowTransactionService.approve(UUID.fromString(id), ActionStatus.valueOf(status)));
   }
 
   @GetMapping

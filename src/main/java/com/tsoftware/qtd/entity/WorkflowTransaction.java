@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
@@ -32,7 +32,7 @@ import org.hibernate.annotations.Type;
 public class WorkflowTransaction extends AbstractAuditEntity {
 
   @Enumerated(EnumType.ORDINAL)
-  private ApproveStatus status;
+  private ActionStatus status;
 
   @Enumerated(EnumType.ORDINAL)
   private TransactionType type;

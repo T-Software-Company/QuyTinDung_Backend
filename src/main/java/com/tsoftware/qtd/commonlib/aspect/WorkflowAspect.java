@@ -152,6 +152,8 @@ public class WorkflowAspect {
     var histories = metadata.get("histories");
     var index = histories == null ? 0 : JsonPath.parse(histories).read("$.length()", Integer.class);
     JsonParser.put(metadata, "histories[" + index + "].request", request);
+    JsonParser.put(
+        metadata, "histories[" + index + "].action", WorkflowAPI.WorkflowAction.CREATE.getValue());
     WorkflowContext.set(workflow);
   }
 

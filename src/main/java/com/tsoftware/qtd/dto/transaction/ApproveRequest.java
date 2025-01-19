@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class ApproveRequest {
   private UUID id;
-  private ApproveStatus status;
+  private ActionStatus status;
 }

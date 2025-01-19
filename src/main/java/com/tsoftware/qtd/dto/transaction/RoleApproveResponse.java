@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,5 +18,5 @@ public class RoleApproveResponse {
   private Role role;
   private Integer requiredCount;
   private List<ApproveResponse> currentApproves;
-  private ApproveStatus status;
+  private ActionStatus status;
 }

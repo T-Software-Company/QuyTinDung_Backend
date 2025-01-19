@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.configuration;
 
 import com.jayway.jsonpath.JsonPath;
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
@@ -20,13 +20,19 @@ public class SpeLConfig {
   public WorkflowStatus extractStatus(StepHistoryDTO stepHistory) {
     var metadata = stepHistory.getMetadata();
     var histories = JsonParser.convert(metadata.get("histories"), List.class);
-    var history = JsonParser.convert(histories.getLast(), Map.class);
-    var responseObject = history.get("response");
-    if (responseObject == null) return WorkflowStatus.INPROGRESS;
+    for (Object history : histories) {
+      var h = JsonParser.convert(history, Map.class);
+      try {
+        var response = JsonParser.convert(h.get("response"), WorkflowTransactionResponse.class);
+        if (response.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
+      } catch (Exception e) {
+        //
+      }
+    }
     try {
-      var response = JsonParser.convert(responseObject, WorkflowTransactionResponse.class);
-      if (response.getStatus().equals(ApproveStatus.APPROVED)) return WorkflowStatus.COMPLETED;
-      if (response.getStatus().equals(ApproveStatus.REJECTED)) return WorkflowStatus.DENIED;
+      var history = JsonParser.convert(histories.getLast(), Map.class);
+      var response = JsonParser.convert(history.get("response"), WorkflowTransactionResponse.class);
+      if (response.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
     } catch (Exception e) {
       log.error("Error extracting status: {}", e.getMessage());
       return WorkflowStatus.INPROGRESS;

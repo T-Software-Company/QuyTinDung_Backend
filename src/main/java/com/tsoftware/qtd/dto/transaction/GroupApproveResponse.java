@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.qtd.commonlib.constant.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -18,5 +18,5 @@ public class GroupApproveResponse {
   private UUID groupId;
   private Integer requiredPercentage;
   private List<ApproveResponse> currentApproves;
-  private ApproveStatus status;
+  private ActionStatus status;
 }

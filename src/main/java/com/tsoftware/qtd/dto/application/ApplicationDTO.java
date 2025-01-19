@@ -25,6 +25,6 @@ public class ApplicationDTO {
   private CustomerDTO customer;
   private LoanPlanRequest loanPlan;
   private LoanRequestRequest loanRequest;
-  private FinancialInfoDTO financialInfo;
+  private FinancialInfoRequest financialInfo;
   boolean canSign;
 }
