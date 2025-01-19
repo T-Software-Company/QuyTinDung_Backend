@@ -21,6 +21,8 @@ public interface WorkflowService {
 
   void calculateStatus(Workflow<?> workflow, String stepName);
 
+  void calculatePrevSteps(Workflow<?> workflow);
+
   void calculateCurrentSteps(Workflow<?> workflow);
 
   void calculateNextSteps(Workflow<?> workflow, String stepName);

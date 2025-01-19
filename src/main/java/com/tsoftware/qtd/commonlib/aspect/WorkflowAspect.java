@@ -307,9 +307,10 @@ public class WorkflowAspect {
   }
 
   private void finalProcess(Workflow<?> workflow, String step) {
+    workflowService.calculateStatus(workflow, step);
+    workflowService.calculatePrevSteps(workflow);
     workflowService.calculateCurrentSteps(workflow);
     workflowService.calculateNextSteps(workflow, step);
-    workflowService.calculateStatus(workflow, step);
   }
 
   private Object extractRequest(JoinPoint joinPoint) {

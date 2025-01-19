@@ -15,6 +15,10 @@ public interface Workflow<T extends Step> {
 
   void setTargetId(UUID value);
 
+  List<String> getPrevSteps();
+
+  void setPrevSteps(List<String> value);
+
   List<String> getCurrentSteps();
 
   void setCurrentSteps(List<String> value);

@@ -16,8 +16,9 @@ import lombok.*;
 public class OnboardingWorkflowDTO implements Workflow<StepHistoryDTO> {
   private UUID id;
   private UUID targetId;
-  private List<String> nextSteps;
+  private List<String> prevSteps;
   private List<String> currentSteps;
+  private List<String> nextSteps;
   private WorkflowStatus status;
   private ZonedDateTime startTime;
   private ZonedDateTime endTime;

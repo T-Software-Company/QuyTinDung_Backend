@@ -20,6 +20,8 @@ import org.hibernate.annotations.Type;
 @Table
 public class OnboardingWorkflow extends AbstractAuditEntity {
   private UUID targetId;
+
+  private List<String> prevSteps;
   private List<String> nextSteps;
   private List<String> currentSteps;
 

@@ -194,17 +194,22 @@ public class OnboardingWorkflowService implements WorkflowService {
   }
 
   @Override
+  public void calculatePrevSteps(Workflow<?> workflow) {
+    var steps = workflow.getSteps();
+    var prevSteps =
+        steps.stream()
+            .filter(st -> st.getStatus().equals(WorkflowStatus.COMPLETED))
+            .map(Step::getName)
+            .distinct()
+            .collect(Collectors.toList());
+    workflow.setPrevSteps(prevSteps);
+  }
+
+  @Override
   public void calculateCurrentSteps(Workflow<?> workflow) {
     var steps = workflow.getSteps();
     var currentSteps = steps.stream().map(Step::getName).distinct().collect(Collectors.toList());
-    workflowProperties
-        .getOnboarding()
-        .forEach(
-            workflowDefinition -> {
-              if (currentSteps.contains(workflowDefinition.getStep())) {
-                workflowDefinition.getDependencies().forEach(currentSteps::remove);
-              }
-            });
+    currentSteps.removeAll(workflow.getPrevSteps());
     workflow.setCurrentSteps(currentSteps);
   }
 
@@ -230,13 +235,16 @@ public class OnboardingWorkflowService implements WorkflowService {
             .toList();
 
     step.setNextSteps(nextSteps);
+
     var workflowNextSteps =
         steps.stream()
             .flatMap(st -> st.getNextSteps().stream())
             .distinct()
             .collect(Collectors.toList());
     var currentSteps = workflow.getCurrentSteps();
+    var prevSteps = workflow.getPrevSteps();
     workflowNextSteps.removeAll(currentSteps);
+    workflowNextSteps.removeAll(prevSteps);
     workflow.setNextSteps(workflowNextSteps);
   }
 
