@@ -23,19 +23,16 @@ public class SpeLConfig {
     for (Object history : histories) {
       var h = JsonParser.convert(history, Map.class);
       try {
-        var response = JsonParser.convert(h.get("response"), WorkflowTransactionResponse.class);
-        if (response.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
+        var response = JsonParser.convert(h.get("response"), Map.class);
+        if (response == null) return WorkflowStatus.INPROGRESS;
+        var transaction =
+            JsonParser.convert(
+                response.get("workflowTransactionResponse"), WorkflowTransactionResponse.class);
+        if (transaction.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
+        if (transaction.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
       } catch (Exception e) {
-        //
+        log.error("Error extracting status : {}", e.getMessage());
       }
-    }
-    try {
-      var history = JsonParser.convert(histories.getLast(), Map.class);
-      var response = JsonParser.convert(history.get("response"), WorkflowTransactionResponse.class);
-      if (response.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
-    } catch (Exception e) {
-      log.error("Error extracting status: {}", e.getMessage());
-      return WorkflowStatus.INPROGRESS;
     }
     return WorkflowStatus.INPROGRESS;
   }
@@ -43,11 +40,12 @@ public class SpeLConfig {
   public boolean resolveAddAssetCollateralStep(StepHistoryDTO stepHistory) {
     int validationPrice = 500000;
     try {
-      var context = JsonPath.parse(stepHistory.getMetadata());
+      var responses = JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]");
+      var metadataList =
+          JsonPath.parse(responses)
+              .read("[-1:].response.workflowTransactionResponse.metadata", List.class);
       var loanRequestResponse =
-          context.read(
-              "$.histories[-1].response.workflowTransactionResponse.metadata",
-              LoanRequestResponse.class);
+          JsonParser.convert(metadataList.getFirst(), LoanRequestResponse.class);
       return loanRequestResponse.getAmount().compareTo(BigDecimal.valueOf(validationPrice)) >= 0;
     } catch (Exception e) {
       log.error("Error resolving step: {}", e.getMessage());

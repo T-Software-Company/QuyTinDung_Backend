@@ -28,6 +28,8 @@ public class WorkflowTransactionResponse extends AbstractResponse {
   @Builder
   @Getter
   @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
   public static class Application {
     String id;
   }

@@ -17,7 +17,7 @@ public enum ErrorType implements CommonError {
   REQUEST_BODY_NOT_VALID(10, HttpStatus.BAD_REQUEST, "Request body not valid. {}"),
   FAIL_TO_CONVERT(11, HttpStatus.INTERNAL_SERVER_ERROR, "Fail to convert {} to {}."),
   ACCESS_DENIED(12, HttpStatus.FORBIDDEN, "Access denied. {}"),
-  HAS_APPLICATION_IN_PROGRESS(13, HttpStatus.BAD_REQUEST, "Existing in-progress {}. {}"),
+  HAS_APPLICATION_IN_PROGRESS(13, HttpStatus.CONFLICT, "Existing in-progress {}. {}"),
   CANNOT_SIGN(14, HttpStatus.BAD_REQUEST, "Cannot sign this application, please check again. {}"),
   ACTION_ALREADY_COMPLETED(15, HttpStatus.CONFLICT, "The action has already been completed. {}");
 

@@ -321,6 +321,7 @@ public class WorkflowAspect {
       var key =
           argValues[i] == null
                   || isPrimitiveOrWrapper(argValues[i].getClass())
+                  || argValues[i].getClass().equals(String.class)
                   || argValues[i].getClass().getSimpleName().isEmpty()
               ? argNames[i]
               : StringUtils.lowercaseFirstLetter(argValues[i].getClass().getSimpleName());

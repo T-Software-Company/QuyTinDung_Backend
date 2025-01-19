@@ -168,16 +168,14 @@ public class OnboardingWorkflowService implements WorkflowService {
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName));
-    var status =
-        this.handleStatusWithExpression(
-            (StepHistoryDTO) step,
-            CollectionUtils.findFirst(
-                    workflowProperties.getOnboarding(), t -> t.getStep().equals(stepName))
-                .orElseThrow(
-                    () ->
-                        new WorkflowException(
-                            HttpStatus.NOT_FOUND.value(), "Step not found in rules"))
-                .getExtractStatus());
+    var expression =
+        CollectionUtils.findFirst(
+                workflowProperties.getOnboarding(), t -> t.getStep().equals(stepName))
+            .orElseThrow(
+                () ->
+                    new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found in rules"))
+            .getExtractStatus();
+    var status = this.handleStatusWithExpression((StepHistoryDTO) step, expression);
     step.setStatus(status);
     if (WorkflowStatus.COMPLETED.equals(status)) {
       step.setEndTime(ZonedDateTime.now());
