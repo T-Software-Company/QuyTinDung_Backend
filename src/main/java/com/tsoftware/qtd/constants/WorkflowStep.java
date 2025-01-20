@@ -4,6 +4,7 @@ public class WorkflowStep {
   public static final String CREATE_LOAN_REQUEST = "create-loan-request";
   public static final String CREATE_LOAN_PLAN = "create-loan-plan";
   public static final String CREATE_FINANCIAL_INFO = "create-financial-info";
+  public static final String ADD_ASSET_COLLATERAL = "add-asset-collateral";
 
   private WorkflowStep() {}
 }

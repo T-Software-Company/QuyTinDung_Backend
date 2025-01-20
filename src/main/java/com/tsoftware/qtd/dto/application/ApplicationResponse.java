@@ -22,4 +22,13 @@ public class ApplicationResponse extends AbstractResponse {
   private BigDecimal interestRate;
   private BigDecimal amountPaid;
   private BigDecimal currentOutstandingDebt;
+  private Customer customer;
+
+  @Getter
+  @Setter
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class Customer {
+    private String id;
+  }
 }

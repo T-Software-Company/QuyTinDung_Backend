@@ -1,18 +1,18 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.asset.LandAssetRequest;
-import com.tsoftware.qtd.entity.LandAsset;
+import com.tsoftware.qtd.dto.ValuationAssetDTO;
+import com.tsoftware.qtd.entity.ValuationAsset;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
-public interface LandAssetMapper {
-  LandAsset toEntity(LandAssetRequest dto);
+public interface ValuationAssetMapper {
+  ValuationAsset toEntity(ValuationAssetDTO DTO);
 
-  LandAssetRequest toDTO(LandAsset entity);
+  ValuationAssetDTO toDTO(ValuationAsset entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(LandAssetRequest dto, @MappingTarget LandAsset entity);
+  void updateEntity(ValuationAssetDTO DTO, @MappingTarget ValuationAsset entity);
 }

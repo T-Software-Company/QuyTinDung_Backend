@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.LandAndImprovementDTO;
+import com.tsoftware.qtd.dto.asset.LandAndImprovementRequest;
 import com.tsoftware.qtd.entity.LandAndImprovement;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LandAndImprovementMapper;
@@ -21,18 +21,19 @@ public class LandAndImprovementService {
 
   private final LandAndImprovementMapper landandimprovementMapper;
 
-  public LandAndImprovementDTO create(LandAndImprovementDTO landandimprovementDTO) {
+  public LandAndImprovementRequest create(LandAndImprovementRequest landandimprovementRequest) {
     LandAndImprovement landandimprovement =
-        landandimprovementMapper.toEntity(landandimprovementDTO);
+        landandimprovementMapper.toEntity(landandimprovementRequest);
     return landandimprovementMapper.toDTO(landandimprovementRepository.save(landandimprovement));
   }
 
-  public LandAndImprovementDTO update(UUID id, LandAndImprovementDTO landandimprovementDTO) {
+  public LandAndImprovementRequest update(
+      UUID id, LandAndImprovementRequest landandimprovementRequest) {
     LandAndImprovement landandimprovement =
         landandimprovementRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LandAndImprovement not found"));
-    landandimprovementMapper.updateEntity(landandimprovementDTO, landandimprovement);
+    landandimprovementMapper.updateEntity(landandimprovementRequest, landandimprovement);
     return landandimprovementMapper.toDTO(landandimprovementRepository.save(landandimprovement));
   }
 
@@ -40,7 +41,7 @@ public class LandAndImprovementService {
     landandimprovementRepository.deleteById(id);
   }
 
-  public LandAndImprovementDTO getById(UUID id) {
+  public LandAndImprovementRequest getById(UUID id) {
     LandAndImprovement landandimprovement =
         landandimprovementRepository
             .findById(id)
@@ -48,7 +49,7 @@ public class LandAndImprovementService {
     return landandimprovementMapper.toDTO(landandimprovement);
   }
 
-  public List<LandAndImprovementDTO> getAll() {
+  public List<LandAndImprovementRequest> getAll() {
     return landandimprovementRepository.findAll().stream()
         .map(landandimprovementMapper::toDTO)
         .collect(Collectors.toList());

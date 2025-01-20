@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.dto.asset;
 
-import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
@@ -8,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class LandAssetDTO {
+public class LandAssetRequest {
 
   private String plotNumber;
   private String mapNumber;
@@ -17,5 +16,4 @@ public class LandAssetDTO {
   private String purpose;
   private ZonedDateTime expirationDate;
   private String originOfUsage;
-  private TypeOfUse typeOfUse;
 }

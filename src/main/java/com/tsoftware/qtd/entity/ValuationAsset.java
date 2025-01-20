@@ -1,8 +1,9 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.constants.EnumType.LegalStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,22 +12,24 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
-@AllArgsConstructor
-@SuperBuilder
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
-public class LoanPurposeDocument extends AbstractAuditEntity {
-
-  private String link;
-  private String name;
+public class ValuationAsset extends AbstractAuditEntity {
+  private BigDecimal value;
+  private String liquidity;
+  private String risk;
+  private BigDecimal depreciationRate;
+  private LegalStatus legalStatus;
+  private String valuationMethod;
+  private String thirdPartyValuationReport;
+  private Boolean thirdPartyValuation;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Application application;
 }

@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.VehicleDTO;
+import com.tsoftware.qtd.dto.asset.VehicleRequest;
 import com.tsoftware.qtd.entity.Vehicle;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.VehicleMapper;
@@ -21,17 +21,17 @@ public class VehicleService {
 
   private final VehicleMapper vehicleMapper;
 
-  public VehicleDTO create(VehicleDTO vehicleDTO) {
-    Vehicle vehicle = vehicleMapper.toEntity(vehicleDTO);
+  public VehicleRequest create(VehicleRequest vehicleRequest) {
+    Vehicle vehicle = vehicleMapper.toEntity(vehicleRequest);
     return vehicleMapper.toDTO(vehicleRepository.save(vehicle));
   }
 
-  public VehicleDTO update(UUID id, VehicleDTO vehicleDTO) {
+  public VehicleRequest update(UUID id, VehicleRequest vehicleRequest) {
     Vehicle vehicle =
         vehicleRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Vehicle not found"));
-    vehicleMapper.updateEntity(vehicleDTO, vehicle);
+    vehicleMapper.updateEntity(vehicleRequest, vehicle);
     return vehicleMapper.toDTO(vehicleRepository.save(vehicle));
   }
 
@@ -39,7 +39,7 @@ public class VehicleService {
     vehicleRepository.deleteById(id);
   }
 
-  public VehicleDTO getById(UUID id) {
+  public VehicleRequest getById(UUID id) {
     Vehicle vehicle =
         vehicleRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class VehicleService {
     return vehicleMapper.toDTO(vehicle);
   }
 
-  public List<VehicleDTO> getAll() {
+  public List<VehicleRequest> getAll() {
     return vehicleRepository.findAll().stream()
         .map(vehicleMapper::toDTO)
         .collect(Collectors.toList());

@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -49,9 +48,6 @@ public class Apartment extends AbstractAuditEntity {
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @Enumerated(EnumType.ORDINAL)
-  private TypeOfUse typeOfUse;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private OwnerInfo ownerInfo;

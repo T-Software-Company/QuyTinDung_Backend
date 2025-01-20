@@ -24,11 +24,11 @@ public class AssetResponse {
   private AssetType assetType;
   private Boolean valuationStatus;
 
-  private ApartmentDTO apartment;
-  private LandAndImprovementDTO landAndImprovement;
-  private VehicleDTO vehicle;
-  private MarketStallsDTO marketStalls;
-  private MachineryDTO machinery;
-  private OtherAssetDTO otherAsset;
-  private LandAssetDTO landAsset;
+  private ApartmentRequest apartment;
+  private LandAndImprovementRequest landAndImprovement;
+  private VehicleRequest vehicle;
+  private MarketStallsRequest marketStalls;
+  private MachineryRequest machinery;
+  private OtherAssetRequest otherAsset;
+  private LandAssetRequest landAsset;
 }

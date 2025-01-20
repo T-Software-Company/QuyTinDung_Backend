@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.ApartmentDTO;
+import com.tsoftware.qtd.dto.asset.ApartmentRequest;
 import com.tsoftware.qtd.entity.Apartment;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.ApartmentMapper;
@@ -21,17 +21,17 @@ public class ApartmentService {
 
   private final ApartmentMapper apartmentMapper;
 
-  public ApartmentDTO create(ApartmentDTO apartmentDTO) {
-    Apartment apartment = apartmentMapper.toEntity(apartmentDTO);
+  public ApartmentRequest create(ApartmentRequest apartmentRequest) {
+    Apartment apartment = apartmentMapper.toEntity(apartmentRequest);
     return apartmentMapper.toDTO(apartmentRepository.save(apartment));
   }
 
-  public ApartmentDTO update(UUID id, ApartmentDTO apartmentDTO) {
+  public ApartmentRequest update(UUID id, ApartmentRequest apartmentRequest) {
     Apartment apartment =
         apartmentRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Apartment not found"));
-    apartmentMapper.updateEntity(apartmentDTO, apartment);
+    apartmentMapper.updateEntity(apartmentRequest, apartment);
     return apartmentMapper.toDTO(apartmentRepository.save(apartment));
   }
 
@@ -39,7 +39,7 @@ public class ApartmentService {
     apartmentRepository.deleteById(id);
   }
 
-  public ApartmentDTO getById(UUID id) {
+  public ApartmentRequest getById(UUID id) {
     Apartment apartment =
         apartmentRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class ApartmentService {
     return apartmentMapper.toDTO(apartment);
   }
 
-  public List<ApartmentDTO> getAll() {
+  public List<ApartmentRequest> getAll() {
     return apartmentRepository.findAll().stream()
         .map(apartmentMapper::toDTO)
         .collect(Collectors.toList());

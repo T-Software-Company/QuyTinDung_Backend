@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.MarketStallsDTO;
+import com.tsoftware.qtd.dto.asset.MarketStallsRequest;
 import com.tsoftware.qtd.entity.MarketStalls;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.MarketStallsMapper;
@@ -21,17 +21,17 @@ public class MarketStallsService {
 
   private final MarketStallsMapper marketstallsMapper;
 
-  public MarketStallsDTO create(MarketStallsDTO marketstallsDTO) {
-    MarketStalls marketstalls = marketstallsMapper.toEntity(marketstallsDTO);
+  public MarketStallsRequest create(MarketStallsRequest marketstallsRequest) {
+    MarketStalls marketstalls = marketstallsMapper.toEntity(marketstallsRequest);
     return marketstallsMapper.toDTO(marketstallsRepository.save(marketstalls));
   }
 
-  public MarketStallsDTO update(UUID id, MarketStallsDTO marketstallsDTO) {
+  public MarketStallsRequest update(UUID id, MarketStallsRequest marketstallsRequest) {
     MarketStalls marketstalls =
         marketstallsRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("MarketStalls not found"));
-    marketstallsMapper.updateEntity(marketstallsDTO, marketstalls);
+    marketstallsMapper.updateEntity(marketstallsRequest, marketstalls);
     return marketstallsMapper.toDTO(marketstallsRepository.save(marketstalls));
   }
 
@@ -39,7 +39,7 @@ public class MarketStallsService {
     marketstallsRepository.deleteById(id);
   }
 
-  public MarketStallsDTO getById(UUID id) {
+  public MarketStallsRequest getById(UUID id) {
     MarketStalls marketstalls =
         marketstallsRepository
             .findById(id)
@@ -47,7 +47,7 @@ public class MarketStallsService {
     return marketstallsMapper.toDTO(marketstalls);
   }
 
-  public List<MarketStallsDTO> getAll() {
+  public List<MarketStallsRequest> getAll() {
     return marketstallsRepository.findAll().stream()
         .map(marketstallsMapper::toDTO)
         .collect(Collectors.toList());

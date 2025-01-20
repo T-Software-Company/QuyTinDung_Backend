@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class MachineryDTO {
+public class MachineryRequest {
 
   private String name;
   private String model;

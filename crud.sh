@@ -29,6 +29,7 @@ import $PACKAGE_PATH.entity.$ENTITY_NAME;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import java.util.UUID;
 
 @Repository
 public interface ${ENTITY_NAME}Repository extends JpaRepository<$ENTITY_NAME, UUID>, JpaSpecificationExecutor<$ENTITY_NAME>  {
