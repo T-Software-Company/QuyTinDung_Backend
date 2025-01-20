@@ -20,7 +20,7 @@ public class ProfileRequest {
 
   @NotBlank @Email String email;
 
-  @Valid AddressDTO address;
+  @Valid @NotNull AddressDTO address;
 
   @NotBlank String firstName;
 

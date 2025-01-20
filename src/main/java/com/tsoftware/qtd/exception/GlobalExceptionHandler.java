@@ -3,16 +3,21 @@ package com.tsoftware.qtd.exception;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.turkraft.springfilter.parser.InvalidSyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,17 +29,21 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
   private static final String INVALID_REQUEST_INFORMATION_MESSAGE =
       "Request information is not valid";
+  private final Environment environment;
 
   @ExceptionHandler(value = Exception.class)
   ResponseEntity<ApiResponse<Void>> handlingRuntimeException(Exception exception) {
     log.error("Exception: ", exception);
     ApiResponse<Void> apiResponse = new ApiResponse<Void>();
-
+    var isProduction = Arrays.asList(environment.getActiveProfiles()).contains("production");
+    var message =
+        isProduction ? HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase() : exception.getMessage();
     apiResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-    apiResponse.setMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+    apiResponse.setMessage(message);
 
     return ResponseEntity.internalServerError().body(apiResponse);
   }
@@ -117,12 +126,31 @@ public class GlobalExceptionHandler {
   protected ResponseEntity<ApiResponse<?>> handleHandlerMethodValidationException(
       HandlerMethodValidationException ex) {
     Map<String, Object> errors = new HashMap<>();
+    ex.getAllErrors()
+        .forEach(
+            e -> {
+              if (e instanceof FieldError fieldError) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+              } else {
+                errors.put(Objects.requireNonNull(e.getCodes())[0], e.getDefaultMessage());
+              }
+            });
     ex.getAllValidationResults()
         .forEach(
             result -> {
-              errors.put(
-                  result.getMethodParameter().getParameterName(),
-                  result.getResolvableErrors().getFirst().getDefaultMessage());
+              result
+                  .getResolvableErrors()
+                  .forEach(
+                      ms -> {
+                        if (ms instanceof FieldError fieldError) {
+                          errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+                        } else {
+                          errors.put(
+                              result.getMethodParameter().getParameterName()
+                                  + Arrays.toString(ms.getCodes()),
+                              ms.getDefaultMessage());
+                        }
+                      });
             });
     return ResponseEntity.badRequest()
         .body(

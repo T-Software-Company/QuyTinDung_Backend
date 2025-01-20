@@ -23,8 +23,8 @@ public class EmployeeUpdateRequest {
 
   @NotBlank @Email String email;
 
-  @Valid AddressDTO address;
-  @Valid IdentityInfoDTO identityInfo;
+  @Valid @NotNull AddressDTO address;
+  @Valid @NotNull IdentityInfoDTO identityInfo;
 
   @NotBlank String firstName;
 

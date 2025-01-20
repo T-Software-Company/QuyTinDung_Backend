@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.configuration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.JsonPath;
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
@@ -22,34 +23,26 @@ public class SpeLConfig {
     var histories = JsonParser.convert(metadata.get("histories"), List.class);
     for (Object history : histories) {
       var h = JsonParser.convert(history, Map.class);
-      try {
-        var response = JsonParser.convert(h.get("response"), Map.class);
-        if (response == null) return WorkflowStatus.INPROGRESS;
-        var transaction =
-            JsonParser.convert(
-                response.get("workflowTransactionResponse"), WorkflowTransactionResponse.class);
-        if (transaction.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
-        if (transaction.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
-      } catch (Exception e) {
-        log.error("Error extracting status : {}", e.getMessage());
-      }
+      var response = JsonParser.convert(h.get("response"), Map.class);
+      if (response == null) return WorkflowStatus.INPROGRESS;
+      var transaction =
+          JsonParser.convert(
+              response.get("workflowTransactionResponse"), WorkflowTransactionResponse.class);
+      if (transaction.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
+      if (transaction.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
     }
     return WorkflowStatus.INPROGRESS;
   }
 
-  public boolean resolveAddAssetCollateralStep(StepHistoryDTO stepHistory) {
+  public boolean resolveAddAssetCollateralStep(StepHistoryDTO stepHistory)
+      throws JsonProcessingException {
     int validationPrice = 500000;
-    try {
-      var responses = JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]");
-      var metadataList =
-          JsonPath.parse(responses)
-              .read("[-1:].response.workflowTransactionResponse.metadata", List.class);
-      var loanRequestResponse =
-          JsonParser.convert(metadataList.getFirst(), LoanRequestResponse.class);
-      return loanRequestResponse.getAmount().compareTo(BigDecimal.valueOf(validationPrice)) >= 0;
-    } catch (Exception e) {
-      log.error("Error resolving step: {}", e.getMessage());
-      return false;
-    }
+    var histories =
+        JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]", List.class);
+    var last = histories.getLast();
+    var loanRequestResponse =
+        JsonParser.getValueByPath(
+            last, "response.workflowTransactionResponse.metadata", LoanRequestResponse.class);
+    return loanRequestResponse.getAmount().compareTo(BigDecimal.valueOf(validationPrice)) >= 0;
   }
 }

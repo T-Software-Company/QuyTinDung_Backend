@@ -43,8 +43,8 @@ public class EmployeeRequest {
 
   @NotBlank String firstName;
   @NotBlank String lastName;
-  @Valid AddressDTO address;
-  @Valid IdentityInfoDTO identityInfo;
+  @Valid @NotNull AddressDTO address;
+  @Valid @NotNull IdentityInfoDTO identityInfo;
 
   @IsEnum(enumClass = Role.class)
   List<String> roles;
