@@ -19,6 +19,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class OnboardingWorkflowResponse extends AbstractResponse {
   private UUID targetId;
+  private List<String> prevSteps;
+  private List<String> currentSteps;
   private List<String> nextSteps;
   private WorkflowStatus workflowStatus;
   private ZonedDateTime startTime;

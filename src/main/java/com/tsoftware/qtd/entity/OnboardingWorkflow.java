@@ -22,8 +22,8 @@ public class OnboardingWorkflow extends AbstractAuditEntity {
   private UUID targetId;
 
   private List<String> prevSteps;
-  private List<String> nextSteps;
   private List<String> currentSteps;
+  private List<String> nextSteps;
 
   @Enumerated(EnumType.ORDINAL)
   private WorkflowStatus status;
