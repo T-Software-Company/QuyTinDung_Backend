@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.constants.EnumType;
 
-public enum LegalDocType {
+public enum IdentityType {
   CMND,
   CCCD,
   PASSPORT,

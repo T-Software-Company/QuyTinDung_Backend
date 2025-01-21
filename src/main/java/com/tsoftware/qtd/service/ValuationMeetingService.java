@@ -26,11 +26,11 @@ public class ValuationMeetingService {
   private final ValuationMeetingMapper valuationMeetingMapper;
 
   public ValuationMeetingResponse create(
-      ValuationMeetingRequest valuationMeetingRequest, UUID creditId) {
+      ValuationMeetingRequest valuationMeetingRequest, UUID applicationId) {
     ValuationMeeting valuationMeeting = valuationMeetingMapper.toEntity(valuationMeetingRequest);
     Application application =
         applicationRepository
-            .findById(creditId)
+            .findById(applicationId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     valuationMeeting.setApplication(application);
     return valuationMeetingMapper.toResponse(valuationMeetingRepository.save(valuationMeeting));

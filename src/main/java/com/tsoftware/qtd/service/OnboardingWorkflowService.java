@@ -49,6 +49,15 @@ public class OnboardingWorkflowService implements WorkflowService {
     return pageResponseMapper.toPageResponse(onboardingWorkflowPage);
   }
 
+  public OnboardingWorkflowResponse getByTargetId(String targetId) {
+    var onboardingWorkflow =
+        onboardingWorkflowRepository
+            .findByTargetId(UUID.fromString(targetId))
+            .orElseThrow(
+                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, "targetId: " + targetId));
+    return onboardingWorkflowMapper.toResponse(onboardingWorkflow);
+  }
+
   @Override
   public Workflow<?> getByTargetId(UUID targetId) {
     var onboardingWorkflow =

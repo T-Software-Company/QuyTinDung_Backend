@@ -2,7 +2,7 @@ package com.tsoftware.qtd.initdb;
 
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.constants.EnumType.LegalDocType;
+import com.tsoftware.qtd.constants.EnumType.IdentityType;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.address.AddressDTO;
@@ -131,7 +131,7 @@ public class initDbService {
                       .gender(Gender.MALE.name())
                       .dateOfBirth(ZonedDateTime.now().minusYears(30))
                       .identifyId("123456789")
-                      .legalDocType(LegalDocType.CCCD.name())
+                      .legalDocType(IdentityType.CCCD.name())
                       .expirationDate(ZonedDateTime.now().minusYears(10))
                       .issuingAuthority("Công an TP.HCM")
                       .expirationDate(ZonedDateTime.now().plusYears(10))
@@ -247,7 +247,7 @@ public class initDbService {
                       .gender(random.nextBoolean() ? Gender.MALE.name() : Gender.FEMALE.name())
                       .dateOfBirth(ZonedDateTime.now().minusYears(random.nextInt(30) + 20))
                       .identifyId(identifyId)
-                      .legalDocType(LegalDocType.CCCD.name())
+                      .legalDocType(IdentityType.CCCD.name())
                       .issuingAuthority(issuingAuthority)
                       .issueDate(issuingDate)
                       .expirationDate(issuingDate.plusYears(15)) // CCCD có giá trị 15 năm
@@ -381,7 +381,7 @@ public class initDbService {
                     .gender(random.nextBoolean() ? Gender.MALE.name() : Gender.FEMALE.name())
                     .dateOfBirth(ZonedDateTime.now().minusYears(random.nextInt(30) + 20))
                     .identifyId(identifyId)
-                    .legalDocType(LegalDocType.CCCD.name())
+                    .legalDocType(IdentityType.CCCD.name())
                     .issuingAuthority(issuingAuthority)
                     .issueDate(issuingDate)
                     .expirationDate(issuingDate.plusYears(15))

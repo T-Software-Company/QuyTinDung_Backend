@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.constants.EnumType.LegalDocType;
+import com.tsoftware.qtd.constants.EnumType.IdentityType;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
@@ -41,7 +41,7 @@ public class IdentityInfo extends AbstractAuditEntity {
   String issuingAuthority;
 
   @Enumerated(EnumType.ORDINAL)
-  LegalDocType legalDocType;
+  IdentityType legalDocType;
 
   String frontPhotoUrl;
   String backPhotoUrl;

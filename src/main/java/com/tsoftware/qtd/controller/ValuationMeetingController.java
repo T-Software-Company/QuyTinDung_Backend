@@ -1,22 +1,18 @@
 package com.tsoftware.qtd.controller;
 
+import com.tsoftware.qtd.commonlib.annotation.TargetId;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.service.ValuationMeetingService;
+import com.tsoftware.qtd.validation.IsUUID;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/valuation-meetings")
@@ -24,6 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ValuationMeetingController {
 
   private final ValuationMeetingService valuationMeetingService;
+
+  @PostMapping
+  public ResponseEntity<ApiResponse<ValuationMeetingResponse>> create(
+      @RequestBody @Valid ValuationMeetingRequest valuationMeetingRequest,
+      @Valid @TargetId @IsUUID @RequestParam String applicationId) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(
+            1000,
+            "Created",
+            valuationMeetingService.create(
+                valuationMeetingRequest, UUID.fromString(applicationId))));
+  }
 
   @PostMapping("/{id}/add-participants")
   public ResponseEntity<ApiResponse<Void>> addParticipants(
@@ -38,13 +46,6 @@ public class ValuationMeetingController {
     valuationMeetingService.removeParticipants(id, participantIds);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added", null));
   }
-
-  //    @PostMapping
-  //    public ResponseEntity<ApiResponse<ValuationMeetingResponse>> create(@RequestBody
-  // ValuationMeetingRequest valuationmeetingDTO) {
-  //        return ResponseEntity.ok(new ApiResponse<>(1000, "Created",
-  // valuationMeetingService.create(valuationmeetingDTO)));
-  //    }
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> update(

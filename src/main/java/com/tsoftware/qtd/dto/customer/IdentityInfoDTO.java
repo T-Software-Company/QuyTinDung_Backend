@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.customer;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.constants.EnumType.LegalDocType;
+import com.tsoftware.qtd.constants.EnumType.IdentityType;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
 import com.tsoftware.qtd.validation.IsEnum;
 import jakarta.validation.constraints.NotBlank;
@@ -51,7 +51,7 @@ public class IdentityInfoDTO {
   @NotNull String backPhotoUrl;
 
   @NotNull
-  @IsEnum(enumClass = LegalDocType.class)
+  @IsEnum(enumClass = IdentityType.class)
   String legalDocType;
 
   // Passport
