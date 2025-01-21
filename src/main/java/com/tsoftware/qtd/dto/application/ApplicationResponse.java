@@ -1,16 +1,34 @@
 package com.tsoftware.qtd.dto.application;
 
-import com.tsoftware.qtd.commonlib.model.AbstractWorkflowResponse;
+import com.tsoftware.qtd.dto.AbstractResponse;
+import com.tsoftware.qtd.dto.employee.EmployeeSimpleResponse;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-public class ApplicationResponse extends AbstractWorkflowResponse<Object> {
-  private UUID applicationId;
-  private List<UUID> transactionIds;
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ApplicationResponse extends AbstractResponse {
+  private BigDecimal amount;
+  private List<EmployeeSimpleResponse> loanProcessors;
+  private ZonedDateTime startDate;
+  private ZonedDateTime dueDate;
+  private BigDecimal interestRate;
+  private BigDecimal amountPaid;
+  private BigDecimal currentOutstandingDebt;
+  private Customer customer;
+
+  @Getter
+  @Setter
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class Customer {
+    private String id;
+  }
 }

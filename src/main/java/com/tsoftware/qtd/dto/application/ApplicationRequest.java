@@ -1,11 +1,13 @@
 package com.tsoftware.qtd.dto.application;
 
-import com.tsoftware.qtd.commonlib.model.AbstractWorkflowRequest;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.tsoftware.qtd.validation.IsUUID;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class ApplicationRequest extends AbstractWorkflowRequest<ApplicationDTO> {}
+@SuperBuilder
+@RequiredArgsConstructor
+public class ApplicationRequest {
+  @IsUUID private String id;
+}

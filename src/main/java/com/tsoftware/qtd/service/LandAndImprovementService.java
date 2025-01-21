@@ -1,17 +1,57 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.asset.LandAndImprovementDto;
+import com.tsoftware.qtd.dto.asset.LandAndImprovementRequest;
+import com.tsoftware.qtd.entity.LandAndImprovement;
+import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.mapper.LandAndImprovementMapper;
+import com.tsoftware.qtd.repository.LandAndImprovementRepository;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface LandAndImprovementService {
-  LandAndImprovementDto create(LandAndImprovementDto landandimprovementDto);
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class LandAndImprovementService {
 
-  LandAndImprovementDto update(UUID id, LandAndImprovementDto landandimprovementDto);
+  private final LandAndImprovementRepository landandimprovementRepository;
 
-  void delete(UUID id);
+  private final LandAndImprovementMapper landandimprovementMapper;
 
-  LandAndImprovementDto getById(UUID id);
+  public LandAndImprovementRequest create(LandAndImprovementRequest landandimprovementRequest) {
+    LandAndImprovement landandimprovement =
+        landandimprovementMapper.toEntity(landandimprovementRequest);
+    return landandimprovementMapper.toDTO(landandimprovementRepository.save(landandimprovement));
+  }
 
-  List<LandAndImprovementDto> getAll();
+  public LandAndImprovementRequest update(
+      UUID id, LandAndImprovementRequest landandimprovementRequest) {
+    LandAndImprovement landandimprovement =
+        landandimprovementRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("LandAndImprovement not found"));
+    landandimprovementMapper.updateEntity(landandimprovementRequest, landandimprovement);
+    return landandimprovementMapper.toDTO(landandimprovementRepository.save(landandimprovement));
+  }
+
+  public void delete(UUID id) {
+    landandimprovementRepository.deleteById(id);
+  }
+
+  public LandAndImprovementRequest getById(UUID id) {
+    LandAndImprovement landandimprovement =
+        landandimprovementRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("LandAndImprovement not found"));
+    return landandimprovementMapper.toDTO(landandimprovement);
+  }
+
+  public List<LandAndImprovementRequest> getAll() {
+    return landandimprovementRepository.findAll().stream()
+        .map(landandimprovementMapper::toDTO)
+        .collect(Collectors.toList());
+  }
 }

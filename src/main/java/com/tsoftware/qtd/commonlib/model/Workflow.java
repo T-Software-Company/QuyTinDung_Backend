@@ -6,32 +6,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface Workflow {
+public interface Workflow<T extends Step> {
+  UUID getId();
+
+  void setId(UUID value);
+
   UUID getTargetId();
 
   void setTargetId(UUID value);
 
-  String getCurrentStep();
+  List<String> getPrevSteps();
 
-  void setCurrentStep(String value);
+  void setPrevSteps(List<String> value);
 
-  String getNextStep();
+  List<String> getCurrentSteps();
 
-  void setNextStep(String value);
+  void setCurrentSteps(List<String> value);
 
-  WorkflowStatus getWorkflowStatus();
+  List<String> getNextSteps();
 
-  void setWorkflowStatus(WorkflowStatus value);
+  void setNextSteps(List<String> value);
 
-  ZonedDateTime getStatusUpdatedTime();
+  WorkflowStatus getStatus();
 
-  void setStatusUpdatedTime(ZonedDateTime value);
+  void setStatus(WorkflowStatus value);
+
+  ZonedDateTime getStartTime();
+
+  void setStartTime(ZonedDateTime value);
+
+  ZonedDateTime getEndTime();
+
+  void setEndTime(ZonedDateTime value);
+
+  String getCreatedBy();
+
+  void setCreatedBy(String value);
 
   Map<String, Object> getMetadata();
 
   void setMetadata(Map<String, Object> value);
 
-  List<StepHistory> getStepHistories();
+  List<T> getSteps();
 
-  void setStepHistories(List<StepHistory> value);
+  void setSteps(List<T> value);
 }

@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.customer;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import jakarta.validation.constraints.*;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerDTO {
   UUID id;
   String username;
@@ -26,7 +24,7 @@ public class CustomerDTO {
   Boolean enabled;
   String firstName;
   String lastName;
-  AddressDto address;
+  AddressDTO address;
   IdentityInfoDTO identityInfo;
   String signaturePhoto;
 }

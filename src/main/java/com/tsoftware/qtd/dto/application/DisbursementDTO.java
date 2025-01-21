@@ -4,13 +4,14 @@ import com.tsoftware.qtd.constants.EnumType.DisbursementStatus;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class DisbursementDTO {
   private UUID id;
   private BigDecimal amount;

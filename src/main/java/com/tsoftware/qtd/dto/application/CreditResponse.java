@@ -2,22 +2,18 @@ package com.tsoftware.qtd.dto.application;
 
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
+import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.UUID;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-public class CreditResponse {
-  private UUID id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class CreditResponse extends AbstractResponse {
 
   private BigDecimal amount;
   private ZonedDateTime startDate;

@@ -101,7 +101,63 @@
       "attributes" : { }
     } ],
     "client" : {
-      "server" : [ ],
+      "server" : [ {
+        "id" : "45db6651-b1ba-44af-afc1-93250f84fe46",
+        "name" : "CUSTOMER",
+        "description" : "Khách hàng",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      }, {
+        "id" : "6cedfd47-e35c-43b3-9104-de67e40fd6f8",
+        "name" : "ASSET_VALUATION_ACCESS",
+        "description" : "Định giá",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      }, {
+        "id" : "9afb816e-cbd5-4b3e-b598-3d35809e7049",
+        "name" : "ADMIN",
+        "description" : "Admin",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      }, {
+        "id" : "033b4cc0-095d-4897-a81e-f9e711a6658b",
+        "name" : "REPORT_ACCESS",
+        "description" : "Báo cáo",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      }, {
+        "id" : "4157a741-95f3-4273-b512-2ad3e789ce05",
+        "name" : "CREDIT_ACCESS",
+        "description" : "Tín dụng",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      }, {
+        "id" : "c8a3d695-7847-40ab-acb7-9495f23f04cb",
+        "name" : "APPRAISAL",
+        "description" : "Thẩm định",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      }, {
+        "id" : "e669ecdc-c5bf-4c2b-86a4-d5b8cdb03a6a",
+        "name" : "EMPLOYEE",
+        "description" : "Nhân viên",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "fd8762fd-27dc-4bcc-a641-e7f45cf94f82",
+        "attributes" : { }
+      } ],
       "realm-management" : [ {
         "id" : "b23f89fd-52a3-4089-aa72-f161376d1174",
         "name" : "query-realms",
@@ -280,6 +336,7 @@
       } ],
       "web" : [ ],
       "security-admin-console" : [ ],
+      "mobile" : [ ],
       "admin-cli" : [ ],
       "account-console" : [ ],
       "broker" : [ {
@@ -368,7 +425,27 @@
       } ]
     }
   },
-  "groups" : [ ],
+  "groups" : [ {
+    "id" : "c5fe595c-cc90-4a47-aa46-e7ecd5b9ab04",
+    "name" : "Hội đồng tín dụng",
+    "path" : "/Hội đồng tín dụng",
+    "subGroups" : [ ],
+    "attributes" : { },
+    "realmRoles" : [ ],
+    "clientRoles" : {
+      "server" : [ "REPORT_ACCESS", "CREDIT_ACCESS" ]
+    }
+  }, {
+    "id" : "d97a380a-88bd-4e5c-8275-9e13814acb44",
+    "name" : "Hội đồng định giá",
+    "path" : "/Hội đồng định giá",
+    "subGroups" : [ ],
+    "attributes" : { },
+    "realmRoles" : [ ],
+    "clientRoles" : {
+      "server" : [ "ASSET_VALUATION_ACCESS", "REPORT_ACCESS" ]
+    }
+  } ],
   "defaultRole" : {
     "id" : "bd312951-3785-4eb8-918b-95dec0229907",
     "name" : "default-roles-tsoftware",
@@ -410,28 +487,6 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
-    "id" : "99b96288-3bee-45ff-9679-61270e73f3fe",
-    "username" : "duncan",
-    "firstName" : "Nguyen",
-    "lastName" : "Van Tuan",
-    "email" : "duncan.nguyen.18@gmail.com",
-    "emailVerified" : true,
-    "createdTimestamp" : 1731379281583,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ {
-      "id" : "4b78a5f5-c8d4-4598-bb55-df235eff0d0d",
-      "type" : "password",
-      "createdDate" : 1732357586904,
-      "secretData" : "{\"value\":\"SovAUd7HeodwX00b7uGzskZhzikP6MeVaRiK77iwLB8=\",\"salt\":\"ixdikHWkHYC7Vp5Fr/chcA==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
-    } ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-tsoftware" ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
     "id" : "2aa99568-d081-4798-9365-ea1e81fa51f8",
     "username" : "service-account-dev",
     "emailVerified" : false,
@@ -687,6 +742,44 @@
         "jsonType.label" : "String"
       }
     } ],
+    "defaultClientScopes" : [ "web-origins", "acr", "profile", "roles", "basic", "email" ],
+    "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
+  }, {
+    "id" : "3006d0b2-f100-4c82-8972-3912ac1793fc",
+    "clientId" : "mobile",
+    "name" : "",
+    "description" : "",
+    "rootUrl" : "",
+    "adminUrl" : "",
+    "baseUrl" : "",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "alwaysDisplayInConsole" : false,
+    "clientAuthenticatorType" : "client-secret",
+    "secret" : "yWXagG5sNXUuZ1I40HAzyYBaHoLT1YJb",
+    "redirectUris" : [ "" ],
+    "webOrigins" : [ "/*" ],
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "consentRequired" : false,
+    "standardFlowEnabled" : true,
+    "implicitFlowEnabled" : false,
+    "directAccessGrantsEnabled" : true,
+    "serviceAccountsEnabled" : false,
+    "publicClient" : false,
+    "frontchannelLogout" : true,
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "oidc.ciba.grant.enabled" : "false",
+      "client.secret.creation.time" : "1736866561",
+      "backchannel.logout.session.required" : "true",
+      "display.on.consent.screen" : "false",
+      "oauth2.device.authorization.grant.enabled" : "false",
+      "backchannel.logout.revoke.offline.tokens" : "false"
+    },
+    "authenticationFlowBindingOverrides" : { },
+    "fullScopeAllowed" : true,
+    "nodeReRegistrationTimeout" : -1,
     "defaultClientScopes" : [ "web-origins", "acr", "profile", "roles", "basic", "email" ],
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
@@ -1472,7 +1565,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper", "oidc-full-name-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "oidc-usermodel-property-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper" ]
       }
     }, {
       "id" : "2a48a511-f7a7-4eba-81ff-da5e0a34118f",
@@ -1488,7 +1581,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper" ]
       }
     }, {
       "id" : "6faa7fb7-0735-472b-9f1c-9b8c3cae529c",

@@ -4,7 +4,7 @@ KEYSTOREFILE=$JAVA_HOME/lib/security/cacerts
 KEYSTOREPASS=changeit
 
 #keytool -delete -alias 14.225.215.106 -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit
-# get the SSL certificate
+# getWorkflow the SSL certificate
 openssl s_client -connect ${HOST}:${PORT} </dev/null \
     | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
 

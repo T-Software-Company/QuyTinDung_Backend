@@ -3,7 +3,6 @@ package com.tsoftware.qtd.service;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tsoftware.qtd.service.impl.GoogleCloudStorageService;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;

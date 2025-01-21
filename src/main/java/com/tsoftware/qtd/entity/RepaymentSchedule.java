@@ -22,7 +22,7 @@ public class RepaymentSchedule extends AbstractAuditEntity {
 
   private Integer installmentNumber;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime dueDate;
 
   private BigDecimal principalAmount;

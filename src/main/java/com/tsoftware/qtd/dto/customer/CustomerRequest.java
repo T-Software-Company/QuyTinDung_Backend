@@ -1,11 +1,11 @@
 package com.tsoftware.qtd.dto.customer;
 
-import com.tsoftware.qtd.dto.address.AddressDto;
+import com.tsoftware.qtd.dto.address.AddressDTO;
 import com.tsoftware.qtd.repository.CustomerRepository;
+import com.tsoftware.qtd.validation.IsUUID;
 import com.tsoftware.qtd.validation.Unique;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,13 +13,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@Unique(
+    repositoryClass = CustomerRepository.class,
+    fields = {"username"})
 public class CustomerRequest {
-  UUID id;
+  @IsUUID String id;
 
   @NotNull
   @NotBlank
   @Size(min = 4)
-  @Unique(repositoryClass = CustomerRepository.class, checkMethod = "existsByUsername")
   String username;
 
   @NotNull
@@ -39,7 +41,7 @@ public class CustomerRequest {
   Boolean enabled;
   @NotNull @NotBlank String firstName;
   @NotNull @NotBlank String lastName;
-  @Valid AddressDto address;
-  @Valid IdentityInfoDTO identityInfo;
+  @Valid @NotNull AddressDTO address;
+  @Valid @NotNull IdentityInfoDTO identityInfo;
   @NotNull @NotBlank String signaturePhoto;
 }

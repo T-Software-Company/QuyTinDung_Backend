@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE_USE})
+@Target({ElementType.TYPE})
 @Constraint(validatedBy = UniqueValidator.class)
 public @interface Unique {
   String message() default "Value is already unique";
@@ -18,5 +18,7 @@ public @interface Unique {
 
   Class<? extends JpaRepository<?, ?>> repositoryClass();
 
-  String checkMethod();
+  String[] fields();
+
+  String idFieldName() default "id";
 }

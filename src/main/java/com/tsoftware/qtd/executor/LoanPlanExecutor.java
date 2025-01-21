@@ -1,18 +1,13 @@
 package com.tsoftware.qtd.executor;
 
-import com.tsoftware.qtd.commonlib.context.WorkflowContext;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
-import com.tsoftware.qtd.dto.transaction.ApproveDTO;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
-import com.tsoftware.qtd.dto.transaction.Transaction;
-import com.tsoftware.qtd.mapper.LoanPlanMapper;
-import com.tsoftware.qtd.repository.ApplicationRepository;
-import com.tsoftware.qtd.repository.LoanPlanRepository;
-import com.tsoftware.qtd.service.ApplicationService;
-import com.tsoftware.qtd.service.TransactionService;
+import com.tsoftware.qtd.dto.application.LoanPlanRequest;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
+import com.tsoftware.qtd.service.LoanPlanService;
+import com.tsoftware.qtd.service.WorkflowTransactionService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,40 +15,32 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("loanPlanExecutor")
 @RequiredArgsConstructor
-public class LoanPlanExecutor extends BaseTransactionExecutor<Transaction> {
-  final LoanPlanMapper loanPlanMapper;
-  final ApplicationRepository applicationRepository;
-  final LoanPlanRepository loanPlanRepository;
-  final ApplicationService applicationService;
-  private final TransactionService transactionService;
+public class LoanPlanExecutor extends BaseTransactionExecutor<WorkflowTransactionDTO> {
+  private final LoanPlanService loanPlanService;
+  private final WorkflowTransactionService workflowTransactionService;
 
   @Override
-  protected void preValidate(Transaction transaction) {
-    transactionService.validateTransaction(transaction);
+  protected void preValidate(WorkflowTransactionDTO workflowTransactionDTO) {
+    workflowTransactionService.validateTransaction(workflowTransactionDTO);
   }
 
   @Override
-  protected Transaction processApproval(Transaction transaction) {
-    return transactionService.processApproval(transaction);
+  protected WorkflowTransactionDTO processApproval(
+      WorkflowTransactionDTO workflowTransactionDTO, ActionStatus status) {
+    return workflowTransactionService.processApproval(workflowTransactionDTO, status);
   }
 
   @Override
-  protected Object doExecute(Transaction transaction) {
-    log.info("All approvals received for transaction: {}", transaction.getId());
-    var request = JsonParser.convert(transaction.getMetadata(), LoanPlanDTO.class);
-    applicationService.createOrUpdateLoanPlan(transaction.getApplication().getId(), request);
-    ApproveResponse response = new ApproveResponse();
-    response.setData(
-        ApproveDTO.builder()
-            .transactionId(transaction.getId())
-            .status(ApproveStatus.APPROVED)
-            .build());
-    return response;
+  protected void doExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+    log.info(
+        "All approvals received for workflowTransactionDTO: {}", workflowTransactionDTO.getId());
+    var request = JsonParser.convert(workflowTransactionDTO.getMetadata(), LoanPlanRequest.class);
+    var result = loanPlanService.create(request, UUID.fromString(request.getApplication().getId()));
+    workflowTransactionDTO.setReferenceId(result.getId());
   }
 
   @Override
-  protected void postExecute(Transaction transaction) {
-    transactionService.updateTransaction(transaction);
-    WorkflowContext.putMetadata(transaction.getId().toString(), transaction.getStatus());
+  protected WorkflowTransactionDTO postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
+    return workflowTransactionService.updateTransaction(workflowTransactionDTO);
   }
 }

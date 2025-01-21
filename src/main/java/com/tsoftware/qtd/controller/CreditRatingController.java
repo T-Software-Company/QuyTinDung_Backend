@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.application.CreditRatingDto;
+import com.tsoftware.qtd.dto.application.CreditRatingDTO;
 import com.tsoftware.qtd.service.CreditRatingService;
 import java.util.List;
 import java.util.UUID;
@@ -24,17 +24,17 @@ public class CreditRatingController {
   private final CreditRatingService creditratingService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<CreditRatingDto>> create(
-      @RequestBody CreditRatingDto creditratingDto) {
+  public ResponseEntity<ApiResponse<CreditRatingDTO>> create(
+      @RequestBody CreditRatingDTO creditratingDTO) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", creditratingService.create(creditratingDto)));
+        new ApiResponse<>(1000, "Created", creditratingService.create(creditratingDTO)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<CreditRatingDto>> update(
-      @PathVariable UUID id, @RequestBody CreditRatingDto creditratingDto) {
+  public ResponseEntity<ApiResponse<CreditRatingDTO>> update(
+      @PathVariable UUID id, @RequestBody CreditRatingDTO creditratingDTO) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", creditratingService.update(id, creditratingDto)));
+        new ApiResponse<>(1000, "Updated", creditratingService.update(id, creditratingDTO)));
   }
 
   @DeleteMapping("/{id}")
@@ -44,12 +44,12 @@ public class CreditRatingController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CreditRatingDto>> getById(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<CreditRatingDTO>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched", creditratingService.getById(id)));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<CreditRatingDto>>> getAll() {
+  public ResponseEntity<ApiResponse<List<CreditRatingDTO>>> getAll() {
     return ResponseEntity.ok(new ApiResponse<>(1000, "Fetched All", creditratingService.getAll()));
   }
 }

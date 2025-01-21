@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.repository;
 
+import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import com.tsoftware.qtd.entity.Application;
 import java.util.List;
 import java.util.UUID;
@@ -11,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface ApplicationRepository
     extends JpaRepository<Application, UUID>, JpaSpecificationExecutor<Application> {
   List<Application> findByCustomerId(UUID customerId);
+
+  List<Application> findByCustomerIdAndStatusIn(UUID customerId, List<LoanStatus> status);
 }

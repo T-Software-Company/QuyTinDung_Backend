@@ -1,44 +1,43 @@
 package com.tsoftware.qtd.commonlib.executor;
 
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class BaseTransactionExecutor<T extends AbstractTransaction>
+public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
     implements TransactionExecutor<T> {
 
   @Override
-  public Object execute(T transaction) {
+  public T execute(T transaction, ActionStatus status) {
     log.info("Starting execution for transaction: {}", transaction.getId());
     try {
       preValidate(transaction);
-      var resolvedTransaction = processApproval(transaction);
-      Object result = "Approved";
+      var resolvedTransaction = processApproval(transaction, status);
       if (resolvedTransaction.isApproved()) {
-        log.info("Transaction already approved: {}", transaction.getId());
-        result = doExecute(transaction);
+        doExecute(transaction);
+        log.info("WorkflowTransactionDTO already approved: {}", transaction.getId());
       }
-      postExecute(transaction);
       log.info("Completed execution for transaction: {}", transaction.getId());
-      return result;
+      return postExecute(transaction);
     } catch (Exception e) {
       log.error("Error executing transaction: {}", transaction.getId(), e);
-      callBackWhenFall(transaction);
+      callBackWhenFall(transaction, e);
       throw e;
     }
   }
 
-  protected abstract T processApproval(T transaction);
+  protected abstract T processApproval(T transaction, ActionStatus status);
 
-  protected abstract Object doExecute(T transaction);
+  protected abstract void doExecute(T transaction);
 
   protected void preValidate(T transaction) {
     // Default validation logic
   }
 
-  protected abstract void postExecute(T transaction);
+  protected abstract T postExecute(T transaction);
 
-  protected void callBackWhenFall(T transaction) {
+  protected void callBackWhenFall(T transaction, Exception e) {
     // Default pre-execution logic
   }
 }

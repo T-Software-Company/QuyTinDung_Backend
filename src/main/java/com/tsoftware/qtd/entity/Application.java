@@ -1,10 +1,8 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.ApplicationStep;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -26,35 +24,28 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@SuperBuilder
 @Entity
 @Table
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Application extends AbstractAuditEntity {
 
   private BigDecimal amount;
-
-  @Enumerated(EnumType.ORDINAL)
-  private ApplicationStep step; // ?
-
-  @ManyToMany(mappedBy = "applicationsAssigned", fetch = FetchType.LAZY)
-  private List<Employee> LoanProcessor;
-
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  List<TransactionEntity> transactions;
-
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
-  private ZonedDateTime startDate;
-
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
-  private ZonedDateTime dueDate;
-
   private BigDecimal interestRate;
   private BigDecimal amountPaid;
   private BigDecimal currentOutstandingDebt;
+
+  //  @Enumerated(EnumType.ORDINAL)
+  //  private ApplicationStep step; // ?
+
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+  private ZonedDateTime startDate;
+
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+  private ZonedDateTime dueDate;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
@@ -66,44 +57,35 @@ public class Application extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private LoanSecurityType loanSecurityType;
 
+  @ManyToMany(mappedBy = "applicationsAssigned", fetch = FetchType.LAZY)
+  private List<Employee> loanProcessors;
+
+  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
+  private List<WorkflowTransaction> transactions;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Customer customer;
 
-  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "application")
+  private LoanRequest loanRequest;
+
+  @OneToOne(mappedBy = "application")
   private LoanPlan loanPlan;
 
-  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "application")
   private FinancialInfo financialInfo;
-
-  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
-  private LoanAccount loanAccount;
 
   @OneToOne(mappedBy = "application")
   private ValuationMeeting valuationMeeting;
 
-  @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
-  private LoanRequest loanRequest;
-
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "application")
   private List<Asset> assets;
 
   @OneToOne(mappedBy = "application")
   private AppraisalPlan appraisalPlan;
 
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
-  private List<IncomeProof> incomeProofs;
-
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
-  private List<DebtNotification> debtNotification;
-
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
-  private List<AssetRepossessionNotice> assetRepossessionNotices;
-
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
-  private List<LoanRecordRelate> loanRecordRelates;
-
-  @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
-  private List<LoanPurposeDocument> loanPurposeDocuments;
+  @OneToOne(mappedBy = "application")
+  private LoanAccount loanAccount;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
   private List<LoanCollection> loanCollections;

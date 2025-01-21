@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.Gender;
-import com.tsoftware.qtd.constants.EnumType.LegalDocType;
+import com.tsoftware.qtd.constants.EnumType.IdentityType;
 import com.tsoftware.qtd.constants.EnumType.PassPortType;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
@@ -25,23 +25,23 @@ public class IdentityInfo extends AbstractAuditEntity {
   String religion;
   Gender gender;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   ZonedDateTime dateOfBirth;
 
   String nationality;
   String placeOfBirth;
   String permanentAddress;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   ZonedDateTime issueDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   ZonedDateTime expirationDate;
 
   String issuingAuthority;
 
   @Enumerated(EnumType.ORDINAL)
-  LegalDocType legalDocType;
+  IdentityType legalDocType;
 
   String frontPhotoUrl;
   String backPhotoUrl;

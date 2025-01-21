@@ -1,17 +1,21 @@
 package com.tsoftware.qtd.commonlib.model;
 
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-public abstract class AbstractTransaction {
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public abstract class AbstractTransaction<T extends Enum<?>> {
   private UUID id;
-  private String PIC;
-  private String type;
-  private UUID customerId;
+  private String createdBy;
+  private T type;
   private Object metadata;
+  private ActionStatus status;
 
   public abstract boolean isApproved();
 }

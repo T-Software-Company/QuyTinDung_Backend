@@ -7,7 +7,6 @@ import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.employee.GroupResponse;
 import com.tsoftware.qtd.entity.Group;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
-import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.validation.IsEnum;
 import com.tsoftware.qtd.validation.IsUUID;
@@ -18,7 +17,6 @@ import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -41,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class GroupController {
 
   GroupService groupService;
-  private final PageResponseMapper pageResponseMapper;
 
   @PreAuthorize("hasAnyRole('ADMIN')")
   @PostMapping
@@ -85,11 +82,8 @@ public class GroupController {
   @PreAuthorize("hasAnyRole('ADMIN')")
   public ResponseEntity<ApiResponse<PageResponse<GroupResponse>>> getAll(
       @Filter Specification<Group> spec, Pageable page) {
-    Page<GroupResponse> groups = groupService.getAll(spec, page);
-
     return ResponseEntity.ok(
-        new ApiResponse<>(
-            HttpStatus.OK.value(), "Fetched All", pageResponseMapper.toPageResponse(groups)));
+        new ApiResponse<>(HttpStatus.OK.value(), "Fetched All", groupService.getAll(spec, page)));
   }
 
   @PreAuthorize("hasRole('ADMIN')")

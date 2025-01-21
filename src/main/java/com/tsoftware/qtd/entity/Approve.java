@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -13,12 +13,13 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table
 public class Approve extends AbstractAuditEntity {
-
+  private String comment;
   @ManyToOne private Employee approver;
 
   @Enumerated(EnumType.ORDINAL)
-  private ApproveStatus status;
+  private ActionStatus status;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private TransactionEntity transaction;
+  @ManyToOne private WorkflowTransaction transaction;
+  @ManyToOne private GroupApprove groupApprove;
+  @ManyToOne private RoleApprove roleApprove;
 }

@@ -1,8 +1,7 @@
 package com.tsoftware.qtd.commonlib.configuration;
 
-import com.tsoftware.qtd.commonlib.properties.WorkflowRuleProperties;
+import com.tsoftware.qtd.commonlib.constant.StepType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +20,6 @@ public class WorkflowAutoConfig {
   @Component
   @ConfigurationPropertiesBinding
   public static class ExpressionStringConverter implements Converter<String, Expression> {
-
     @Override
     public Expression convert(@NonNull String s) {
       ExpressionParser parser = new SpelExpressionParser();
@@ -32,7 +30,6 @@ public class WorkflowAutoConfig {
   @Component
   @ConfigurationPropertiesBinding
   public static class ExpressionBooleanConverter implements Converter<Boolean, Expression> {
-
     @Override
     public Expression convert(Boolean b) {
       ExpressionParser parser = new SpelExpressionParser();
@@ -40,11 +37,17 @@ public class WorkflowAutoConfig {
     }
   }
 
-  @Bean
-  @ConfigurationProperties("t-software.workflow")
-  @ConditionalOnMissingBean
-  public WorkflowRuleProperties workflowRuleProperties() {
-    return new WorkflowRuleProperties();
+  @Component
+  @ConfigurationPropertiesBinding
+  public static class StepTypeConverter implements Converter<String, StepType> {
+
+    @Override
+    public StepType convert(@NonNull String source) {
+      if (source.isBlank()) {
+        return StepType.DEFAULT;
+      }
+      return StepType.valueOf(source.toUpperCase());
+    }
   }
 
   @Bean

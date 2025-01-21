@@ -25,16 +25,16 @@ public class DisbursementController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<DisbursementDTO>> create(
-      @RequestBody DisbursementDTO disbursementDto) {
+      @RequestBody DisbursementDTO disbursementDTO) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", disbursementService.create(disbursementDto)));
+        new ApiResponse<>(1000, "Created", disbursementService.create(disbursementDTO)));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<DisbursementDTO>> update(
-      @PathVariable UUID id, @RequestBody DisbursementDTO disbursementDto) {
+      @PathVariable UUID id, @RequestBody DisbursementDTO disbursementDTO) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", disbursementService.update(id, disbursementDto)));
+        new ApiResponse<>(1000, "Updated", disbursementService.update(id, disbursementDTO)));
   }
 
   @DeleteMapping("/{id}")

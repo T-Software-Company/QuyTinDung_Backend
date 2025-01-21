@@ -8,7 +8,7 @@ import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional.KcTransactionType;
 import com.tsoftware.qtd.service.CustomerService;
-import com.tsoftware.qtd.service.impl.DocumentService;
+import com.tsoftware.qtd.service.DocumentService;
 import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
@@ -39,14 +39,14 @@ public class CustomerController {
   @PostMapping
   @KcTransactional(KcTransactionType.CREATE_USER)
   public ResponseEntity<CustomerResponse> create(
-      @Valid @RequestBody CustomerRequest customerRequest) throws Exception {
+      @Valid @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(customerService.create(customerRequest));
   }
 
   @PutMapping("/{id}")
   @KcTransactional(KcTransactionType.UPDATE_USER)
   public ResponseEntity<ApiResponse<CustomerResponse>> update(
-      @PathVariable @IsUUID String id, @Valid @RequestBody CustomerRequest customerRequest) {
+      @PathVariable @Valid @IsUUID String id, @Valid @RequestBody CustomerRequest customerRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
             200, "Updated", customerService.update(UUID.fromString(id), customerRequest)));
@@ -65,8 +65,10 @@ public class CustomerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable UUID id) {
-    return ResponseEntity.ok(new ApiResponse<>(200, "Fetched", customerService.getById(id)));
+  public ResponseEntity<ApiResponse<CustomerResponse>> getById(
+      @PathVariable @Valid @IsUUID String id) {
+    return ResponseEntity.ok(
+        new ApiResponse<>(200, "Fetched", customerService.getById(UUID.fromString(id))));
   }
 
   @GetMapping("/{id}/documents")

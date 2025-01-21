@@ -1,20 +1,19 @@
 package com.tsoftware.qtd.constants.EnumType;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
+import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
+import com.tsoftware.qtd.executor.FinancialInfoExecutor;
+import com.tsoftware.qtd.executor.LoanPlanExecutor;
+import com.tsoftware.qtd.executor.LoanRequestExecutor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public enum TransactionType {
-  CREATE_LOAN_REQUEST("loanRequestExecutor"),
-  CREATE_LOAN_PLAN("loanPlanExecutor"),
-  CREATE_FINANCIAL_INFO("financialInfoExecutor"),
+  CREATE_LOAN_REQUEST(LoanRequestExecutor.class),
+  CREATE_LOAN_PLAN(LoanPlanExecutor.class),
+  CREATE_FINANCIAL_INFO(FinancialInfoExecutor.class),
   ;
-  final String executor;
-  public static final Map<String, String> executorMap =
-      Arrays.stream(TransactionType.values())
-          .collect(Collectors.toMap(TransactionType::name, TransactionType::getExecutor));
+  final Class<? extends BaseTransactionExecutor<WorkflowTransactionDTO>> executor;
 }

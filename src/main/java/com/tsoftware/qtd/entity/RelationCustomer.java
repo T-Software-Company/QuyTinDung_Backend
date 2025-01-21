@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class RelationCustomer extends AbstractAuditEntity {
   private String fullName;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime dateOfBirth;
 
   private String identityId;

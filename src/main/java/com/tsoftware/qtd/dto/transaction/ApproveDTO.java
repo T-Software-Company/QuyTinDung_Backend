@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.transaction;
 
-import com.tsoftware.qtd.constants.EnumType.ApproveStatus;
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApproveDTO {
   private UUID id;
-  private UUID transactionId;
+  private String comment;
   private EmployeeResponse approver;
-  private ApproveStatus status;
+  private ActionStatus status;
+  private WorkflowTransactionRequest transaction;
+  private GroupApproveRequest groupApprove;
+  private RoleApproveRequest roleApprove;
 }

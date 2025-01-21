@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.application.CreditRatingDto;
+import com.tsoftware.qtd.dto.application.CreditRatingDTO;
 import com.tsoftware.qtd.entity.CreditRating;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -9,10 +9,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface CreditRatingMapper {
-  CreditRating toEntity(CreditRatingDto dto);
+  CreditRating toEntity(CreditRatingDTO dto);
 
-  CreditRatingDto toDto(CreditRating entity);
+  CreditRatingDTO toDTO(CreditRating entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(CreditRatingDto dto, @MappingTarget CreditRating entity);
+  void updateEntity(CreditRatingDTO dto, @MappingTarget CreditRating entity);
 }

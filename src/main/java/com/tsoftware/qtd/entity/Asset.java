@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.AssetType;
+import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -19,9 +20,7 @@ import org.hibernate.annotations.Type;
 @Table
 public class Asset extends AbstractAuditEntity {
 
-  private BigDecimal assessedValue;
-  private String liquidity;
-  private String risk;
+  private BigDecimal proposedValue;
   private Boolean valuationStatus;
 
   @Type(JsonType.class)
@@ -31,10 +30,15 @@ public class Asset extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private AssetType assetType;
 
-  @OneToMany(fetch = FetchType.EAGER)
-  private List<LegalDocument> legalDocuments;
+  @Enumerated(EnumType.ORDINAL)
+  private TypeOfUse typeOfUse;
+
+  private List<String> documents;
 
   @ManyToOne private Application application;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  private ValuationAsset valuationAsset;
 
   @OneToOne(cascade = CascadeType.ALL)
   private Apartment apartment;
@@ -56,9 +60,6 @@ public class Asset extends AbstractAuditEntity {
 
   @OneToOne(cascade = CascadeType.ALL)
   private LandAsset landAsset;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private AssetRepossessionNotice assetRepossessionNotice;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private ValuationMeeting valuationMeeting;

@@ -47,10 +47,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${OAUTH2_RESOURCESERVER_URI}
-#  data:
-#    web:
-#      pageable:
-#        one-indexed-parameters: true
+
   mail:
     host: ${HOST_MAIL}
     port: ${PORT_MAIL}
@@ -62,8 +59,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
-
 
 idp:
   server-url: ${IDP_URL}
@@ -84,30 +79,92 @@ logging:
   pattern:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} [%clr(%X{TraceId}){yellow}] %m%n%wex"
 
-
-
 google:
   cloud:
     storage:
       bucket-name: qtd_tsoftware
       service-account: service-account.json
 
-t-software:
-  account:
-    format:
-      loan: LN****###**
-  workflow:
-    rules:
-      create_customer:
-        create_application: true
-      create_application:
-        loan_submit_approve: true
-      loan_submit_approve:
-        asset_valuation: loan_submit_approve == true
-        loan_submit_approve: true
-      asset_valuation:
-        appraisal_plan: true
-      appraisal_plan:
-        appraisal_approval: true
-      appraisal_approval:
-        appraisal_report: true
+workflow:
+  rules:
+    onboarding:
+      - step: init
+        dependencies: []
+        nextStepRules:
+          - step: create-loan-request
+            condition: "true"
+          - step: create-loan-plan
+            condition: "true"
+          - step: create-financial-info
+            condition: "true"
+
+      - step: create-loan-request
+        extractStatus: "@speLConfig.extractStatus(#step)"
+        type: action
+        dependencies:
+          - init
+        nextStepRules:
+          - step: add-asset-collateral
+            condition: "@speLConfig.resolveAddAssetCollateralStep(#step)"
+          - step: create-credit-rating
+            condition: "true"
+
+      - step: create-loan-plan
+        type: action
+        extractStatus: "@speLConfig.extractStatus(#step)"
+        dependencies:
+          - init
+        nextStepRules:
+          - step: create-credit-rating
+            condition: "true"
+
+      - step: create-financial-info
+        type: action
+        extractStatus: "@speLConfig.extractStatus(#step)"
+        dependencies:
+          - init
+        nextStepRules:
+          - step: create-credit-rating
+            condition: "true"
+
+      - step: add-asset-collateral
+        dependencies:
+          - financial-info
+          - create-loan-plan
+          - create-loan-request
+        nextStepRules:
+          - step: create-valuation-meting
+            condition: "true"
+
+      - step: create-valuation-meting
+        dependencies:
+          -  add-asset-collateral
+        nextStepRules:
+          - step: create-valuation-report
+            condition: "true"
+
+      - step: create-valuation-report
+        type: action
+        extractStatus: "@speLConfig.extractStatus(#step)"
+        dependencies:
+          - create-valuation-meting
+        nextStepRules:
+          - step: create-appraisal-meting
+            condition: "true"
+
+      - step: create-credit-rating
+        dependencies:
+          - financial-info
+          - create-loan-plan
+          - create-loan-request
+        nextStepRules:
+          - step: create-appraisal-meting
+            condition: "true"
+
+      - step:  create-appraisal-meting
+        dependencies:
+          - create-credit-rating
+          - create-valuation-report
+        nextStepRules:
+          - step: create-appraisal-report
+            condition: "true"

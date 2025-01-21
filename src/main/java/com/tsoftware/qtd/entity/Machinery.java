@@ -23,10 +23,10 @@ public class Machinery extends AbstractAuditEntity {
   private String model;
   private String manufacturer;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime manufactureDate;
 
-  @Column(columnDefinition = "TIME WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime purchaseDate;
 
   private String purchasePrice;

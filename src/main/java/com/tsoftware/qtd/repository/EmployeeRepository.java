@@ -21,4 +21,8 @@ public interface EmployeeRepository
   Set<Employee> findByUserIdIn(Set<String> assignees);
 
   List<Employee> findByIdIn(List<UUID> ids);
+
+  List<Employee> findByGroupsId(UUID groupId);
+
+  List<Employee> findByRolesName(String name);
 }

@@ -1,21 +1,21 @@
 package com.tsoftware.qtd.controller;
 
+import com.tsoftware.qtd.commonlib.annotation.TargetId;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.application.LoanPlanDTO;
+import com.tsoftware.qtd.constants.WorkflowStep;
+import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanPlanResponse;
 import com.tsoftware.qtd.service.LoanPlanService;
+import com.tsoftware.qtd.util.ValidationUtils;
+import com.tsoftware.qtd.validation.IsUUID;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loan-plans")
@@ -25,23 +25,22 @@ public class LoanPlanController {
   private final LoanPlanService loanplanService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<LoanPlanResponse>> create(
-      @RequestBody LoanPlanDTO loanPlanDTO, @PathVariable UUID creditId) throws Exception {
+  @WorkflowAPI(step = WorkflowStep.CREATE_LOAN_PLAN, action = WorkflowAPI.WorkflowAction.CREATE)
+  public ResponseEntity<?> create(
+      @RequestBody @Valid LoanPlanRequest loanPlanRequest,
+      @Valid @RequestParam @IsUUID @TargetId String applicationId)
+      throws Exception {
+    ValidationUtils.validateEqual(applicationId, loanPlanRequest.getApplication().getId());
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Created", loanplanService.create(loanPlanDTO, creditId)));
+        new ApiResponse<>(
+            HttpStatus.CREATED.value(), "Created", loanplanService.request(loanPlanRequest)));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<LoanPlanResponse>> update(
-      @PathVariable UUID id, @RequestBody LoanPlanDTO loanPlanDTO) {
+      @PathVariable UUID id, @RequestBody LoanPlanRequest loanPlanRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Updated", loanplanService.update(id, loanPlanDTO)));
-  }
-
-  @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
-    loanplanService.delete(id);
-    return ResponseEntity.ok(new ApiResponse<>(1000, "Deleted", null));
+        new ApiResponse<>(1000, "Updated", loanplanService.update(id, loanPlanRequest)));
   }
 
   @GetMapping("/{id}")

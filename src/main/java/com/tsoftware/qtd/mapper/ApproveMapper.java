@@ -11,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface ApproveMapper {
   Approve toEntity(ApproveResponse dto);
 
-  ApproveResponse toDto(Approve entity);
+  ApproveResponse toDTO(Approve entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntity(ApproveResponse dto, @MappingTarget Approve entity);
