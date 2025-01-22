@@ -125,7 +125,7 @@ public class ApprovalProcessService {
     var userId = RequestUtil.getUserId();
     // Check permission in Approves
     boolean hasPermission =
-        Optional.ofNullable(approvalProcessDTO.getApproves()).orElse(new ArrayList<>()).stream()
+        Optional.ofNullable(approvalProcessDTO.getApprovals()).orElse(new ArrayList<>()).stream()
             .anyMatch(
                 approve -> {
                   var employee = approve.getApprover();
@@ -135,12 +135,12 @@ public class ApprovalProcessService {
     // If you don't have permission, check in GroupApproves
     if (!hasPermission) {
       hasPermission =
-          Optional.ofNullable(approvalProcessDTO.getGroupApproves())
+          Optional.ofNullable(approvalProcessDTO.getGroupApprovals())
               .orElse(new ArrayList<>())
               .stream()
               .flatMap(
                   groupApprove ->
-                      Optional.ofNullable(groupApprove.getcurrentApprovals())
+                      Optional.ofNullable(groupApprove.getCurrentApprovals())
                           .orElse(new ArrayList<>())
                           .stream())
               .anyMatch(
@@ -153,12 +153,12 @@ public class ApprovalProcessService {
     // If you don't have permission, check in RoleApproves
     if (!hasPermission) {
       hasPermission =
-          Optional.ofNullable(approvalProcessDTO.getRoleApproves())
+          Optional.ofNullable(approvalProcessDTO.getRoleApprovals())
               .orElse(new ArrayList<>())
               .stream()
               .flatMap(
                   roleApprove ->
-                      Optional.ofNullable(roleApprove.getcurrentApprovals())
+                      Optional.ofNullable(roleApprove.getCurrentApprovals())
                           .orElse(new ArrayList<>())
                           .stream())
               .anyMatch(
@@ -179,24 +179,25 @@ public class ApprovalProcessService {
   public ApprovalProcessDTO processApproval(
       ApprovalProcessDTO approvalProcessDTO, ActionStatus status) {
     var userId = RequestUtil.getUserId();
-    var approvers = Optional.ofNullable(approvalProcessDTO.getApproves()).orElse(new ArrayList<>());
+    var approvers =
+        Optional.ofNullable(approvalProcessDTO.getApprovals()).orElse(new ArrayList<>());
     approvers.stream()
         .filter(approve -> approve.getApprover().getUserId().equals(userId))
         .forEach(approve -> approve.setStatus(status));
     var groupApproves =
-        Optional.ofNullable(approvalProcessDTO.getGroupApproves()).orElse(new ArrayList<>());
+        Optional.ofNullable(approvalProcessDTO.getGroupApprovals()).orElse(new ArrayList<>());
     groupApproves.forEach(
         groupApprove ->
-            Optional.ofNullable(groupApprove.getcurrentApprovals())
+            Optional.ofNullable(groupApprove.getCurrentApprovals())
                 .orElse(new ArrayList<>())
                 .stream()
                 .filter(approve -> approve.getApprover().getUserId().equals(userId))
                 .forEach(approve -> approve.setStatus(status)));
     var roleApprovers =
-        Optional.ofNullable(approvalProcessDTO.getRoleApproves()).orElse(new ArrayList<>());
+        Optional.ofNullable(approvalProcessDTO.getRoleApprovals()).orElse(new ArrayList<>());
     roleApprovers.forEach(
         roleApprove ->
-            Optional.ofNullable(roleApprove.getcurrentApprovals())
+            Optional.ofNullable(roleApprove.getCurrentApprovals())
                 .orElse(new ArrayList<>())
                 .stream()
                 .filter(approve -> approve.getApprover().getUserId().equals(userId))
@@ -215,8 +216,8 @@ public class ApprovalProcessService {
                     new CommonException(
                         ErrorType.ENTITY_NOT_FOUND,
                         "ApprovalSetting with processType: " + processType.name()));
-    approvalProcess.setRoleApproves(this.toRoleApprove(approveSetting, approvalProcess));
-    approvalProcess.setGroupApproves(this.toGroupApprove(approveSetting, approvalProcess));
+    approvalProcess.setRoleApprovals(this.toRoleApprove(approveSetting, approvalProcess));
+    approvalProcess.setGroupApprovals(this.toGroupApprove(approveSetting, approvalProcess));
   }
 
   private List<GroupApprovalDTO> toGroupApprove(
