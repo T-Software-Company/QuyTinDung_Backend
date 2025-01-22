@@ -23,27 +23,27 @@ import lombok.experimental.SuperBuilder;
 public class ApprovalProcessDTO extends AbstractTransaction<ProcessType> {
   private ApplicationDTO application;
   private ActionStatus status;
-  private List<ApprovalDTO> approves;
-  private List<GroupApprovalDTO> groupApproves;
-  private List<RoleApprovalDTO> roleApproves;
+  private List<ApprovalDTO> approvals;
+  private List<GroupApprovalDTO> groupApprovals;
+  private List<RoleApprovalDTO> roleApprovals;
   private ZonedDateTime approvedAt;
   private UUID referenceId;
 
   @Override
   public boolean isApproved() {
     var approved =
-        Optional.ofNullable(this.approves).orElse(new ArrayList<>()).stream()
+        Optional.ofNullable(this.approvals).orElse(new ArrayList<>()).stream()
                 .allMatch(approve -> approve.getStatus() == ActionStatus.APPROVED)
-            && Optional.ofNullable(this.roleApproves).orElse(new ArrayList<>()).stream()
+            && Optional.ofNullable(this.roleApprovals).orElse(new ArrayList<>()).stream()
                 .allMatch(RoleApprovalDTO::isApproved)
-            && Optional.ofNullable(this.groupApproves).orElse(new ArrayList<>()).stream()
+            && Optional.ofNullable(this.groupApprovals).orElse(new ArrayList<>()).stream()
                 .allMatch(GroupApprovalDTO::isApproved);
     var rejected =
-        Optional.ofNullable(this.approves).orElse(new ArrayList<>()).stream()
+        Optional.ofNullable(this.approvals).orElse(new ArrayList<>()).stream()
                 .anyMatch(a -> ActionStatus.REJECTED.equals(a.getStatus()))
-            || Optional.ofNullable(this.groupApproves).orElse(new ArrayList<>()).stream()
+            || Optional.ofNullable(this.groupApprovals).orElse(new ArrayList<>()).stream()
                 .anyMatch(g -> ActionStatus.REJECTED.equals(g.getStatus()))
-            || Optional.ofNullable(this.roleApproves).orElse(new ArrayList<>()).stream()
+            || Optional.ofNullable(this.roleApprovals).orElse(new ArrayList<>()).stream()
                 .anyMatch(r -> ActionStatus.REJECTED.equals(r.getStatus()));
     this.status =
         approved ? ActionStatus.APPROVED : rejected ? ActionStatus.REJECTED : ActionStatus.WAIT;

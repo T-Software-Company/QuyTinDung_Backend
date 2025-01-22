@@ -10,7 +10,7 @@ import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
-import com.tsoftware.qtd.service.ApproveService;
+import com.tsoftware.qtd.service.ApprovalService;
 import com.tsoftware.qtd.service.EmployeeService;
 import com.tsoftware.qtd.service.GroupService;
 import com.tsoftware.qtd.service.KeycloakService;
@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
 
   EmployeeService employeeService;
-  ApproveService approveService;
+  ApprovalService approvalService;
   private final GroupService groupService;
   private final KeycloakService keycloakService;
 
@@ -229,7 +229,7 @@ public class EmployeeController {
         new ApiResponse<>(
             HttpStatus.OK.value(),
             "Fetched All",
-            approveService.getByApproverId(UUID.fromString(id))));
+            approvalService.getByApproverId(UUID.fromString(id))));
   }
 
   @PreAuthorize("hasRole('ADMIN')")

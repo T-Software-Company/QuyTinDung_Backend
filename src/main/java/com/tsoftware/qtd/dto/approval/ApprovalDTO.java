@@ -20,6 +20,6 @@ public class ApprovalDTO {
   private EmployeeResponse approver;
   private ActionStatus status;
   private ApprovalProcessRequest approvalProcess;
-  private GroupApprovalRequest groupApprove;
-  private RoleApprovalRequest roleApprove;
+  private GroupApprovalRequest groupApproval;
+  private RoleApprovalRequest roleApproval;
 }

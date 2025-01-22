@@ -15,28 +15,29 @@ public class GroupApprovalDTO {
   private UUID id;
   private UUID groupId;
   private Integer requiredPercentage;
-  private List<ApprovalDTO> currentApproves;
+  private List<ApprovalDTO> currentApprovals;
   private ActionStatus status;
   private ApprovalProcessRequest approvalProcess;
 
   public boolean isApproved() {
-    this.currentApproves = this.currentApproves != null ? this.currentApproves : new ArrayList<>();
+    this.currentApprovals =
+        this.currentApprovals != null ? this.currentApprovals : new ArrayList<>();
     var approvedApproves =
-        currentApproves.stream()
+        currentApprovals.stream()
             .filter(approve -> approve.getStatus() == ActionStatus.APPROVED)
             .distinct();
     var approved = true;
     var rejected = false;
-    if (!this.currentApproves.isEmpty()) {
+    if (!this.currentApprovals.isEmpty()) {
       approved =
-          approvedApproves.count() * 100 / this.currentApproves.size() >= this.requiredPercentage;
+          approvedApproves.count() * 100 / this.currentApprovals.size() >= this.requiredPercentage;
       rejected =
           100
-                  - this.currentApproves.stream()
+                  - this.currentApprovals.stream()
                           .filter(a -> ActionStatus.REJECTED.equals(a.getStatus()))
                           .count()
                       * 100
-                      / this.currentApproves.size()
+                      / this.currentApprovals.size()
               < this.requiredPercentage;
     }
     this.status =

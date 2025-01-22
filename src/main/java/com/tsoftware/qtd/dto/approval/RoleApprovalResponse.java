@@ -17,6 +17,6 @@ import lombok.experimental.SuperBuilder;
 public class RoleApprovalResponse {
   private Role role;
   private Integer requiredCount;
-  private List<ApprovalResponse> currentApproves;
+  private List<ApprovalResponse> currentApprovals;
   private ActionStatus status;
 }

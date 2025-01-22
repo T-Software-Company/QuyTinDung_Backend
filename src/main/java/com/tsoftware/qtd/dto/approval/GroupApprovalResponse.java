@@ -17,6 +17,6 @@ import lombok.experimental.SuperBuilder;
 public class GroupApprovalResponse {
   private UUID groupId;
   private Integer requiredPercentage;
-  private List<ApprovalResponse> currentApproves;
+  private List<ApprovalResponse> currentApprovals;
   private ActionStatus status;
 }

@@ -140,7 +140,7 @@ public class ApprovalProcessService {
               .stream()
               .flatMap(
                   groupApprove ->
-                      Optional.ofNullable(groupApprove.getCurrentApproves())
+                      Optional.ofNullable(groupApprove.getcurrentApprovals())
                           .orElse(new ArrayList<>())
                           .stream())
               .anyMatch(
@@ -158,7 +158,7 @@ public class ApprovalProcessService {
               .stream()
               .flatMap(
                   roleApprove ->
-                      Optional.ofNullable(roleApprove.getCurrentApproves())
+                      Optional.ofNullable(roleApprove.getcurrentApprovals())
                           .orElse(new ArrayList<>())
                           .stream())
               .anyMatch(
@@ -187,7 +187,7 @@ public class ApprovalProcessService {
         Optional.ofNullable(approvalProcessDTO.getGroupApproves()).orElse(new ArrayList<>());
     groupApproves.forEach(
         groupApprove ->
-            Optional.ofNullable(groupApprove.getCurrentApproves())
+            Optional.ofNullable(groupApprove.getcurrentApprovals())
                 .orElse(new ArrayList<>())
                 .stream()
                 .filter(approve -> approve.getApprover().getUserId().equals(userId))
@@ -196,7 +196,9 @@ public class ApprovalProcessService {
         Optional.ofNullable(approvalProcessDTO.getRoleApproves()).orElse(new ArrayList<>());
     roleApprovers.forEach(
         roleApprove ->
-            Optional.ofNullable(roleApprove.getCurrentApproves()).orElse(new ArrayList<>()).stream()
+            Optional.ofNullable(roleApprove.getcurrentApprovals())
+                .orElse(new ArrayList<>())
+                .stream()
                 .filter(approve -> approve.getApprover().getUserId().equals(userId))
                 .forEach(approve -> approve.setStatus(status)));
 
@@ -241,7 +243,7 @@ public class ApprovalProcessService {
                       .groupId(groupApproveSetting.getId())
                       .requiredPercentage(groupApproveSetting.getRequiredPercentage())
                       .status(ActionStatus.WAIT)
-                      .currentApproves(approves)
+                      .currentApprovals(approves)
                       .approvalProcess(
                           ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .build());
@@ -273,7 +275,7 @@ public class ApprovalProcessService {
                       .approvalProcess(
                           ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .role(roleApproveSetting.getRole())
-                      .currentApproves(approves)
+                      .currentApprovals(approves)
                       .requiredCount(roleApproveSetting.getRequiredCount())
                       .status(ActionStatus.WAIT)
                       .build());

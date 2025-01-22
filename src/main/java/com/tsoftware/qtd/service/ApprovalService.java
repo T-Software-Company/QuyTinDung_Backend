@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ApproveService {
+public class ApprovalService {
 
   private final ApproveRepository approveRepository;
 

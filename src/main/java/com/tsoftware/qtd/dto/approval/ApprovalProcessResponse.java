@@ -19,9 +19,9 @@ public class ApprovalProcessResponse extends AbstractResponse {
   private ProcessType type;
   private UUID referenceId;
   private ZonedDateTime approvedAt;
-  private List<ApprovalResponse> approves;
-  private List<GroupApprovalResponse> groupApproves;
-  private List<RoleApprovalResponse> roleApproves;
+  private List<ApprovalResponse> approvals;
+  private List<GroupApprovalResponse> groupApprovals;
+  private List<RoleApprovalResponse> roleApprovals;
   private Object metadata;
   private Application application;
 
