@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
-import com.tsoftware.qtd.entity.Approve;
+import com.tsoftware.qtd.dto.approval.ApprovalResponse;
+import com.tsoftware.qtd.entity.Approval;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.ApproveMapper;
 import com.tsoftware.qtd.repository.ApproveRepository;
@@ -21,39 +21,39 @@ public class ApproveService {
 
   private final ApproveMapper approveMapper;
 
-  public ApproveResponse create(ApproveResponse approveResponse) {
-    Approve approve = approveMapper.toEntity(approveResponse);
-    return approveMapper.toDTO(approveRepository.save(approve));
+  public ApprovalResponse create(ApprovalResponse approvalResponse) {
+    Approval approval = approveMapper.toEntity(approvalResponse);
+    return approveMapper.toDTO(approveRepository.save(approval));
   }
 
-  public ApproveResponse update(UUID id, ApproveResponse approveResponse) {
-    Approve approve =
+  public ApprovalResponse update(UUID id, ApprovalResponse approvalResponse) {
+    Approval approval =
         approveRepository
             .findById(id)
-            .orElseThrow(() -> new NotFoundException("Approve not found"));
-    approveMapper.updateEntity(approveResponse, approve);
-    return approveMapper.toDTO(approveRepository.save(approve));
+            .orElseThrow(() -> new NotFoundException("Approval not found"));
+    approveMapper.updateEntity(approvalResponse, approval);
+    return approveMapper.toDTO(approveRepository.save(approval));
   }
 
   public void delete(UUID id) {
     approveRepository.deleteById(id);
   }
 
-  public ApproveResponse getById(UUID id) {
-    Approve approve =
+  public ApprovalResponse getById(UUID id) {
+    Approval approval =
         approveRepository
             .findById(id)
-            .orElseThrow(() -> new NotFoundException("Approve not found"));
-    return approveMapper.toDTO(approve);
+            .orElseThrow(() -> new NotFoundException("Approval not found"));
+    return approveMapper.toDTO(approval);
   }
 
-  public List<ApproveResponse> getAll() {
+  public List<ApprovalResponse> getAll() {
     return approveRepository.findAll().stream()
         .map(approveMapper::toDTO)
         .collect(Collectors.toList());
   }
 
-  public List<ApproveResponse> getByApproverId(UUID id) {
+  public List<ApprovalResponse> getByApproverId(UUID id) {
     var approves = approveRepository.findByApproverId(id);
     return approves.stream().map(approveMapper::toDTO).collect(Collectors.toList());
   }

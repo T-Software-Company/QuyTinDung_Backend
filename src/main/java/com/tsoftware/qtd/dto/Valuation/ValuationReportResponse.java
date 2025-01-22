@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.Valuation;
 
+import com.tsoftware.qtd.dto.approval.ApprovalResponse;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -21,5 +21,5 @@ public class ValuationReportResponse {
   private String createdBy;
   private BigDecimal totalValuationAmount;
   private List<AssetRequest> assets;
-  private List<ApproveResponse> approves;
+  private List<ApprovalResponse> approves;
 }

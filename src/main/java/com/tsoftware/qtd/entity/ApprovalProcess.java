@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,27 +29,27 @@ import org.hibernate.annotations.Type;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class WorkflowTransaction extends AbstractAuditEntity {
+public class ApprovalProcess extends AbstractAuditEntity {
 
   @Enumerated(EnumType.ORDINAL)
   private ActionStatus status;
 
   @Enumerated(EnumType.ORDINAL)
-  private TransactionType type;
+  private ProcessType type;
 
   private UUID referenceId;
 
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime approvedAt;
 
-  @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  private List<Approve> approves;
+  @OneToMany(mappedBy = "approvalProcess", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<Approval> approvals;
 
-  @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  private List<GroupApprove> groupApproves;
+  @OneToMany(mappedBy = "approvalProcess", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<GroupApproval> groupApprovals;
 
-  @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  private List<RoleApprove> roleApproves;
+  @OneToMany(mappedBy = "approvalProcess", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<RoleApproval> roleApprovals;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")

@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
-import com.tsoftware.qtd.dto.setting.ApproveSettingRequest;
+import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
 import com.tsoftware.qtd.service.ApproveSettingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +22,11 @@ public class SettingController {
 
   @PostMapping
   public ResponseEntity<?> createApproveSetting(
-      @RequestBody @Valid ApproveSettingRequest approveSettingRequest) {
+      @RequestBody @Valid ApprovalSettingRequest approvalSettingRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            HttpStatus.OK.value(), "Created", approveSettingService.create(approveSettingRequest)));
+            HttpStatus.OK.value(),
+            "Created",
+            approveSettingService.create(approvalSettingRequest)));
   }
 }

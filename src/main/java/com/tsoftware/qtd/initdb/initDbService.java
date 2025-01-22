@@ -3,14 +3,14 @@ package com.tsoftware.qtd.initdb;
 import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.IdentityType;
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.dto.address.AddressDTO;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
 import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
-import com.tsoftware.qtd.dto.setting.ApproveSettingRequest;
+import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
 import com.tsoftware.qtd.repository.*;
 import com.tsoftware.qtd.service.*;
 import java.time.ZonedDateTime;
@@ -41,50 +41,44 @@ public class initDbService {
   private final ApproveSettingRepository approveSettingRepository;
 
   public void createApproveSetting() {
-    if (approveSettingRepository
-        .findByTransactionType(TransactionType.CREATE_LOAN_REQUEST)
-        .isEmpty()) {
+    if (approveSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_REQUEST).isEmpty()) {
       var request =
-          ApproveSettingRequest.builder()
-              .roleApproveSettings(
+          ApprovalSettingRequest.builder()
+              .roleApprovalSettings(
                   List.of(
-                      ApproveSettingRequest.RoleApproveSettingRequest.builder()
+                      ApprovalSettingRequest.RoleApprovalSettingRequest.builder()
                           .requiredCount(1)
                           .role(Role.ADMIN.name())
                           .build()))
-              .transactionType(TransactionType.CREATE_LOAN_REQUEST.name())
+              .processType(ProcessType.CREATE_LOAN_REQUEST.name())
               .name("create loan request")
               .build();
       approveSettingService.create(request);
     }
-    if (approveSettingRepository
-        .findByTransactionType(TransactionType.CREATE_LOAN_PLAN)
-        .isEmpty()) {
+    if (approveSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_PLAN).isEmpty()) {
       var request =
-          ApproveSettingRequest.builder()
-              .roleApproveSettings(
+          ApprovalSettingRequest.builder()
+              .roleApprovalSettings(
                   List.of(
-                      ApproveSettingRequest.RoleApproveSettingRequest.builder()
+                      ApprovalSettingRequest.RoleApprovalSettingRequest.builder()
                           .requiredCount(1)
                           .role(Role.ADMIN.name())
                           .build()))
-              .transactionType(TransactionType.CREATE_LOAN_PLAN.name())
+              .processType(ProcessType.CREATE_LOAN_PLAN.name())
               .name("create loan plan")
               .build();
       approveSettingService.create(request);
     }
-    if (approveSettingRepository
-        .findByTransactionType(TransactionType.CREATE_FINANCIAL_INFO)
-        .isEmpty()) {
+    if (approveSettingRepository.findByProcessType(ProcessType.CREATE_FINANCIAL_INFO).isEmpty()) {
       var request =
-          ApproveSettingRequest.builder()
-              .roleApproveSettings(
+          ApprovalSettingRequest.builder()
+              .roleApprovalSettings(
                   List.of(
-                      ApproveSettingRequest.RoleApproveSettingRequest.builder()
+                      ApprovalSettingRequest.RoleApprovalSettingRequest.builder()
                           .requiredCount(1)
                           .role(Role.ADMIN.name())
                           .build()))
-              .transactionType(TransactionType.CREATE_FINANCIAL_INFO.name())
+              .processType(ProcessType.CREATE_FINANCIAL_INFO.name())
               .name("create financial info")
               .build();
       approveSettingService.create(request);

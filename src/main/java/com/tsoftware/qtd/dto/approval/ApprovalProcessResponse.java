@@ -1,7 +1,7 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.AbstractResponse;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -14,14 +14,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowTransactionResponse extends AbstractResponse {
+public class ApprovalProcessResponse extends AbstractResponse {
   private ActionStatus status;
-  private TransactionType type;
+  private ProcessType type;
   private UUID referenceId;
   private ZonedDateTime approvedAt;
-  private List<ApproveResponse> approves;
-  private List<GroupApproveResponse> groupApproves;
-  private List<RoleApproveResponse> roleApproves;
+  private List<ApprovalResponse> approves;
+  private List<GroupApprovalResponse> groupApproves;
+  private List<RoleApprovalResponse> roleApproves;
   private Object metadata;
   private Application application;
 

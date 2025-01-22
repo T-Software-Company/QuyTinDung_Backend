@@ -3,7 +3,7 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
+import com.tsoftware.qtd.dto.approval.ApprovalResponse;
 import com.tsoftware.qtd.service.ValuationReportService;
 import java.util.List;
 import java.util.UUID;
@@ -60,7 +60,7 @@ public class ValuationReportController {
   }
 
   @PostMapping("/{id}/add-approve")
-  public ResponseEntity<ApiResponse<List<ApproveResponse>>> addApprove(
+  public ResponseEntity<ApiResponse<List<ApprovalResponse>>> addApprove(
       @RequestBody List<UUID> approverIds, @PathVariable UUID id) {
     return ResponseEntity.ok(
         new ApiResponse<>(

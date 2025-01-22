@@ -3,8 +3,8 @@ package com.tsoftware.qtd.service;
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
-import com.tsoftware.qtd.entity.Approve;
+import com.tsoftware.qtd.dto.approval.ApprovalResponse;
+import com.tsoftware.qtd.entity.Approval;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationReport;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -68,19 +68,19 @@ public class ValuationReportService {
   }
 
   @Transactional
-  public List<ApproveResponse> addApprove(UUID id, List<UUID> approverIds) {
+  public List<ApprovalResponse> addApprove(UUID id, List<UUID> approverIds) {
 
-    List<ApproveResponse> approveResponses = new ArrayList<>();
+    List<ApprovalResponse> approvalRespons = new ArrayList<>();
     approverIds.forEach(
         i ->
-            approveResponses.add(
+            approvalRespons.add(
                 approveMapper.toDTO(
                     approveRepository.save(
-                        Approve.builder()
+                        Approval.builder()
                             .approver(Employee.builder().id(i).build())
                             .status(ActionStatus.WAIT)
                             .build()))));
-    return approveResponses;
+    return approvalRespons;
   }
 
   public void removeApprove(UUID id, List<UUID> approverIds) {

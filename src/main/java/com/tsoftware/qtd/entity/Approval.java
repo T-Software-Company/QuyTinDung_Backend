@@ -12,14 +12,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table
-public class Approve extends AbstractAuditEntity {
+public class Approval extends AbstractAuditEntity {
   private String comment;
   @ManyToOne private Employee approver;
 
   @Enumerated(EnumType.ORDINAL)
   private ActionStatus status;
 
-  @ManyToOne private WorkflowTransaction transaction;
-  @ManyToOne private GroupApprove groupApprove;
-  @ManyToOne private RoleApprove roleApprove;
+  @ManyToOne private ApprovalProcess approvalProcess;
+  @ManyToOne private GroupApproval groupApproval;
+  @ManyToOne private RoleApproval roleApproval;
 }

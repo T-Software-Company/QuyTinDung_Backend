@@ -16,7 +16,7 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
       var resolvedTransaction = processApproval(transaction, status);
       if (resolvedTransaction.isApproved()) {
         doExecute(transaction);
-        log.info("WorkflowTransactionDTO already approved: {}", transaction.getId());
+        log.info("ApprovalProcessDTO already approved: {}", transaction.getId());
       }
       log.info("Completed execution for transaction: {}", transaction.getId());
       return postExecute(transaction);

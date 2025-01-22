@@ -1,8 +1,8 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.setting.ApproveSettingRequest;
-import com.tsoftware.qtd.dto.setting.ApproveSettingResponse;
-import com.tsoftware.qtd.entity.ApproveSetting;
+import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
+import com.tsoftware.qtd.dto.setting.ApprovalSettingResponse;
+import com.tsoftware.qtd.entity.ApprovalSetting;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
@@ -12,10 +12,10 @@ import org.mapstruct.MappingTarget;
     nullValueCheckStrategy = org.mapstruct.NullValueCheckStrategy.ALWAYS)
 public interface SettingMapper {
 
-  ApproveSetting toEntity(ApproveSettingRequest approveSettingRequest);
+  ApprovalSetting toEntity(ApprovalSettingRequest approvalSettingRequest);
 
-  ApproveSettingResponse toResponse(ApproveSetting saved);
+  ApprovalSettingResponse toResponse(ApprovalSetting saved);
 
   void updateEntity(
-      @MappingTarget ApproveSetting entity, ApproveSettingRequest approveSettingRequest);
+      @MappingTarget ApprovalSetting entity, ApprovalSettingRequest approvalSettingRequest);
 }

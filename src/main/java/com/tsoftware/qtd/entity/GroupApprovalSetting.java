@@ -15,8 +15,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table
-public class GroupApproveSetting extends AbstractAuditEntity {
+public class GroupApprovalSetting extends AbstractAuditEntity {
   private UUID groupId;
   private Integer requiredPercentage;
-  @ManyToOne private ApproveSetting approveSetting;
+  @ManyToOne private ApprovalSetting approvalSetting;
 }

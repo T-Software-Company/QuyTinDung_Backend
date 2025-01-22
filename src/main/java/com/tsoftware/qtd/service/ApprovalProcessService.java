@@ -2,18 +2,18 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.commonlib.annotation.TryTransactionId;
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.application.ApplicationRequest;
-import com.tsoftware.qtd.dto.transaction.*;
-import com.tsoftware.qtd.entity.ApproveSetting;
-import com.tsoftware.qtd.entity.WorkflowTransaction;
+import com.tsoftware.qtd.dto.approval.*;
+import com.tsoftware.qtd.entity.ApprovalProcess;
+import com.tsoftware.qtd.entity.ApprovalSetting;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.*;
+import com.tsoftware.qtd.repository.ApprovalProcessRepository;
 import com.tsoftware.qtd.repository.ApproveSettingRepository;
 import com.tsoftware.qtd.repository.EmployeeRepository;
-import com.tsoftware.qtd.repository.WorkflowTransactionRepository;
 import com.tsoftware.qtd.util.RequestUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class WorkflowTransactionService {
-  private final WorkflowTransactionRepository repository;
-  private final WorkflowTransactionMapper workflowTransactionMapper;
+public class ApprovalProcessService {
+  private final ApprovalProcessRepository repository;
+  private final ApprovalProcessMapper approvalProcessMapper;
   private final ApproveSettingRepository approveSettingRepository;
   private final EmployeeRepository employeeRepository;
   private final EmployeeMapper employeeMapper;
@@ -41,8 +41,8 @@ public class WorkflowTransactionService {
   private final ApplicationContext applicationContext;
 
   @TryTransactionId
-  public WorkflowTransactionResponse create(
-      Object object, ApplicationRequest applicationRequest, TransactionType type) {
+  public ApprovalProcessResponse create(
+      Object object, ApplicationRequest applicationRequest, ProcessType type) {
     var exists =
         repository.existsByApplicationIdAndType(UUID.fromString(applicationRequest.getId()), type);
     if (exists) {
@@ -51,84 +51,81 @@ public class WorkflowTransactionService {
           "application: " + applicationRequest.getId(),
           type.name());
     }
-    var transaction =
-        WorkflowTransactionDTO.builder()
+    var approvalProcess =
+        ApprovalProcessDTO.builder()
             .application(applicationMapper.toDTO(applicationRequest))
             .type(type)
             .status(ActionStatus.WAIT)
             .metadata(object)
             .build();
-    this.mappingApprovesFromSetting(transaction, type);
-    var entity = workflowTransactionMapper.toEntity(transaction);
-    Optional.ofNullable(entity.getGroupApproves())
+    this.mappingApprovesFromSetting(approvalProcess, type);
+    var entity = approvalProcessMapper.toEntity(approvalProcess);
+    Optional.ofNullable(entity.getGroupApprovals())
         .ifPresent(
             stef ->
                 stef.forEach(
                     groupApprove -> {
-                      groupApprove.setTransaction(entity);
+                      groupApprove.setApprovalProcess(entity);
                       groupApprove
-                          .getCurrentApproves()
-                          .forEach(approve -> approve.setGroupApprove(groupApprove));
+                          .getCurrentApprovals()
+                          .forEach(approve -> approve.setGroupApproval(groupApprove));
                     }));
-    Optional.ofNullable(entity.getRoleApproves())
+    Optional.ofNullable(entity.getRoleApprovals())
         .ifPresent(
             stef ->
                 stef.forEach(
                     roleApprove -> {
-                      roleApprove.setTransaction(entity);
+                      roleApprove.setApprovalProcess(entity);
                       roleApprove
-                          .getCurrentApproves()
-                          .forEach(approve -> approve.setRoleApprove(roleApprove));
+                          .getCurrentApprovals()
+                          .forEach(approve -> approve.setRoleApproval(roleApprove));
                     }));
-    Optional.ofNullable(entity.getApproves())
-        .ifPresent(stef -> stef.forEach(approve -> approve.setTransaction(entity)));
+    Optional.ofNullable(entity.getApprovals())
+        .ifPresent(stef -> stef.forEach(approve -> approve.setApprovalProcess(entity)));
     var saved = repository.save(entity);
-    return workflowTransactionMapper.toResponse(saved);
+    return approvalProcessMapper.toResponse(saved);
   }
 
-  public WorkflowTransactionResponse approve(UUID id, ActionStatus status) {
+  public ApprovalProcessResponse approve(UUID id, ActionStatus status) {
     var transactionDTO =
         repository
             .findById(id)
-            .map(workflowTransactionMapper::toDTO)
+            .map(approvalProcessMapper::toDTO)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
     var executor = applicationContext.getBean(transactionDTO.getType().getExecutor());
-    var transaction = executor.execute(transactionDTO, status);
-    return workflowTransactionMapper.toResponse(transaction);
+    var approvalProcess = executor.execute(transactionDTO, status);
+    return approvalProcessMapper.toResponse(approvalProcess);
   }
 
-  public PageResponse<WorkflowTransactionResponse> getAll(
-      Specification<WorkflowTransaction> spec, Pageable pageable) {
+  public PageResponse<ApprovalProcessResponse> getAll(
+      Specification<ApprovalProcess> spec, Pageable pageable) {
     try {
-      var transactions =
-          repository.findAll(spec, pageable).map(workflowTransactionMapper::toResponse);
+      var transactions = repository.findAll(spec, pageable).map(approvalProcessMapper::toResponse);
       return pageResponseMapper.toPageResponse(transactions);
     } catch (DataIntegrityViolationException e) {
       throw new CommonException(ErrorType.METHOD_ARGUMENT_NOT_VALID, e.getMessage());
     }
   }
 
-  public WorkflowTransactionDTO updateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {
-    WorkflowTransaction entity =
+  public ApprovalProcessDTO updateTransaction(ApprovalProcessDTO approvalProcessDTO) {
+    ApprovalProcess entity =
         repository
-            .findById(workflowTransactionDTO.getId())
+            .findById(approvalProcessDTO.getId())
             .orElseThrow(
-                () ->
-                    new CommonException(
-                        ErrorType.ENTITY_NOT_FOUND, workflowTransactionDTO.getId()));
-    workflowTransactionMapper.updateEntity(entity, workflowTransactionDTO);
-    return workflowTransactionMapper.toDTO(repository.save(entity));
+                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, approvalProcessDTO.getId()));
+    approvalProcessMapper.updateEntity(entity, approvalProcessDTO);
+    return approvalProcessMapper.toDTO(repository.save(entity));
   }
 
-  public void validateTransaction(WorkflowTransactionDTO workflowTransactionDTO) {
-    if (workflowTransactionDTO.getStatus().equals(ActionStatus.APPROVED)) {
+  public void validateTransaction(ApprovalProcessDTO approvalProcessDTO) {
+    if (approvalProcessDTO.getStatus().equals(ActionStatus.APPROVED)) {
       throw new CommonException(
           ErrorType.ACTION_ALREADY_COMPLETED, "Transaction has been approved");
     }
     var userId = RequestUtil.getUserId();
     // Check permission in Approves
     boolean hasPermission =
-        Optional.ofNullable(workflowTransactionDTO.getApproves()).orElse(new ArrayList<>()).stream()
+        Optional.ofNullable(approvalProcessDTO.getApproves()).orElse(new ArrayList<>()).stream()
             .anyMatch(
                 approve -> {
                   var employee = approve.getApprover();
@@ -138,7 +135,7 @@ public class WorkflowTransactionService {
     // If you don't have permission, check in GroupApproves
     if (!hasPermission) {
       hasPermission =
-          Optional.ofNullable(workflowTransactionDTO.getGroupApproves())
+          Optional.ofNullable(approvalProcessDTO.getGroupApproves())
               .orElse(new ArrayList<>())
               .stream()
               .flatMap(
@@ -156,7 +153,7 @@ public class WorkflowTransactionService {
     // If you don't have permission, check in RoleApproves
     if (!hasPermission) {
       hasPermission =
-          Optional.ofNullable(workflowTransactionDTO.getRoleApproves())
+          Optional.ofNullable(approvalProcessDTO.getRoleApproves())
               .orElse(new ArrayList<>())
               .stream()
               .flatMap(
@@ -179,16 +176,15 @@ public class WorkflowTransactionService {
     }
   }
 
-  public WorkflowTransactionDTO processApproval(
-      WorkflowTransactionDTO workflowTransactionDTO, ActionStatus status) {
+  public ApprovalProcessDTO processApproval(
+      ApprovalProcessDTO approvalProcessDTO, ActionStatus status) {
     var userId = RequestUtil.getUserId();
-    var approvers =
-        Optional.ofNullable(workflowTransactionDTO.getApproves()).orElse(new ArrayList<>());
+    var approvers = Optional.ofNullable(approvalProcessDTO.getApproves()).orElse(new ArrayList<>());
     approvers.stream()
         .filter(approve -> approve.getApprover().getUserId().equals(userId))
         .forEach(approve -> approve.setStatus(status));
     var groupApproves =
-        Optional.ofNullable(workflowTransactionDTO.getGroupApproves()).orElse(new ArrayList<>());
+        Optional.ofNullable(approvalProcessDTO.getGroupApproves()).orElse(new ArrayList<>());
     groupApproves.forEach(
         groupApprove ->
             Optional.ofNullable(groupApprove.getCurrentApproves())
@@ -197,85 +193,85 @@ public class WorkflowTransactionService {
                 .filter(approve -> approve.getApprover().getUserId().equals(userId))
                 .forEach(approve -> approve.setStatus(status)));
     var roleApprovers =
-        Optional.ofNullable(workflowTransactionDTO.getRoleApproves()).orElse(new ArrayList<>());
+        Optional.ofNullable(approvalProcessDTO.getRoleApproves()).orElse(new ArrayList<>());
     roleApprovers.forEach(
         roleApprove ->
             Optional.ofNullable(roleApprove.getCurrentApproves()).orElse(new ArrayList<>()).stream()
                 .filter(approve -> approve.getApprover().getUserId().equals(userId))
                 .forEach(approve -> approve.setStatus(status)));
 
-    return workflowTransactionDTO;
+    return approvalProcessDTO;
   }
 
   public void mappingApprovesFromSetting(
-      WorkflowTransactionDTO transaction, TransactionType transactionType) {
+      ApprovalProcessDTO approvalProcess, ProcessType processType) {
     var approveSetting =
         approveSettingRepository
-            .findByTransactionType(transactionType)
+            .findByProcessType(processType)
             .orElseThrow(
                 () ->
                     new CommonException(
                         ErrorType.ENTITY_NOT_FOUND,
-                        "ApproveSetting with transactionType: " + transactionType.name()));
-    transaction.setRoleApproves(this.toRoleApprove(approveSetting, transaction));
-    transaction.setGroupApproves(this.toGroupApprove(approveSetting, transaction));
+                        "ApprovalSetting with processType: " + processType.name()));
+    approvalProcess.setRoleApproves(this.toRoleApprove(approveSetting, approvalProcess));
+    approvalProcess.setGroupApproves(this.toGroupApprove(approveSetting, approvalProcess));
   }
 
-  private List<GroupApproveDTO> toGroupApprove(
-      ApproveSetting approveSetting, WorkflowTransactionDTO transaction) {
-    List<GroupApproveDTO> groupApproves = new ArrayList<>();
-    approveSetting
-        .getGroupApproveSettings()
+  private List<GroupApprovalDTO> toGroupApprove(
+      ApprovalSetting approvalSetting, ApprovalProcessDTO approvalProcess) {
+    List<GroupApprovalDTO> groupApproves = new ArrayList<>();
+    approvalSetting
+        .getGroupApprovalSettings()
         .forEach(
             groupApproveSetting -> {
-              List<ApproveDTO> approves = new ArrayList<>();
+              List<ApprovalDTO> approves = new ArrayList<>();
               var employees = employeeRepository.findByGroupsId(groupApproveSetting.getGroupId());
               employees.forEach(
                   employee -> {
                     var approve =
-                        ApproveDTO.builder()
+                        ApprovalDTO.builder()
                             .approver(employeeMapper.toEmployeeResponse(employee))
                             .build();
                     approves.add(approve);
                   });
               groupApproves.add(
-                  GroupApproveDTO.builder()
-                      .transaction(
-                          WorkflowTransactionRequest.builder().id(transaction.getId()).build())
+                  GroupApprovalDTO.builder()
+                      .approvalProcess(
+                          ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .groupId(groupApproveSetting.getId())
                       .requiredPercentage(groupApproveSetting.getRequiredPercentage())
                       .status(ActionStatus.WAIT)
                       .currentApproves(approves)
-                      .transaction(
-                          WorkflowTransactionRequest.builder().id(transaction.getId()).build())
+                      .approvalProcess(
+                          ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .build());
             });
     return groupApproves;
   }
 
-  private List<RoleApproveDTO> toRoleApprove(
-      ApproveSetting approveSetting, WorkflowTransactionDTO transaction) {
-    List<RoleApproveDTO> roleApproves = new ArrayList<>();
-    approveSetting
-        .getRoleApproveSettings()
+  private List<RoleApprovalDTO> toRoleApprove(
+      ApprovalSetting approvalSetting, ApprovalProcessDTO approvalProcess) {
+    List<RoleApprovalDTO> roleApproves = new ArrayList<>();
+    approvalSetting
+        .getRoleApprovalSettings()
         .forEach(
             roleApproveSetting -> {
-              List<ApproveDTO> approves = new ArrayList<>();
+              List<ApprovalDTO> approves = new ArrayList<>();
               var employees =
                   employeeRepository.findByRolesName(roleApproveSetting.getRole().name());
               employees.forEach(
                   employee -> {
                     var approve =
-                        ApproveDTO.builder()
+                        ApprovalDTO.builder()
                             .approver(employeeMapper.toEmployeeResponse(employee))
                             .status(ActionStatus.WAIT)
                             .build();
                     approves.add(approve);
                   });
               roleApproves.add(
-                  RoleApproveDTO.builder()
-                      .transaction(
-                          WorkflowTransactionRequest.builder().id(transaction.getId()).build())
+                  RoleApprovalDTO.builder()
+                      .approvalProcess(
+                          ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .role(roleApproveSetting.getRole())
                       .currentApproves(approves)
                       .requiredCount(roleApproveSetting.getRequiredCount())

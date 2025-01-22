@@ -3,8 +3,8 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.commonlib.annotation.TransactionId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
-import com.tsoftware.qtd.entity.WorkflowTransaction;
-import com.tsoftware.qtd.service.WorkflowTransactionService;
+import com.tsoftware.qtd.entity.ApprovalProcess;
+import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.validation.IsEnum;
 import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
@@ -17,10 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/workflow-transactions")
+@RequestMapping("/approval-process")
 @RequiredArgsConstructor
-public class WorkflowTransactionController {
-  private final WorkflowTransactionService workflowTransactionService;
+public class ApprovalProcessController {
+  private final ApprovalProcessService approvalProcessService;
 
   @WorkflowAPI(action = WorkflowAPI.WorkflowAction.APPROVE)
   @PostMapping("{id}/approve")
@@ -28,12 +28,11 @@ public class WorkflowTransactionController {
       @PathVariable @Valid @TransactionId @IsUUID String id,
       @Valid @IsEnum(enumClass = ActionStatus.class) @RequestParam String status) {
     return ResponseEntity.ok(
-        workflowTransactionService.approve(UUID.fromString(id), ActionStatus.valueOf(status)));
+        approvalProcessService.approve(UUID.fromString(id), ActionStatus.valueOf(status)));
   }
 
   @GetMapping
-  public ResponseEntity<?> getAll(
-      @Filter Specification<WorkflowTransaction> spec, Pageable pageable) {
-    return ResponseEntity.ok(workflowTransactionService.getAll(spec, pageable));
+  public ResponseEntity<?> getAll(@Filter Specification<ApprovalProcess> spec, Pageable pageable) {
+    return ResponseEntity.ok(approvalProcessService.getAll(spec, pageable));
   }
 }

@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.constants.EnumType.Role;
@@ -12,13 +12,13 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleApproveDTO {
+public class RoleApprovalDTO {
   private UUID id;
   private Role role;
   private Integer requiredCount;
-  private List<ApproveDTO> currentApproves;
+  private List<ApprovalDTO> currentApproves;
   private ActionStatus status;
-  private WorkflowTransactionRequest transaction;
+  private ApprovalProcessRequest approvalProcess;
 
   public boolean isApproved() {
     this.currentApproves = this.currentApproves != null ? this.currentApproves : new ArrayList<>();

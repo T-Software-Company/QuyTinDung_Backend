@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.dto.setting;
 
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.constants.EnumType.Role;
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
 import com.tsoftware.qtd.validation.IsEnum;
 import com.tsoftware.qtd.validation.IsUUID;
 import jakarta.validation.Valid;
@@ -15,21 +15,21 @@ import lombok.*;
 @Setter
 @Builder
 @AllArgsConstructor
-public class ApproveSettingRequest {
+public class ApprovalSettingRequest {
   private UUID id;
   @NotNull @NotBlank private String name;
 
-  @IsEnum(enumClass = TransactionType.class)
-  private String transactionType;
+  @IsEnum(enumClass = ProcessType.class)
+  private String processType;
 
-  @NotNull private List<@Valid RoleApproveSettingRequest> roleApproveSettings;
-  @NotNull private List<@Valid GroupApproveSettingRequest> groupApproveSettings;
+  @NotNull private List<@Valid RoleApprovalSettingRequest> roleApprovalSettings;
+  @NotNull private List<@Valid GroupApprovalSettingRequest> groupApprovalSettings;
 
   @Getter
   @Setter
   @Builder
   @AllArgsConstructor
-  public static class GroupApproveSettingRequest {
+  public static class GroupApprovalSettingRequest {
     @NotNull @IsUUID private UUID groupId;
     @NotNull private Integer requiredPercentage;
   }
@@ -38,7 +38,7 @@ public class ApproveSettingRequest {
   @Setter
   @Builder
   @AllArgsConstructor
-  public static class RoleApproveSettingRequest {
+  public static class RoleApprovalSettingRequest {
     @NotNull
     @IsEnum(enumClass = Role.class)
     private String role;
