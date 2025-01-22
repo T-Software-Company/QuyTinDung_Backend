@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-public interface WorkflowClient<T extends Workflow> {
+public interface WorkflowClient<T extends Workflow<?>> {
 
   @GetMapping(value = "/workflows")
   ResponseEntity<List<T>> getByStatus(

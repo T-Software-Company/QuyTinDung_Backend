@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.dto.approval;
 
 import java.util.UUID;
 import lombok.Builder;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class WorkflowTransactionRequest {
+public class GroupApprovalRequest {
   private UUID id;
 }

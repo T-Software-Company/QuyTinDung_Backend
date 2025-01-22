@@ -1,6 +1,7 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -9,14 +10,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-public class GroupApproveResponse {
+@Entity
+@Table
+public class GroupApproval extends AbstractAuditEntity {
   private UUID groupId;
   private Integer requiredPercentage;
-  private List<ApproveResponse> currentApproves;
+
+  @OneToMany(mappedBy = "groupApproval", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<Approval> currentApprovals;
+
   private ActionStatus status;
+
+  @ManyToOne private ApprovalProcess approvalProcess;
 }

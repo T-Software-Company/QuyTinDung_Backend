@@ -1,7 +1,9 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +17,16 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table
-public class RoleApproveSetting extends AbstractAuditEntity {
+public class RoleApproval extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private Role role;
 
   private Integer requiredCount;
-  @ManyToOne private ApproveSetting approveSetting;
+
+  @OneToMany(mappedBy = "roleApproval", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<Approval> currentApprovals;
+
+  private ActionStatus status;
+
+  @ManyToOne private ApprovalProcess approvalProcess;
 }

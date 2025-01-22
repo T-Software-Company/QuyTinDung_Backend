@@ -1,9 +1,9 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
-import com.tsoftware.qtd.dto.transaction.WorkflowTransactionResponse;
+import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;
@@ -24,13 +24,11 @@ public class LoanRequestService {
   private final LoanRequestRepository loanrequestRepository;
   private final LoanRequestMapper loanrequestMapper;
   private final ApplicationRepository applicationRepository;
-  private final WorkflowTransactionService workflowTransactionService;
+  private final ApprovalProcessService approvalProcessService;
 
-  public WorkflowTransactionResponse request(LoanRequestRequest loanRequestRequest) {
-    return workflowTransactionService.create(
-        loanRequestRequest,
-        loanRequestRequest.getApplication(),
-        TransactionType.CREATE_LOAN_REQUEST);
+  public ApprovalProcessResponse request(LoanRequestRequest loanRequestRequest) {
+    return approvalProcessService.create(
+        loanRequestRequest, loanRequestRequest.getApplication(), ProcessType.CREATE_LOAN_REQUEST);
   }
 
   public LoanRequestResponse create(LoanRequestRequest loanRequestRequest, UUID applicationId) {

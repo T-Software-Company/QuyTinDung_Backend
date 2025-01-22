@@ -394,7 +394,7 @@ public class KeycloakService {
     user.setEmailVerified(false);
     var credential = new CredentialRepresentation();
     credential.setType(CredentialRepresentation.PASSWORD);
-    credential.setTemporary(true);
+    credential.setTemporary(false);
     credential.setValue(customerRequest.getPassword());
     user.setCredentials(List.of(credential));
     return user;

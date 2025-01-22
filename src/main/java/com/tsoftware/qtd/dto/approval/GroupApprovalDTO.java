@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import java.util.ArrayList;
@@ -11,13 +11,13 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupApproveDTO {
+public class GroupApprovalDTO {
   private UUID id;
   private UUID groupId;
   private Integer requiredPercentage;
-  private List<ApproveDTO> currentApproves;
+  private List<ApprovalDTO> currentApproves;
   private ActionStatus status;
-  private WorkflowTransactionRequest transaction;
+  private ApprovalProcessRequest approvalProcess;
 
   public boolean isApproved() {
     this.currentApproves = this.currentApproves != null ? this.currentApproves : new ArrayList<>();

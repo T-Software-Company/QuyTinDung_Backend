@@ -5,8 +5,9 @@ import com.jayway.jsonpath.JsonPath;
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
+import com.tsoftware.qtd.commonlib.util.StringUtils;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
-import com.tsoftware.qtd.dto.transaction.WorkflowTransactionResponse;
+import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.dto.workflow.StepHistoryDTO;
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,7 +28,9 @@ public class SpeLConfig {
       if (response == null) return WorkflowStatus.INPROGRESS;
       var transaction =
           JsonParser.convert(
-              response.get("workflowTransactionResponse"), WorkflowTransactionResponse.class);
+              response.get(
+                  StringUtils.lowercaseFirstLetter(ApprovalProcessResponse.class.getSimpleName())),
+              ApprovalProcessResponse.class);
       if (transaction.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
       if (transaction.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
     }
@@ -42,7 +45,11 @@ public class SpeLConfig {
     var last = histories.getLast();
     var loanRequestResponse =
         JsonParser.getValueByPath(
-            last, "response.workflowTransactionResponse.metadata", LoanRequestResponse.class);
+            last,
+            "response."
+                + StringUtils.lowercaseFirstLetter(ApprovalProcessResponse.class.getSimpleName())
+                + ".metadata",
+            LoanRequestResponse.class);
     return loanRequestResponse.getAmount().compareTo(BigDecimal.valueOf(validationPrice)) >= 0;
   }
 }

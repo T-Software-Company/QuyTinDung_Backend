@@ -1,8 +1,8 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
-import com.tsoftware.qtd.constants.EnumType.TransactionType;
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -20,12 +20,12 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @AllArgsConstructor
-public class WorkflowTransactionDTO extends AbstractTransaction<TransactionType> {
+public class ApprovalProcessDTO extends AbstractTransaction<ProcessType> {
   private ApplicationDTO application;
   private ActionStatus status;
-  private List<ApproveDTO> approves;
-  private List<GroupApproveDTO> groupApproves;
-  private List<RoleApproveDTO> roleApproves;
+  private List<ApprovalDTO> approves;
+  private List<GroupApprovalDTO> groupApproves;
+  private List<RoleApprovalDTO> roleApproves;
   private ZonedDateTime approvedAt;
   private UUID referenceId;
 
@@ -35,9 +35,9 @@ public class WorkflowTransactionDTO extends AbstractTransaction<TransactionType>
         Optional.ofNullable(this.approves).orElse(new ArrayList<>()).stream()
                 .allMatch(approve -> approve.getStatus() == ActionStatus.APPROVED)
             && Optional.ofNullable(this.roleApproves).orElse(new ArrayList<>()).stream()
-                .allMatch(RoleApproveDTO::isApproved)
+                .allMatch(RoleApprovalDTO::isApproved)
             && Optional.ofNullable(this.groupApproves).orElse(new ArrayList<>()).stream()
-                .allMatch(GroupApproveDTO::isApproved);
+                .allMatch(GroupApprovalDTO::isApproved);
     var rejected =
         Optional.ofNullable(this.approves).orElse(new ArrayList<>()).stream()
                 .anyMatch(a -> ActionStatus.REJECTED.equals(a.getStatus()))

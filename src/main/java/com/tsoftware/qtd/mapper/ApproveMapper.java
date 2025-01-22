@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
-import com.tsoftware.qtd.entity.Approve;
+import com.tsoftware.qtd.dto.approval.ApprovalResponse;
+import com.tsoftware.qtd.entity.Approval;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -9,10 +9,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", uses = EmployeeMapper.class)
 public interface ApproveMapper {
-  Approve toEntity(ApproveResponse dto);
+  Approval toEntity(ApprovalResponse dto);
 
-  ApproveResponse toDTO(Approve entity);
+  ApprovalResponse toDTO(Approval entity);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void updateEntity(ApproveResponse dto, @MappingTarget Approve entity);
+  void updateEntity(ApprovalResponse dto, @MappingTarget Approval entity);
 }

@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.dto.approval;
 
 import java.util.UUID;
 import lombok.*;
@@ -8,6 +8,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleApproveRequest {
+public class RoleApprovalRequest {
   private UUID id;
 }

@@ -5,9 +5,9 @@ import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.FinancialInfoRequest;
 import com.tsoftware.qtd.dto.application.FinancialInfoResponse;
-import com.tsoftware.qtd.dto.transaction.WorkflowTransactionDTO;
+import com.tsoftware.qtd.dto.approval.ApprovalProcessDTO;
+import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.service.FinancialInfoService;
-import com.tsoftware.qtd.service.WorkflowTransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,32 +15,31 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("financialInfoExecutor")
 @RequiredArgsConstructor
-public class FinancialInfoExecutor extends BaseTransactionExecutor<WorkflowTransactionDTO> {
-  private final WorkflowTransactionService workflowTransactionService;
+public class FinancialInfoExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
+  private final ApprovalProcessService approvalProcessService;
   private final FinancialInfoService financialInfoService;
 
   @Override
-  protected void preValidate(WorkflowTransactionDTO workflowTransactionDTO) {
-    workflowTransactionService.validateTransaction(workflowTransactionDTO);
+  protected void preValidate(ApprovalProcessDTO approvalProcessDTO) {
+    approvalProcessService.validateTransaction(approvalProcessDTO);
   }
 
   @Override
-  protected WorkflowTransactionDTO processApproval(
-      WorkflowTransactionDTO workflowTransactionDTO, ActionStatus status) {
-    return workflowTransactionService.processApproval(workflowTransactionDTO, status);
+  protected ApprovalProcessDTO processApproval(
+      ApprovalProcessDTO approvalProcessDTO, ActionStatus status) {
+    return approvalProcessService.processApproval(approvalProcessDTO, status);
   }
 
   @Override
-  protected void doExecute(WorkflowTransactionDTO workflowTransactionDTO) {
-    log.info(
-        "All approvals received for workflowTransactionDTO: {}", workflowTransactionDTO.getId());
-    var data = JsonParser.convert(workflowTransactionDTO.getMetadata(), FinancialInfoRequest.class);
+  protected void doExecute(ApprovalProcessDTO approvalProcessDTO) {
+    log.info("All approvals received for approvalProcessDTO: {}", approvalProcessDTO.getId());
+    var data = JsonParser.convert(approvalProcessDTO.getMetadata(), FinancialInfoRequest.class);
     FinancialInfoResponse result = financialInfoService.create(data);
-    workflowTransactionDTO.setReferenceId(result.getId());
+    approvalProcessDTO.setReferenceId(result.getId());
   }
 
   @Override
-  protected WorkflowTransactionDTO postExecute(WorkflowTransactionDTO workflowTransactionDTO) {
-    return workflowTransactionService.updateTransaction(workflowTransactionDTO);
+  protected ApprovalProcessDTO postExecute(ApprovalProcessDTO approvalProcessDTO) {
+    return approvalProcessService.updateTransaction(approvalProcessDTO);
   }
 }

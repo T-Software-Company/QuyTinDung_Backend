@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.transaction;
+package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
@@ -14,12 +14,12 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApproveDTO {
+public class ApprovalDTO {
   private UUID id;
   private String comment;
   private EmployeeResponse approver;
   private ActionStatus status;
-  private WorkflowTransactionRequest transaction;
-  private GroupApproveRequest groupApprove;
-  private RoleApproveRequest roleApprove;
+  private ApprovalProcessRequest approvalProcess;
+  private GroupApprovalRequest groupApprove;
+  private RoleApprovalRequest roleApprove;
 }

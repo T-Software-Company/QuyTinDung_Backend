@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.setting.ApproveSettingRequest;
-import com.tsoftware.qtd.dto.setting.ApproveSettingResponse;
+import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
+import com.tsoftware.qtd.dto.setting.ApprovalSettingResponse;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.SettingMapper;
@@ -20,28 +20,28 @@ public class ApproveSettingService {
   private final SettingMapper settingMapper;
   private final ApproveSettingRepository approveSettingRepository;
 
-  public ApproveSettingResponse create(ApproveSettingRequest approveSettingRequest) {
-    var entity = settingMapper.toEntity(approveSettingRequest);
-    Optional.ofNullable(entity.getGroupApproveSettings())
+  public ApprovalSettingResponse create(ApprovalSettingRequest approvalSettingRequest) {
+    var entity = settingMapper.toEntity(approvalSettingRequest);
+    Optional.ofNullable(entity.getGroupApprovalSettings())
         .ifPresent(
-            groupApproveSettings ->
-                groupApproveSettings.forEach(
-                    groupApproveSetting -> groupApproveSetting.setApproveSetting(entity)));
-    Optional.ofNullable(entity.getRoleApproveSettings())
+            groupApprovalSettings ->
+                groupApprovalSettings.forEach(
+                    groupApproveSetting -> groupApproveSetting.setApprovalSetting(entity)));
+    Optional.ofNullable(entity.getRoleApprovalSettings())
         .ifPresent(
-            roleApproveSettings ->
-                roleApproveSettings.forEach(
-                    roleApproveSetting -> roleApproveSetting.setApproveSetting(entity)));
+            roleApprovalSettings ->
+                roleApprovalSettings.forEach(
+                    roleApproveSetting -> roleApproveSetting.setApprovalSetting(entity)));
     var saved = approveSettingRepository.save(entity);
     return settingMapper.toResponse(saved);
   }
 
-  public ApproveSettingResponse update(ApproveSettingRequest approveSettingRequest, UUID id) {
+  public ApprovalSettingResponse update(ApprovalSettingRequest approvalSettingRequest, UUID id) {
     var entity =
         approveSettingRepository
             .findById(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
-    settingMapper.updateEntity(entity, approveSettingRequest);
+    settingMapper.updateEntity(entity, approvalSettingRequest);
     return settingMapper.toResponse(approveSettingRepository.save(entity));
   }
 }

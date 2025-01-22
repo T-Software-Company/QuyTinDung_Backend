@@ -3,11 +3,11 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.PageResponse;
+import com.tsoftware.qtd.dto.approval.ApprovalResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
 import com.tsoftware.qtd.dto.employee.ProfileRequest;
-import com.tsoftware.qtd.dto.transaction.ApproveResponse;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.kcTransactionManager.KcTransactional;
 import com.tsoftware.qtd.service.ApproveService;
@@ -222,8 +222,8 @@ public class EmployeeController {
             .build());
   }
 
-  @GetMapping("/{id}/approves")
-  public ResponseEntity<ApiResponse<List<ApproveResponse>>> getApproves(
+  @GetMapping("/{id}/approvals")
+  public ResponseEntity<ApiResponse<List<ApprovalResponse>>> getApproves(
       @PathVariable @Valid @IsUUID String id) {
     return ResponseEntity.ok(
         new ApiResponse<>(
