@@ -23,9 +23,17 @@ public class ApprovalSetting extends AbstractAuditEntity {
   @Column(nullable = false, unique = true)
   private ProcessType processType;
 
-  @OneToMany(mappedBy = "approvalSetting", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(
+      mappedBy = "approvalSetting",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
   private List<RoleApprovalSetting> roleApprovalSettings;
 
-  @OneToMany(mappedBy = "approvalSetting", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(
+      mappedBy = "approvalSetting",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
   private List<GroupApprovalSetting> groupApprovalSettings;
 }

@@ -155,7 +155,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest()
         .body(
             new ApiResponse<>(
-                ErrorType.CHECKSUM_INVALID.getCode(), INVALID_REQUEST_INFORMATION_MESSAGE, errors));
+                ErrorType.REQUEST_BODY_NOT_VALID.getCode(),
+                INVALID_REQUEST_INFORMATION_MESSAGE,
+                errors));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -173,7 +175,7 @@ public class GlobalExceptionHandler {
         .body(
             ApiResponse.<Map<String, Object>>builder()
                 .message(INVALID_REQUEST_INFORMATION_MESSAGE)
-                .code(ErrorType.CHECKSUM_INVALID.getCode())
+                .code(ErrorType.REQUEST_BODY_NOT_VALID.getCode())
                 .result(errors)
                 .build());
   }

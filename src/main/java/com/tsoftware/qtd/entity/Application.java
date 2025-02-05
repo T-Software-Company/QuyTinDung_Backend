@@ -61,7 +61,7 @@ public class Application extends AbstractAuditEntity {
   private List<Employee> loanProcessors;
 
   @OneToMany(mappedBy = "application", fetch = FetchType.LAZY)
-  private List<ApprovalProcess> transactions;
+  private List<ApprovalProcess> approvalProcess;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Customer customer;

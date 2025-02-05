@@ -42,13 +42,25 @@ public class ApprovalProcess extends AbstractAuditEntity {
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime approvedAt;
 
-  @OneToMany(mappedBy = "approvalProcess", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(
+      mappedBy = "approvalProcess",
+      fetch = FetchType.EAGER,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   private List<Approval> approvals;
 
-  @OneToMany(mappedBy = "approvalProcess", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(
+      mappedBy = "approvalProcess",
+      fetch = FetchType.EAGER,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   private List<GroupApproval> groupApprovals;
 
-  @OneToMany(mappedBy = "approvalProcess", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(
+      mappedBy = "approvalProcess",
+      fetch = FetchType.EAGER,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   private List<RoleApproval> roleApprovals;
 
   @Type(JsonType.class)

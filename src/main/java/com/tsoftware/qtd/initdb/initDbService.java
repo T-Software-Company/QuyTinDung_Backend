@@ -36,12 +36,12 @@ public class initDbService {
   private final GroupService groupService;
   private final CustomerService customerService;
   private final GroupRepository groupRepository;
-  private final ApproveSettingService approveSettingService;
+  private final ApprovalSettingService approvalSettingService;
   private final CustomerRepository customerRepository;
-  private final ApproveSettingRepository approveSettingRepository;
+  private final ApprovalSettingRepository approvalSettingRepository;
 
   public void createApproveSetting() {
-    if (approveSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_REQUEST).isEmpty()) {
+    if (approvalSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_REQUEST).isEmpty()) {
       var request =
           ApprovalSettingRequest.builder()
               .roleApprovalSettings(
@@ -53,9 +53,9 @@ public class initDbService {
               .processType(ProcessType.CREATE_LOAN_REQUEST.name())
               .name("create loan request")
               .build();
-      approveSettingService.create(request);
+      approvalSettingService.create(request);
     }
-    if (approveSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_PLAN).isEmpty()) {
+    if (approvalSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_PLAN).isEmpty()) {
       var request =
           ApprovalSettingRequest.builder()
               .roleApprovalSettings(
@@ -67,9 +67,9 @@ public class initDbService {
               .processType(ProcessType.CREATE_LOAN_PLAN.name())
               .name("create loan plan")
               .build();
-      approveSettingService.create(request);
+      approvalSettingService.create(request);
     }
-    if (approveSettingRepository.findByProcessType(ProcessType.CREATE_FINANCIAL_INFO).isEmpty()) {
+    if (approvalSettingRepository.findByProcessType(ProcessType.CREATE_FINANCIAL_INFO).isEmpty()) {
       var request =
           ApprovalSettingRequest.builder()
               .roleApprovalSettings(
@@ -81,7 +81,7 @@ public class initDbService {
               .processType(ProcessType.CREATE_FINANCIAL_INFO.name())
               .name("create financial info")
               .build();
-      approveSettingService.create(request);
+      approvalSettingService.create(request);
     }
   }
 

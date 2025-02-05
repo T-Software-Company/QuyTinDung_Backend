@@ -12,7 +12,7 @@ import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.*;
 import com.tsoftware.qtd.repository.ApprovalProcessRepository;
-import com.tsoftware.qtd.repository.ApproveSettingRepository;
+import com.tsoftware.qtd.repository.ApprovalSettingRepository;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.util.RequestUtil;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApprovalProcessService {
   private final ApprovalProcessRepository repository;
   private final ApprovalProcessMapper approvalProcessMapper;
-  private final ApproveSettingRepository approveSettingRepository;
+  private final ApprovalSettingRepository approvalSettingRepository;
   private final EmployeeRepository employeeRepository;
   private final EmployeeMapper employeeMapper;
   private final PageResponseMapper pageResponseMapper;
@@ -100,8 +100,9 @@ public class ApprovalProcessService {
   public PageResponse<ApprovalProcessResponse> getAll(
       Specification<ApprovalProcess> spec, Pageable pageable) {
     try {
-      var transactions = repository.findAll(spec, pageable).map(approvalProcessMapper::toResponse);
-      return pageResponseMapper.toPageResponse(transactions);
+      var approvalProcess =
+          repository.findAll(spec, pageable).map(approvalProcessMapper::toResponse);
+      return pageResponseMapper.toPageResponse(approvalProcess);
     } catch (DataIntegrityViolationException e) {
       throw new CommonException(ErrorType.METHOD_ARGUMENT_NOT_VALID, e.getMessage());
     }
@@ -209,7 +210,7 @@ public class ApprovalProcessService {
   public void mappingApprovesFromSetting(
       ApprovalProcessDTO approvalProcess, ProcessType processType) {
     var approveSetting =
-        approveSettingRepository
+        approvalSettingRepository
             .findByProcessType(processType)
             .orElseThrow(
                 () ->

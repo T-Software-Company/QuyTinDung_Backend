@@ -38,6 +38,10 @@ public class OnboardingWorkflow extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @OneToMany(mappedBy = "onboardingWorkflow", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(
+      mappedBy = "onboardingWorkflow",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
   private List<StepHistory> steps;
 }

@@ -22,15 +22,15 @@ public class ApprovalSettingRequest {
   @IsEnum(enumClass = ProcessType.class)
   private String processType;
 
-  @NotNull private List<@Valid RoleApprovalSettingRequest> roleApprovalSettings;
-  @NotNull private List<@Valid GroupApprovalSettingRequest> groupApprovalSettings;
+  private List<@Valid RoleApprovalSettingRequest> roleApprovalSettings;
+  private List<@Valid GroupApprovalSettingRequest> groupApprovalSettings;
 
   @Getter
   @Setter
   @Builder
   @AllArgsConstructor
   public static class GroupApprovalSettingRequest {
-    @NotNull @IsUUID private UUID groupId;
+    @NotNull @IsUUID private String groupId;
     @NotNull private Integer requiredPercentage;
   }
 
