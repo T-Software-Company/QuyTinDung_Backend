@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -37,9 +36,9 @@ public class ControllerAspect {
       }
       ApiResponse<Object> responseData = new ApiResponse<>();
       responseData.setMessage(SUCCESS_MESSAGE);
-      responseData.setCode(HttpStatus.OK.value());
+      responseData.setCode(res.getStatusCode().value());
       responseData.setResult(res.getBody());
-      return ResponseEntity.ok(responseData);
+      return ResponseEntity.status(res.getStatusCode()).body(responseData);
     }
     return response;
   }
