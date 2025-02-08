@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ApproveSettingRepository
+public interface ApprovalSettingRepository
     extends JpaRepository<ApprovalSetting, UUID>, JpaSpecificationExecutor<ApprovalSetting> {
   Optional<ApprovalSetting> findByProcessType(ProcessType processType);
 }

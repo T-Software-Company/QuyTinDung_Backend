@@ -15,14 +15,13 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class LoanPlanRequest {
-  @NotNull @NotBlank private String loanNeeds;
   @NotNull private BigDecimal totalCapitalRequirement;
   @NotNull private BigDecimal ownCapital;
   @NotNull private BigDecimal proposedLoanAmount;
   @NotNull private BigDecimal monthlyIncome;
   @NotNull @NotNull private String repaymentPlan;
   private String note;
-  @NotNull @NotBlank private String loanTerm;
+  @NotNull @NotBlank private Integer loanTerm;
   private Map<String, Object> metadata;
   private Set<String> assignees;
   @NotNull @Valid private ApplicationRequest application;

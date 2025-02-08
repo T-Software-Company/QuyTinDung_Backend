@@ -24,14 +24,13 @@ import org.hibernate.annotations.Type;
 @Table
 public class LoanPlan extends AbstractAuditEntity {
 
-  private String loanNeeds;
   private BigDecimal totalCapitalRequirement;
   private BigDecimal ownCapital;
   private BigDecimal proposedLoanAmount;
   private BigDecimal monthlyIncome;
   private String repaymentPlan;
   private String note;
-  private String loanTerm;
+  private Integer loanTerm;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")

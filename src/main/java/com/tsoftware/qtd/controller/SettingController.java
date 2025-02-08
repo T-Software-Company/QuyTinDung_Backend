@@ -2,31 +2,87 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
-import com.tsoftware.qtd.service.ApproveSettingService;
+import com.tsoftware.qtd.dto.setting.InterestRateSettingRequest;
+import com.tsoftware.qtd.entity.ApprovalSetting;
+import com.tsoftware.qtd.entity.InterestRateSetting;
+import com.tsoftware.qtd.service.ApprovalSettingService;
+import com.tsoftware.qtd.service.InterestRateSettingService;
+import com.tsoftware.qtd.validation.IsUUID;
+import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/settings")
+@PreAuthorize("hasRole('ADMIN')")
 public class SettingController {
-  private final ApproveSettingService approveSettingService;
+  private final ApprovalSettingService approvalSettingService;
+  private final InterestRateSettingService interestRateSettingService;
 
-  @GetMapping
-  public ResponseEntity<?> getAll() {
-    return ResponseEntity.ok("ok");
+  @GetMapping("/approval-settings")
+  public ResponseEntity<?> getAllApprovalSettings(
+      @Filter Specification<ApprovalSetting> spec, Pageable pageable) {
+    return ResponseEntity.ok(approvalSettingService.getAll(spec, pageable));
   }
 
-  @PostMapping
+  @PostMapping("/approval-settings")
   public ResponseEntity<?> createApproveSetting(
       @RequestBody @Valid ApprovalSettingRequest approvalSettingRequest) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(
+            new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                "Created",
+                approvalSettingService.create(approvalSettingRequest)));
+  }
+
+  @PutMapping("/approval-settings/{id}")
+  public ResponseEntity<?> updateApproveSetting(
+      @RequestBody @Valid ApprovalSettingRequest approvalSettingRequest,
+      @Valid @IsUUID @PathVariable String id) {
     return ResponseEntity.ok(
-        new ApiResponse<>(
-            HttpStatus.OK.value(),
-            "Created",
-            approveSettingService.create(approvalSettingRequest)));
+        approvalSettingService.update(approvalSettingRequest, UUID.fromString(id)));
+  }
+
+  @DeleteMapping("/approval-settings/{id}")
+  public ResponseEntity<?> deleteApproveSetting(@Valid @IsUUID @PathVariable String id) {
+    approvalSettingService.delete(UUID.fromString(id));
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
+  }
+
+  @GetMapping("interest-rate-settings")
+  public ResponseEntity<?> getInterestRateSettings(
+      @Filter Specification<InterestRateSetting> spec, Pageable pageable) {
+    return ResponseEntity.ok(interestRateSettingService.findAll(spec, pageable));
+  }
+
+  @PostMapping("interest-rate-settings")
+  public ResponseEntity<?> addInterestRateSetting(
+      @Valid @RequestBody InterestRateSettingRequest request) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(
+            new ApiResponse<>(
+                HttpStatus.CREATED.value(), "Created", interestRateSettingService.create(request)));
+  }
+
+  @PutMapping("interest-rate-settings/{id}")
+  public ResponseEntity<?> updateInterestRateSetting(
+      @Valid @RequestBody InterestRateSettingRequest request,
+      @Valid @IsUUID @PathVariable String id) {
+    return ResponseEntity.ok(interestRateSettingService.update(request, UUID.fromString(id)));
+  }
+
+  @DeleteMapping("interest-rate-settings/{id}")
+  public ResponseEntity<?> deleteInterestRateSetting(@Valid @IsUUID @PathVariable String id) {
+    interestRateSettingService.delete(UUID.fromString(id));
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
   }
 }

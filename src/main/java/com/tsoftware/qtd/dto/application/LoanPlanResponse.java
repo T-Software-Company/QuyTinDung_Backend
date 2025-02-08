@@ -12,13 +12,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class LoanPlanResponse extends AbstractResponse {
-  private String loanNeeds;
   private BigDecimal totalCapitalRequirement;
   private BigDecimal ownCapital;
   private BigDecimal proposedLoanAmount;
   private BigDecimal monthlyIncome;
   private String repaymentPlan;
   private String note;
-  private String loanTerm;
+  private Integer loanTerm;
   private Map<String, Object> metadata;
 }
