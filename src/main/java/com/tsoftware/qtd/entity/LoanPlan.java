@@ -31,6 +31,7 @@ public class LoanPlan extends AbstractAuditEntity {
   private String repaymentPlan;
   private String note;
   private Integer loanTerm;
+  private BigDecimal interestRate;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")

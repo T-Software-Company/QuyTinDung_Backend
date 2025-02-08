@@ -38,6 +38,9 @@ public class LoanPlanService {
         applicationRepository
             .findById(applicationId)
             .orElseThrow(() -> new NotFoundException("Application not found"));
+    application.setInterestRate(loanplan.getInterestRate());
+    application.setLoanTerm(loanplan.getLoanTerm());
+    applicationRepository.save(application);
     loanplan.setApplication(application);
     return loanplanMapper.toDTO(loanplanRepository.save(loanplan));
   }

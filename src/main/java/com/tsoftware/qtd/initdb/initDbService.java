@@ -19,10 +19,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @Transactional
@@ -87,7 +89,7 @@ public class initDbService {
 
   public void createGroups() {
     var groupsResource = keycloak.realm(idpProperties.getRealm()).groups();
-    if (!groupsResource.groups().isEmpty()) {
+    if (!groupsResource.groups().isEmpty() && !groupRepository.findAll().isEmpty()) {
       return;
     }
 
