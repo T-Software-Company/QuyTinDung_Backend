@@ -19,5 +19,6 @@ public class LoanPlanResponse extends AbstractResponse {
   private String repaymentPlan;
   private String note;
   private Integer loanTerm;
+  private BigDecimal interestRate;
   private Map<String, Object> metadata;
 }

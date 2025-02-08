@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.application;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -21,7 +20,8 @@ public class LoanPlanRequest {
   @NotNull private BigDecimal monthlyIncome;
   @NotNull @NotNull private String repaymentPlan;
   private String note;
-  @NotNull @NotBlank private Integer loanTerm;
+  @NotNull private Integer loanTerm;
+  @NotNull private BigDecimal interestRate;
   private Map<String, Object> metadata;
   private Set<String> assignees;
   @NotNull @Valid private ApplicationRequest application;

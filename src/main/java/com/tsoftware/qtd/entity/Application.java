@@ -35,6 +35,7 @@ public class Application extends AbstractAuditEntity {
 
   private BigDecimal amount;
   private BigDecimal interestRate;
+  private Integer loanTerm;
   private BigDecimal amountPaid;
   private BigDecimal currentOutstandingDebt;
 

@@ -303,7 +303,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "realm-management" : [ "query-realms", "manage-users", "view-users", "view-events", "query-groups", "query-users", "view-identity-providers", "manage-authorization", "manage-events", "view-authorization", "create-client", "impersonation", "manage-clients", "view-clients", "manage-realm", "view-realm", "query-clients", "manage-identity-providers" ]
+            "realm-management" : [ "query-realms", "manage-users", "view-events", "view-users", "query-groups", "query-users", "view-identity-providers", "manage-authorization", "manage-events", "view-authorization", "create-client", "impersonation", "manage-clients", "view-clients", "manage-realm", "view-realm", "query-clients", "manage-identity-providers" ]
           }
         },
         "clientRole" : true,
@@ -425,27 +425,7 @@
       } ]
     }
   },
-  "groups" : [ {
-    "id" : "c5fe595c-cc90-4a47-aa46-e7ecd5b9ab04",
-    "name" : "Hội đồng tín dụng",
-    "path" : "/Hội đồng tín dụng",
-    "subGroups" : [ ],
-    "attributes" : { },
-    "realmRoles" : [ ],
-    "clientRoles" : {
-      "server" : [ "REPORT_ACCESS", "CREDIT_ACCESS" ]
-    }
-  }, {
-    "id" : "d97a380a-88bd-4e5c-8275-9e13814acb44",
-    "name" : "Hội đồng định giá",
-    "path" : "/Hội đồng định giá",
-    "subGroups" : [ ],
-    "attributes" : { },
-    "realmRoles" : [ ],
-    "clientRoles" : {
-      "server" : [ "ASSET_VALUATION_ACCESS", "REPORT_ACCESS" ]
-    }
-  } ],
+  "groups" : [ ],
   "defaultRole" : {
     "id" : "bd312951-3785-4eb8-918b-95dec0229907",
     "name" : "default-roles-tsoftware",
@@ -773,6 +753,7 @@
       "oidc.ciba.grant.enabled" : "false",
       "client.secret.creation.time" : "1736866561",
       "backchannel.logout.session.required" : "true",
+      "post.logout.redirect.uris" : "+",
       "display.on.consent.screen" : "false",
       "oauth2.device.authorization.grant.enabled" : "false",
       "backchannel.logout.revoke.offline.tokens" : "false"
@@ -1565,7 +1546,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "oidc-usermodel-property-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "saml-user-property-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper" ]
       }
     }, {
       "id" : "2a48a511-f7a7-4eba-81ff-da5e0a34118f",
@@ -1581,7 +1562,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper", "saml-user-property-mapper", "saml-role-list-mapper" ]
       }
     }, {
       "id" : "6faa7fb7-0735-472b-9f1c-9b8c3cae529c",

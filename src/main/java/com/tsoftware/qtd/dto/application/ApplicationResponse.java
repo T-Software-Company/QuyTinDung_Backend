@@ -20,6 +20,7 @@ public class ApplicationResponse extends AbstractResponse {
   private ZonedDateTime startDate;
   private ZonedDateTime dueDate;
   private BigDecimal interestRate;
+  private Integer loanTerm;
   private BigDecimal amountPaid;
   private BigDecimal currentOutstandingDebt;
   private Customer customer;
