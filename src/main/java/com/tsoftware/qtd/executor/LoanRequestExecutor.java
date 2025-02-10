@@ -5,7 +5,6 @@ import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessDTO;
-import com.tsoftware.qtd.mapper.LoanRequestMapper;
 import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.service.LoanRequestService;
 import java.util.UUID;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 @Service("loanRequestExecutor")
 @RequiredArgsConstructor
 public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
-  final LoanRequestMapper loanRequestMapper;
   private final LoanRequestService loanRequestService;
   final ApprovalProcessService approvalProcessService;
 
