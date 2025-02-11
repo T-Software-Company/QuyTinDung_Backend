@@ -21,7 +21,8 @@ public @interface WorkflowAPI {
   enum WorkflowAction {
     CREATE("create"),
     UPDATE("update"),
-    APPROVE("approve");
+    APPROVE("approve"),
+    CANCEL("cancel");
     private final String value;
 
     public static WorkflowAction fromValue(String value) {
