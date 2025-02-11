@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service("loanRequestExecutor")
+@Service
 @RequiredArgsConstructor
 public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
   private final LoanRequestService loanRequestService;
