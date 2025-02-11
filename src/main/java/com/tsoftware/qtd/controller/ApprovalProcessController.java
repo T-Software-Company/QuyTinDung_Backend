@@ -24,7 +24,7 @@ public class ApprovalProcessController {
 
   @WorkflowAPI(action = WorkflowAPI.WorkflowAction.APPROVE)
   @PostMapping("{id}/approve")
-  public ResponseEntity<?> approveRequest(
+  public ResponseEntity<?> approve(
       @PathVariable @Valid @TransactionId @IsUUID String id,
       @Valid @IsEnum(enumClass = ActionStatus.class) @RequestParam String status) {
     return ResponseEntity.ok(

@@ -6,7 +6,6 @@ import com.turkraft.springfilter.parser.InvalidSyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -126,15 +125,7 @@ public class GlobalExceptionHandler {
   protected ResponseEntity<ApiResponse<?>> handleHandlerMethodValidationException(
       HandlerMethodValidationException ex) {
     Map<String, Object> errors = new HashMap<>();
-    ex.getAllErrors()
-        .forEach(
-            e -> {
-              if (e instanceof FieldError fieldError) {
-                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
-              } else {
-                errors.put(Objects.requireNonNull(e.getCodes())[0], e.getDefaultMessage());
-              }
-            });
+
     ex.getAllValidationResults()
         .forEach(
             result -> {
@@ -146,8 +137,7 @@ public class GlobalExceptionHandler {
                           errors.put(fieldError.getField(), fieldError.getDefaultMessage());
                         } else {
                           errors.put(
-                              result.getMethodParameter().getParameterName()
-                                  + Arrays.toString(ms.getCodes()),
+                              result.getMethodParameter().getParameterName(),
                               ms.getDefaultMessage());
                         }
                       });
