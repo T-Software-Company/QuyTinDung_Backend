@@ -22,7 +22,7 @@ public class OnboardingWorkflowResponse extends AbstractResponse {
   private List<String> prevSteps;
   private List<String> currentSteps;
   private List<String> nextSteps;
-  private WorkflowStatus workflowStatus;
+  private WorkflowStatus status;
   private ZonedDateTime startTime;
   private ZonedDateTime endTime;
   private Map<String, Object> metadata;

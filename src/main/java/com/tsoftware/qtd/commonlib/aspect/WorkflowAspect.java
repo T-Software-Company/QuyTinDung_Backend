@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.JsonPath;
 import com.tsoftware.qtd.commonlib.annotation.*;
 import com.tsoftware.qtd.commonlib.constant.StepType;
+import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.exception.WorkflowException;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
@@ -79,6 +80,9 @@ public class WorkflowAspect {
       this.processBeforeWithApprove(joinPoint);
       return;
     }
+    if (action.equals(WorkflowAPI.WorkflowAction.CANCEL)) {
+      this.processBeforeWithCancel(joinPoint);
+    }
   }
 
   @AfterReturning(
@@ -99,6 +103,10 @@ public class WorkflowAspect {
       this.processAfterWithApprove(joinPoint, workflow, response);
       return;
     }
+    if (action.equals(WorkflowAPI.WorkflowAction.CANCEL)) {
+      this.processAfterWithCancel(workflow, response);
+      return;
+    }
   }
 
   @AfterThrowing(
@@ -114,6 +122,10 @@ public class WorkflowAspect {
     }
     if (action.equals(WorkflowAPI.WorkflowAction.APPROVE)) {
       this.processAfterThrowWithApprove(joinPoint, workflow, ex);
+      return;
+    }
+    if (action.equals(WorkflowAPI.WorkflowAction.CANCEL)) {
+      this.processAfterThrowWithCancel(workflow, ex);
       return;
     }
   }
@@ -136,8 +148,10 @@ public class WorkflowAspect {
       return;
     }
     // process next step
+
     var targetId = getTargetId(joinPoint);
     var workflow = workflowService.getByTargetId(targetId);
+    workflowService.validateWorkflow(workflow);
     workflowService.validateStep(workflow, stepName);
     var request = this.extractRequest(joinPoint);
     var steps = workflow.getSteps();
@@ -160,6 +174,7 @@ public class WorkflowAspect {
   private void processBeforeWithApprove(JoinPoint joinPoint) {
     var transactionId = getTransactionId(joinPoint);
     var workflow = workflowService.getByTransactionId(transactionId);
+    workflowService.validateWorkflow(workflow);
     var step =
         CollectionUtils.findFirst(
                 workflow.getSteps(), s -> transactionId.equals(s.getTransactionId()))
@@ -174,6 +189,22 @@ public class WorkflowAspect {
     JsonParser.put(metadata, "histories[" + index + "].request", request);
     JsonParser.put(
         metadata, "histories[" + index + "].action", WorkflowAPI.WorkflowAction.APPROVE.getValue());
+    WorkflowContext.set(workflow);
+  }
+
+  private void processBeforeWithCancel(JoinPoint joinPoint) {
+    var targetId = getTargetId(joinPoint);
+    var workflow = workflowService.getByTargetId(targetId);
+    workflowService.validateWorkflow(workflow);
+    var request = this.extractRequest(joinPoint);
+    var metadata = Optional.ofNullable(workflow.getMetadata()).orElse(new HashMap<>());
+    var histories = metadata.get("histories");
+    var index = histories == null ? 0 : JsonPath.parse(histories).read("$.length()", Integer.class);
+    JsonParser.put(metadata, "histories[" + index + "].request", request);
+    JsonParser.put(
+        metadata, "histories[" + index + "].action", WorkflowAPI.WorkflowAction.CANCEL.getValue());
+    workflow.setStatus(WorkflowStatus.CANCELLED);
+    workflow.setMetadata(metadata);
     WorkflowContext.set(workflow);
   }
 
@@ -220,6 +251,14 @@ public class WorkflowAspect {
     workflowService.save(workflow);
   }
 
+  private void processAfterWithCancel(Workflow<?> workflow, Object response) {
+    var metadata = workflow.getMetadata();
+    var histories = metadata.get("histories");
+    var index = histories == null ? 0 : JsonPath.parse(histories).read("$.length()", Integer.class);
+    JsonParser.put(metadata, "histories[" + index + "].response", getBodyFromResponse(response));
+    workflowService.save(workflow);
+  }
+
   private void processAfterThrowWithCreate(Workflow<?> workflow, String stepName, Throwable ex) {
     var step =
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
@@ -249,6 +288,13 @@ public class WorkflowAspect {
     var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
     JsonParser.put(metadata, "histories[" + index + "].error", ex.getMessage());
     this.finalProcess(workflow, step.getName());
+    workflowService.save(workflow);
+  }
+
+  private void processAfterThrowWithCancel(Workflow<?> workflow, Throwable ex) {
+    Map<String, Object> metadata = workflow.getMetadata();
+    var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
+    JsonParser.put(metadata, "histories[" + index + "].error", ex.getMessage());
     workflowService.save(workflow);
   }
 
