@@ -55,7 +55,6 @@ jobs:
         env:
           COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
         run: |
-          echo "$COMMIT_MESSAGE"
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd ./tsoftware/qtd/deployment/server
             if [[ "$COMMIT_MESSAGE" == *"compose down -v"* ]]; then
