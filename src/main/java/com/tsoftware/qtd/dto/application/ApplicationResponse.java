@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.dto.application;
 
+import com.tsoftware.qtd.constants.EnumType.BorrowerType;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import com.tsoftware.qtd.dto.AbstractResponse;
@@ -30,6 +31,8 @@ public class ApplicationResponse extends AbstractResponse {
   private BigDecimal currentOutstandingDebt;
   private Customer customer;
   private Map<String, Object> metadata;
+  private String purpose;
+  private BorrowerType borrowerType;
 
   @Getter
   @Setter

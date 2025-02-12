@@ -26,5 +26,4 @@ public class LoanRequestResponse extends AbstractResponse {
   private List<AssetType> loanCollateralTypes;
   private String note;
   private Map<String, Object> metadata;
-  private ApplicationDTO application;
 }

@@ -21,14 +21,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class LoanRequestRequest {
   @NotNull @NotBlank private String purpose;
-
   @NotNull private BigDecimal amount;
 
   @NotNull
   @IsEnum(enumClass = BorrowerType.class)
   private String borrowerType;
-
-  private String asset;
 
   @NotNull
   @IsEnum(enumClass = LoanSecurityType.class)
