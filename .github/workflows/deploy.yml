@@ -57,7 +57,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd ./tsoftware/qtd/deployment/server
-          
             if [[ "$COMMIT_MESSAGE" == *"compose down -v"* ]]; then
               docker compose down -v
             else
