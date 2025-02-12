@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.entity;
 
+import com.tsoftware.qtd.constants.EnumType.BorrowerType;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -38,9 +39,10 @@ public class Application extends AbstractAuditEntity {
   private Integer loanTerm;
   private BigDecimal amountPaid;
   private BigDecimal currentOutstandingDebt;
+  private String purpose;
 
-  //  @Enumerated(EnumType.ORDINAL)
-  //  private ApplicationStep step; // ?
+  @Enumerated(EnumType.ORDINAL)
+  private BorrowerType borrowerType;
 
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime startDate;

@@ -25,11 +25,8 @@ import org.hibernate.annotations.Type;
 public class LoanRequest extends AbstractAuditEntity {
 
   private String purpose;
-
   private BigDecimal amount;
   private String note;
-  private String asset;
-  private String loanTerm;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
