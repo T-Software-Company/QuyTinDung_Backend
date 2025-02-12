@@ -207,7 +207,7 @@ public class ApprovalProcessService {
     return approvalProcessDTO;
   }
 
-  public void mappingApprovesFromSetting(
+  private void mappingApprovesFromSetting(
       ApprovalProcessDTO approvalProcess, ProcessType processType) {
     var approveSetting =
         approvalSettingRepository

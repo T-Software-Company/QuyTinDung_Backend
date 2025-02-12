@@ -31,7 +31,6 @@ public class LoanRequestService {
   private final ApplicationContext applicationEventPublisher;
 
   public ApprovalProcessResponse request(LoanRequestRequest loanRequestRequest) {
-
     var result =
         approvalProcessService.create(
             loanRequestRequest,
