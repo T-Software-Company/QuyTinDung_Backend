@@ -53,8 +53,9 @@ jobs:
 
       - name: Run Docker Compose on VPS
         env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
         run: |
+          echo "$COMMIT_MESSAGE"
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd ./tsoftware/qtd/deployment/server
           
