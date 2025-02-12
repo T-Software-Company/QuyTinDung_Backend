@@ -10,6 +10,7 @@ import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.service.FinancialInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -18,10 +19,11 @@ import org.springframework.stereotype.Service;
 public class FinancialInfoExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
   private final ApprovalProcessService approvalProcessService;
   private final FinancialInfoService financialInfoService;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
   protected void preValidate(ApprovalProcessDTO approvalProcessDTO) {
-    approvalProcessService.validateTransaction(approvalProcessDTO);
+    approvalProcessService.validateApprovalProcess(approvalProcessDTO);
   }
 
   @Override
@@ -40,6 +42,6 @@ public class FinancialInfoExecutor extends BaseTransactionExecutor<ApprovalProce
 
   @Override
   protected ApprovalProcessDTO postExecute(ApprovalProcessDTO approvalProcessDTO) {
-    return approvalProcessService.updateTransaction(approvalProcessDTO);
+    return approvalProcessService.update(approvalProcessDTO);
   }
 }

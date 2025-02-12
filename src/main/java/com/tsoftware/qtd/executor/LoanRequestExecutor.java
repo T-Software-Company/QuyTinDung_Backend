@@ -21,7 +21,7 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcess
 
   @Override
   protected void preValidate(ApprovalProcessDTO approvalProcessDTO) {
-    approvalProcessService.validateTransaction(approvalProcessDTO);
+    approvalProcessService.validateApprovalProcess(approvalProcessDTO);
   }
 
   @Override
@@ -41,6 +41,6 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcess
 
   @Override
   protected ApprovalProcessDTO postExecute(ApprovalProcessDTO approvalProcessDTO) {
-    return approvalProcessService.updateTransaction(approvalProcessDTO);
+    return approvalProcessService.update(approvalProcessDTO);
   }
 }

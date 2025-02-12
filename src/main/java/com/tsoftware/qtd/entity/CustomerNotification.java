@@ -20,5 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class CustomerNotification extends AbstractAuditEntity {
   private Boolean isRead;
   private ZonedDateTime readAt;
+  private String message;
   @ManyToOne private Notification notification;
+  @ManyToOne private Customer customer;
 }

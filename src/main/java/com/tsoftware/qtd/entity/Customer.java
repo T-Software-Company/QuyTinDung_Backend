@@ -58,4 +58,7 @@ public class Customer extends AbstractAuditEntity {
 
   @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
   private List<Application> applications;
+
+  @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+  private List<CustomerNotification> customerNotifications;
 }

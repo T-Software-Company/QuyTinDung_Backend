@@ -108,7 +108,7 @@ public class ApprovalProcessService {
     }
   }
 
-  public ApprovalProcessDTO updateTransaction(ApprovalProcessDTO approvalProcessDTO) {
+  public ApprovalProcessDTO update(ApprovalProcessDTO approvalProcessDTO) {
     ApprovalProcess entity =
         repository
             .findById(approvalProcessDTO.getId())
@@ -118,7 +118,7 @@ public class ApprovalProcessService {
     return approvalProcessMapper.toDTO(repository.save(entity));
   }
 
-  public void validateTransaction(ApprovalProcessDTO approvalProcessDTO) {
+  public void validateApprovalProcess(ApprovalProcessDTO approvalProcessDTO) {
     if (approvalProcessDTO.getStatus().equals(ActionStatus.APPROVED)) {
       throw new CommonException(
           ErrorType.ACTION_ALREADY_COMPLETED, "Transaction has been approved");

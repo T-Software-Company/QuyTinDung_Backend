@@ -1,12 +1,11 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.constants.EnumType.NotificationType;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.entity.Application;
-import com.tsoftware.qtd.event.NotificationEvent;
+import com.tsoftware.qtd.event.LoanRequestSubmittedEvent;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.LoanRequestMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
@@ -36,8 +35,7 @@ public class LoanRequestService {
             loanRequestRequest,
             loanRequestRequest.getApplication(),
             ProcessType.CREATE_LOAN_REQUEST);
-    applicationEventPublisher.publishEvent(
-        new NotificationEvent(this, NotificationType.CREATE_LOAN_REQUEST, result));
+    applicationEventPublisher.publishEvent(new LoanRequestSubmittedEvent(this, result));
     return result;
   }
 
