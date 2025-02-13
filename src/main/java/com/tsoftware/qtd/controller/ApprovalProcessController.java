@@ -2,10 +2,9 @@ package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TransactionId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.dto.approval.ApprovalRequest;
 import com.tsoftware.qtd.entity.ApprovalProcess;
 import com.tsoftware.qtd.service.ApprovalProcessService;
-import com.tsoftware.qtd.validation.IsEnum;
 import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
@@ -26,9 +25,8 @@ public class ApprovalProcessController {
   @PostMapping("{id}/approve")
   public ResponseEntity<?> approve(
       @PathVariable @Valid @TransactionId @IsUUID String id,
-      @Valid @IsEnum(enumClass = ActionStatus.class) @RequestParam String status) {
-    return ResponseEntity.ok(
-        approvalProcessService.approve(UUID.fromString(id), ActionStatus.valueOf(status)));
+      @Valid @RequestBody ApprovalRequest approvalRequest) {
+    return ResponseEntity.ok(approvalProcessService.approve(UUID.fromString(id), approvalRequest));
   }
 
   @GetMapping

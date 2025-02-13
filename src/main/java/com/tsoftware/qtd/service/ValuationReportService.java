@@ -8,7 +8,7 @@ import com.tsoftware.qtd.entity.Approval;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationReport;
 import com.tsoftware.qtd.exception.NotFoundException;
-import com.tsoftware.qtd.mapper.ApproveMapper;
+import com.tsoftware.qtd.mapper.ApprovalMapper;
 import com.tsoftware.qtd.mapper.ValuationReportMapper;
 import com.tsoftware.qtd.repository.ApproveRepository;
 import com.tsoftware.qtd.repository.ValuationReportRepository;
@@ -30,7 +30,7 @@ public class ValuationReportService {
   private final ValuationReportMapper valuationreportMapper;
 
   private final ApproveRepository approveRepository;
-  private final ApproveMapper approveMapper;
+  private final ApprovalMapper approvalMapper;
 
   @Transactional
   public ValuationReportResponse create(ValuationReportRequest valuationreportRequest) {
@@ -70,17 +70,17 @@ public class ValuationReportService {
   @Transactional
   public List<ApprovalResponse> addApprove(UUID id, List<UUID> approverIds) {
 
-    List<ApprovalResponse> approvalRespons = new ArrayList<>();
+    List<ApprovalResponse> approvalResponse = new ArrayList<>();
     approverIds.forEach(
         i ->
-            approvalRespons.add(
-                approveMapper.toDTO(
+            approvalResponse.add(
+                approvalMapper.toResponse(
                     approveRepository.save(
                         Approval.builder()
                             .approver(Employee.builder().id(i).build())
                             .status(ActionStatus.WAIT)
                             .build()))));
-    return approvalRespons;
+    return approvalResponse;
   }
 
   public void removeApprove(UUID id, List<UUID> approverIds) {

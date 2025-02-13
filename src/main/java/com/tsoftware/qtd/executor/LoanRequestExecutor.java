@@ -1,19 +1,23 @@
 package com.tsoftware.qtd.executor;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
+import com.tsoftware.qtd.commonlib.util.CollectionUtils;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessDTO;
+import com.tsoftware.qtd.dto.approval.ApprovalRequest;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.service.LoanRequestService;
+import java.util.Arrays;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service("loanRequestExecutor")
+@Service
 @RequiredArgsConstructor
 public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
   private final LoanRequestService loanRequestService;
@@ -21,13 +25,15 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcess
 
   @Override
   protected void preValidate(ApprovalProcessDTO approvalProcessDTO) {
-    approvalProcessService.validateTransaction(approvalProcessDTO);
+    approvalProcessService.validateApprovalProcess(approvalProcessDTO);
   }
 
   @Override
-  protected ApprovalProcessDTO processApproval(
-      ApprovalProcessDTO approvalProcessDTO, ActionStatus status) {
-    return approvalProcessService.processApproval(approvalProcessDTO, status);
+  protected void processApproval(ApprovalProcessDTO approvalProcessDTO, Object... args) {
+    var approvalRequest =
+        CollectionUtils.findFirst(Arrays.stream(args).toList(), a -> a instanceof ApprovalRequest)
+            .orElseThrow(() -> new CommonException(ErrorType.MISSING_REQUIRED_ARGUMENT));
+    approvalProcessService.processApproval(approvalProcessDTO, (ApprovalRequest) approvalRequest);
   }
 
   @Override
@@ -41,6 +47,6 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcess
 
   @Override
   protected ApprovalProcessDTO postExecute(ApprovalProcessDTO approvalProcessDTO) {
-    return approvalProcessService.updateTransaction(approvalProcessDTO);
+    return approvalProcessService.update(approvalProcessDTO);
   }
 }

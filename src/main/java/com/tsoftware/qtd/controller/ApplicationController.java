@@ -3,6 +3,7 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.service.ApplicationService;
 import com.tsoftware.qtd.validation.IsUUID;
@@ -24,7 +25,7 @@ public class ApplicationController {
   private final ApplicationService applicationService;
 
   @PostMapping
-  @WorkflowAPI(step = "init")
+  @WorkflowAPI(step = WorkflowStep.INIT, action = WorkflowAPI.WorkflowAction.CREATE)
   public ResponseEntity<?> create(@RequestParam @Valid @IsUUID String customerId) throws Exception {
     return ResponseEntity.ok(applicationService.create(UUID.fromString(customerId)));
   }

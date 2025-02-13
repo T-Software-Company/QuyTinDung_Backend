@@ -64,4 +64,7 @@ public class Employee extends AbstractAuditEntity {
 
   @ManyToMany(fetch = FetchType.LAZY)
   private List<Application> applicationsAssigned;
+
+  @OneToMany(mappedBy = "employee")
+  private List<EmployeeNotification> employeeNotifications;
 }

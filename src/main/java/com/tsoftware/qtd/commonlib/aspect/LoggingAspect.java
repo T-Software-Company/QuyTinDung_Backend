@@ -21,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 @Slf4j
 public class LoggingAspect {
+  private long startTime;
 
   @Pointcut("execution(public * *(..))")
   public void publicMethod() {}
@@ -32,7 +33,9 @@ public class LoggingAspect {
   public void afterExceptionAdvise(JoinPoint joinPoint, Object objResponse) {
     log.info("Exception Advise: {}", joinPoint.getSignature());
     if (objResponse instanceof ResponseEntity<?> response) {
-      logResponse(getRequest(), response.getBody());
+      long endTime = System.currentTimeMillis();
+      long duration = endTime - startTime;
+      logResponse(getRequest(), response.getBody(), duration);
     }
   }
 
@@ -40,12 +43,15 @@ public class LoggingAspect {
       value =
           "execution(* *..controller..*(..)) || execution(* org.springframework.web.bind.annotation.RestController.*(..))")
   public Object proceedLogForRequest(ProceedingJoinPoint pjp) throws Throwable {
+    this.startTime = System.currentTimeMillis();
     log.info("Request: {}", pjp.getSignature());
     var request = getRequest();
     var args = pjp.getArgs();
     logRequest(request, args);
     var response = pjp.proceed();
-    logResponse(getRequest(), response);
+    long endTime = System.currentTimeMillis();
+    long duration = endTime - startTime;
+    logResponse(getRequest(), response, duration);
 
     return response;
   }
@@ -65,10 +71,11 @@ public class LoggingAspect {
     }
   }
 
-  public void logResponse(HttpServletRequest request, Object body) {
+  public void logResponse(HttpServletRequest request, Object body, long duration) {
     try {
       String jReq = JsonParser.toString(body);
-      log.info("Response {}, body: {}", request.getRequestURI(), jReq);
+      log.info(
+          "Response {}, processed in {} ms, body: {}", duration, request.getRequestURI(), jReq);
     } catch (Exception ignore) {
       // ignore exception
     }

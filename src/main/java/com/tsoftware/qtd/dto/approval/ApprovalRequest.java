@@ -1,7 +1,8 @@
 package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
-import java.util.UUID;
+import com.tsoftware.qtd.validation.IsEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApprovalRequest {
-  private UUID id;
-  private ActionStatus status;
+  @NotNull
+  @IsEnum(enumClass = ActionStatus.class)
+  private String status;
+
+  @NotNull private String comment;
 }
