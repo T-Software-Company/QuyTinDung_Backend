@@ -52,13 +52,10 @@ jobs:
           EOF
 
       - name: Run Docker Compose on VPS
-        env:
-          COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd ./tsoftware/qtd/deployment/server
-            echo $COMMIT_MESSAGE
-            if [[ "$COMMIT_MESSAGE" == *"compose down -v"* ]]; then
+            if [[ "${{ github.event.workflow_run.head_commit.message }}" == *"compose down -v"* ]]; then
               docker compose down -v
             else
               docker compose down
