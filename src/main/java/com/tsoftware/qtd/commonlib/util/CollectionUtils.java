@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.commonlib.util;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import lombok.experimental.UtilityClass;
@@ -16,7 +15,7 @@ public class CollectionUtils {
    * @param condition The condition to check for each element.
    * @return The first element that satisfies the condition, or Optional.empty() if not found.
    */
-  public static <T> Optional<T> findFirst(List<T> list, Predicate<T> condition) {
+  public static <T> Optional<T> findFirst(Iterable<T> list, Predicate<T> condition) {
     if (list == null || condition == null) {
       return Optional.empty();
     }

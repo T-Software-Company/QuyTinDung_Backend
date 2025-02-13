@@ -19,8 +19,9 @@ public enum ErrorType implements CommonError {
   ACCESS_DENIED(12, HttpStatus.FORBIDDEN, "Access denied. {}"),
   HAS_APPLICATION_IN_PROGRESS(13, HttpStatus.CONFLICT, "Existing in-progress {}. {}"),
   CANNOT_SIGN(14, HttpStatus.BAD_REQUEST, "Cannot sign this application, please check again. {}"),
-  ACTION_ALREADY_COMPLETED(15, HttpStatus.CONFLICT, "The action has already been completed. {}");
-
+  ACTION_ALREADY_COMPLETED(15, HttpStatus.CONFLICT, "The action has already been completed. {}"),
+  MISSING_REQUIRED_ARGUMENT(16, HttpStatus.BAD_REQUEST, "Missing required argument: {}."),
+  ;
   private final int code;
   private final HttpStatus httpStatus;
   private final String message;

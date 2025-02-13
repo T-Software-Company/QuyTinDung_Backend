@@ -1,7 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
-import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +16,6 @@ import lombok.experimental.SuperBuilder;
 public class GroupApprovalResponse {
   private UUID groupId;
   private Integer requiredPercentage;
-  private List<ApprovalResponse> currentApprovals;
+  private ApprovalProcessResponse approvalProcess;
   private ActionStatus status;
 }

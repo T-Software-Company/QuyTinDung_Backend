@@ -1,15 +1,15 @@
 package com.tsoftware.qtd.event;
 
-import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
+import java.util.UUID;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
 public class LoanRequestSubmittedEvent extends ApplicationEvent {
-  private final ApprovalProcessResponse approvalProcessResponse;
+  private final UUID approvalProcessId;
 
-  public LoanRequestSubmittedEvent(Object source, ApprovalProcessResponse response) {
+  public LoanRequestSubmittedEvent(Object source, UUID approvalProcessId) {
     super(source);
-    this.approvalProcessResponse = response;
+    this.approvalProcessId = approvalProcessId;
   }
 }

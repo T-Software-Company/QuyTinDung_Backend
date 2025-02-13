@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", uses = ApproveMapper.class)
+@Mapper(componentModel = "spring", uses = ApprovalMapper.class)
 public interface ValuationReportMapper {
   ValuationReport toEntity(ValuationReportRequest dto);
 

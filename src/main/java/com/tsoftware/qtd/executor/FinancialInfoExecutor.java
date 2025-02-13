@@ -1,16 +1,19 @@
 package com.tsoftware.qtd.executor;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
+import com.tsoftware.qtd.commonlib.util.CollectionUtils;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.dto.application.FinancialInfoRequest;
 import com.tsoftware.qtd.dto.application.FinancialInfoResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessDTO;
+import com.tsoftware.qtd.dto.approval.ApprovalRequest;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.service.FinancialInfoService;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class FinancialInfoExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
   private final ApprovalProcessService approvalProcessService;
   private final FinancialInfoService financialInfoService;
-  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
   protected void preValidate(ApprovalProcessDTO approvalProcessDTO) {
@@ -27,9 +29,11 @@ public class FinancialInfoExecutor extends BaseTransactionExecutor<ApprovalProce
   }
 
   @Override
-  protected ApprovalProcessDTO processApproval(
-      ApprovalProcessDTO approvalProcessDTO, ActionStatus status) {
-    return approvalProcessService.processApproval(approvalProcessDTO, status);
+  protected void processApproval(ApprovalProcessDTO approvalProcessDTO, Object... args) {
+    var approvalRequest =
+        CollectionUtils.findFirst(Arrays.stream(args).toList(), a -> a instanceof ApprovalRequest)
+            .orElseThrow(() -> new CommonException(ErrorType.MISSING_REQUIRED_ARGUMENT));
+    approvalProcessService.processApproval(approvalProcessDTO, (ApprovalRequest) approvalRequest);
   }
 
   @Override

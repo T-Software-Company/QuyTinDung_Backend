@@ -4,7 +4,6 @@ import com.tsoftware.qtd.commonlib.constant.ActionStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.AbstractResponse;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,9 +18,9 @@ public class ApprovalProcessResponse extends AbstractResponse {
   private ProcessType type;
   private UUID referenceId;
   private ZonedDateTime approvedAt;
-  private List<ApprovalResponse> approvals;
-  private List<GroupApprovalResponse> groupApprovals;
-  private List<RoleApprovalResponse> roleApprovals;
+  //  private List<ApprovalResponse> approvals;
+  //  private List<GroupApprovalResponse> groupApprovals;
+  //  private List<RoleApprovalResponse> roleApprovals;
   private Object metadata;
   private Application application;
 

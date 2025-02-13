@@ -1,11 +1,9 @@
 package com.tsoftware.qtd.dto.approval;
 
 import com.tsoftware.qtd.commonlib.constant.ActionStatus;
-import com.tsoftware.qtd.dto.employee.EmployeeSimpleResponse;
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -13,6 +11,19 @@ import lombok.Setter;
 public class ApprovalResponse {
   private UUID id;
   private String comment;
+  private ProcessType processType;
   private ActionStatus status;
-  private EmployeeSimpleResponse approver;
+  private Approver approver;
+  private ApprovalProcessResponse approvalProcess;
+  private GroupApprovalResponse groupApproval;
+  private RoleApprovalResponse roleApproval;
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  public static class Approver {
+    UUID id;
+  }
 }

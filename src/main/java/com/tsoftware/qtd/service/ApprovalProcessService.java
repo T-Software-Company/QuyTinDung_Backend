@@ -39,6 +39,7 @@ public class ApprovalProcessService {
   private final PageResponseMapper pageResponseMapper;
   private final ApplicationMapper applicationMapper;
   private final ApplicationContext applicationContext;
+  private final ApprovalMapper approvalMapper;
 
   @TryTransactionId
   public ApprovalProcessResponse create(
@@ -68,7 +69,10 @@ public class ApprovalProcessService {
                       groupApprove.setApprovalProcess(entity);
                       groupApprove
                           .getCurrentApprovals()
-                          .forEach(approve -> approve.setGroupApproval(groupApprove));
+                          .forEach(
+                              approval -> {
+                                approval.setGroupApproval(groupApprove);
+                              });
                     }));
     Optional.ofNullable(entity.getRoleApprovals())
         .ifPresent(
@@ -78,22 +82,25 @@ public class ApprovalProcessService {
                       roleApprove.setApprovalProcess(entity);
                       roleApprove
                           .getCurrentApprovals()
-                          .forEach(approve -> approve.setRoleApproval(roleApprove));
+                          .forEach(
+                              approval -> {
+                                approval.setRoleApproval(roleApprove);
+                              });
                     }));
     Optional.ofNullable(entity.getApprovals())
-        .ifPresent(stef -> stef.forEach(approve -> approve.setApprovalProcess(entity)));
+        .ifPresent(stef -> stef.forEach(approval -> approval.setApprovalProcess(entity)));
     var saved = repository.save(entity);
     return approvalProcessMapper.toResponse(saved);
   }
 
-  public ApprovalProcessResponse approve(UUID id, ActionStatus status) {
-    var transactionDTO =
+  public ApprovalProcessResponse approve(UUID id, ApprovalRequest approvalRequest) {
+    var entity =
         repository
             .findById(id)
-            .map(approvalProcessMapper::toDTO)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
-    var executor = applicationContext.getBean(transactionDTO.getType().getExecutor());
-    var approvalProcess = executor.execute(transactionDTO, status);
+    var dto = approvalProcessMapper.toDTO(entity);
+    var executor = applicationContext.getBean(dto.getType().getExecutor());
+    var approvalProcess = executor.execute(dto, approvalRequest);
     return approvalProcessMapper.toResponse(approvalProcess);
   }
 
@@ -128,8 +135,8 @@ public class ApprovalProcessService {
     boolean hasPermission =
         Optional.ofNullable(approvalProcessDTO.getApprovals()).orElse(new ArrayList<>()).stream()
             .anyMatch(
-                approve -> {
-                  var employee = approve.getApprover();
+                approval -> {
+                  var employee = approval.getApprover();
                   return userId.equals(employee.getUserId());
                 });
 
@@ -145,8 +152,8 @@ public class ApprovalProcessService {
                           .orElse(new ArrayList<>())
                           .stream())
               .anyMatch(
-                  approve -> {
-                    var employee = approve.getApprover();
+                  approval -> {
+                    var employee = approval.getApprover();
                     return userId.equals(employee.getUserId());
                   });
     }
@@ -163,8 +170,8 @@ public class ApprovalProcessService {
                           .orElse(new ArrayList<>())
                           .stream())
               .anyMatch(
-                  approve -> {
-                    var employee = approve.getApprover();
+                  approval -> {
+                    var employee = approval.getApprover();
                     return userId.equals(employee.getUserId());
                   });
     }
@@ -177,14 +184,20 @@ public class ApprovalProcessService {
     }
   }
 
-  public ApprovalProcessDTO processApproval(
-      ApprovalProcessDTO approvalProcessDTO, ActionStatus status) {
+  public void processApproval(
+      ApprovalProcessDTO approvalProcessDTO, ApprovalRequest approvalRequest) {
+    var approvalDTO = approvalMapper.toDTO(approvalRequest);
+
     var userId = RequestUtil.getUserId();
     var approvers =
         Optional.ofNullable(approvalProcessDTO.getApprovals()).orElse(new ArrayList<>());
     approvers.stream()
-        .filter(approve -> approve.getApprover().getUserId().equals(userId))
-        .forEach(approve -> approve.setStatus(status));
+        .filter(approval -> approval.getApprover().getUserId().equals(userId))
+        .forEach(
+            approval -> {
+              approval.setStatus(approvalDTO.getStatus());
+              approval.setComment(approvalDTO.getComment());
+            });
     var groupApproves =
         Optional.ofNullable(approvalProcessDTO.getGroupApprovals()).orElse(new ArrayList<>());
     groupApproves.forEach(
@@ -192,8 +205,12 @@ public class ApprovalProcessService {
             Optional.ofNullable(groupApprove.getCurrentApprovals())
                 .orElse(new ArrayList<>())
                 .stream()
-                .filter(approve -> approve.getApprover().getUserId().equals(userId))
-                .forEach(approve -> approve.setStatus(status)));
+                .filter(approval -> approval.getApprover().getUserId().equals(userId))
+                .forEach(
+                    approval -> {
+                      approval.setStatus(approvalDTO.getStatus());
+                      approval.setComment(approvalDTO.getComment());
+                    }));
     var roleApprovers =
         Optional.ofNullable(approvalProcessDTO.getRoleApprovals()).orElse(new ArrayList<>());
     roleApprovers.forEach(
@@ -201,10 +218,12 @@ public class ApprovalProcessService {
             Optional.ofNullable(roleApprove.getCurrentApprovals())
                 .orElse(new ArrayList<>())
                 .stream()
-                .filter(approve -> approve.getApprover().getUserId().equals(userId))
-                .forEach(approve -> approve.setStatus(status)));
-
-    return approvalProcessDTO;
+                .filter(approval -> approval.getApprover().getUserId().equals(userId))
+                .forEach(
+                    approval -> {
+                      approval.setStatus(approvalDTO.getStatus());
+                      approval.setComment(approvalDTO.getComment());
+                    }));
   }
 
   private void mappingApprovesFromSetting(
@@ -228,24 +247,24 @@ public class ApprovalProcessService {
         .getGroupApprovalSettings()
         .forEach(
             groupApproveSetting -> {
-              List<ApprovalDTO> approves = new ArrayList<>();
+              List<ApprovalDTO> approvals = new ArrayList<>();
               var employees = employeeRepository.findByGroupsId(groupApproveSetting.getGroupId());
               employees.forEach(
                   employee -> {
-                    var approve =
+                    var approval =
                         ApprovalDTO.builder()
+                            .processType(approvalSetting.getProcessType())
                             .approver(employeeMapper.toEmployeeResponse(employee))
+                            .status(ActionStatus.WAIT)
                             .build();
-                    approves.add(approve);
+                    approvals.add(approval);
                   });
               groupApproves.add(
                   GroupApprovalDTO.builder()
-                      .approvalProcess(
-                          ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .groupId(groupApproveSetting.getId())
                       .requiredPercentage(groupApproveSetting.getRequiredPercentage())
                       .status(ActionStatus.WAIT)
-                      .currentApprovals(approves)
+                      .currentApprovals(approvals)
                       .approvalProcess(
                           ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .build());
@@ -260,28 +279,37 @@ public class ApprovalProcessService {
         .getRoleApprovalSettings()
         .forEach(
             roleApproveSetting -> {
-              List<ApprovalDTO> approves = new ArrayList<>();
+              List<ApprovalDTO> approvals = new ArrayList<>();
               var employees =
                   employeeRepository.findByRolesName(roleApproveSetting.getRole().name());
               employees.forEach(
                   employee -> {
-                    var approve =
+                    var approval =
                         ApprovalDTO.builder()
                             .approver(employeeMapper.toEmployeeResponse(employee))
+                            .processType(approvalSetting.getProcessType())
                             .status(ActionStatus.WAIT)
                             .build();
-                    approves.add(approve);
+                    approvals.add(approval);
                   });
               roleApproves.add(
                   RoleApprovalDTO.builder()
                       .approvalProcess(
                           ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
                       .role(roleApproveSetting.getRole())
-                      .currentApprovals(approves)
+                      .currentApprovals(approvals)
                       .requiredCount(roleApproveSetting.getRequiredCount())
                       .status(ActionStatus.WAIT)
                       .build());
             });
     return roleApproves;
+  }
+
+  public ApprovalProcessDTO getDTOById(UUID approvalProcessId) {
+    var entity =
+        repository
+            .findById(approvalProcessId)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, approvalProcessId));
+    return approvalProcessMapper.toDTO(entity);
   }
 }

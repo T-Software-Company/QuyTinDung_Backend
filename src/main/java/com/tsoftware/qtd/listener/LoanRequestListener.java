@@ -8,6 +8,7 @@ import com.tsoftware.qtd.event.NotificationEvent;
 import com.tsoftware.qtd.service.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -22,24 +23,21 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class LoanRequestListener {
   private final ApplicationContext applicationContext;
   private final NotificationService notificationService;
-  private final ApprovalProcessService approvalProcessService;
   private final ApplicationService applicationService;
-  private final CustomerService customerService;
-  private final CustomerNotificationService customerNotificationService;
   private final EmployeeNotificationService employeeNotificationService;
+  private final ApprovalProcessService approvalProcessService;
 
   @Async
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void handLoanRequestSubmittedEvent(LoanRequestSubmittedEvent event) {
-    var approvalProcess = event.getApprovalProcessResponse();
+    var approvalProcess = approvalProcessService.getDTOById(event.getApprovalProcessId());
     var approvalProcessId = approvalProcess.getId();
     var applicationId = approvalProcess.getApplication().getId();
-    var application = applicationService.getById(UUID.fromString(applicationId));
-    var customer = customerService.getById(UUID.fromString(application.getCustomer().getId()));
+    var application = applicationService.getById(applicationId);
     var notificationMetadata = new HashMap<String, Object>();
     notificationMetadata.put("applicationId", applicationId);
-    notificationMetadata.put("customerId", customer.getId());
+    notificationMetadata.put("customerId", application.getCustomer().getId());
     notificationMetadata.put("approvalProcessId", approvalProcessId);
     var notificationRequest =
         NotificationRequest.builder()
@@ -50,14 +48,24 @@ public class LoanRequestListener {
             .build();
     var notification = notificationService.create(notificationRequest);
 
-    var employeeIds = new ArrayList<String>();
+    var employeeIds = new ArrayList<UUID>();
     employeeIds.addAll(
-        approvalProcess.getApprovals().stream()
+        Optional.ofNullable(approvalProcess.getApprovals()).orElse(new ArrayList<>()).stream()
             .map(approval -> approval.getApprover().getId())
             .toList());
     employeeIds.addAll(
-        approvalProcess.getRoleApprovals().stream()
-            .flatMap(r -> r.getCurrentApprovals().stream().map(a -> a.getApprover().getId()))
+        Optional.ofNullable(approvalProcess.getRoleApprovals()).orElse(new ArrayList<>()).stream()
+            .flatMap(
+                r ->
+                    Optional.ofNullable(r.getCurrentApprovals()).orElse(new ArrayList<>()).stream()
+                        .map(a -> a.getApprover().getId()))
+            .toList());
+    employeeIds.addAll(
+        Optional.ofNullable(approvalProcess.getGroupApprovals()).orElse(new ArrayList<>()).stream()
+            .flatMap(
+                g ->
+                    Optional.ofNullable(g.getCurrentApprovals()).orElse(new ArrayList<>()).stream()
+                        .map(a -> a.getApprover().getId()))
             .toList());
     employeeIds.stream()
         .distinct()
@@ -66,7 +74,8 @@ public class LoanRequestListener {
               var employeeNotificationRequest =
                   EmployeeNotificationRequest.builder()
                       .isRead(false)
-                      .employee(EmployeeNotificationRequest.Employee.builder().id(id).build())
+                      .employee(
+                          EmployeeNotificationRequest.Employee.builder().id(id.toString()).build())
                       .notification(
                           EmployeeNotificationRequest.Notification.builder()
                               .id(notification.getId().toString())
