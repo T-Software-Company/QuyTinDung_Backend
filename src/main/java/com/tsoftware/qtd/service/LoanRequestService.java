@@ -49,6 +49,8 @@ public class LoanRequestService {
     loanrequest.setApplication(application);
     application.setAmount(loanrequest.getAmount());
     application.setLoanSecurityType(loanrequest.getLoanSecurityType());
+    application.setBorrowerType(loanrequest.getBorrowerType());
+    application.setPurpose(loanrequest.getPurpose());
     applicationRepository.save(application);
     return loanrequestMapper.toResponse(loanrequestRepository.save(loanrequest));
   }
