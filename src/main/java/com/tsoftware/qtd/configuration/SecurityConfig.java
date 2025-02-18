@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.configuration;
 
+import com.tsoftware.qtd.converters.CustomAuthoritiesConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,26 +18,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfig {
-
-  final String[] protectedClientPaths = {
-    "/employees/client/my-employee", "/employees/client/reset-password",
-  };
+  private final CustomAuthoritiesConverter customAuthoritiesConverter;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api-docs", "/api-docs/**", "/swagger-ui/**")
+                auth.requestMatchers("/api-docs", "/api-docs/**", "/swagger-ui/**", "/ws/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/customers", "/documents/upload")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-        //        																		.requestMatchers(protectedClientPaths)
-        //        																		.authenticated()
-        //        																		.anyRequest()
-        //        																		.hasRole(Role.ADMIN.name()))
         .oauth2ResourceServer(
             oauth2 ->
                 oauth2.jwt(
@@ -50,7 +44,7 @@ public class SecurityConfig {
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-    converter.setJwtGrantedAuthoritiesConverter(new CustomAuthoritiesConverter());
+    converter.setJwtGrantedAuthoritiesConverter(customAuthoritiesConverter);
     return converter;
   }
 }
