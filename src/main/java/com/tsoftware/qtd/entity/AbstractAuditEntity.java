@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.configuration.CustomAuditingEntityListener;
+import com.tsoftware.qtd.listener.CustomAuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;

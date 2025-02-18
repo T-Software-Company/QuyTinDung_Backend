@@ -31,7 +31,7 @@ public class ControllerAspect {
   private Object proceedResponse(ProceedingJoinPoint pjp) throws Throwable {
     var response = pjp.proceed();
     if (response instanceof ResponseEntity<?> res) {
-      if (res.getBody() instanceof ApiResponse<?> apiResponse) {
+      if (res.getBody() instanceof ApiResponse<?>) {
         return res;
       }
       ApiResponse<Object> responseData = new ApiResponse<>();

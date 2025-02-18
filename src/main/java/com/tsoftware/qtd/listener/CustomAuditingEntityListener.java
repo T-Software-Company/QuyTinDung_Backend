@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.configuration;
+package com.tsoftware.qtd.listener;
 
 import com.tsoftware.qtd.entity.AbstractAuditEntity;
 import jakarta.persistence.PrePersist;
