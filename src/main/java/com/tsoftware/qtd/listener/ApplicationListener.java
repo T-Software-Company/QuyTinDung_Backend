@@ -4,6 +4,8 @@ import com.tsoftware.qtd.constants.EnumType.NotificationType;
 import com.tsoftware.qtd.dto.notification.EmployeeNotificationRequest;
 import com.tsoftware.qtd.dto.notification.NotificationRequest;
 import com.tsoftware.qtd.dto.notification.NotificationResponse;
+import com.tsoftware.qtd.event.FinancialInfoSubmittedEvent;
+import com.tsoftware.qtd.event.LoanPlanSubmittedEvent;
 import com.tsoftware.qtd.event.LoanRequestSubmittedEvent;
 import com.tsoftware.qtd.event.NotificationEvent;
 import com.tsoftware.qtd.service.*;
@@ -21,7 +23,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class LoanRequestListener {
+public class ApplicationListener {
   private final ApplicationContext applicationContext;
   private final NotificationService notificationService;
   private final ApplicationService applicationService;
@@ -32,11 +34,37 @@ public class LoanRequestListener {
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void handLoanRequestSubmittedEvent(LoanRequestSubmittedEvent event) {
-    var notification = generateNotificationFormApprovalProcess(event.getApprovalProcessId());
+    var content = "Một yêu cầu vay mới đã được tạo";
+    var title = " Tạo yêu cầu vay";
+    var notification =
+        generateNotificationFormApprovalProcess(event.getApprovalProcessId(), content, title);
     applicationContext.publishEvent(new NotificationEvent(this, notification));
   }
 
-  private NotificationResponse generateNotificationFormApprovalProcess(UUID approvalProcessId) {
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handLoanPlanSubmittedEvent(LoanPlanSubmittedEvent event) {
+    var content = "Một kế hoạch vay mới đã được tạo";
+    var title = "Tạo kế hoạch vay";
+    var notification =
+        generateNotificationFormApprovalProcess(event.getApprovalProcessId(), content, title);
+    applicationContext.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handFinancialInfoSubmittedEvent(FinancialInfoSubmittedEvent event) {
+    var content = "Thông tin tài chính đã được thêm";
+    var title = "Thêm thông tin tài chính";
+    var notification =
+        generateNotificationFormApprovalProcess(event.getApprovalProcessId(), content, title);
+    applicationContext.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  private NotificationResponse generateNotificationFormApprovalProcess(
+      UUID approvalProcessId, String content, String title) {
     var approvalProcess = approvalProcessService.getDTOById(approvalProcessId);
     var applicationId = approvalProcess.getApplication().getId();
     var application = applicationService.getById(applicationId);
@@ -46,8 +74,8 @@ public class LoanRequestListener {
     notificationMetadata.put("approvalProcessId", approvalProcessId);
     var notificationRequest =
         NotificationRequest.builder()
-            .content("Một yêu cầu vay mới đã được tạo")
-            .title("Tạo yêu cầu vay")
+            .content(content)
+            .title(title)
             .type(NotificationType.CREATE_LOAN_REQUEST)
             .metadata(notificationMetadata)
             .build();

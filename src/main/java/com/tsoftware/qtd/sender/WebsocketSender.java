@@ -19,16 +19,10 @@ public class WebsocketSender implements NotificationSender {
   public void send(NotificationResponse notificationResponse) {
     var employeeNotifications =
         employeeNotificationService.getByNotificationId(notificationResponse.getId());
-    var customerNotifications =
-        customerNotificationService.getByNotificationId(notificationResponse.getId());
     employeeNotifications.forEach(
         e -> {
           simpMessagingTemplate.convertAndSendToUser(
               e.getEmployee().getUserId(), "/queue/notification", e);
         });
-    customerNotifications.forEach(
-        c ->
-            simpMessagingTemplate.convertAndSendToUser(
-                c.getCustomer().getUserId(), "queue/notification", c));
   }
 }
