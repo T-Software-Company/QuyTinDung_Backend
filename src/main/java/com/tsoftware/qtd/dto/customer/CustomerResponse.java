@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerResponse extends AbstractResponse {
+  String userId;
   String username;
   String email;
   String code;

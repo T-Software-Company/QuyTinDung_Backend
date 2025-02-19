@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class LoanRequestService {
   private final LoanRequestMapper loanrequestMapper;
   private final ApplicationRepository applicationRepository;
   private final ApprovalProcessService approvalProcessService;
-  private final ApplicationContext applicationEventPublisher;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   public ApprovalProcessResponse request(LoanRequestRequest loanRequestRequest) {
     var result =
