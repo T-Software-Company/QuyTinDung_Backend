@@ -11,8 +11,11 @@ import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
+import com.tsoftware.qtd.dto.setting.InterestRateSettingRequest;
 import com.tsoftware.qtd.repository.*;
 import com.tsoftware.qtd.service.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +44,27 @@ public class initDbService {
   private final ApprovalSettingService approvalSettingService;
   private final CustomerRepository customerRepository;
   private final ApprovalSettingRepository approvalSettingRepository;
+  private final InterestRateSettingRepository interestRateSettingRepository;
+  private final InterestRateSettingService interestRateSettingService;
+
+  public void createInterestSetting() {
+    if (!interestRateSettingRepository.findAll().isEmpty()) {
+      return;
+    }
+
+    Random random = new Random();
+    // Create settings for terms from 1 to 36 months
+    for (int term = 1; term <= 36; term++) {
+      var type = random.nextBoolean() ? "LOAN" : "SAVINGS";
+      var request =
+          InterestRateSettingRequest.builder()
+              .type(type)
+              .term(term)
+              .rate(BigDecimal.valueOf(random.nextDouble() * 10).setScale(2, RoundingMode.HALF_UP))
+              .build();
+      interestRateSettingService.create(request);
+    }
+  }
 
   public void createApproveSetting() {
     if (approvalSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_REQUEST).isEmpty()) {

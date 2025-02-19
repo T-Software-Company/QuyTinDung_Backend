@@ -58,7 +58,7 @@ jobs:
             if [[ "${{ github.event.workflow_run.head_commit.message }}" == *"compose down -v"* ]]; then
               docker compose down -v
             else
-              docker compose down
+              docker compose down server
             fi
           
             docker compose pull 
