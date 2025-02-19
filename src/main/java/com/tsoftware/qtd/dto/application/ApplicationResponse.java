@@ -33,6 +33,9 @@ public class ApplicationResponse extends AbstractResponse {
   private Map<String, Object> metadata;
   private String purpose;
   private BorrowerType borrowerType;
+  private LoanRequestResponse loanRequest;
+  private LoanPlanResponse loanPlan;
+  private FinancialInfoResponse financialInfo;
 
   @Getter
   @Setter
