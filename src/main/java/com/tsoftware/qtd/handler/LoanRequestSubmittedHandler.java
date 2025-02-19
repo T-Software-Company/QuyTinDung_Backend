@@ -1,26 +1,25 @@
 package com.tsoftware.qtd.handler;
 
 import com.tsoftware.qtd.event.NotificationEvent;
-import com.tsoftware.qtd.service.CustomerNotificationService;
+import com.tsoftware.qtd.sender.NotificationSender;
 import com.tsoftware.qtd.service.EmployeeNotificationService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoanRequestSubmittedNotificationHandler implements NotificationHandler {
+public class LoanRequestSubmittedHandler implements NotificationHandler {
   private final EmployeeNotificationService employeeNotificationService;
-  private final CustomerNotificationService customerNotificationService;
+  private final SimpMessagingTemplate simpMessagingTemplate;
+  private final List<NotificationSender> senders;
 
   @Override
   public void handle(NotificationEvent event) {
     var notification = event.getNotificationResponse();
-    var notificationId = notification.getId();
-    var employeeNotifications = employeeNotificationService.getByNotificationId(notificationId);
-    var customerNotifications = customerNotificationService.getByNotificationId(notificationId);
-
-    log.info("Notification handling");
+    senders.forEach(s -> s.send(notification));
   }
 }

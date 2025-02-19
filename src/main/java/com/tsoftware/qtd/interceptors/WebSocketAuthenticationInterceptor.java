@@ -34,6 +34,7 @@ public class WebSocketAuthenticationInterceptor implements ChannelInterceptor {
     var finalAccessToken = accessToken.substring(7);
     var jwt = jwtDecoder.decode(finalAccessToken);
     var authentication = jwtAuthenticationConverter.convert(jwt);
+    accessor.setUser(authentication);
     SecurityContextHolder.getContext().setAuthentication(authentication);
     return message;
   }

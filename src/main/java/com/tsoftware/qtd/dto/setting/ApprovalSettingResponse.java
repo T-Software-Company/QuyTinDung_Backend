@@ -14,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class ApprovalSettingResponse extends AbstractResponse {
-  private String name;
   private ProcessType processType;
   private List<RoleApprovalSettingResponse> roleApprovalSettings;
   private List<GroupApprovalSettingResponse> groupApprovalSettings;

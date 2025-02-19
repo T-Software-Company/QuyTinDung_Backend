@@ -53,7 +53,6 @@ public class initDbService {
                           .role(Role.ADMIN.name())
                           .build()))
               .processType(ProcessType.CREATE_LOAN_REQUEST.name())
-              .name("create loan request")
               .build();
       approvalSettingService.create(request);
     }
@@ -67,7 +66,6 @@ public class initDbService {
                           .role(Role.ADMIN.name())
                           .build()))
               .processType(ProcessType.CREATE_LOAN_PLAN.name())
-              .name("create loan plan")
               .build();
       approvalSettingService.create(request);
     }
@@ -81,7 +79,6 @@ public class initDbService {
                           .role(Role.ADMIN.name())
                           .build()))
               .processType(ProcessType.CREATE_FINANCIAL_INFO.name())
-              .name("create financial info")
               .build();
       approvalSettingService.create(request);
     }

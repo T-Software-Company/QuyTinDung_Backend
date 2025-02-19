@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.dto.notification;
 
 import com.tsoftware.qtd.dto.AbstractResponse;
+import com.tsoftware.qtd.dto.customer.CustomerSimpleResponse;
 import java.time.ZonedDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,4 +16,5 @@ public class CustomerNotificationResponse extends AbstractResponse {
   private Boolean isRead;
   private ZonedDateTime readAt;
   private String message;
+  private CustomerSimpleResponse customer;
 }

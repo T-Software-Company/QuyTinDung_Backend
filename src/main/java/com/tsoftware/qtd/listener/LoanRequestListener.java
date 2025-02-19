@@ -3,6 +3,7 @@ package com.tsoftware.qtd.listener;
 import com.tsoftware.qtd.constants.EnumType.NotificationType;
 import com.tsoftware.qtd.dto.notification.EmployeeNotificationRequest;
 import com.tsoftware.qtd.dto.notification.NotificationRequest;
+import com.tsoftware.qtd.dto.notification.NotificationResponse;
 import com.tsoftware.qtd.event.LoanRequestSubmittedEvent;
 import com.tsoftware.qtd.event.NotificationEvent;
 import com.tsoftware.qtd.service.*;
@@ -31,8 +32,12 @@ public class LoanRequestListener {
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void handLoanRequestSubmittedEvent(LoanRequestSubmittedEvent event) {
-    var approvalProcess = approvalProcessService.getDTOById(event.getApprovalProcessId());
-    var approvalProcessId = approvalProcess.getId();
+    var notification = generateNotificationFormApprovalProcess(event.getApprovalProcessId());
+    applicationContext.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  private NotificationResponse generateNotificationFormApprovalProcess(UUID approvalProcessId) {
+    var approvalProcess = approvalProcessService.getDTOById(approvalProcessId);
     var applicationId = approvalProcess.getApplication().getId();
     var application = applicationService.getById(applicationId);
     var notificationMetadata = new HashMap<String, Object>();
@@ -84,6 +89,6 @@ public class LoanRequestListener {
                       .build();
               employeeNotificationService.create(employeeNotificationRequest);
             });
-    applicationContext.publishEvent(new NotificationEvent(this, notification));
+    return notification;
   }
 }

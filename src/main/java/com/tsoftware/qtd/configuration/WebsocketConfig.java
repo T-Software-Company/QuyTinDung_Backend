@@ -34,6 +34,7 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
   private final ApplicationContext applicationContext;
   private final WebSocketAuthenticationInterceptor webSocketAuthenticationInterceptor;
   private final AuthorizationManager<Message<?>> authorizationManager;
+  private final ObjectMapper objectMapper;
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -75,7 +76,7 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     DefaultContentTypeResolver resolver = new DefaultContentTypeResolver();
     resolver.setDefaultMimeType(APPLICATION_JSON);
     MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-    converter.setObjectMapper(new ObjectMapper());
+    converter.setObjectMapper(objectMapper);
     converter.setContentTypeResolver(resolver);
     messageConverters.add(converter);
     return false;
