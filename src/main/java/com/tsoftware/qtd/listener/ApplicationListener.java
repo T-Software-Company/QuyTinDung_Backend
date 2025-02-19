@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ApplicationListener {
@@ -37,7 +39,8 @@ public class ApplicationListener {
     var content = "Một yêu cầu vay mới đã được tạo";
     var title = " Tạo yêu cầu vay";
     var notification =
-        generateNotificationFormApprovalProcess(event.getApprovalProcessId(), content, title);
+        generateNotificationFormApprovalProcess(
+            event.getApprovalProcessId(), NotificationType.CREATE_LOAN_REQUEST, content, title);
     applicationContext.publishEvent(new NotificationEvent(this, notification));
   }
 
@@ -48,7 +51,9 @@ public class ApplicationListener {
     var content = "Một kế hoạch vay mới đã được tạo";
     var title = "Tạo kế hoạch vay";
     var notification =
-        generateNotificationFormApprovalProcess(event.getApprovalProcessId(), content, title);
+        generateNotificationFormApprovalProcess(
+            event.getApprovalProcessId(), NotificationType.CREATE_LOAN_PLAN, content, title);
+    log.info("handling loan plan submitted");
     applicationContext.publishEvent(new NotificationEvent(this, notification));
   }
 
@@ -59,12 +64,13 @@ public class ApplicationListener {
     var content = "Thông tin tài chính đã được thêm";
     var title = "Thêm thông tin tài chính";
     var notification =
-        generateNotificationFormApprovalProcess(event.getApprovalProcessId(), content, title);
+        generateNotificationFormApprovalProcess(
+            event.getApprovalProcessId(), NotificationType.CREATE_FINANCIAL_INFO, content, title);
     applicationContext.publishEvent(new NotificationEvent(this, notification));
   }
 
   private NotificationResponse generateNotificationFormApprovalProcess(
-      UUID approvalProcessId, String content, String title) {
+      UUID approvalProcessId, NotificationType type, String content, String title) {
     var approvalProcess = approvalProcessService.getDTOById(approvalProcessId);
     var applicationId = approvalProcess.getApplication().getId();
     var application = applicationService.getById(applicationId);
@@ -76,7 +82,7 @@ public class ApplicationListener {
         NotificationRequest.builder()
             .content(content)
             .title(title)
-            .type(NotificationType.CREATE_LOAN_REQUEST)
+            .type(type)
             .metadata(notificationMetadata)
             .build();
     var notification = notificationService.create(notificationRequest);

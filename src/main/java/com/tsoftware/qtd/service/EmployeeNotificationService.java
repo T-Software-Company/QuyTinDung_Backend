@@ -81,4 +81,44 @@ public class EmployeeNotificationService {
             .map(employeeNotificationMapper::toResponse);
     return pageResponseMapper.toPageResponse(result);
   }
+
+  public void read(UUID id) {
+    var entity =
+        employeeNotificationRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
+    entity.setIsRead(true);
+    entity.setReadAt(ZonedDateTime.now());
+    employeeNotificationRepository.save(entity);
+  }
+
+  public void unRead(UUID id) {
+    var entity =
+        employeeNotificationRepository
+            .findById(id)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
+    entity.setIsRead(false);
+    entity.setReadAt(null);
+    employeeNotificationRepository.save(entity);
+  }
+
+  public void read(List<UUID> ids) {
+    var entities = employeeNotificationRepository.findAllById(ids);
+    entities.forEach(
+        e -> {
+          e.setIsRead(true);
+          e.setReadAt(ZonedDateTime.now());
+        });
+    employeeNotificationRepository.saveAll(entities);
+  }
+
+  public void unRead(List<UUID> ids) {
+    var entities = employeeNotificationRepository.findAllById(ids);
+    entities.forEach(
+        e -> {
+          e.setIsRead(false);
+          e.setReadAt(null);
+        });
+    employeeNotificationRepository.saveAll(entities);
+  }
 }
