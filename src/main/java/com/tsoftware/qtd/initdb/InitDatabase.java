@@ -19,5 +19,6 @@ public class InitDatabase implements CommandLineRunner {
     initDbservice.createEmployees();
     initDbservice.createCustomers();
     initDbservice.createApproveSetting();
+    initDbservice.createInterestSetting();
   }
 }
