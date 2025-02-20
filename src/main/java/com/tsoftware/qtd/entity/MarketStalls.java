@@ -2,6 +2,7 @@ package com.tsoftware.qtd.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,8 @@ public class MarketStalls extends AbstractAuditEntity {
   private String stallName;
   private String ownerName;
   private String category;
-  private String areaSize;
-  private String rentPrice;
+  private BigDecimal areaSize;
+  private BigDecimal rentPrice;
 
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime rentStartDate;

@@ -2,6 +2,7 @@ package com.tsoftware.qtd.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class Machinery extends AbstractAuditEntity {
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime purchaseDate;
 
-  private String purchasePrice;
+  private BigDecimal purchasePrice;
   private String serialNumber;
   private String location;
   private String status;

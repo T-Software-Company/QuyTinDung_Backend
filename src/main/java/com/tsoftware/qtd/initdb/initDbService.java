@@ -67,45 +67,23 @@ public class initDbService {
   }
 
   public void createApproveSetting() {
-    if (approvalSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_REQUEST).isEmpty()) {
-      var request =
-          ApprovalSettingRequest.builder()
-              .roleApprovalSettings(
-                  List.of(
-                      ApprovalSettingRequest.RoleApprovalSettingRequest.builder()
-                          .requiredCount(1)
-                          .role(Role.ADMIN.name())
-                          .build()))
-              .processType(ProcessType.CREATE_LOAN_REQUEST.name())
-              .build();
-      approvalSettingService.create(request);
-    }
-    if (approvalSettingRepository.findByProcessType(ProcessType.CREATE_LOAN_PLAN).isEmpty()) {
-      var request =
-          ApprovalSettingRequest.builder()
-              .roleApprovalSettings(
-                  List.of(
-                      ApprovalSettingRequest.RoleApprovalSettingRequest.builder()
-                          .requiredCount(1)
-                          .role(Role.ADMIN.name())
-                          .build()))
-              .processType(ProcessType.CREATE_LOAN_PLAN.name())
-              .build();
-      approvalSettingService.create(request);
-    }
-    if (approvalSettingRepository.findByProcessType(ProcessType.CREATE_FINANCIAL_INFO).isEmpty()) {
-      var request =
-          ApprovalSettingRequest.builder()
-              .roleApprovalSettings(
-                  List.of(
-                      ApprovalSettingRequest.RoleApprovalSettingRequest.builder()
-                          .requiredCount(1)
-                          .role(Role.ADMIN.name())
-                          .build()))
-              .processType(ProcessType.CREATE_FINANCIAL_INFO.name())
-              .build();
-      approvalSettingService.create(request);
-    }
+    Arrays.stream(ProcessType.values())
+        .forEach(
+            processType -> {
+              if (approvalSettingRepository.findByProcessType(processType).isEmpty()) {
+                var request =
+                    ApprovalSettingRequest.builder()
+                        .roleApprovalSettings(
+                            List.of(
+                                ApprovalSettingRequest.RoleApprovalSettingRequest.builder()
+                                    .requiredCount(1)
+                                    .role(Role.ADMIN.name())
+                                    .build()))
+                        .processType(processType.name())
+                        .build();
+                approvalSettingService.create(request);
+              }
+            });
   }
 
   public void createGroups() {

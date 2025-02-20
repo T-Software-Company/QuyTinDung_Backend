@@ -1,8 +1,11 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.constants.EnumType.ProcessType;
+import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.entity.Asset;
+import com.tsoftware.qtd.event.AssetSubmittedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,16 @@ public class AssetService {
 
   private final AssetMapper assetMapper;
   private final ApplicationRepository applicationRepository;
+  private final ApprovalProcessService approvalProcessService;
+  private final ApplicationEventPublisher applicationEventPublisher;
+
+  public ApprovalProcessResponse request(List<AssetRequest> assetsRequest) {
+    var result =
+        approvalProcessService.create(
+            assetsRequest, assetsRequest.getFirst().getApplication(), ProcessType.CREATE_ASSETS);
+    applicationEventPublisher.publishEvent(new AssetSubmittedEvent(this, result.getId()));
+    return result;
+  }
 
   public List<AssetResponse> create(List<AssetRequest> assetsRequest, UUID applicationId) {
     var application =

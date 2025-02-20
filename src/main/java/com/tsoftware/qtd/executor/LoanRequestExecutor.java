@@ -11,6 +11,7 @@ import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.service.LoanRequestService;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcess
     var request = JsonParser.convert(approvalProcessDTO.getMetadata(), LoanRequestRequest.class);
     var result =
         loanRequestService.create(request, UUID.fromString(request.getApplication().getId()));
-    approvalProcessDTO.setReferenceId(result.getId());
+    approvalProcessDTO.setReferenceIds(List.of(result.getId()));
   }
 
   @Override

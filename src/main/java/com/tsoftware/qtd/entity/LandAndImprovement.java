@@ -46,7 +46,9 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private String certificateNumber;
   private String certificateBookNumber;
   private String issuingAuthority;
-  private String issueDate;
+
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+  private ZonedDateTime issueDate;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")

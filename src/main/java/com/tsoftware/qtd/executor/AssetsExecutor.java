@@ -1,15 +1,17 @@
 package com.tsoftware.qtd.executor;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.tsoftware.qtd.commonlib.executor.BaseTransactionExecutor;
 import com.tsoftware.qtd.commonlib.util.CollectionUtils;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
-import com.tsoftware.qtd.dto.application.LoanPlanRequest;
+import com.tsoftware.qtd.dto.AbstractResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessDTO;
 import com.tsoftware.qtd.dto.approval.ApprovalRequest;
+import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.service.ApprovalProcessService;
-import com.tsoftware.qtd.service.LoanPlanService;
+import com.tsoftware.qtd.service.AssetService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -20,9 +22,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoanPlanExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
-  private final LoanPlanService loanPlanService;
+public class AssetsExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
   private final ApprovalProcessService approvalProcessService;
+  private final AssetService assetService;
 
   @Override
   protected void preValidate(ApprovalProcessDTO approvalProcessDTO) {
@@ -40,9 +42,12 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<ApprovalProcessDTO
   @Override
   protected void doExecute(ApprovalProcessDTO approvalProcessDTO) {
     log.info("All approvals received for approvalProcessDTO: {}", approvalProcessDTO.getId());
-    var request = JsonParser.convert(approvalProcessDTO.getMetadata(), LoanPlanRequest.class);
-    var result = loanPlanService.create(request, UUID.fromString(request.getApplication().getId()));
-    approvalProcessDTO.setReferenceIds(List.of(result.getId()));
+    var list =
+        JsonParser.convert(
+            approvalProcessDTO.getMetadata(), new TypeReference<List<AssetRequest>>() {});
+    var result =
+        assetService.create(list, UUID.fromString(list.getFirst().getApplication().getId()));
+    approvalProcessDTO.setReferenceIds(result.stream().map(AbstractResponse::getId).toList());
   }
 
   @Override

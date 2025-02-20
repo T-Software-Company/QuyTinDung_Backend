@@ -27,7 +27,7 @@ public class ApprovalProcessDTO extends AbstractTransaction<ProcessType> {
   private List<GroupApprovalDTO> groupApprovals;
   private List<RoleApprovalDTO> roleApprovals;
   private ZonedDateTime approvedAt;
-  private UUID referenceId;
+  private List<UUID> referenceIds;
 
   @Override
   public boolean isApproved() {

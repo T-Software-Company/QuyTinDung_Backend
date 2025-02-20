@@ -1,9 +1,10 @@
 package com.tsoftware.qtd.dto.asset;
 
 import com.tsoftware.qtd.constants.EnumType.AssetType;
+import com.tsoftware.qtd.constants.EnumType.OwnershipType;
+import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-import java.util.UUID;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,18 +12,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class AssetResponse {
-
-  private UUID id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
-  private BigDecimal assessedValue;
-  private String liquidity;
-  private String risk;
+public class AssetResponse extends AbstractResponse {
+  private BigDecimal proposedValue;
   private AssetType assetType;
   private Boolean valuationStatus;
+  private OwnershipType ownershipType;
+  private String title;
+  private List<String> documents;
+  private ValuationAssetResponse valuationAsset;
 
   private ApartmentRequest apartment;
   private LandAndImprovementRequest landAndImprovement;

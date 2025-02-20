@@ -4,10 +4,7 @@ import com.tsoftware.qtd.constants.EnumType.NotificationType;
 import com.tsoftware.qtd.dto.notification.EmployeeNotificationRequest;
 import com.tsoftware.qtd.dto.notification.NotificationRequest;
 import com.tsoftware.qtd.dto.notification.NotificationResponse;
-import com.tsoftware.qtd.event.FinancialInfoSubmittedEvent;
-import com.tsoftware.qtd.event.LoanPlanSubmittedEvent;
-import com.tsoftware.qtd.event.LoanRequestSubmittedEvent;
-import com.tsoftware.qtd.event.NotificationEvent;
+import com.tsoftware.qtd.event.*;
 import com.tsoftware.qtd.service.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +63,18 @@ public class ApplicationListener {
     var notification =
         generateNotificationFormApprovalProcess(
             event.getApprovalProcessId(), NotificationType.CREATE_FINANCIAL_INFO, content, title);
+    applicationContext.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handAssetsSubmittedEvent(AssetSubmittedEvent event) {
+    var content = "Thông tin tài sản đã được thêm";
+    var title = "Thêm thông tin tài sản";
+    var notification =
+        generateNotificationFormApprovalProcess(
+            event.getApprovalProcessId(), NotificationType.CREATE_ASSETS, content, title);
     applicationContext.publishEvent(new NotificationEvent(this, notification));
   }
 

@@ -12,6 +12,7 @@ import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.service.ApprovalProcessService;
 import com.tsoftware.qtd.service.FinancialInfoService;
 import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class FinancialInfoExecutor extends BaseTransactionExecutor<ApprovalProce
     log.info("All approvals received for approvalProcessDTO: {}", approvalProcessDTO.getId());
     var data = JsonParser.convert(approvalProcessDTO.getMetadata(), FinancialInfoRequest.class);
     FinancialInfoResponse result = financialInfoService.create(data);
-    approvalProcessDTO.setReferenceId(result.getId());
+    approvalProcessDTO.setReferenceIds(List.of(result.getId()));
   }
 
   @Override
