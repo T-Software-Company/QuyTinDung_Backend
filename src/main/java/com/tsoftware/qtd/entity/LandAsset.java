@@ -32,9 +32,9 @@ public class LandAsset extends AbstractAuditEntity {
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private OwnerInfo ownerInfo;
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private TransferInfo transferInfo;
 }

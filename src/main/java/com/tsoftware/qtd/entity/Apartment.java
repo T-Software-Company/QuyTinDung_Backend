@@ -29,7 +29,7 @@ public class Apartment extends AbstractAuditEntity {
 
   private String originOfUsage;
   private String typeOfHousing;
-  private String Name;
+  private String name;
   private BigDecimal floorArea;
   private String typeOfOwnership;
 

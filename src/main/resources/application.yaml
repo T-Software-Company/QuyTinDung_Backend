@@ -37,10 +37,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
 
   security:
     oauth2:
@@ -128,6 +128,8 @@ workflow:
             condition: "true"
 
       - step: add-asset-collateral
+        type: action
+        extractStatus: "@speLConfig.extractStatus(#step)"
         dependencies:
           - financial-info
           - create-loan-plan

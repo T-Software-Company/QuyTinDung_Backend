@@ -1,11 +1,13 @@
 package com.tsoftware.qtd.controller;
 
+import com.tsoftware.qtd.commonlib.annotation.TargetId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.service.AssetService;
+import com.tsoftware.qtd.util.ValidationUtils;
 import com.tsoftware.qtd.validation.IsUUID;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -34,13 +36,10 @@ public class AssetController {
   @WorkflowAPI(step = WorkflowStep.ADD_ASSET_COLLATERAL, action = WorkflowAPI.WorkflowAction.CREATE)
   public ResponseEntity<?> create(
       @RequestBody List<@Valid AssetRequest> assetsRequest,
-      @RequestParam @Valid @IsUUID String applicationId) {
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(
-            new ApiResponse<>(
-                HttpStatus.CREATED.value(),
-                "Created",
-                assetService.create(assetsRequest, UUID.fromString(applicationId))));
+      @RequestParam @TargetId @Valid @IsUUID String applicationId) {
+    assetsRequest.forEach(
+        a -> ValidationUtils.validateEqual(applicationId, a.getApplication().getId()));
+    return ResponseEntity.ok(assetService.request(assetsRequest));
   }
 
   @PutMapping("/{id}")

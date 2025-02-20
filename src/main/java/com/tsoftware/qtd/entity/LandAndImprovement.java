@@ -46,15 +46,17 @@ public class LandAndImprovement extends AbstractAuditEntity {
   private String certificateNumber;
   private String certificateBookNumber;
   private String issuingAuthority;
-  private String issueDate;
+
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+  private ZonedDateTime issueDate;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private OwnerInfo ownerInfo;
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private TransferInfo transferInfo;
 }

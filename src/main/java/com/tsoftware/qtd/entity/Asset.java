@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.AssetType;
-import com.tsoftware.qtd.constants.EnumType.TypeOfUse;
+import com.tsoftware.qtd.constants.EnumType.OwnershipType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -22,6 +22,7 @@ public class Asset extends AbstractAuditEntity {
 
   private BigDecimal proposedValue;
   private Boolean valuationStatus;
+  private String title;
 
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
@@ -31,7 +32,7 @@ public class Asset extends AbstractAuditEntity {
   private AssetType assetType;
 
   @Enumerated(EnumType.ORDINAL)
-  private TypeOfUse typeOfUse;
+  private OwnershipType ownershipType;
 
   private List<String> documents;
 
