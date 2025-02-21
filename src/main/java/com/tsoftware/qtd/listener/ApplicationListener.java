@@ -27,7 +27,7 @@ public class ApplicationListener {
   private final ApplicationService applicationService;
   private final EmployeeNotificationService employeeNotificationService;
   private final ApprovalProcessService approvalProcessService;
-  private ApplicationEventPublisher applicationEventPublisher;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Async
   @TransactionalEventListener
@@ -86,13 +86,18 @@ public class ApplicationListener {
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void handleValuationMeetingCreatedEvent(ValuationMeetingCreatedEvent event) {
+    var valuationMeeting = event.getValuationMeetingResponse();
     var content = "Cuộc họp định giá tài sản đã được tạo";
     var title = "Tạo cuộc họp định giá";
+    var notificationMetadata = new HashMap<String, Object>();
+    notificationMetadata.put("valuationMeetingId", valuationMeeting.getId());
+    notificationMetadata.put("applicationId", valuationMeeting.getApplication().getId());
     var notificationRequest =
         NotificationRequest.builder()
             .content(content)
             .title(title)
             .type(NotificationType.CREATE_VALUATION_MEETING)
+            .metadata(notificationMetadata)
             .build();
     var notification = notificationService.create(notificationRequest);
     event
