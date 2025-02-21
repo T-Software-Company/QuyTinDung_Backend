@@ -38,7 +38,7 @@ public class Asset extends AbstractAuditEntity {
 
   @ManyToOne private Application application;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "asset")
   private ValuationAsset valuationAsset;
 
   @OneToOne(cascade = CascadeType.ALL)
@@ -61,10 +61,4 @@ public class Asset extends AbstractAuditEntity {
 
   @OneToOne(cascade = CascadeType.ALL)
   private LandAsset landAsset;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private ValuationMeeting valuationMeeting;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  private ValuationReport valuationReport;
 }

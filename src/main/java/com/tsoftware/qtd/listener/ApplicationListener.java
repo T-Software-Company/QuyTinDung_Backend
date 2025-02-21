@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,11 +23,11 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 public class ApplicationListener {
-  private final ApplicationContext applicationContext;
   private final NotificationService notificationService;
   private final ApplicationService applicationService;
   private final EmployeeNotificationService employeeNotificationService;
   private final ApprovalProcessService approvalProcessService;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Async
   @TransactionalEventListener
@@ -35,10 +35,11 @@ public class ApplicationListener {
   public void handLoanRequestSubmittedEvent(LoanRequestSubmittedEvent event) {
     var content = "Một yêu cầu vay mới đã được tạo";
     var title = " Tạo yêu cầu vay";
+    var approvalProcessId = event.getApprovalProcessResponse().getId();
     var notification =
         generateNotificationFormApprovalProcess(
-            event.getApprovalProcessId(), NotificationType.CREATE_LOAN_REQUEST, content, title);
-    applicationContext.publishEvent(new NotificationEvent(this, notification));
+            approvalProcessId, NotificationType.CREATE_LOAN_REQUEST, content, title);
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
   @Async
@@ -47,11 +48,12 @@ public class ApplicationListener {
   public void handLoanPlanSubmittedEvent(LoanPlanSubmittedEvent event) {
     var content = "Một kế hoạch vay mới đã được tạo";
     var title = "Tạo kế hoạch vay";
+    var approvalProcessId = event.getApprovalProcessResponse().getId();
     var notification =
         generateNotificationFormApprovalProcess(
-            event.getApprovalProcessId(), NotificationType.CREATE_LOAN_PLAN, content, title);
+            approvalProcessId, NotificationType.CREATE_LOAN_PLAN, content, title);
     log.info("handling loan plan submitted");
-    applicationContext.publishEvent(new NotificationEvent(this, notification));
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
   @Async
@@ -60,10 +62,11 @@ public class ApplicationListener {
   public void handFinancialInfoSubmittedEvent(FinancialInfoSubmittedEvent event) {
     var content = "Thông tin tài chính đã được thêm";
     var title = "Thêm thông tin tài chính";
+    var approvalProcessId = event.getApprovalProcessResponse().getId();
     var notification =
         generateNotificationFormApprovalProcess(
-            event.getApprovalProcessId(), NotificationType.CREATE_FINANCIAL_INFO, content, title);
-    applicationContext.publishEvent(new NotificationEvent(this, notification));
+            approvalProcessId, NotificationType.CREATE_FINANCIAL_INFO, content, title);
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
   @Async
@@ -72,10 +75,52 @@ public class ApplicationListener {
   public void handAssetsSubmittedEvent(AssetSubmittedEvent event) {
     var content = "Thông tin tài sản đã được thêm";
     var title = "Thêm thông tin tài sản";
+    var approvalProcessId = event.getApprovalProcessResponse().getId();
     var notification =
         generateNotificationFormApprovalProcess(
-            event.getApprovalProcessId(), NotificationType.CREATE_ASSETS, content, title);
-    applicationContext.publishEvent(new NotificationEvent(this, notification));
+            approvalProcessId, NotificationType.CREATE_ASSETS, content, title);
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handleValuationMeetingCreatedEvent(ValuationMeetingCreatedEvent event) {
+    var valuationMeeting = event.getValuationMeetingResponse();
+    var content = "Cuộc họp định giá tài sản đã được tạo";
+    var title = "Tạo cuộc họp định giá";
+    var notificationMetadata = new HashMap<String, Object>();
+    notificationMetadata.put("valuationMeetingId", valuationMeeting.getId());
+    notificationMetadata.put("applicationId", valuationMeeting.getApplication().getId());
+    var notificationRequest =
+        NotificationRequest.builder()
+            .content(content)
+            .title(title)
+            .type(NotificationType.CREATE_VALUATION_MEETING)
+            .metadata(notificationMetadata)
+            .build();
+    var notification = notificationService.create(notificationRequest);
+    event
+        .getValuationMeetingResponse()
+        .getParticipants()
+        .forEach(
+            e -> {
+              var employeeNotificationRequest =
+                  EmployeeNotificationRequest.builder()
+                      .message("Bạn có một cuộc họp định giá tài sản")
+                      .notification(
+                          EmployeeNotificationRequest.Notification.builder()
+                              .id(notification.getId().toString())
+                              .build())
+                      .employee(
+                          EmployeeNotificationRequest.Employee.builder()
+                              .id(e.getId().toString())
+                              .build())
+                      .isRead(false)
+                      .build();
+              employeeNotificationService.create(employeeNotificationRequest);
+            });
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
   private NotificationResponse generateNotificationFormApprovalProcess(

@@ -46,7 +46,7 @@ public class LoanRequestService {
             loanRequestRequest,
             loanRequestRequest.getApplication(),
             ProcessType.CREATE_LOAN_REQUEST);
-    applicationEventPublisher.publishEvent(new LoanRequestSubmittedEvent(this, result.getId()));
+    applicationEventPublisher.publishEvent(new LoanRequestSubmittedEvent(this, result));
     return result;
   }
 

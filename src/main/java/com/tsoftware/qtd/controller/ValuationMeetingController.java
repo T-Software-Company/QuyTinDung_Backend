@@ -1,10 +1,13 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
+import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.service.ValuationMeetingService;
+import com.tsoftware.qtd.util.ValidationUtils;
 import com.tsoftware.qtd.validation.IsUUID;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -22,15 +25,21 @@ public class ValuationMeetingController {
   private final ValuationMeetingService valuationMeetingService;
 
   @PostMapping
+  @WorkflowAPI(
+      step = WorkflowStep.CREATE_VALUATION_MEETING,
+      action = WorkflowAPI.WorkflowAction.CREATE)
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> create(
       @RequestBody @Valid ValuationMeetingRequest valuationMeetingRequest,
       @Valid @TargetId @IsUUID @RequestParam String applicationId) {
-    return ResponseEntity.ok(
-        new ApiResponse<>(
-            1000,
-            "Created",
-            valuationMeetingService.create(
-                valuationMeetingRequest, UUID.fromString(applicationId))));
+    ValidationUtils.validateEqual(valuationMeetingRequest.getApplication().getId(), applicationId);
+
+    return ResponseEntity.status(HttpStatus.CREATED.value())
+        .body(
+            new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                "Created",
+                valuationMeetingService.create(
+                    valuationMeetingRequest, UUID.fromString(applicationId))));
   }
 
   @PostMapping("/{id}/add-participants")

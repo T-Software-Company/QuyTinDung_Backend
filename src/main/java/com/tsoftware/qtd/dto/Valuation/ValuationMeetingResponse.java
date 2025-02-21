@@ -1,25 +1,35 @@
 package com.tsoftware.qtd.dto.Valuation;
 
+import com.tsoftware.qtd.dto.AbstractResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-public class ValuationMeetingResponse {
-  private UUID id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ValuationMeetingResponse extends AbstractResponse {
+
   private String address;
   private String note;
   private ZonedDateTime startDate;
   private ZonedDateTime endDate;
   private List<EmployeeResponse> participants;
+  private Map<String, Object> metadata;
+  private Application application;
+
+  @Getter
+  @Setter
+  @Builder
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  public static class Application {
+    UUID id;
+  }
 }

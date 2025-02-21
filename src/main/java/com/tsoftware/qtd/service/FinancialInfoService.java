@@ -25,7 +25,7 @@ public class FinancialInfoService {
     var result =
         approvalProcessService.create(
             request, request.getApplication(), ProcessType.CREATE_FINANCIAL_INFO);
-    applicationEventPublisher.publishEvent(new FinancialInfoSubmittedEvent(this, result.getId()));
+    applicationEventPublisher.publishEvent(new FinancialInfoSubmittedEvent(this, result));
     return result;
   }
 

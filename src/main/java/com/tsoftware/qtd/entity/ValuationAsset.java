@@ -29,6 +29,10 @@ public class ValuationAsset extends AbstractAuditEntity {
   private String thirdPartyValuationReport;
   private Boolean thirdPartyValuation;
 
+  @ManyToOne private ValuationReport valuationReport;
+
+  @OneToOne private Asset asset;
+
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
