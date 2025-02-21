@@ -16,6 +16,7 @@ import com.tsoftware.qtd.commonlib.service.WorkflowService;
 import com.tsoftware.qtd.commonlib.util.CollectionUtils;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.commonlib.util.StringUtils;
+import com.tsoftware.qtd.exception.CommonException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -267,7 +268,7 @@ public class WorkflowAspect {
     step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
     var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
-    JsonParser.put(metadata, "histories[" + index + "].error", ex.getMessage());
+    JsonParser.put(metadata, "histories[" + index + "].error", this.getErrorMessage(ex));
     this.finalProcess(workflow, step.getName());
     workflowService.save(workflow);
   }
@@ -286,7 +287,7 @@ public class WorkflowAspect {
     step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
     var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
-    JsonParser.put(metadata, "histories[" + index + "].error", ex.getMessage());
+    JsonParser.put(metadata, "histories[" + index + "].error", this.getErrorMessage(ex));
     this.finalProcess(workflow, step.getName());
     workflowService.save(workflow);
   }
@@ -294,7 +295,7 @@ public class WorkflowAspect {
   private void processAfterThrowWithCancel(Workflow<?> workflow, Throwable ex) {
     Map<String, Object> metadata = workflow.getMetadata();
     var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class) - 1;
-    JsonParser.put(metadata, "histories[" + index + "].error", ex.getMessage());
+    JsonParser.put(metadata, "histories[" + index + "].error", this.getErrorMessage(ex));
     workflowService.save(workflow);
   }
 
@@ -384,5 +385,14 @@ public class WorkflowAspect {
     argsMap.put("time", ZonedDateTime.now());
     argsMap.put("user", SecurityContextHolder.getContext().getAuthentication().getName());
     return argsMap;
+  }
+
+  private String getErrorMessage(Throwable ex) {
+    if (ex instanceof CommonException commonException) {
+      String message = commonException.getMessage();
+      var params = commonException.getParameters().toArray();
+      return String.format(message.replace("{}", "%s"), params);
+    }
+    return ex.getMessage();
   }
 }

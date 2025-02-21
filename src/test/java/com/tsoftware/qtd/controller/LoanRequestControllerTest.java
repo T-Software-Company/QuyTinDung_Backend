@@ -33,7 +33,6 @@ public class LoanRequestControllerTest {
             .purpose("Purchase of machinery")
             .amount(new BigDecimal("50000.00"))
             .borrowerType(BorrowerType.INDIVIDUAL.name())
-            .asset("Factory equipment")
             .loanSecurityType(LoanSecurityType.MORTGAGE.name())
             .loanCollateralTypes(List.of("VEHICLE"))
             .note("Urgent loan for business expansion")
