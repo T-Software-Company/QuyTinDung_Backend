@@ -115,6 +115,8 @@ workflow:
         dependencies:
           - init
         nextStepRules:
+          - step: add-asset-collateral
+            condition: "@speLConfig.resolveAddAssetCollateralStep(#step)"
           - step: create-credit-rating
             condition: "true"
 
@@ -131,11 +133,12 @@ workflow:
         type: action
         extractStatus: "@speLConfig.extractStatus(#step)"
         dependencies:
-          - financial-info
-          - create-loan-plan
           - create-loan-request
+          - create-loan-plan
         nextStepRules:
           - step: create-valuation-meting
+            condition: "true"
+          - step: create-valuation-report
             condition: "true"
 
       - step: create-valuation-meting
@@ -149,7 +152,7 @@ workflow:
         type: action
         extractStatus: "@speLConfig.extractStatus(#step)"
         dependencies:
-          - create-valuation-meting
+          - add-asset-collateral
         nextStepRules:
           - step: create-appraisal-meting
             condition: "true"

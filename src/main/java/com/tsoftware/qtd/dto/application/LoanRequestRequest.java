@@ -31,7 +31,6 @@ public class LoanRequestRequest {
   @IsEnum(enumClass = LoanSecurityType.class)
   private String loanSecurityType;
 
-  @NotNull
   @IsEnum(enumClass = AssetType.class)
   private List<String> loanCollateralTypes;
 

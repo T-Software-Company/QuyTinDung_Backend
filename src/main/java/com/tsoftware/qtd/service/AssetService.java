@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
@@ -12,6 +13,7 @@ import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.AssetMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.AssetRepository;
+import com.tsoftware.qtd.repository.LoanRequestRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,8 +33,32 @@ public class AssetService {
   private final ApplicationRepository applicationRepository;
   private final ApprovalProcessService approvalProcessService;
   private final ApplicationEventPublisher applicationEventPublisher;
+  private final LoanRequestRepository loanRequestRepository;
 
   public ApprovalProcessResponse request(List<AssetRequest> assetsRequest) {
+    var applicationId = assetsRequest.getFirst().getApplication().getId();
+    var loanRequest =
+        loanRequestRepository
+            .findByApplicationId(UUID.fromString(applicationId))
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, "byApplicationId: " + applicationId));
+    var assetsType = loanRequest.getLoanCollateralTypes();
+    if (assetsType.size() != assetsRequest.size()) {
+      throw new CommonException(
+          ErrorType.CHECKSUM_INVALID, "Assets type are not matched with loan request");
+    }
+    assetsRequest.forEach(
+        a -> {
+          if (!loanRequest.getLoanCollateralTypes().contains(AssetType.valueOf(a.getAssetType()))) {
+            throw new CommonException(
+                ErrorType.CHECKSUM_INVALID,
+                "Assets type are not matched with loan request, "
+                    + a.getAssetType()
+                    + "not found on loan request");
+          }
+        });
     var result =
         approvalProcessService.create(
             assetsRequest, assetsRequest.getFirst().getApplication(), ProcessType.CREATE_ASSETS);

@@ -158,6 +158,15 @@ public class OnboardingWorkflowService implements WorkflowService {
     var dependencyStepsOfNextStep =
         workflow.getSteps().stream()
             .filter(st -> nextStepRule.getDependencies().contains(st.getName()));
+    var stepsName = workflow.getSteps().stream().map(Step::getName).toList();
+    var dependencyStepsNotCreate =
+        nextStepRule.getDependencies().stream().filter(s -> !stepsName.contains(s));
+    dependencyStepsNotCreate.forEach(
+        s -> {
+          throw new WorkflowException(
+              HttpStatus.UNPROCESSABLE_ENTITY.value(),
+              "Dependency step has not been create (" + s + ")");
+        });
     dependencyStepsOfNextStep.forEach(
         st -> {
           if (!WorkflowStatus.COMPLETED.equals(st.getStatus())) {
