@@ -15,7 +15,6 @@ import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,21 +22,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SpeLConfig {
 
-  public WorkflowStatus extractStatus(StepHistoryDTO stepHistory) {
-    var metadata = stepHistory.getMetadata();
-    var histories = JsonParser.convert(metadata.get("histories"), List.class);
-    for (Object history : histories) {
-      var h = JsonParser.convert(history, Map.class);
-      var response = JsonParser.convert(h.get("response"), Map.class);
-      if (response == null) return WorkflowStatus.INPROGRESS;
-      var transaction =
-          JsonParser.convert(
-              response.get(
-                  StringUtils.lowercaseFirstLetter(ApprovalProcessResponse.class.getSimpleName())),
-              ApprovalProcessResponse.class);
-      if (transaction.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
-      if (transaction.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
+  public WorkflowStatus extractStatus(StepHistoryDTO stepHistory) throws JsonProcessingException {
+    var status = WorkflowStatus.INPROGRESS;
+    var histories =
+        JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]", List.class);
+    if (histories.isEmpty()) {
+      return WorkflowStatus.INPROGRESS;
     }
+    var last = histories.getLast();
+    var approvalProcess =
+        JsonParser.getValueByPath(
+            last,
+            "response."
+                + StringUtils.lowercaseFirstLetter(ApprovalProcessResponse.class.getSimpleName()),
+            ApprovalProcessResponse.class);
+    if (approvalProcess.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
+    if (approvalProcess.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
     return WorkflowStatus.INPROGRESS;
   }
 

@@ -45,7 +45,7 @@ public class LoanPlanService {
     var result =
         approvalProcessService.create(
             loanPlanRequest, loanPlanRequest.getApplication(), ProcessType.CREATE_LOAN_PLAN);
-    applicationEventPublisher.publishEvent(new LoanPlanSubmittedEvent(this, result.getId()));
+    applicationEventPublisher.publishEvent(new LoanPlanSubmittedEvent(this, result));
     return result;
   }
 

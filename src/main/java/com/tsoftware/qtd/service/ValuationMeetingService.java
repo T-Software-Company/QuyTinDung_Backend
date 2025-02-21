@@ -5,14 +5,19 @@ import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationMeeting;
+import com.tsoftware.qtd.event.ValuationMeetingCreatedEvent;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.ValuationMeetingMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
+import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.ValuationMeetingRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,8 @@ public class ValuationMeetingService {
   private final ValuationMeetingRepository valuationMeetingRepository;
   private final ApplicationRepository applicationRepository;
   private final ValuationMeetingMapper valuationMeetingMapper;
+  private final ApplicationEventPublisher applicationEventPublisher;
+  private final EmployeeRepository employeeRepository;
 
   public ValuationMeetingResponse create(
       ValuationMeetingRequest valuationMeetingRequest, UUID applicationId) {
@@ -33,7 +40,23 @@ public class ValuationMeetingService {
             .findById(applicationId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     valuationMeeting.setApplication(application);
-    return valuationMeetingMapper.toResponse(valuationMeetingRepository.save(valuationMeeting));
+    valuationMeeting
+        .getParticipants()
+        .forEach(
+            e -> {
+              Employee finalE = e;
+              e =
+                  employeeRepository
+                      .findById(e.getId())
+                      .orElseThrow(
+                          () ->
+                              new CommonException(
+                                  ErrorType.ENTITY_NOT_FOUND, "employee: " + finalE.getId()));
+            });
+    var saved = valuationMeetingRepository.save(valuationMeeting);
+    var result = valuationMeetingMapper.toResponse(saved);
+    applicationEventPublisher.publishEvent(new ValuationMeetingCreatedEvent(this, result));
+    return result;
   }
 
   public ValuationMeetingResponse update(UUID id, ValuationMeetingRequest valuationMeetingRequest) {

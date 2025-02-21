@@ -1,12 +1,12 @@
 package com.tsoftware.qtd.event;
 
-import java.util.UUID;
+import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import lombok.Getter;
 
 @Getter
 public class LoanRequestSubmittedEvent extends SubmittedEvent {
 
-  public LoanRequestSubmittedEvent(Object source, UUID approvalProcessId) {
-    super(source, approvalProcessId);
+  public LoanRequestSubmittedEvent(Object source, ApprovalProcessResponse approvalProcessResponse) {
+    super(source, approvalProcessResponse);
   }
 }

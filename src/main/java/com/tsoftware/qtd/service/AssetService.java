@@ -62,7 +62,7 @@ public class AssetService {
     var result =
         approvalProcessService.create(
             assetsRequest, assetsRequest.getFirst().getApplication(), ProcessType.CREATE_ASSETS);
-    applicationEventPublisher.publishEvent(new AssetSubmittedEvent(this, result.getId()));
+    applicationEventPublisher.publishEvent(new AssetSubmittedEvent(this, result));
     return result;
   }
 

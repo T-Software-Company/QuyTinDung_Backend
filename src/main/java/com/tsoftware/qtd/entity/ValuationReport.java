@@ -22,13 +22,14 @@ import org.hibernate.annotations.Type;
 public class ValuationReport extends AbstractAuditEntity {
   private BigDecimal totalValuationAmount;
 
+  @OneToMany(
+      mappedBy = "valuationReport",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
+  private List<ValuationAsset> valuationAssets;
+
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
-
-  @OneToMany(mappedBy = "valuationReport")
-  private List<Asset> assets;
-
-  @OneToOne(mappedBy = "valuationReport")
-  private ValuationMeeting valuationMeeting;
 }

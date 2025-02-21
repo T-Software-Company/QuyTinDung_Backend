@@ -5,7 +5,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
@@ -39,14 +38,9 @@ public class ValuationMeeting extends AbstractAuditEntity {
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime endDate;
 
-  @OneToMany(mappedBy = "valuationMeeting")
-  private List<Asset> assets;
-
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;
 
   @ManyToMany(mappedBy = "valuationMeetings")
   private List<Employee> participants;
-
-  @OneToOne private ValuationReport valuationReport;
 }

@@ -1,16 +1,18 @@
-package com.tsoftware.qtd.dto.asset;
+package com.tsoftware.qtd.dto.Valuation;
 
 import com.tsoftware.qtd.constants.EnumType.LegalStatus;
+import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
 import java.util.Map;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-public class ValuationAssetResponse {
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ValuationAssetResponse extends AbstractResponse {
   private BigDecimal value;
   private String liquidity;
   private String risk;
