@@ -26,6 +26,11 @@ import org.hibernate.annotations.Type;
 @Table
 public class AppraisalPlan extends AbstractAuditEntity {
   private String address;
+  private String note;
+
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
 
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime startDate;
@@ -33,16 +38,8 @@ public class AppraisalPlan extends AbstractAuditEntity {
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime endDate;
 
-  @Type(JsonType.class)
-  @Column(columnDefinition = "jsonb")
-  private Map<String, Object> metadata;
-
-  @ManyToMany(mappedBy = "appraisalPlans", fetch = FetchType.LAZY)
-  private List<Employee> participants;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  private AppraisalReport appraisalReport;
-
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;
+
+  @ManyToMany private List<Employee> participants;
 }

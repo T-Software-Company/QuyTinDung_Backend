@@ -49,12 +49,14 @@ public class Employee extends AbstractAuditEntity {
   @OneToOne(cascade = CascadeType.ALL)
   private IdentityInfo identityInfo;
 
-  @ManyToMany private List<AppraisalPlan> appraisalPlans;
+  @ManyToMany(mappedBy = "participants")
+  private List<AppraisalPlan> appraisalPlans;
 
   @OneToMany(mappedBy = "approver", fetch = FetchType.LAZY)
   private List<Approval> approvals;
 
-  @ManyToMany private List<ValuationMeeting> valuationMeetings;
+  @ManyToMany(mappedBy = "participants")
+  private List<ValuationMeeting> valuationMeetings;
 
   @ManyToMany(mappedBy = "employees", fetch = FetchType.LAZY)
   private List<Group> groups;

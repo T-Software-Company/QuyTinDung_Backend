@@ -41,6 +41,5 @@ public class ValuationMeeting extends AbstractAuditEntity {
   @OneToOne(fetch = FetchType.LAZY)
   private Application application;
 
-  @ManyToMany(mappedBy = "valuationMeetings")
-  private List<Employee> participants;
+  @ManyToMany private List<Employee> participants;
 }
