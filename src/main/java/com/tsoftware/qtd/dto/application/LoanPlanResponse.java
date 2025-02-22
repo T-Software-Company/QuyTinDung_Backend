@@ -3,6 +3,7 @@ package com.tsoftware.qtd.dto.application;
 import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.UUID;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -21,4 +22,14 @@ public class LoanPlanResponse extends AbstractResponse {
   private Integer loanTerm;
   private BigDecimal interestRate;
   private Map<String, Object> metadata;
+  private Application application;
+
+  @Getter
+  @Setter
+  @Builder
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  public static class Application {
+    UUID id;
+  }
 }

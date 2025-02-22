@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.dto.Valuation;
 
+import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -20,10 +21,12 @@ public class ValuationReportRequest {
   @PositiveOrZero(message = "Total valuation amount must be zero or positive")
   private BigDecimal totalValuationAmount;
 
-  @NonNull
-  @NotEmpty(message = "Valuation assets cannot be empty")
   @Valid
+  @NotNull
+  @NotEmpty(message = "Valuation assets cannot be empty")
   private List<ValuationAssetRequest> valuationAssets;
 
   private Map<String, Object> metadata;
+
+  @Valid @NotNull private ApplicationRequest application;
 }

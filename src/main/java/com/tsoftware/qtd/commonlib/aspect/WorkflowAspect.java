@@ -317,7 +317,7 @@ public class WorkflowAspect {
         }
       }
     }
-    throw new WorkflowException(HttpStatus.NOT_FOUND.value(), "Target id not try");
+    throw new WorkflowException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Target id not try");
   }
 
   private Object getBodyFromResponse(Object responseEntity) {

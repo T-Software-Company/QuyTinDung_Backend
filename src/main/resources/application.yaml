@@ -181,3 +181,12 @@ workflow:
         nextStepRules:
           - step: create-appraisal-report
             condition: "true"
+
+      - step: create-appraisal-report
+        type: default
+        extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
+        dependencies:
+          - create-appraisal-meting
+        nextStepRules: []
+#          - step: create-appraisal-report
+#            condition: "true"

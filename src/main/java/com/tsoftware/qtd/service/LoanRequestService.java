@@ -6,7 +6,6 @@ import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
-import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.event.LoanRequestSubmittedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
@@ -53,10 +52,13 @@ public class LoanRequestService {
   public LoanRequestResponse create(LoanRequestRequest loanRequestRequest, UUID applicationId) {
     com.tsoftware.qtd.entity.LoanRequest loanrequest =
         loanrequestMapper.toEntity(loanRequestRequest);
-    Application application =
+    var application =
         applicationRepository
             .findById(applicationId)
-            .orElseThrow(() -> new NotFoundException("Credit not found"));
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, "Application not found: " + applicationId));
     loanrequest.setApplication(application);
     application.setAmount(loanrequest.getAmount());
     application.setLoanSecurityType(loanrequest.getLoanSecurityType());

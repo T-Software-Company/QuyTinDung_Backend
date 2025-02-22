@@ -37,7 +37,7 @@ public class ApprovalProcess extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private ProcessType type;
 
-  private UUID referenceId;
+  private List<UUID> referenceIds;
 
   @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
   private ZonedDateTime approvedAt;

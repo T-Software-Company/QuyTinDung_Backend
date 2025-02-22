@@ -4,6 +4,8 @@ import com.tsoftware.qtd.constants.EnumType.BorrowerType;
 import com.tsoftware.qtd.constants.EnumType.LoanSecurityType;
 import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import com.tsoftware.qtd.dto.AbstractResponse;
+import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
+import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeSimpleResponse;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -36,6 +38,8 @@ public class ApplicationResponse extends AbstractResponse {
   private LoanRequestResponse loanRequest;
   private LoanPlanResponse loanPlan;
   private FinancialInfoResponse financialInfo;
+  private ValuationMeetingResponse valuationMeeting;
+  private ValuationReportResponse valuationReport;
 
   @Getter
   @Setter

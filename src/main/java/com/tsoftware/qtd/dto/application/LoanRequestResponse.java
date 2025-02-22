@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -26,4 +27,14 @@ public class LoanRequestResponse extends AbstractResponse {
   private List<AssetType> loanCollateralTypes;
   private String note;
   private Map<String, Object> metadata;
+  private Application application;
+
+  @Getter
+  @Setter
+  @Builder
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  public static class Application {
+    UUID id;
+  }
 }

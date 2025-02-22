@@ -2,7 +2,6 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
-import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationMeeting;
 import com.tsoftware.qtd.event.ValuationMeetingCreatedEvent;
@@ -36,10 +35,13 @@ public class ValuationMeetingService {
   public ValuationMeetingResponse create(
       ValuationMeetingRequest valuationMeetingRequest, UUID applicationId) {
     ValuationMeeting valuationMeeting = valuationMeetingMapper.toEntity(valuationMeetingRequest);
-    Application application =
+    var application =
         applicationRepository
             .findById(applicationId)
-            .orElseThrow(() -> new NotFoundException("Credit not found"));
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, "Application not found: " + applicationId));
     valuationMeeting.setApplication(application);
     var savedEmployee = new ArrayList<Employee>();
     valuationMeeting

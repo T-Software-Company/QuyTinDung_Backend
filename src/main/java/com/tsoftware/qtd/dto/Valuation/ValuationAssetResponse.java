@@ -3,6 +3,7 @@ package com.tsoftware.qtd.dto.Valuation;
 import com.tsoftware.qtd.constants.EnumType.LegalStatus;
 import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,6 +22,7 @@ public class ValuationAssetResponse extends AbstractResponse {
   private String valuationMethod;
   private String thirdPartyValuationReport;
   private Boolean thirdPartyValuation;
+  private List<String> documents;
 
   private Map<String, Object> metadata;
 }
