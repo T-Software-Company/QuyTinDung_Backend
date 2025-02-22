@@ -21,8 +21,19 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class SpeLConfig {
+  public WorkflowStatus extractStatusWitDefault(StepHistoryDTO stepHistory)
+      throws JsonProcessingException {
+    var status = WorkflowStatus.INPROGRESS;
+    var histories =
+        JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]", List.class);
+    if (histories.isEmpty()) {
+      return WorkflowStatus.INPROGRESS;
+    }
+    return WorkflowStatus.COMPLETED;
+  }
 
-  public WorkflowStatus extractStatus(StepHistoryDTO stepHistory) throws JsonProcessingException {
+  public WorkflowStatus extractStatusWitApprove(StepHistoryDTO stepHistory)
+      throws JsonProcessingException {
     var status = WorkflowStatus.INPROGRESS;
     var histories =
         JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]", List.class);

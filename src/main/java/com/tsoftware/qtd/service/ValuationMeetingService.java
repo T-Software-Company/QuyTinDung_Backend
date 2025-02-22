@@ -13,6 +13,7 @@ import com.tsoftware.qtd.mapper.ValuationMeetingMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.ValuationMeetingRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,19 +41,21 @@ public class ValuationMeetingService {
             .findById(applicationId)
             .orElseThrow(() -> new NotFoundException("Credit not found"));
     valuationMeeting.setApplication(application);
+    var savedEmployee = new ArrayList<Employee>();
     valuationMeeting
         .getParticipants()
         .forEach(
             e -> {
-              Employee finalE = e;
-              e =
+              var employee =
                   employeeRepository
                       .findById(e.getId())
                       .orElseThrow(
                           () ->
                               new CommonException(
-                                  ErrorType.ENTITY_NOT_FOUND, "employee: " + finalE.getId()));
+                                  ErrorType.ENTITY_NOT_FOUND, "employee: " + e.getId()));
+              savedEmployee.add(employee);
             });
+    valuationMeeting.setParticipants(savedEmployee);
     var saved = valuationMeetingRepository.save(valuationMeeting);
     var result = valuationMeetingMapper.toResponse(saved);
     applicationEventPublisher.publishEvent(new ValuationMeetingCreatedEvent(this, result));

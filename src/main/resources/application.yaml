@@ -89,6 +89,8 @@ workflow:
   rules:
     onboarding:
       - step: init
+        type: default
+        extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
         dependencies: []
         nextStepRules:
           - step: create-loan-request
@@ -99,7 +101,7 @@ workflow:
             condition: "true"
 
       - step: create-loan-request
-        extractStatus: "@speLConfig.extractStatus(#step)"
+        extractStatus: "@speLConfig.extractStatusWitApprove(#step)"
         type: action
         dependencies:
           - init
@@ -111,7 +113,7 @@ workflow:
 
       - step: create-loan-plan
         type: action
-        extractStatus: "@speLConfig.extractStatus(#step)"
+        extractStatus: "@speLConfig.extractStatusWitApprove(#step)"
         dependencies:
           - init
         nextStepRules:
@@ -122,7 +124,7 @@ workflow:
 
       - step: create-financial-info
         type: action
-        extractStatus: "@speLConfig.extractStatus(#step)"
+        extractStatus: "@speLConfig.extractStatusWitApprove(#step)"
         dependencies:
           - init
         nextStepRules:
@@ -131,7 +133,7 @@ workflow:
 
       - step: add-asset-collateral
         type: action
-        extractStatus: "@speLConfig.extractStatus(#step)"
+        extractStatus: "@speLConfig.extractStatusWitApprove(#step)"
         dependencies:
           - create-loan-request
           - create-loan-plan
@@ -142,6 +144,8 @@ workflow:
             condition: "true"
 
       - step: create-valuation-meting
+        type: default
+        extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
         dependencies:
           -  add-asset-collateral
         nextStepRules:
@@ -150,7 +154,7 @@ workflow:
 
       - step: create-valuation-report
         type: action
-        extractStatus: "@speLConfig.extractStatus(#step)"
+        extractStatus: "@speLConfig.extractStatusWitApprove(#step)"
         dependencies:
           - add-asset-collateral
         nextStepRules:
@@ -158,6 +162,8 @@ workflow:
             condition: "true"
 
       - step: create-credit-rating
+        type: default
+        extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
         dependencies:
           - financial-info
           - create-loan-plan
@@ -167,6 +173,8 @@ workflow:
             condition: "true"
 
       - step:  create-appraisal-meting
+        type: default
+        extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
         dependencies:
           - create-credit-rating
           - create-valuation-report
