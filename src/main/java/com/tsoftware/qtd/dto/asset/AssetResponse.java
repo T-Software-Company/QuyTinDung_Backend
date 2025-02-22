@@ -6,13 +6,14 @@ import com.tsoftware.qtd.dto.AbstractResponse;
 import com.tsoftware.qtd.dto.Valuation.ValuationAssetResponse;
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class AssetResponse extends AbstractResponse {
   private BigDecimal proposedValue;
   private AssetType assetType;

@@ -6,7 +6,6 @@ import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanPlanResponse;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
-import com.tsoftware.qtd.entity.Application;
 import com.tsoftware.qtd.entity.LoanPlan;
 import com.tsoftware.qtd.event.LoanPlanSubmittedEvent;
 import com.tsoftware.qtd.exception.CommonException;
@@ -51,10 +50,13 @@ public class LoanPlanService {
 
   public LoanPlanResponse create(LoanPlanRequest loanplanRequest, UUID applicationId) {
     LoanPlan loanplan = loanplanMapper.toEntity(loanplanRequest);
-    Application application =
+    var application =
         applicationRepository
             .findById(applicationId)
-            .orElseThrow(() -> new NotFoundException("Application not found"));
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, "Application not found: " + applicationId));
     application.setInterestRate(loanplan.getInterestRate());
     application.setLoanTerm(loanplan.getLoanTerm());
     applicationRepository.save(application);

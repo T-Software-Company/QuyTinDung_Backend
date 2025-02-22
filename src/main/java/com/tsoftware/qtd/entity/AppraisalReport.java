@@ -19,10 +19,10 @@ public class AppraisalReport extends AbstractAuditEntity {
   private String title;
   private String note;
 
-  @OneToOne(mappedBy = "appraisalReport", fetch = FetchType.LAZY)
-  private AppraisalPlan appraisalPlan;
-
   @Type(JsonType.class)
   @Column(columnDefinition = "jsonb")
   private Map<String, Object> metadata;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  private Application application;
 }

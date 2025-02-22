@@ -10,17 +10,19 @@ public abstract class BaseTransactionExecutor<T extends AbstractTransaction<?>>
   @Override
   public T execute(T transaction, Object... args) {
     log.info("Starting execution for transaction: {}", transaction.getId());
+    var type = transaction.getType().name();
+    var id = transaction.getId();
     try {
       preValidate(transaction);
       processApproval(transaction, args);
       if (transaction.isApproved()) {
         doExecute(transaction);
-        log.info("ApprovalProcessDTO already approved: {}", transaction.getId());
+        log.info("Transaction already approved: {} - {}", type, id);
       }
-      log.info("Completed execution for transaction: {}", transaction.getId());
+      log.info("Completed execution for transaction:{} - {}", type, id);
       return postExecute(transaction);
     } catch (Exception e) {
-      log.error("Error executing transaction: {}", transaction.getId(), e);
+      log.error("Error executing transaction: {} - {}", type, id, e);
       callBackWhenFall(transaction, e);
       throw e;
     }

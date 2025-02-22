@@ -123,6 +123,19 @@ public class ApplicationListener {
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handleValuationReportSubmittedEvent(ValuationReportSubmittedEvent event) {
+    var content = "Báo cáo định giá tài sản đã được tạo";
+    var title = "Tạo báo cáo định giá";
+    var approvalProcessId = event.getApprovalProcessResponse().getId();
+    var notification =
+        generateNotificationFormApprovalProcess(
+            approvalProcessId, NotificationType.CREATE_VALUATION_REPORT, content, title);
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
+  }
+
   private NotificationResponse generateNotificationFormApprovalProcess(
       UUID approvalProcessId, NotificationType type, String content, String title) {
     var approvalProcess = approvalProcessService.getDTOById(approvalProcessId);

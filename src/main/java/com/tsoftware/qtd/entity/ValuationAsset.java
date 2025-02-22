@@ -4,6 +4,7 @@ import com.tsoftware.qtd.constants.EnumType.LegalStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class ValuationAsset extends AbstractAuditEntity {
   private String valuationMethod;
   private String thirdPartyValuationReport;
   private Boolean thirdPartyValuation;
+  private List<String> documents;
 
   @ManyToOne private ValuationReport valuationReport;
 

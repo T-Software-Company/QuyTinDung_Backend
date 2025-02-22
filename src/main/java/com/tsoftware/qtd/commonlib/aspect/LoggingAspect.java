@@ -39,10 +39,7 @@ public class LoggingAspect {
     }
   }
 
-  @Around(
-      value =
-          "execution(* *..controller..*(..)) || execution(* org.springframework.web.bind.annotation.RestController.*(..))"
-              + "&& !with(* *..WebsocketController")
+  @Around(value = " execution(* org.springframework.web.bind.annotation.RestController.*(..))")
   public Object proceedLogForRequest(ProceedingJoinPoint pjp) throws Throwable {
     this.startTime = System.currentTimeMillis();
     log.info("Request: {}", pjp.getSignature());

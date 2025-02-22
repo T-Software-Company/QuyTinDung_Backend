@@ -227,7 +227,10 @@ public class OnboardingWorkflowService implements WorkflowService {
   public void calculateCurrentSteps(Workflow<?> workflow) {
     var steps = workflow.getSteps();
     var currentSteps = steps.stream().map(Step::getName).distinct().collect(Collectors.toList());
-    currentSteps.removeAll(workflow.getPrevSteps());
+    var prevSteps = workflow.getPrevSteps();
+    currentSteps.removeAll(prevSteps);
+    var skipSteps = extractSkipSteps(prevSteps, currentSteps);
+    currentSteps.removeAll(skipSteps);
     workflow.setCurrentSteps(currentSteps);
   }
 
@@ -263,7 +266,32 @@ public class OnboardingWorkflowService implements WorkflowService {
     var prevSteps = workflow.getPrevSteps();
     workflowNextSteps.removeAll(currentSteps);
     workflowNextSteps.removeAll(prevSteps);
+    var skipSteps = extractSkipSteps(prevSteps, workflowNextSteps);
+    workflowNextSteps.removeAll(skipSteps);
     workflow.setNextSteps(workflowNextSteps);
+  }
+
+  private List<String> extractSkipSteps(List<String> prevSteps, List<String> workflowNextSteps) {
+    var workflowDefinitionsOfNextSteps =
+        workflowNextSteps.stream()
+            .map(
+                s ->
+                    CollectionUtils.findFirst(
+                            workflowProperties.getOnboarding(),
+                            workflowDefinition -> Objects.equals(workflowDefinition.getStep(), s))
+                        .orElseThrow());
+    var skipSteps = new ArrayList<String>();
+    workflowDefinitionsOfNextSteps.forEach(
+        workflowDefinition ->
+            workflowDefinition
+                .getNextStepRules()
+                .forEach(
+                    nextStepRule -> {
+                      if (prevSteps.contains(nextStepRule.getStep())) {
+                        skipSteps.add(workflowDefinition.getStep());
+                      }
+                    }));
+    return skipSteps;
   }
 
   private boolean evaluateCondition(StepHistoryDTO step, Expression condition) {

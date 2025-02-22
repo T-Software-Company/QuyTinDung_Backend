@@ -11,6 +11,7 @@ import com.tsoftware.qtd.entity.ApprovalSetting;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.*;
+import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.ApprovalProcessRepository;
 import com.tsoftware.qtd.repository.ApprovalSettingRepository;
 import com.tsoftware.qtd.repository.EmployeeRepository;
@@ -40,10 +41,18 @@ public class ApprovalProcessService {
   private final ApplicationMapper applicationMapper;
   private final ApplicationContext applicationContext;
   private final ApprovalMapper approvalMapper;
+  private final ApplicationRepository applicationRepository;
 
   @TryTransactionId
   public ApprovalProcessResponse create(
       Object object, ApplicationRequest applicationRequest, ProcessType type) {
+    applicationRepository
+        .findById(UUID.fromString(applicationRequest.getId()))
+        .orElseThrow(
+            () ->
+                new CommonException(
+                    ErrorType.ENTITY_NOT_FOUND,
+                    "Application not found: " + applicationRequest.getId()));
     var exists =
         repository.existsByApplicationIdAndType(UUID.fromString(applicationRequest.getId()), type);
     if (exists) {
