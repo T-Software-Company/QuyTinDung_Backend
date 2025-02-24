@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class RoleApprovalDTO {
   private Role role;
   private Integer requiredCount;
   private List<ApprovalDTO> currentApprovals;
-  private ActionStatus status;
+  private ApprovalStatus status;
   private ApprovalProcessRequest approvalProcess;
 
   public boolean isApproved() {
@@ -25,18 +25,20 @@ public class RoleApprovalDTO {
         this.currentApprovals != null ? this.currentApprovals : new ArrayList<>();
     var approvedApproves =
         currentApprovals.stream()
-            .filter(approve -> approve.getStatus() == ActionStatus.APPROVED)
+            .filter(approve -> approve.getStatus() == ApprovalStatus.APPROVED)
             .distinct();
     var rejected =
         currentApprovals.stream()
-                .filter(a -> ActionStatus.REJECTED.equals(a.getStatus()))
+                .filter(a -> ApprovalStatus.REJECTED.equals(a.getStatus()))
                 .distinct()
                 .count()
             > this.currentApprovals.size() - this.requiredCount;
     var approved =
         this.currentApprovals.isEmpty() || approvedApproves.count() >= this.requiredCount;
     this.status =
-        approved ? ActionStatus.APPROVED : rejected ? ActionStatus.REJECTED : ActionStatus.WAIT;
+        approved
+            ? ApprovalStatus.APPROVED
+            : rejected ? ApprovalStatus.REJECTED : ApprovalStatus.WAIT;
     return approved;
   }
 }

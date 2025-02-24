@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.commonlib.model;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import java.util.UUID;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,7 +15,7 @@ public abstract class AbstractTransaction<T extends Enum<?>> {
   private String createdBy;
   private T type;
   private Object metadata;
-  private ActionStatus status;
+  private ApprovalStatus status;
 
   public abstract boolean isApproved();
 }

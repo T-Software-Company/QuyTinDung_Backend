@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.commonlib.annotation.TryTransactionId;
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.application.ApplicationRequest;
@@ -65,7 +65,7 @@ public class ApprovalProcessService {
         ApprovalProcessDTO.builder()
             .application(applicationMapper.toDTO(applicationRequest))
             .type(type)
-            .status(ActionStatus.WAIT)
+            .status(ApprovalStatus.WAIT)
             .metadata(object)
             .build();
     this.mappingApprovesFromSetting(approvalProcess, type);
@@ -135,7 +135,7 @@ public class ApprovalProcessService {
   }
 
   public void validateApprovalProcess(ApprovalProcessDTO approvalProcessDTO) {
-    if (approvalProcessDTO.getStatus().equals(ActionStatus.APPROVED)) {
+    if (approvalProcessDTO.getStatus().equals(ApprovalStatus.APPROVED)) {
       throw new CommonException(
           ErrorType.ACTION_ALREADY_COMPLETED, "Transaction has been approved");
     }
@@ -264,7 +264,7 @@ public class ApprovalProcessService {
                         ApprovalDTO.builder()
                             .processType(approvalSetting.getProcessType())
                             .approver(employeeMapper.toEmployeeResponse(employee))
-                            .status(ActionStatus.WAIT)
+                            .status(ApprovalStatus.WAIT)
                             .build();
                     approvals.add(approval);
                   });
@@ -272,7 +272,7 @@ public class ApprovalProcessService {
                   GroupApprovalDTO.builder()
                       .groupId(groupApproveSetting.getId())
                       .requiredPercentage(groupApproveSetting.getRequiredPercentage())
-                      .status(ActionStatus.WAIT)
+                      .status(ApprovalStatus.WAIT)
                       .currentApprovals(approvals)
                       .approvalProcess(
                           ApprovalProcessRequest.builder().id(approvalProcess.getId()).build())
@@ -297,7 +297,7 @@ public class ApprovalProcessService {
                         ApprovalDTO.builder()
                             .approver(employeeMapper.toEmployeeResponse(employee))
                             .processType(approvalSetting.getProcessType())
-                            .status(ActionStatus.WAIT)
+                            .status(ApprovalStatus.WAIT)
                             .build();
                     approvals.add(approval);
                   });
@@ -308,7 +308,7 @@ public class ApprovalProcessService {
                       .role(roleApproveSetting.getRole())
                       .currentApprovals(approvals)
                       .requiredCount(roleApproveSetting.getRequiredCount())
-                      .status(ActionStatus.WAIT)
+                      .status(ApprovalStatus.WAIT)
                       .build());
             });
     return roleApproves;

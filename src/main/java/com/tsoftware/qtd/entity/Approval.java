@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +21,7 @@ public class Approval extends AbstractAuditEntity {
   private ProcessType processType;
 
   @Enumerated(EnumType.ORDINAL)
-  private ActionStatus status;
+  private ApprovalStatus status;
 
   @ManyToOne private ApprovalProcess approvalProcess;
   @ManyToOne private GroupApproval groupApproval;

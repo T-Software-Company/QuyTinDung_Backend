@@ -44,7 +44,7 @@ public class WorkflowAutoConfig {
     @Override
     public StepType convert(@NonNull String source) {
       if (source.isBlank()) {
-        return StepType.DEFAULT;
+        return StepType.ACTION;
       }
       return StepType.valueOf(source.toUpperCase());
     }

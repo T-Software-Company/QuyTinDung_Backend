@@ -2,7 +2,7 @@ package com.tsoftware.qtd.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.JsonPath;
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.commonlib.constant.WorkflowStatus;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import com.tsoftware.qtd.commonlib.util.StringUtils;
@@ -47,8 +47,9 @@ public class SpeLConfig {
             "response."
                 + StringUtils.lowercaseFirstLetter(ApprovalProcessResponse.class.getSimpleName()),
             ApprovalProcessResponse.class);
-    if (approvalProcess.getStatus().equals(ActionStatus.APPROVED)) return WorkflowStatus.COMPLETED;
-    if (approvalProcess.getStatus().equals(ActionStatus.REJECTED)) return WorkflowStatus.DENIED;
+    if (approvalProcess.getStatus().equals(ApprovalStatus.APPROVED))
+      return WorkflowStatus.COMPLETED;
+    if (approvalProcess.getStatus().equals(ApprovalStatus.REJECTED)) return WorkflowStatus.DENIED;
     return WorkflowStatus.INPROGRESS;
   }
 

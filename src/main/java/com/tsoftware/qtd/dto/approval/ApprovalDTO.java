@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class ApprovalDTO {
   private String comment;
   private EmployeeResponse approver;
   private ProcessType processType;
-  private ActionStatus status;
+  private ApprovalStatus status;
   private ApprovalProcessRequest approvalProcess;
   private GroupApprovalRequest groupApproval;
   private RoleApprovalRequest roleApproval;

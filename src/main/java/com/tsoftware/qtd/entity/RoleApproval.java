@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import jakarta.persistence.*;
 import java.util.List;
@@ -30,7 +30,7 @@ public class RoleApproval extends AbstractAuditEntity {
       orphanRemoval = true)
   private List<Approval> currentApprovals;
 
-  private ActionStatus status;
+  private ApprovalStatus status;
 
   @ManyToOne private ApprovalProcess approvalProcess;
 }
