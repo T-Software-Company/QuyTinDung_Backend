@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
-import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
@@ -25,9 +25,9 @@ public class ValuationMeetingController {
   private final ValuationMeetingService valuationMeetingService;
 
   @PostMapping
-  @WorkflowAPI(
+  @WorkflowEngine(
       step = WorkflowStep.CREATE_VALUATION_MEETING,
-      action = WorkflowAPI.WorkflowAction.CREATE)
+      action = WorkflowEngine.WorkflowAction.CREATE)
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> create(
       @RequestBody @Valid ValuationMeetingRequest valuationMeetingRequest,
       @Valid @TargetId @IsUUID @RequestParam String applicationId) {

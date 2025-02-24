@@ -5,10 +5,10 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class SubmittedEvent extends ApplicationEvent {
+public class ApprovalSubmittedEvent extends ApplicationEvent {
   private final ApprovalProcessResponse approvalProcessResponse;
 
-  public SubmittedEvent(Object source, ApprovalProcessResponse approvalProcessResponse) {
+  public ApprovalSubmittedEvent(Object source, ApprovalProcessResponse approvalProcessResponse) {
     super(source);
     this.approvalProcessResponse = approvalProcessResponse;
   }

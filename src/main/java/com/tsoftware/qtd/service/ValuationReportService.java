@@ -9,7 +9,6 @@ import com.tsoftware.qtd.dto.approval.ApprovalResponse;
 import com.tsoftware.qtd.entity.Approval;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationReport;
-import com.tsoftware.qtd.event.ValuationReportSubmittedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,20 +38,15 @@ public class ValuationReportService {
   private final ApproveRepository approveRepository;
   private final ApprovalMapper approvalMapper;
   private final ApprovalProcessService approvalProcessService;
-  private final ApplicationEventPublisher applicationEventPublisher;
   private final AssetRepository assetRepository;
   private final ApplicationRepository applicationRepository;
 
   public ApprovalProcessResponse request(ValuationReportRequest valuationReportRequest) {
-    var result =
-        approvalProcessService.create(
-            valuationReportRequest,
-            valuationReportRequest.getApplication(),
-            ProcessType.CREATE_VALUATION_REPORT);
 
-    applicationEventPublisher.publishEvent(new ValuationReportSubmittedEvent(this, result));
-
-    return result;
+    return approvalProcessService.create(
+        valuationReportRequest,
+        valuationReportRequest.getApplication(),
+        ProcessType.CREATE_VALUATION_REPORT);
   }
 
   public ValuationReportResponse create(ValuationReportRequest valuationReportRequest) {

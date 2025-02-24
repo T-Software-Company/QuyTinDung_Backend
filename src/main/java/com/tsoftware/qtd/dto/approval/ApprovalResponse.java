@@ -14,6 +14,7 @@ public class ApprovalResponse {
   private ProcessType processType;
   private ApprovalStatus status;
   private Approver approver;
+  private Boolean canApprove;
   private ApprovalProcessResponse approvalProcess;
   private GroupApprovalResponse groupApproval;
   private RoleApprovalResponse roleApproval;

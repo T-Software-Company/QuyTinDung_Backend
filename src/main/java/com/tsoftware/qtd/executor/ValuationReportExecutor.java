@@ -43,6 +43,13 @@ public class ValuationReportExecutor extends BaseTransactionExecutor<ApprovalPro
     var data = JsonParser.convert(approvalProcessDTO.getMetadata(), ValuationReportRequest.class);
     ValuationReportResponse result = valuationReportService.create(data);
     approvalProcessDTO.setReferenceIds(List.of(result.getId()));
+    approvalProcessDTO.getApprovals().forEach(a -> a.setCanApprove(false));
+    approvalProcessDTO
+        .getRoleApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
+    approvalProcessDTO
+        .getGroupApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
   }
 
   @Override

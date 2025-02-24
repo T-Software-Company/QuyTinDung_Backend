@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface WorkflowAPI {
+public @interface WorkflowEngine {
   String step() default "unknown";
 
   WorkflowAction action() default WorkflowAction.CREATE;

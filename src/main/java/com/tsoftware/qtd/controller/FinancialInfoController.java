@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
-import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.application.FinancialInfoRequest;
 import com.tsoftware.qtd.service.FinancialInfoService;
@@ -19,9 +19,9 @@ public class FinancialInfoController {
   private final FinancialInfoService financialinfoService;
 
   @PostMapping
-  @WorkflowAPI(
+  @WorkflowEngine(
       step = WorkflowStep.CREATE_FINANCIAL_INFO,
-      action = WorkflowAPI.WorkflowAction.CREATE)
+      action = WorkflowEngine.WorkflowAction.CREATE)
   public ResponseEntity<?> createFinancialInfo(
       @Valid @RequestBody FinancialInfoRequest financialInfoRequest,
       @Valid @RequestParam @IsUUID @TargetId String applicationId) {

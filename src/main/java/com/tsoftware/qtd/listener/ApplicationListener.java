@@ -1,15 +1,14 @@
 package com.tsoftware.qtd.listener;
 
 import com.tsoftware.qtd.constants.EnumType.NotificationType;
+import com.tsoftware.qtd.dto.approval.ApprovalProcessDTO;
+import com.tsoftware.qtd.dto.notification.CustomerNotificationRequest;
 import com.tsoftware.qtd.dto.notification.EmployeeNotificationRequest;
 import com.tsoftware.qtd.dto.notification.NotificationRequest;
 import com.tsoftware.qtd.dto.notification.NotificationResponse;
 import com.tsoftware.qtd.event.*;
 import com.tsoftware.qtd.service.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,57 +27,61 @@ public class ApplicationListener {
   private final EmployeeNotificationService employeeNotificationService;
   private final ApprovalProcessService approvalProcessService;
   private final ApplicationEventPublisher applicationEventPublisher;
+  private final CustomerNotificationService customerNotificationService;
 
   @Async
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handLoanRequestSubmittedEvent(LoanRequestSubmittedEvent event) {
-    var content = "Một yêu cầu vay mới đã được tạo";
-    var title = " Tạo yêu cầu vay";
+  public void handApprovalSubmittedEvent(ApprovalSubmittedEvent event) {
+    var notificationType =
+        NotificationType.SubmittedTypeFromProcessType(event.getApprovalProcessResponse().getType());
     var approvalProcessId = event.getApprovalProcessResponse().getId();
-    var notification =
-        generateNotificationFormApprovalProcess(
-            approvalProcessId, NotificationType.CREATE_LOAN_REQUEST, content, title);
+    var notification = generateApprovalRequestNotification(approvalProcessId, notificationType);
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
   @Async
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handLoanPlanSubmittedEvent(LoanPlanSubmittedEvent event) {
-    var content = "Một kế hoạch vay mới đã được tạo";
-    var title = "Tạo kế hoạch vay";
-    var approvalProcessId = event.getApprovalProcessResponse().getId();
-    var notification =
-        generateNotificationFormApprovalProcess(
-            approvalProcessId, NotificationType.CREATE_LOAN_PLAN, content, title);
-    log.info("handling loan plan submitted");
+  public void handleApprovedEvent(ApprovedEvent event) {
+    var approvalProcess = event.getApprovalProcessDTO();
+
+    var application = approvalProcess.getApplication();
+    var notificationType = NotificationType.ApprovedTypeFromProcessType(approvalProcess.getType());
+
+    var notificationMetadata = new HashMap<String, Object>();
+    notificationMetadata.put("applicationId", application.getId());
+    notificationMetadata.put("customerId", application.getCustomer().getId());
+    notificationMetadata.put("approvalProcessId", approvalProcess.getId());
+    notificationMetadata.put("referenceIds", approvalProcess.getReferenceIds());
+
+    var notification = createNotification(notificationType, notificationMetadata);
+    createCustomerNotification(
+        application.getCustomer().getId(), notification.getId(), notificationType);
+    createEmployeeNotifications(approvalProcess, notification.getId(), notificationType);
+
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
   @Async
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handFinancialInfoSubmittedEvent(FinancialInfoSubmittedEvent event) {
-    var content = "Thông tin tài chính đã được thêm";
-    var title = "Thêm thông tin tài chính";
-    var approvalProcessId = event.getApprovalProcessResponse().getId();
-    var notification =
-        generateNotificationFormApprovalProcess(
-            approvalProcessId, NotificationType.CREATE_FINANCIAL_INFO, content, title);
-    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
-  }
+  public void handleRejectedEvent(RejectedEvent event) {
+    var approvalProcess = event.getApprovalProcessDTO();
 
-  @Async
-  @TransactionalEventListener
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handAssetsSubmittedEvent(AssetSubmittedEvent event) {
-    var content = "Thông tin tài sản đã được thêm";
-    var title = "Thêm thông tin tài sản";
-    var approvalProcessId = event.getApprovalProcessResponse().getId();
-    var notification =
-        generateNotificationFormApprovalProcess(
-            approvalProcessId, NotificationType.CREATE_ASSETS, content, title);
+    var application = approvalProcess.getApplication();
+    var notificationType = NotificationType.RejectedTypeFromProcessType(approvalProcess.getType());
+
+    var notificationMetadata = new HashMap<String, Object>();
+    notificationMetadata.put("applicationId", application.getId());
+    notificationMetadata.put("customerId", application.getCustomer().getId());
+    notificationMetadata.put("approvalProcessId", approvalProcess.getId());
+
+    var notification = createNotification(notificationType, notificationMetadata);
+    createCustomerNotification(
+        application.getCustomer().getId(), notification.getId(), notificationType);
+    createEmployeeNotifications(approvalProcess, notification.getId(), notificationType);
+
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
@@ -87,73 +90,109 @@ public class ApplicationListener {
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void handleValuationMeetingCreatedEvent(ValuationMeetingCreatedEvent event) {
     var valuationMeeting = event.getValuationMeetingResponse();
-    var content = "Cuộc họp định giá tài sản đã được tạo";
-    var title = "Tạo cuộc họp định giá";
+    var notificationType = NotificationType.CREATE_VALUATION_MEETING;
+
     var notificationMetadata = new HashMap<String, Object>();
     notificationMetadata.put("valuationMeetingId", valuationMeeting.getId());
     notificationMetadata.put("applicationId", valuationMeeting.getApplication().getId());
-    var notificationRequest =
-        NotificationRequest.builder()
-            .content(content)
-            .title(title)
-            .type(NotificationType.CREATE_VALUATION_MEETING)
-            .metadata(notificationMetadata)
-            .build();
-    var notification = notificationService.create(notificationRequest);
+
+    var notification = createNotification(notificationType, notificationMetadata);
+
     event
         .getValuationMeetingResponse()
         .getParticipants()
         .forEach(
-            e -> {
+            participant -> {
               var employeeNotificationRequest =
                   EmployeeNotificationRequest.builder()
-                      .message("Bạn có một cuộc họp định giá tài sản")
+                      .message(notificationType.getContent())
                       .notification(
                           EmployeeNotificationRequest.Notification.builder()
                               .id(notification.getId().toString())
                               .build())
                       .employee(
                           EmployeeNotificationRequest.Employee.builder()
-                              .id(e.getId().toString())
+                              .id(participant.getId().toString())
                               .build())
                       .isRead(false)
                       .build();
               employeeNotificationService.create(employeeNotificationRequest);
             });
+
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
-  @Async
-  @TransactionalEventListener
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handleValuationReportSubmittedEvent(ValuationReportSubmittedEvent event) {
-    var content = "Báo cáo định giá tài sản đã được tạo";
-    var title = "Tạo báo cáo định giá";
-    var approvalProcessId = event.getApprovalProcessResponse().getId();
-    var notification =
-        generateNotificationFormApprovalProcess(
-            approvalProcessId, NotificationType.CREATE_VALUATION_REPORT, content, title);
-    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
-  }
-
-  private NotificationResponse generateNotificationFormApprovalProcess(
-      UUID approvalProcessId, NotificationType type, String content, String title) {
+  private NotificationResponse generateApprovalRequestNotification(
+      UUID approvalProcessId, NotificationType type) {
     var approvalProcess = approvalProcessService.getDTOById(approvalProcessId);
     var applicationId = approvalProcess.getApplication().getId();
     var application = applicationService.getById(applicationId);
+
     var notificationMetadata = new HashMap<String, Object>();
     notificationMetadata.put("applicationId", applicationId);
     notificationMetadata.put("customerId", application.getCustomer().getId());
     notificationMetadata.put("approvalProcessId", approvalProcessId);
+
+    var notification = createNotification(type, notificationMetadata);
+    createEmployeeNotifications(approvalProcess, notification.getId(), type);
+    return notification;
+  }
+
+  private NotificationResponse createNotification(
+      NotificationType type, Map<String, Object> metadata) {
+    String content = type.getContent();
+
     var notificationRequest =
         NotificationRequest.builder()
             .content(content)
-            .title(title)
+            .title(type.getTitle())
             .type(type)
-            .metadata(notificationMetadata)
+            .metadata(metadata)
             .build();
-    var notification = notificationService.create(notificationRequest);
+    return notificationService.create(notificationRequest);
+  }
 
+  private void createCustomerNotification(
+      UUID customerId, UUID notificationId, NotificationType type) {
+    if (type.getCustomerMessage() == null) return;
+
+    var customerNotificationRequest =
+        CustomerNotificationRequest.builder()
+            .customer(
+                CustomerNotificationRequest.Customer.builder().id(customerId.toString()).build())
+            .notification(
+                CustomerNotificationRequest.Notification.builder()
+                    .id(notificationId.toString())
+                    .build())
+            .message(type.getCustomerMessage())
+            .isRead(false)
+            .build();
+    customerNotificationService.create(customerNotificationRequest);
+  }
+
+  private void createEmployeeNotifications(
+      ApprovalProcessDTO approvalProcess, UUID notificationId, NotificationType type) {
+    var employeeIds = this.extractEmployeeIds(approvalProcess);
+    employeeIds.stream()
+        .distinct()
+        .forEach(
+            id -> {
+              var employeeNotificationRequest =
+                  EmployeeNotificationRequest.builder()
+                      .employee(
+                          EmployeeNotificationRequest.Employee.builder().id(id.toString()).build())
+                      .notification(
+                          EmployeeNotificationRequest.Notification.builder()
+                              .id(notificationId.toString())
+                              .build())
+                      .message(type.getEmployeeMessage())
+                      .isRead(false)
+                      .build();
+              employeeNotificationService.create(employeeNotificationRequest);
+            });
+  }
+
+  private List<UUID> extractEmployeeIds(ApprovalProcessDTO approvalProcess) {
     var employeeIds = new ArrayList<UUID>();
     employeeIds.addAll(
         Optional.ofNullable(approvalProcess.getApprovals()).orElse(new ArrayList<>()).stream()
@@ -166,6 +205,7 @@ public class ApplicationListener {
                     Optional.ofNullable(r.getCurrentApprovals()).orElse(new ArrayList<>()).stream()
                         .map(a -> a.getApprover().getId()))
             .toList());
+
     employeeIds.addAll(
         Optional.ofNullable(approvalProcess.getGroupApprovals()).orElse(new ArrayList<>()).stream()
             .flatMap(
@@ -173,23 +213,6 @@ public class ApplicationListener {
                     Optional.ofNullable(g.getCurrentApprovals()).orElse(new ArrayList<>()).stream()
                         .map(a -> a.getApprover().getId()))
             .toList());
-    employeeIds.stream()
-        .distinct()
-        .forEach(
-            id -> {
-              var employeeNotificationRequest =
-                  EmployeeNotificationRequest.builder()
-                      .isRead(false)
-                      .employee(
-                          EmployeeNotificationRequest.Employee.builder().id(id.toString()).build())
-                      .notification(
-                          EmployeeNotificationRequest.Notification.builder()
-                              .id(notification.getId().toString())
-                              .build())
-                      .message("Bạn có một yêu cầu xét duyệt")
-                      .build();
-              employeeNotificationService.create(employeeNotificationRequest);
-            });
-    return notification;
+    return employeeIds;
   }
 }

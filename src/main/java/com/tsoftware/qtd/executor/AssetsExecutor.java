@@ -48,6 +48,13 @@ public class AssetsExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> 
     var result =
         assetService.create(list, UUID.fromString(list.getFirst().getApplication().getId()));
     approvalProcessDTO.setReferenceIds(result.stream().map(AbstractResponse::getId).toList());
+    approvalProcessDTO.getApprovals().forEach(a -> a.setCanApprove(false));
+    approvalProcessDTO
+        .getRoleApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
+    approvalProcessDTO
+        .getGroupApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
   }
 
   @Override

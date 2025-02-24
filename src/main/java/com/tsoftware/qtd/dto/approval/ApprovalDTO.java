@@ -20,6 +20,7 @@ public class ApprovalDTO {
   private String comment;
   private EmployeeResponse approver;
   private ProcessType processType;
+  private Boolean canApprove;
   private ApprovalStatus status;
   private ApprovalProcessRequest approvalProcess;
   private GroupApprovalRequest groupApproval;
