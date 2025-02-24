@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ public class GroupApprovalDTO {
   private UUID groupId;
   private Integer requiredPercentage;
   private List<ApprovalDTO> currentApprovals;
-  private ActionStatus status;
+  private ApprovalStatus status;
   private ApprovalProcessRequest approvalProcess;
 
   public boolean isApproved() {
@@ -24,7 +24,7 @@ public class GroupApprovalDTO {
         this.currentApprovals != null ? this.currentApprovals : new ArrayList<>();
     var approvedApproves =
         currentApprovals.stream()
-            .filter(approve -> approve.getStatus() == ActionStatus.APPROVED)
+            .filter(approve -> approve.getStatus() == ApprovalStatus.APPROVED)
             .distinct();
     var approved = true;
     var rejected = false;
@@ -34,14 +34,16 @@ public class GroupApprovalDTO {
       rejected =
           100
                   - this.currentApprovals.stream()
-                          .filter(a -> ActionStatus.REJECTED.equals(a.getStatus()))
+                          .filter(a -> ApprovalStatus.REJECTED.equals(a.getStatus()))
                           .count()
                       * 100
                       / this.currentApprovals.size()
               < this.requiredPercentage;
     }
     this.status =
-        approved ? ActionStatus.APPROVED : rejected ? ActionStatus.REJECTED : ActionStatus.WAIT;
+        approved
+            ? ApprovalStatus.APPROVED
+            : rejected ? ApprovalStatus.REJECTED : ApprovalStatus.WAIT;
     return approved;
   }
 }

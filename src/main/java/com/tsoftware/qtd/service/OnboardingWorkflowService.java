@@ -113,7 +113,7 @@ public class OnboardingWorkflowService implements WorkflowService {
                         workflowProperties.getOnboarding(), s -> s.getStep().equals(stepName))
                     .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, stepName))
                     .getType())
-            .orElse(StepType.DEFAULT);
+            .orElse(StepType.ACTION);
     return (T)
         StepHistoryDTO.builder()
             .name(stepName)

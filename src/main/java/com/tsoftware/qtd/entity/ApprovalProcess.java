@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
@@ -32,7 +32,7 @@ import org.hibernate.annotations.Type;
 public class ApprovalProcess extends AbstractAuditEntity {
 
   @Enumerated(EnumType.ORDINAL)
-  private ActionStatus status;
+  private ApprovalStatus status;
 
   @Enumerated(EnumType.ORDINAL)
   private ProcessType type;

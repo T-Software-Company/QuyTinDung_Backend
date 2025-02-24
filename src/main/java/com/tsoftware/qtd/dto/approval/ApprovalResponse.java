@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import java.util.UUID;
 import lombok.*;
@@ -12,7 +12,7 @@ public class ApprovalResponse {
   private UUID id;
   private String comment;
   private ProcessType processType;
-  private ActionStatus status;
+  private ApprovalStatus status;
   private Approver approver;
   private ApprovalProcessResponse approvalProcess;
   private GroupApprovalResponse groupApproval;

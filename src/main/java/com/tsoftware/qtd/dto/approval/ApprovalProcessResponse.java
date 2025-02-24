@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.AbstractResponse;
 import java.time.ZonedDateTime;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApprovalProcessResponse extends AbstractResponse {
-  private ActionStatus status;
+  private ApprovalStatus status;
   private ProcessType type;
   private List<UUID> referenceIds;
   private ZonedDateTime approvedAt;

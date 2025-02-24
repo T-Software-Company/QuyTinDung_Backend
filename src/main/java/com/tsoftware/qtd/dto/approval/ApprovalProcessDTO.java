@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.application.ApplicationDTO;
@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class ApprovalProcessDTO extends AbstractTransaction<ProcessType> {
   private ApplicationDTO application;
-  private ActionStatus status;
+  private ApprovalStatus status;
   private List<ApprovalDTO> approvals;
   private List<GroupApprovalDTO> groupApprovals;
   private List<RoleApprovalDTO> roleApprovals;
@@ -33,20 +33,22 @@ public class ApprovalProcessDTO extends AbstractTransaction<ProcessType> {
   public boolean isApproved() {
     var approved =
         Optional.ofNullable(this.approvals).orElse(new ArrayList<>()).stream()
-                .allMatch(approve -> approve.getStatus() == ActionStatus.APPROVED)
+                .allMatch(approve -> approve.getStatus() == ApprovalStatus.APPROVED)
             && Optional.ofNullable(this.roleApprovals).orElse(new ArrayList<>()).stream()
                 .allMatch(RoleApprovalDTO::isApproved)
             && Optional.ofNullable(this.groupApprovals).orElse(new ArrayList<>()).stream()
                 .allMatch(GroupApprovalDTO::isApproved);
     var rejected =
         Optional.ofNullable(this.approvals).orElse(new ArrayList<>()).stream()
-                .anyMatch(a -> ActionStatus.REJECTED.equals(a.getStatus()))
+                .anyMatch(a -> ApprovalStatus.REJECTED.equals(a.getStatus()))
             || Optional.ofNullable(this.groupApprovals).orElse(new ArrayList<>()).stream()
-                .anyMatch(g -> ActionStatus.REJECTED.equals(g.getStatus()))
+                .anyMatch(g -> ApprovalStatus.REJECTED.equals(g.getStatus()))
             || Optional.ofNullable(this.roleApprovals).orElse(new ArrayList<>()).stream()
-                .anyMatch(r -> ActionStatus.REJECTED.equals(r.getStatus()));
+                .anyMatch(r -> ApprovalStatus.REJECTED.equals(r.getStatus()));
     this.status =
-        approved ? ActionStatus.APPROVED : rejected ? ActionStatus.REJECTED : ActionStatus.WAIT;
+        approved
+            ? ApprovalStatus.APPROVED
+            : rejected ? ApprovalStatus.REJECTED : ApprovalStatus.WAIT;
     this.approvedAt = approved ? ZonedDateTime.now() : null;
     return approved;
   }

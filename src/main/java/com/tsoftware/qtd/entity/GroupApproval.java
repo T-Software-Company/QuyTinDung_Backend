@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class GroupApproval extends AbstractAuditEntity {
       orphanRemoval = true)
   private List<Approval> currentApprovals;
 
-  private ActionStatus status;
+  private ApprovalStatus status;
 
   @ManyToOne private ApprovalProcess approvalProcess;
 }

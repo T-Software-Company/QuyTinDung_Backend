@@ -215,7 +215,7 @@ public class WorkflowAspect {
         CollectionUtils.findFirst(workflow.getSteps(), s -> s.getName().equals(stepName))
             .orElseThrow(
                 () -> new WorkflowException(HttpStatus.NOT_FOUND.value(), "Step not found"));
-    if (step.getType().equals(StepType.ACTION)) {
+    if (step.getType().equals(StepType.APPROVAL)) {
       var transactionId = WorkflowContext.getTransactionId();
       if (transactionId != null) {
         step.setTransactionId(transactionId);

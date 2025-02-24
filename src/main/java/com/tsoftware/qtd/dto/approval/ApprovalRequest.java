@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.validation.IsEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class ApprovalRequest {
   @NotNull
-  @IsEnum(enumClass = ActionStatus.class)
+  @IsEnum(enumClass = ApprovalStatus.class)
   private String status;
 
   @NotNull private String comment;

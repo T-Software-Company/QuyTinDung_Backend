@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.dto.approval;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +16,6 @@ import lombok.experimental.SuperBuilder;
 public class RoleApprovalResponse {
   private Role role;
   private Integer requiredCount;
-  private ActionStatus status;
+  private ApprovalStatus status;
   private ApprovalProcessResponse approvalProcess;
 }

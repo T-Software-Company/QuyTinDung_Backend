@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.commonlib.constant.ActionStatus;
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
 import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
@@ -122,7 +122,7 @@ public class ValuationReportService {
                     approveRepository.save(
                         Approval.builder()
                             .approver(Employee.builder().id(i).build())
-                            .status(ActionStatus.WAIT)
+                            .status(ApprovalStatus.WAIT)
                             .build()))));
     return approvalResponse;
   }
