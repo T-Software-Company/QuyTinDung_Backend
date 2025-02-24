@@ -68,7 +68,10 @@ public class ApprovalProcessService {
     }
     var approvalProcess =
         ApprovalProcessDTO.builder()
-            .application(applicationMapper.toDTO(applicationRequest))
+            .application(
+                ApprovalProcessDTO.Application.builder()
+                    .id(UUID.fromString(applicationRequest.getId()))
+                    .build())
             .type(type)
             .status(ApprovalStatus.WAIT)
             .metadata(object)
