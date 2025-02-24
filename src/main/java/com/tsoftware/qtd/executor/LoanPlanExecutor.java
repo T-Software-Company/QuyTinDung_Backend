@@ -43,6 +43,13 @@ public class LoanPlanExecutor extends BaseTransactionExecutor<ApprovalProcessDTO
     var request = JsonParser.convert(approvalProcessDTO.getMetadata(), LoanPlanRequest.class);
     var result = loanPlanService.create(request, UUID.fromString(request.getApplication().getId()));
     approvalProcessDTO.setReferenceIds(List.of(result.getId()));
+    approvalProcessDTO.getApprovals().forEach(a -> a.setCanApprove(false));
+    approvalProcessDTO
+        .getRoleApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
+    approvalProcessDTO
+        .getGroupApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
   }
 
   @Override

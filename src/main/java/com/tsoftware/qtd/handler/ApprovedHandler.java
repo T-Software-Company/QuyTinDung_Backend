@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SubmittedHandler implements NotificationHandler {
+public class ApprovedHandler implements NotificationHandler {
   private final Map<String, NotificationSender> senders;
 
   @Override
@@ -18,5 +18,6 @@ public class SubmittedHandler implements NotificationHandler {
     var notification = event.getNotificationResponse();
     senders.get("websocketSender").send(notification);
     senders.get("emailSender").send(notification);
+    senders.get("pushSender").send(notification);
   }
 }

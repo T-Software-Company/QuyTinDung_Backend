@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
-import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.entity.Application;
@@ -25,7 +25,7 @@ public class ApplicationController {
   private final ApplicationService applicationService;
 
   @PostMapping
-  @WorkflowAPI(step = WorkflowStep.INIT, action = WorkflowAPI.WorkflowAction.CREATE)
+  @WorkflowEngine(step = WorkflowStep.INIT, action = WorkflowEngine.WorkflowAction.CREATE)
   public ResponseEntity<?> create(@RequestParam @Valid @IsUUID String customerId) throws Exception {
     return ResponseEntity.ok(applicationService.create(UUID.fromString(customerId)));
   }
@@ -43,7 +43,7 @@ public class ApplicationController {
   }
 
   @PostMapping("/{id}/cancel")
-  @WorkflowAPI(action = WorkflowAPI.WorkflowAction.CANCEL)
+  @WorkflowEngine(action = WorkflowEngine.WorkflowAction.CANCEL)
   public ResponseEntity<?> cancel(
       @PathVariable(name = "id") @Valid @IsUUID @TargetId String applicationId) {
     applicationService.cancel(UUID.fromString(applicationId));

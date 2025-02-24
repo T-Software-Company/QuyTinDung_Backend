@@ -8,6 +8,9 @@ import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import com.tsoftware.qtd.dto.approval.*;
 import com.tsoftware.qtd.entity.ApprovalProcess;
 import com.tsoftware.qtd.entity.ApprovalSetting;
+import com.tsoftware.qtd.event.ApprovalSubmittedEvent;
+import com.tsoftware.qtd.event.ApprovedEvent;
+import com.tsoftware.qtd.event.RejectedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.*;
@@ -22,6 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -42,6 +46,7 @@ public class ApprovalProcessService {
   private final ApplicationContext applicationContext;
   private final ApprovalMapper approvalMapper;
   private final ApplicationRepository applicationRepository;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @TryTransactionId
   public ApprovalProcessResponse create(
@@ -99,7 +104,9 @@ public class ApprovalProcessService {
     Optional.ofNullable(entity.getApprovals())
         .ifPresent(stef -> stef.forEach(approval -> approval.setApprovalProcess(entity)));
     var saved = repository.save(entity);
-    return approvalProcessMapper.toResponse(saved);
+    var result = approvalProcessMapper.toResponse(saved);
+    applicationEventPublisher.publishEvent(new ApprovalSubmittedEvent(this, result));
+    return result;
   }
 
   public ApprovalProcessResponse approve(UUID id, ApprovalRequest approvalRequest) {
@@ -131,6 +138,12 @@ public class ApprovalProcessService {
             .orElseThrow(
                 () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, approvalProcessDTO.getId()));
     approvalProcessMapper.updateEntity(entity, approvalProcessDTO);
+    if (approvalProcessDTO.getStatus().equals(ApprovalStatus.APPROVED)) {
+      applicationContext.publishEvent(new ApprovedEvent(this, approvalProcessDTO));
+    }
+    if (approvalProcessDTO.getStatus().equals(ApprovalStatus.REJECTED)) {
+      applicationContext.publishEvent(new RejectedEvent(this, approvalProcessDTO));
+    }
     return approvalProcessMapper.toDTO(repository.save(entity));
   }
 
@@ -265,6 +278,7 @@ public class ApprovalProcessService {
                             .processType(approvalSetting.getProcessType())
                             .approver(employeeMapper.toEmployeeResponse(employee))
                             .status(ApprovalStatus.WAIT)
+                            .canApprove(true)
                             .build();
                     approvals.add(approval);
                   });
@@ -298,6 +312,7 @@ public class ApprovalProcessService {
                             .approver(employeeMapper.toEmployeeResponse(employee))
                             .processType(approvalSetting.getProcessType())
                             .status(ApprovalStatus.WAIT)
+                            .canApprove(true)
                             .build();
                     approvals.add(approval);
                   });

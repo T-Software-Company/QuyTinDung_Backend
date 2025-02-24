@@ -23,6 +23,8 @@ public class Approval extends AbstractAuditEntity {
   @Enumerated(EnumType.ORDINAL)
   private ApprovalStatus status;
 
+  private Boolean canApprove;
+
   @ManyToOne private ApprovalProcess approvalProcess;
   @ManyToOne private GroupApproval groupApproval;
   @ManyToOne private RoleApproval roleApproval;

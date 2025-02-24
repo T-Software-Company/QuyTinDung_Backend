@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
-import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
@@ -33,7 +33,9 @@ public class AssetController {
   private final AssetService assetService;
 
   @PostMapping
-  @WorkflowAPI(step = WorkflowStep.ADD_ASSET_COLLATERAL, action = WorkflowAPI.WorkflowAction.CREATE)
+  @WorkflowEngine(
+      step = WorkflowStep.ADD_ASSET_COLLATERAL,
+      action = WorkflowEngine.WorkflowAction.CREATE)
   public ResponseEntity<?> create(
       @RequestBody List<@Valid AssetRequest> assetsRequest,
       @RequestParam @TargetId @Valid @IsUUID String applicationId) {

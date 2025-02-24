@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
-import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
@@ -25,7 +25,9 @@ public class LoanRequestController {
   private final LoanRequestService loanRequestService;
 
   @PostMapping
-  @WorkflowAPI(step = WorkflowStep.CREATE_LOAN_REQUEST, action = WorkflowAPI.WorkflowAction.CREATE)
+  @WorkflowEngine(
+      step = WorkflowStep.CREATE_LOAN_REQUEST,
+      action = WorkflowEngine.WorkflowAction.CREATE)
   public ResponseEntity<?> create(
       @RequestBody @Valid LoanRequestRequest loanRequestRequest,
       @Valid @IsUUID @TargetId @RequestParam String applicationId) {

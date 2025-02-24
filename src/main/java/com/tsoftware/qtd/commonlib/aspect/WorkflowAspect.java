@@ -69,19 +69,19 @@ public class WorkflowAspect {
   }
 
   @Before(value = "@annotation(workflowAPI)", argNames = "joinPoint,workflowAPI")
-  public void beforeProceedWorkflow(JoinPoint joinPoint, WorkflowAPI workflowAPI) {
+  public void beforeProceedWorkflow(JoinPoint joinPoint, WorkflowEngine workflowAPI) {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
 
-    if (action.equals(WorkflowAPI.WorkflowAction.CREATE)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.CREATE)) {
       this.processBeforeWithCreate(joinPoint, stepName);
       return;
     }
-    if (action.equals(WorkflowAPI.WorkflowAction.APPROVE)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.APPROVE)) {
       this.processBeforeWithApprove(joinPoint);
       return;
     }
-    if (action.equals(WorkflowAPI.WorkflowAction.CANCEL)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.CANCEL)) {
       this.processBeforeWithCancel(joinPoint);
     }
   }
@@ -90,21 +90,22 @@ public class WorkflowAspect {
       value = "@annotation(workflowAPI)",
       returning = "response",
       argNames = "joinPoint,response,workflowAPI")
-  private void afterReturnWorkflow(JoinPoint joinPoint, Object response, WorkflowAPI workflowAPI) {
+  private void afterReturnWorkflow(
+      JoinPoint joinPoint, Object response, WorkflowEngine workflowAPI) {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
     if (response instanceof ApiResponse<?> apiResponse) {
       response = apiResponse.getResult();
     }
     Workflow<?> workflow = WorkflowContext.getWorkflow();
-    if (action.equals(WorkflowAPI.WorkflowAction.CREATE)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.CREATE)) {
       this.processAfterWithCreate(workflow, stepName, response);
     }
-    if (action.equals(WorkflowAPI.WorkflowAction.APPROVE)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.APPROVE)) {
       this.processAfterWithApprove(joinPoint, workflow, response);
       return;
     }
-    if (action.equals(WorkflowAPI.WorkflowAction.CANCEL)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.CANCEL)) {
       this.processAfterWithCancel(workflow, response);
       return;
     }
@@ -114,18 +115,18 @@ public class WorkflowAspect {
       value = "@annotation(workflowAPI)",
       throwing = "ex",
       argNames = "joinPoint,ex,workflowAPI")
-  private void afterThrowWorkflow(JoinPoint joinPoint, Throwable ex, WorkflowAPI workflowAPI) {
+  private void afterThrowWorkflow(JoinPoint joinPoint, Throwable ex, WorkflowEngine workflowAPI) {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
     Workflow<?> workflow = WorkflowContext.getWorkflow();
-    if (action.equals(WorkflowAPI.WorkflowAction.CREATE)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.CREATE)) {
       this.processAfterThrowWithCreate(workflow, stepName, ex);
     }
-    if (action.equals(WorkflowAPI.WorkflowAction.APPROVE)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.APPROVE)) {
       this.processAfterThrowWithApprove(joinPoint, workflow, ex);
       return;
     }
-    if (action.equals(WorkflowAPI.WorkflowAction.CANCEL)) {
+    if (action.equals(WorkflowEngine.WorkflowAction.CANCEL)) {
       this.processAfterThrowWithCancel(workflow, ex);
       return;
     }
@@ -144,7 +145,8 @@ public class WorkflowAspect {
       var request = this.extractRequest(joinPoint);
       var metadata = step.getMetadata();
       JsonParser.put(metadata, "histories[0].request", request);
-      JsonParser.put(metadata, "histories[0].action", WorkflowAPI.WorkflowAction.CREATE.getValue());
+      JsonParser.put(
+          metadata, "histories[0].action", WorkflowEngine.WorkflowAction.CREATE.getValue());
       WorkflowContext.set(workflow);
       return;
     }
@@ -168,7 +170,9 @@ public class WorkflowAspect {
     var index = histories == null ? 0 : JsonPath.parse(histories).read("$.length()", Integer.class);
     JsonParser.put(metadata, "histories[" + index + "].request", request);
     JsonParser.put(
-        metadata, "histories[" + index + "].action", WorkflowAPI.WorkflowAction.CREATE.getValue());
+        metadata,
+        "histories[" + index + "].action",
+        WorkflowEngine.WorkflowAction.CREATE.getValue());
     WorkflowContext.set(workflow);
   }
 
@@ -189,7 +193,9 @@ public class WorkflowAspect {
     var index = JsonPath.parse(metadata.get("histories")).read("$.length()", Integer.class);
     JsonParser.put(metadata, "histories[" + index + "].request", request);
     JsonParser.put(
-        metadata, "histories[" + index + "].action", WorkflowAPI.WorkflowAction.APPROVE.getValue());
+        metadata,
+        "histories[" + index + "].action",
+        WorkflowEngine.WorkflowAction.APPROVE.getValue());
     WorkflowContext.set(workflow);
   }
 
@@ -203,7 +209,9 @@ public class WorkflowAspect {
     var index = histories == null ? 0 : JsonPath.parse(histories).read("$.length()", Integer.class);
     JsonParser.put(metadata, "histories[" + index + "].request", request);
     JsonParser.put(
-        metadata, "histories[" + index + "].action", WorkflowAPI.WorkflowAction.CANCEL.getValue());
+        metadata,
+        "histories[" + index + "].action",
+        WorkflowEngine.WorkflowAction.CANCEL.getValue());
     workflow.setStatus(WorkflowStatus.CANCELLED);
     workflow.setMetadata(metadata);
     WorkflowContext.set(workflow);

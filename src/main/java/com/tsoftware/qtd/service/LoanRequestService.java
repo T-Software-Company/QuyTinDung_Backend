@@ -6,7 +6,6 @@ import com.tsoftware.qtd.dto.application.LoanPlanRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestRequest;
 import com.tsoftware.qtd.dto.application.LoanRequestResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
-import com.tsoftware.qtd.event.LoanRequestSubmittedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,20 +31,14 @@ public class LoanRequestService {
   private final LoanRequestMapper loanrequestMapper;
   private final ApplicationRepository applicationRepository;
   private final ApprovalProcessService approvalProcessService;
-  private final ApplicationEventPublisher applicationEventPublisher;
   private final LoanPlanRepository loanPlanRepository;
   private final ApprovalProcessRepository approvalProcessRepository;
   private final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 
   public ApprovalProcessResponse request(LoanRequestRequest loanRequestRequest) {
     this.validRequest(loanRequestRequest);
-    var result =
-        approvalProcessService.create(
-            loanRequestRequest,
-            loanRequestRequest.getApplication(),
-            ProcessType.CREATE_LOAN_REQUEST);
-    applicationEventPublisher.publishEvent(new LoanRequestSubmittedEvent(this, result));
-    return result;
+    return approvalProcessService.create(
+        loanRequestRequest, loanRequestRequest.getApplication(), ProcessType.CREATE_LOAN_REQUEST);
   }
 
   public LoanRequestResponse create(LoanRequestRequest loanRequestRequest, UUID applicationId) {

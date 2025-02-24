@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcessDTO> {
   private final LoanRequestService loanRequestService;
-  final ApprovalProcessService approvalProcessService;
+  private final ApprovalProcessService approvalProcessService;
 
   @Override
   protected void preValidate(ApprovalProcessDTO approvalProcessDTO) {
@@ -44,6 +44,13 @@ public class LoanRequestExecutor extends BaseTransactionExecutor<ApprovalProcess
     var result =
         loanRequestService.create(request, UUID.fromString(request.getApplication().getId()));
     approvalProcessDTO.setReferenceIds(List.of(result.getId()));
+    approvalProcessDTO.getApprovals().forEach(a -> a.setCanApprove(false));
+    approvalProcessDTO
+        .getRoleApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
+    approvalProcessDTO
+        .getGroupApprovals()
+        .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
   }
 
   @Override

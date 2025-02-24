@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TransactionId;
-import com.tsoftware.qtd.commonlib.annotation.WorkflowAPI;
+import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.dto.approval.ApprovalRequest;
 import com.tsoftware.qtd.entity.ApprovalProcess;
 import com.tsoftware.qtd.service.ApprovalProcessService;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApprovalProcessController {
   private final ApprovalProcessService approvalProcessService;
 
-  @WorkflowAPI(action = WorkflowAPI.WorkflowAction.APPROVE)
+  @WorkflowEngine(action = WorkflowEngine.WorkflowAction.APPROVE)
   @PostMapping("{id}/approve")
   public ResponseEntity<?> approve(
       @PathVariable @Valid @TransactionId @IsUUID String id,

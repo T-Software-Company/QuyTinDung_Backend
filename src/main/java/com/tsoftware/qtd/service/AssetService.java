@@ -6,7 +6,6 @@ import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
 import com.tsoftware.qtd.entity.Asset;
-import com.tsoftware.qtd.event.AssetSubmittedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +30,6 @@ public class AssetService {
   private final AssetMapper assetMapper;
   private final ApplicationRepository applicationRepository;
   private final ApprovalProcessService approvalProcessService;
-  private final ApplicationEventPublisher applicationEventPublisher;
   private final LoanRequestRepository loanRequestRepository;
 
   public ApprovalProcessResponse request(List<AssetRequest> assetsRequest) {
@@ -59,11 +56,8 @@ public class AssetService {
                     + "not found on loan request");
           }
         });
-    var result =
-        approvalProcessService.create(
-            assetsRequest, assetsRequest.getFirst().getApplication(), ProcessType.CREATE_ASSETS);
-    applicationEventPublisher.publishEvent(new AssetSubmittedEvent(this, result));
-    return result;
+    return approvalProcessService.create(
+        assetsRequest, assetsRequest.getFirst().getApplication(), ProcessType.CREATE_ASSETS);
   }
 
   public List<AssetResponse> create(List<AssetRequest> assetsRequest, UUID applicationId) {
