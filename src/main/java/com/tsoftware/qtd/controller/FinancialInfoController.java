@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/financial-infos")
 @RequiredArgsConstructor
 public class FinancialInfoController {
-  private final FinancialInfoService financialinfoService;
+  private final FinancialInfoService financialInfoService;
 
   @PostMapping
   @WorkflowEngine(
@@ -26,6 +26,6 @@ public class FinancialInfoController {
       @Valid @RequestBody FinancialInfoRequest financialInfoRequest,
       @Valid @RequestParam @IsUUID @TargetId String applicationId) {
     ValidationUtils.validateEqual(financialInfoRequest.getApplication().getId(), applicationId);
-    return ResponseEntity.ok(financialinfoService.request(financialInfoRequest));
+    return ResponseEntity.ok(financialInfoService.request(financialInfoRequest));
   }
 }

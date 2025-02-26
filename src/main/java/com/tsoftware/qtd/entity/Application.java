@@ -88,6 +88,9 @@ public class Application extends AbstractAuditEntity {
   private List<Asset> assets;
 
   @OneToOne(mappedBy = "application")
+  private CreditRating creditRating;
+
+  @OneToOne(mappedBy = "application")
   private AppraisalPlan appraisalPlan;
 
   @OneToOne(mappedBy = "application")
