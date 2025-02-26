@@ -41,8 +41,6 @@ public class LandAssetRequest {
   private String originOfUsage;
 
   private Map<String, Object> metadata;
-
-  @Valid private OwnerInfoRequest ownerInfo;
-
-  @Valid private TransferInfoRequest transferInfo;
+  @NotNull @Valid private OwnerInfoRequest ownerInfo;
+  @NotNull @Valid private TransferInfoRequest transferInfo;
 }

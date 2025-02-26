@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.dto.asset;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -78,5 +79,7 @@ public class LandAndImprovementRequest {
   @PastOrPresent(message = "Issue date must be in the past or present")
   private ZonedDateTime issueDate;
 
+  @NotNull @Valid private OwnerInfoRequest ownerInfo;
+  @NotNull @Valid private TransferInfoRequest transferInfo;
   private Map<String, Object> metadata;
 }

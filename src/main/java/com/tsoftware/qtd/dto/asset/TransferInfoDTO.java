@@ -1,5 +1,6 @@
 package com.tsoftware.qtd.dto.asset;
 
+import jakarta.validation.constraints.*;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.Builder;
@@ -11,10 +12,6 @@ import lombok.Setter;
 @Builder
 public class TransferInfoDTO {
   private UUID id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
   private String fullName;
   private ZonedDateTime dayOfBirth;
   private String idCardNumber;

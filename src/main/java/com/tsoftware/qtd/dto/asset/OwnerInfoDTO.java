@@ -11,10 +11,6 @@ import lombok.Setter;
 @Builder
 public class OwnerInfoDTO {
   private UUID id;
-  private ZonedDateTime createdAt;
-  private ZonedDateTime updatedAt;
-  private String lastModifiedBy;
-  private String createdBy;
   private String fullName;
   private ZonedDateTime dayOfBirth;
   private String idCardNumber;

@@ -3,16 +3,12 @@ package com.tsoftware.qtd.dto.approval;
 import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.commonlib.model.AbstractTransaction;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
-import com.tsoftware.qtd.dto.application.ApplicationDTO;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -21,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 public class ApprovalProcessDTO extends AbstractTransaction<ProcessType> {
-  private ApplicationDTO application;
+  private Application application;
   private ApprovalStatus status;
   private List<ApprovalDTO> approvals;
   private List<GroupApprovalDTO> groupApprovals;
@@ -51,5 +47,14 @@ public class ApprovalProcessDTO extends AbstractTransaction<ProcessType> {
             : rejected ? ApprovalStatus.REJECTED : ApprovalStatus.WAIT;
     this.approvedAt = approved ? ZonedDateTime.now() : null;
     return approved;
+  }
+
+  @Getter
+  @Setter
+  @Builder
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  public static class Application {
+    UUID id;
   }
 }

@@ -23,11 +23,11 @@ public class AssetResponse extends AbstractResponse {
   private List<String> documents;
   private ValuationAssetResponse valuationAsset;
 
-  private ApartmentRequest apartment;
-  private LandAndImprovementRequest landAndImprovement;
-  private VehicleRequest vehicle;
-  private MarketStallsRequest marketStalls;
-  private MachineryRequest machinery;
+  private ApartmentDTO apartment;
+  private LandAndImprovementDTO landAndImprovement;
+  private VehicleDTO vehicle;
+  private MarketStallsDTO marketStalls;
+  private MachineryDTO machinery;
   private OtherAssetRequest otherAsset;
-  private LandAssetRequest landAsset;
+  private LandAssetDTO landAsset;
 }
