@@ -6,13 +6,17 @@ import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
+import com.tsoftware.qtd.entity.Asset;
 import com.tsoftware.qtd.service.AssetService;
 import com.tsoftware.qtd.util.ValidationUtils;
 import com.tsoftware.qtd.validation.IsUUID;
+import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,8 +68,8 @@ public class AssetController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<AssetResponse>>> getAll() {
+  public ResponseEntity<?> getAll(@Filter Specification<Asset> spec, Pageable page) {
     return ResponseEntity.ok(
-        new ApiResponse<>(HttpStatus.OK.value(), "Fetched All", assetService.getAll()));
+        new ApiResponse<>(HttpStatus.OK.value(), "Fetched All", assetService.getAll(spec, page)));
   }
 }

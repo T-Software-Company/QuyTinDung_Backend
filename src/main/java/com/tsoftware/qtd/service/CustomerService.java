@@ -138,4 +138,12 @@ public class CustomerService {
             .findByUserId(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id)));
   }
+
+  public CustomerResponse getByApplicationId(UUID applicationId) {
+    var result =
+        customerRepository
+            .findByApplicationsId(applicationId)
+            .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, applicationId));
+    return customerMapper.toResponse(result);
+  }
 }

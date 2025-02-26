@@ -172,7 +172,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<ApiResponse<Object>> handleInvalidJson() {
+  public ResponseEntity<ApiResponse<Object>> handleInvalidJson(HttpMessageNotReadableException e) {
     String errorMessage = "Invalid request body";
     return ResponseEntity.badRequest()
         .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), errorMessage, null));

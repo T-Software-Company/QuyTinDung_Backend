@@ -1,8 +1,6 @@
 package com.tsoftware.qtd.entity;
 
-import com.tsoftware.qtd.constants.EnumType.RatingLevel;
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +16,12 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class CreditRating extends AbstractAuditEntity {
 
-  private BigDecimal score;
+  @OneToOne(mappedBy = "creditRating", cascade = CascadeType.ALL)
+  private RatingByCriteria ratingByCriteria;
 
-  @Enumerated(EnumType.ORDINAL)
-  private RatingLevel ratingLevel;
+  @OneToOne(mappedBy = "creditRating", cascade = CascadeType.ALL)
+  private RatingByCIC ratingByCIC;
 
   @OneToOne(fetch = FetchType.LAZY)
-  private AppraisalReport appraisalReport;
+  private Application application;
 }

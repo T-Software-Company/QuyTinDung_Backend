@@ -3,10 +3,13 @@ package com.tsoftware.qtd.controller;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
 import com.tsoftware.qtd.dto.setting.InterestRateSettingRequest;
+import com.tsoftware.qtd.dto.setting.RatingCriterionSettingRequest;
 import com.tsoftware.qtd.entity.ApprovalSetting;
 import com.tsoftware.qtd.entity.InterestRateSetting;
+import com.tsoftware.qtd.entity.RatingCriterionSetting;
 import com.tsoftware.qtd.service.ApprovalSettingService;
 import com.tsoftware.qtd.service.InterestRateSettingService;
+import com.tsoftware.qtd.service.RatingCriterionSettingService;
 import com.tsoftware.qtd.validation.IsUUID;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class SettingController {
   private final ApprovalSettingService approvalSettingService;
   private final InterestRateSettingService interestRateSettingService;
+  private final RatingCriterionSettingService ratingCriterionSettingService;
 
   @GetMapping("/approval-settings")
   public ResponseEntity<?> getAllApprovalSettings(
@@ -83,6 +87,36 @@ public class SettingController {
   @DeleteMapping("interest-rate-settings/{id}")
   public ResponseEntity<?> deleteInterestRateSetting(@Valid @IsUUID @PathVariable String id) {
     interestRateSettingService.delete(UUID.fromString(id));
+    return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
+  }
+
+  @GetMapping("rating-criterion-settings")
+  public ResponseEntity<?> getRatingSettings(
+      @Filter Specification<RatingCriterionSetting> spec, Pageable pageable) {
+    return ResponseEntity.ok(ratingCriterionSettingService.findAll(spec, pageable));
+  }
+
+  @PostMapping("rating-criterion-settings")
+  public ResponseEntity<?> createRatingCriterionSetting(
+      @Valid @RequestBody RatingCriterionSettingRequest request) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(
+            new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                "Created",
+                ratingCriterionSettingService.create(request)));
+  }
+
+  @PutMapping("rating-criterion-settings/{id}")
+  public ResponseEntity<?> updateRatingCriterionSetting(
+      @Valid @RequestBody RatingCriterionSettingRequest request,
+      @Valid @IsUUID @PathVariable String id) {
+    return ResponseEntity.ok(ratingCriterionSettingService.update(request, UUID.fromString(id)));
+  }
+
+  @DeleteMapping("rating-criterion-settings/{id}")
+  public ResponseEntity<?> deleteRatingCriterionSetting(@Valid @IsUUID @PathVariable String id) {
+    ratingCriterionSettingService.delete(UUID.fromString(id));
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
   }
 }

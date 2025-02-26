@@ -17,4 +17,6 @@ public interface CustomerRepository
   Optional<Customer> findByUserId(String id);
 
   boolean existsByEmail(String email);
+
+  Optional<Customer> findByApplicationsId(UUID applicationId);
 }

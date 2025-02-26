@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class ApprovalProcessService {
-  private final ApprovalProcessRepository repository;
+  private final ApprovalProcessRepository approvalProcessRepository;
   private final ApprovalProcessMapper approvalProcessMapper;
   private final ApprovalSettingRepository approvalSettingRepository;
   private final EmployeeRepository employeeRepository;
@@ -51,6 +51,7 @@ public class ApprovalProcessService {
   @TryTransactionId
   public ApprovalProcessResponse create(
       Object object, ApplicationRequest applicationRequest, ProcessType type) {
+
     applicationRepository
         .findById(UUID.fromString(applicationRequest.getId()))
         .orElseThrow(
@@ -59,7 +60,8 @@ public class ApprovalProcessService {
                     ErrorType.ENTITY_NOT_FOUND,
                     "Application not found: " + applicationRequest.getId()));
     var exists =
-        repository.existsByApplicationIdAndType(UUID.fromString(applicationRequest.getId()), type);
+        approvalProcessRepository.existsByApplicationIdAndType(
+            UUID.fromString(applicationRequest.getId()), type);
     if (exists) {
       throw new CommonException(
           ErrorType.HAS_APPLICATION_IN_PROGRESS,
@@ -68,10 +70,7 @@ public class ApprovalProcessService {
     }
     var approvalProcess =
         ApprovalProcessDTO.builder()
-            .application(
-                ApprovalProcessDTO.Application.builder()
-                    .id(UUID.fromString(applicationRequest.getId()))
-                    .build())
+            .application(applicationMapper.toDTO(applicationRequest))
             .type(type)
             .status(ApprovalStatus.WAIT)
             .metadata(object)
@@ -104,9 +103,10 @@ public class ApprovalProcessService {
                                 approval.setRoleApproval(roleApprove);
                               });
                     }));
+
     Optional.ofNullable(entity.getApprovals())
         .ifPresent(stef -> stef.forEach(approval -> approval.setApprovalProcess(entity)));
-    var saved = repository.save(entity);
+    var saved = approvalProcessRepository.save(entity);
     var result = approvalProcessMapper.toResponse(saved);
     applicationEventPublisher.publishEvent(new ApprovalSubmittedEvent(this, result));
     return result;
@@ -114,7 +114,7 @@ public class ApprovalProcessService {
 
   public ApprovalProcessResponse approve(UUID id, ApprovalRequest approvalRequest) {
     var entity =
-        repository
+        approvalProcessRepository
             .findById(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
     var dto = approvalProcessMapper.toDTO(entity);
@@ -127,7 +127,7 @@ public class ApprovalProcessService {
       Specification<ApprovalProcess> spec, Pageable pageable) {
     try {
       var approvalProcess =
-          repository.findAll(spec, pageable).map(approvalProcessMapper::toResponse);
+          approvalProcessRepository.findAll(spec, pageable).map(approvalProcessMapper::toResponse);
       return pageResponseMapper.toPageResponse(approvalProcess);
     } catch (DataIntegrityViolationException e) {
       throw new CommonException(ErrorType.METHOD_ARGUMENT_NOT_VALID, e.getMessage());
@@ -136,7 +136,7 @@ public class ApprovalProcessService {
 
   public ApprovalProcessDTO update(ApprovalProcessDTO approvalProcessDTO) {
     ApprovalProcess entity =
-        repository
+        approvalProcessRepository
             .findById(approvalProcessDTO.getId())
             .orElseThrow(
                 () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, approvalProcessDTO.getId()));
@@ -147,7 +147,7 @@ public class ApprovalProcessService {
     if (approvalProcessDTO.getStatus().equals(ApprovalStatus.REJECTED)) {
       applicationContext.publishEvent(new RejectedEvent(this, approvalProcessDTO));
     }
-    return approvalProcessMapper.toDTO(repository.save(entity));
+    return approvalProcessMapper.toDTO(approvalProcessRepository.save(entity));
   }
 
   public void validateApprovalProcess(ApprovalProcessDTO approvalProcessDTO) {
@@ -334,7 +334,7 @@ public class ApprovalProcessService {
 
   public ApprovalProcessDTO getDTOById(UUID approvalProcessId) {
     var entity =
-        repository
+        approvalProcessRepository
             .findById(approvalProcessId)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, approvalProcessId));
     return approvalProcessMapper.toDTO(entity);

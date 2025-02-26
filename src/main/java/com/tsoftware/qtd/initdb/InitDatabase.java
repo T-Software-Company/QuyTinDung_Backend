@@ -9,16 +9,17 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 @Slf4j
 public class InitDatabase implements CommandLineRunner {
-  private final initDbService initDbservice;
+  private final initDbService initDbService;
 
   @Override
   public void run(String... args) throws Exception {
-    initDbservice.createRoles();
-    initDbservice.createGroups();
-    initDbservice.createAdmin();
-    initDbservice.createEmployees();
-    initDbservice.createCustomers();
-    initDbservice.createApproveSetting();
-    initDbservice.createInterestSetting();
+    initDbService.createRoles();
+    initDbService.createGroups();
+    initDbService.createAdmin();
+    initDbService.createEmployees();
+    initDbService.createCustomers();
+    initDbService.createApproveSetting();
+    initDbService.createInterestSetting();
+    initDbService.createRatingCriteria();
   }
 }

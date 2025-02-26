@@ -8,6 +8,7 @@ public class WorkflowStep {
   public static final String ADD_ASSET_COLLATERAL = "add-asset-collateral";
   public static final String CREATE_VALUATION_MEETING = "create-valuation-meting";
   public static final String CREATE_VALUATION_REPORT = "create-valuation-report";
+  public static final String CREATE_CREDIT_RATING = "create-credit-rating";
 
   private WorkflowStep() {}
 }

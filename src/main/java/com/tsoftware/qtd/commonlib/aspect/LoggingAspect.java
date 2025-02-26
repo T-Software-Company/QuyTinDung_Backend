@@ -27,8 +27,7 @@ public class LoggingAspect {
   public void publicMethod() {}
 
   @AfterReturning(
-      value =
-          "execution(* *..GlobalExceptionHandler..*(..)) || execution(* org.springframework.web.bind.annotation.ControllerAdvice.*(..))",
+      value = "@within(org.springframework.web.bind.annotation.ControllerAdvice)",
       returning = "objResponse")
   public void afterExceptionAdvise(JoinPoint joinPoint, Object objResponse) {
     log.info("Exception Advise: {}", joinPoint.getSignature());
@@ -39,7 +38,7 @@ public class LoggingAspect {
     }
   }
 
-  @Around(value = " execution(* org.springframework.web.bind.annotation.RestController.*(..))")
+  @Around("@within(org.springframework.web.bind.annotation.RestController)")
   public Object proceedLogForRequest(ProceedingJoinPoint pjp) throws Throwable {
     this.startTime = System.currentTimeMillis();
     log.info("Request: {}", pjp.getSignature());
@@ -72,8 +71,7 @@ public class LoggingAspect {
   public void logResponse(HttpServletRequest request, Object body, long duration) {
     try {
       String jReq = JsonParser.toString(body);
-      log.info(
-          "Response {}, processed in {} ms, body: {}", duration, request.getRequestURI(), jReq);
+      log.info("Response({} ms), {},  body: {}", duration, request.getRequestURI(), jReq);
     } catch (Exception ignore) {
       // ignore exception
     }

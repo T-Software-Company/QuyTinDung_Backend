@@ -4,6 +4,7 @@ import com.tsoftware.qtd.configuration.IdpProperties;
 import com.tsoftware.qtd.constants.EnumType.Gender;
 import com.tsoftware.qtd.constants.EnumType.IdentityType;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
+import com.tsoftware.qtd.constants.EnumType.RatingCriterionType;
 import com.tsoftware.qtd.constants.EnumType.Role;
 import com.tsoftware.qtd.dto.address.AddressDTO;
 import com.tsoftware.qtd.dto.customer.CustomerRequest;
@@ -12,15 +13,19 @@ import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.GroupRequest;
 import com.tsoftware.qtd.dto.setting.ApprovalSettingRequest;
 import com.tsoftware.qtd.dto.setting.InterestRateSettingRequest;
+import com.tsoftware.qtd.dto.setting.RatingCriterionSettingRequest;
 import com.tsoftware.qtd.repository.*;
 import com.tsoftware.qtd.service.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
@@ -46,6 +51,7 @@ public class initDbService {
   private final ApprovalSettingRepository approvalSettingRepository;
   private final InterestRateSettingRepository interestRateSettingRepository;
   private final InterestRateSettingService interestRateSettingService;
+  private final RatingCriterionSettingService ratingCriterionSettingService;
 
   public void createInterestSetting() {
     if (!interestRateSettingRepository.findAll().isEmpty()) {
@@ -397,5 +403,192 @@ public class initDbService {
                     .build())
             .build();
     customerService.create(customerResquest);
+  }
+
+  public void createRatingCriteria() {
+    if (ratingCriterionSettingService.hasAnyData()) {
+      return;
+    }
+
+    var personalCriteria =
+        List.of(
+            createRatingCriterion(
+                RatingCriterionType.PERSONAL,
+                "Tuổi",
+                5,
+                10,
+                Map.of(
+                    "Từ 20 đến 24", BigDecimal.valueOf(7),
+                    "Từ 25 đến 34", BigDecimal.valueOf(9),
+                    "Từ 35 đến 54", BigDecimal.valueOf(10),
+                    "Từ 55 đến 70", BigDecimal.valueOf(8))),
+            createRatingCriterion(
+                RatingCriterionType.PERSONAL,
+                "Trình độ học vấn",
+                5,
+                10,
+                Map.of(
+                    "Trên Đại học", BigDecimal.valueOf(10),
+                    "Đại học", BigDecimal.valueOf(9),
+                    "Cao đẳng/Trung cấp", BigDecimal.valueOf(8),
+                    "Phổ thông", BigDecimal.valueOf(7),
+                    "Khác", BigDecimal.valueOf(5))),
+            createRatingCriterion(
+                RatingCriterionType.PERSONAL,
+                "Tình trạng sở hữu tài sản",
+                10,
+                10,
+                Map.of(
+                    "Bất động sản", BigDecimal.valueOf(10),
+                    "Xe ô tô, sổ tiết kiệm", BigDecimal.valueOf(9),
+                    "Giấy phép kinh doanh/Giấy chứng nhận cổ phiếu", BigDecimal.valueOf(8),
+                    "Tài sản khác", BigDecimal.valueOf(7))),
+            createRatingCriterion(
+                RatingCriterionType.PERSONAL,
+                "Thu nhập chính",
+                10,
+                10,
+                Map.of(
+                    "Trên 15.000.000", BigDecimal.valueOf(10),
+                    "Từ 10.000.000 - 15.000.000", BigDecimal.valueOf(9),
+                    "Từ 6.000.000 - 10.000.000", BigDecimal.valueOf(7),
+                    "Dưới 6.000.000", BigDecimal.valueOf(5))),
+            createRatingCriterion(
+                RatingCriterionType.PERSONAL,
+                "Chi tiêu hàng tháng",
+                10,
+                10,
+                Map.of(
+                    "Trên 12.000.000", BigDecimal.valueOf(10),
+                    "Từ 10.000.000 - 12.000.000", BigDecimal.valueOf(9),
+                    "Từ 6.000.000 - 10.000.000", BigDecimal.valueOf(7),
+                    "Dưới 5.000.000", BigDecimal.valueOf(5))));
+
+    var socialRelationCriteria =
+        List.of(
+            createRatingCriterion(
+                RatingCriterionType.NETWORK,
+                "Chức vụ/nghề nghiệp/Chủ cơ sở",
+                5,
+                10,
+                Map.of(
+                    "Cấp quản lý, điều hành/ Chủ cơ sở", BigDecimal.valueOf(10),
+                    "Cấp chuyên viên, Cán bộ, Viên chức", BigDecimal.valueOf(8),
+                    "Lao động được đào tạo nghề, công nhân", BigDecimal.valueOf(6),
+                    "Kinh doanh tự do", BigDecimal.valueOf(5))),
+            createRatingCriterion(
+                RatingCriterionType.NETWORK,
+                "Thời gian làm việc/ kinh doanh",
+                8,
+                10,
+                Map.of(
+                    "Trên 5 năm", BigDecimal.valueOf(10),
+                    "Từ 3 - 5 năm", BigDecimal.valueOf(9),
+                    "Từ 1- 3 năm", BigDecimal.valueOf(7),
+                    "< 1 năm", BigDecimal.valueOf(5))),
+            createRatingCriterion(
+                RatingCriterionType.NETWORK,
+                "Thu nhập khác",
+                7,
+                10,
+                Map.of(
+                    "Cho thuê nhà, đất", BigDecimal.valueOf(10),
+                    "Cho thuê xe, Sổ tiết kiệm", BigDecimal.valueOf(9),
+                    "Khác", BigDecimal.valueOf(7))),
+            createRatingCriterion(
+                RatingCriterionType.NETWORK,
+                "Thu nhập của người đồng trách nhiệm",
+                5,
+                10,
+                Map.of(
+                    "Cho thuê nhà, cho thuê xe", BigDecimal.valueOf(10),
+                    "Lương và phụ cấp", BigDecimal.valueOf(8),
+                    "Kinh doanh tự do", BigDecimal.valueOf(6),
+                    "Khác", BigDecimal.valueOf(5))),
+            createRatingCriterion(
+                RatingCriterionType.NETWORK,
+                "Liên kết xã hội, cộng đồng",
+                5,
+                10,
+                Map.of(
+                    "Sử dụng email/Zalo/Viber/Facebook,…", BigDecimal.valueOf(6),
+                    "Thành viên trong các hội, đoàn, Nhóm,…", BigDecimal.valueOf(8),
+                    "Thông qua UBND Phường, CTV, đầu mối,…", BigDecimal.valueOf(10))));
+
+    var familyCriteria =
+        List.of(
+            createRatingCriterion(
+                RatingCriterionType.FAMILY,
+                "Thời gian ở địa chỉ hiện tại",
+                5,
+                10,
+                Map.of(
+                    "Trên 5 năm", BigDecimal.valueOf(10),
+                    "Từ 2 - 5 năm", BigDecimal.valueOf(8),
+                    "< 2 năm", BigDecimal.valueOf(6))),
+            createRatingCriterion(
+                RatingCriterionType.FAMILY,
+                "Số người phụ thuộc",
+                5,
+                10,
+                Map.of(
+                    "0", BigDecimal.valueOf(8),
+                    "1", BigDecimal.valueOf(9),
+                    "2", BigDecimal.valueOf(10),
+                    "3", BigDecimal.valueOf(5))),
+            createRatingCriterion(
+                RatingCriterionType.FAMILY,
+                "Sinh sống tại nhà riêng/Cùng gia đình/Thuê",
+                5,
+                10,
+                Map.of(
+                    "Nhà riêng", BigDecimal.valueOf(10),
+                    "Sống cùng gia đình", BigDecimal.valueOf(8),
+                    "Nhà cơ quan", BigDecimal.valueOf(7),
+                    "Nhà thuê", BigDecimal.valueOf(5))),
+            createRatingCriterion(
+                RatingCriterionType.FAMILY,
+                "Người bảo lãnh/Đồng trách nhiệm",
+                5,
+                10,
+                Map.of(
+                    "Vợ/chồng", BigDecimal.valueOf(10),
+                    "Ba/Mẹ", BigDecimal.valueOf(8),
+                    "Con/Anh chị Em ruột", BigDecimal.valueOf(7),
+                    "Người quen", BigDecimal.valueOf(5))));
+
+    var creditRelationCriteria =
+        List.of(
+            createRatingCriterion(
+                RatingCriterionType.CREDIT_NETWORK,
+                "Quan hệ tín dụng",
+                10,
+                10,
+                Map.of(
+                    "Một NH", BigDecimal.valueOf(10),
+                    "Hai NH", BigDecimal.valueOf(8),
+                    "Trên 2 NH", BigDecimal.valueOf(6),
+                    "Chưa vay", BigDecimal.valueOf(7),
+                    "Lịch sử nợ quá hạn", BigDecimal.valueOf(-5),
+                    "Lịch sử nợ xấu", BigDecimal.valueOf(-10))));
+
+    Stream.of(personalCriteria, socialRelationCriteria, familyCriteria, creditRelationCriteria)
+        .flatMap(Collection::stream)
+        .forEach(ratingCriterionSettingService::create);
+  }
+
+  private RatingCriterionSettingRequest createRatingCriterion(
+      RatingCriterionType type,
+      String title,
+      Integer weigh,
+      Integer coefficient,
+      Map<String, BigDecimal> scoreMapping) {
+    return RatingCriterionSettingRequest.builder()
+        .ratingCriterionType(type.name())
+        .title(title)
+        .weigh(weigh)
+        .coefficient(coefficient)
+        .scoreMapping(scoreMapping)
+        .build();
   }
 }

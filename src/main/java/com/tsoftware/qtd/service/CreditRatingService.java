@@ -1,14 +1,17 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.application.CreditRatingDTO;
-import com.tsoftware.qtd.entity.CreditRating;
-import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.dto.application.CreditRatingRequest;
+import com.tsoftware.qtd.dto.application.CreditRatingResponse;
+import com.tsoftware.qtd.event.CreditRatingCreatedEvent;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.mapper.CreditRatingMapper;
+import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.CreditRatingRepository;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,39 +20,72 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreditRatingService {
 
-  private final CreditRatingRepository creditratingRepository;
+  private final CreditRatingRepository creditRatingRepository;
+  private final ApplicationRepository applicationRepository;
+  private final CreditRatingMapper creditRatingMapper;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
-  private final CreditRatingMapper creditratingMapper;
+  public CreditRatingResponse create(CreditRatingRequest request, UUID applicationId) {
+    var application =
+        applicationRepository
+            .findById(applicationId)
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, "Application not found: " + applicationId));
 
-  public CreditRatingDTO create(CreditRatingDTO creditratingDTO) {
-    CreditRating creditrating = creditratingMapper.toEntity(creditratingDTO);
-    return creditratingMapper.toDTO(creditratingRepository.save(creditrating));
+    var creditRating = creditRatingMapper.toEntity(request);
+    creditRating.setApplication(application);
+    creditRating.getRatingByCIC().setCreditRating(creditRating);
+    creditRating.getRatingByCriteria().setCreditRating(creditRating);
+
+    var saved = creditRatingRepository.save(creditRating);
+    var result = creditRatingMapper.toResponse(saved);
+
+    applicationEventPublisher.publishEvent(new CreditRatingCreatedEvent(this, result));
+
+    return result;
   }
 
-  public CreditRatingDTO update(UUID id, CreditRatingDTO creditratingDTO) {
-    CreditRating creditrating =
-        creditratingRepository
+  public CreditRatingResponse update(UUID id, CreditRatingRequest request) {
+    var creditRating =
+        creditRatingRepository
             .findById(id)
-            .orElseThrow(() -> new NotFoundException("CreditRating not found"));
-    creditratingMapper.updateEntity(creditratingDTO, creditrating);
-    return creditratingMapper.toDTO(creditratingRepository.save(creditrating));
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, "Credit rating not found: " + id));
+
+    creditRatingMapper.updateEntity(request, creditRating);
+    return creditRatingMapper.toResponse(creditRatingRepository.save(creditRating));
   }
 
   public void delete(UUID id) {
-    creditratingRepository.deleteById(id);
+    creditRatingRepository.deleteById(id);
   }
 
-  public CreditRatingDTO getById(UUID id) {
-    CreditRating creditrating =
-        creditratingRepository
+  public CreditRatingResponse getById(UUID id) {
+    return creditRatingMapper.toResponse(
+        creditRatingRepository
             .findById(id)
-            .orElseThrow(() -> new NotFoundException("CreditRating not found"));
-    return creditratingMapper.toDTO(creditrating);
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND, "Credit rating not found: " + id)));
   }
 
-  public List<CreditRatingDTO> getAll() {
-    return creditratingRepository.findAll().stream()
-        .map(creditratingMapper::toDTO)
-        .collect(Collectors.toList());
+  public List<CreditRatingResponse> getAll() {
+    return creditRatingRepository.findAll().stream().map(creditRatingMapper::toResponse).toList();
+  }
+
+  public CreditRatingResponse getByCreditId(UUID creditId) {
+    return creditRatingMapper.toResponse(
+        creditRatingRepository
+            .findByApplicationId(creditId)
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND,
+                        "Credit rating not found for credit: " + creditId)));
   }
 }

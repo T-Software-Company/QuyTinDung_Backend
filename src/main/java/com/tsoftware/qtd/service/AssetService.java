@@ -2,6 +2,7 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
+import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.dto.asset.AssetRequest;
 import com.tsoftware.qtd.dto.asset.AssetResponse;
@@ -10,6 +11,7 @@ import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.AssetMapper;
+import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.AssetRepository;
 import com.tsoftware.qtd.repository.LoanRequestRepository;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +35,7 @@ public class AssetService {
   private final ApplicationRepository applicationRepository;
   private final ApprovalProcessService approvalProcessService;
   private final LoanRequestRepository loanRequestRepository;
+  private final PageResponseMapper pageResponseMapper;
 
   public ApprovalProcessResponse request(List<AssetRequest> assetsRequest) {
     var applicationId = assetsRequest.getFirst().getApplication().getId();
@@ -95,6 +100,11 @@ public class AssetService {
     return assetRepository.findAll().stream()
         .map(assetMapper::toResponse)
         .collect(Collectors.toList());
+  }
+
+  public PageResponse<AssetResponse> getAll(Specification<Asset> spec, Pageable page) {
+    var result = assetRepository.findAll(spec, page).map(assetMapper::toResponse);
+    return pageResponseMapper.toPageResponse(result);
   }
 
   public List<AssetResponse> getAssetsByCreditId(UUID id) {
