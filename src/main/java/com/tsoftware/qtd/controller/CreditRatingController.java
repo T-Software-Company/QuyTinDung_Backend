@@ -5,7 +5,7 @@ import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
 import com.tsoftware.qtd.dto.application.CreditRatingRequest;
-import com.tsoftware.qtd.dto.application.CreditResponse;
+import com.tsoftware.qtd.dto.application.CreditRatingResponse;
 import com.tsoftware.qtd.service.CreditRatingService;
 import com.tsoftware.qtd.util.ValidationUtils;
 import com.tsoftware.qtd.validation.IsUUID;
@@ -28,7 +28,7 @@ public class CreditRatingController {
   @WorkflowEngine(
       step = WorkflowStep.CREATE_CREDIT_RATING,
       action = WorkflowEngine.WorkflowAction.CREATE)
-  public ResponseEntity<ApiResponse<CreditResponse>> create(
+  public ResponseEntity<ApiResponse<CreditRatingResponse>> create(
       @RequestBody @Valid CreditRatingRequest request,
       @RequestParam @TargetId @Valid @IsUUID String applicationId) {
     ValidationUtils.validateEqual(applicationId, request.getApplication().getId());
@@ -42,27 +42,31 @@ public class CreditRatingController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<CreditResponse>> update(
-      @PathVariable UUID id, @RequestBody @Valid CreditRatingRequest request) {
+  public ResponseEntity<ApiResponse<CreditRatingResponse>> update(
+      @PathVariable @Valid @IsUUID String id, @RequestBody @Valid CreditRatingRequest request) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            HttpStatus.OK.value(), "Updated", creditRatingService.update(id, request)));
+            HttpStatus.OK.value(),
+            "Updated",
+            creditRatingService.update(UUID.fromString(id), request)));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
-    creditRatingService.delete(id);
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable @Valid @IsUUID String id) {
+    creditRatingService.delete(UUID.fromString(id));
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Deleted", null));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<CreditResponse>> getById(@PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<CreditRatingResponse>> getById(
+      @PathVariable @Valid @IsUUID String id) {
     return ResponseEntity.ok(
-        new ApiResponse<>(HttpStatus.OK.value(), "Fetched", creditRatingService.getById(id)));
+        new ApiResponse<>(
+            HttpStatus.OK.value(), "Fetched", creditRatingService.getById(UUID.fromString(id))));
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<CreditResponse>>> getAll() {
+  public ResponseEntity<ApiResponse<List<CreditRatingResponse>>> getAll() {
     return ResponseEntity.ok(
         new ApiResponse<>(HttpStatus.OK.value(), "Fetched All", creditRatingService.getAll()));
   }

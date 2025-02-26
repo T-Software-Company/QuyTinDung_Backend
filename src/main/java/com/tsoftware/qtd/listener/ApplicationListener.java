@@ -28,6 +28,7 @@ public class ApplicationListener {
   private final ApprovalProcessService approvalProcessService;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final CustomerNotificationService customerNotificationService;
+  private final CustomerService customerService;
 
   @Async
   @TransactionalEventListener
@@ -118,6 +119,27 @@ public class ApplicationListener {
                       .build();
               employeeNotificationService.create(employeeNotificationRequest);
             });
+
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handleCreditRatingCreatedEvent(CreditRatingCreatedEvent event) {
+    var creditRating = event.getCreditRatingResponse();
+    var notificationType = NotificationType.CREATE_CREDIT_RATING;
+    var applicationId = creditRating.getApplication().getId();
+    var customer = customerService.getByApplicationId(applicationId);
+
+    var notificationMetadata = new HashMap<String, Object>();
+    notificationMetadata.put("creditRatingId", creditRating.getId());
+    notificationMetadata.put("applicationId", applicationId);
+    notificationMetadata.put("customerId", customer.getId());
+
+    var notification = createNotification(notificationType, notificationMetadata);
+
+    createCustomerNotification(customer.getId(), notification.getId(), notificationType);
 
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }

@@ -16,10 +16,10 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class CreditRating extends AbstractAuditEntity {
 
-  @OneToOne(mappedBy = "creditRating")
+  @OneToOne(mappedBy = "creditRating", cascade = CascadeType.ALL)
   private RatingByCriteria ratingByCriteria;
 
-  @OneToOne(mappedBy = "creditRating")
+  @OneToOne(mappedBy = "creditRating", cascade = CascadeType.ALL)
   private RatingByCIC ratingByCIC;
 
   @OneToOne(fetch = FetchType.LAZY)

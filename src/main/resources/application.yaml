@@ -165,7 +165,7 @@ workflow:
         type: action
         extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
         dependencies:
-          - financial-info
+          - create-financial-info
           - create-loan-plan
           - create-loan-request
         nextStepRules:
@@ -183,7 +183,7 @@ workflow:
             condition: "true"
 
       - step: create-appraisal-report
-        type: action
+        type: approval
         extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
         dependencies:
           - create-appraisal-meting

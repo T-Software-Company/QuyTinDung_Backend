@@ -40,6 +40,12 @@ public enum NotificationType {
       "Báo cáo thẩm định",
       "Báo cáo thẩm định được hoàn thành và chờ xét duyệt",
       "Bạn có báo cáo thẩm định cần xét duyệt"),
+  CREATE_CREDIT_RATING(
+      ApprovalSubmittedHandler.class,
+      "Đánh giá tín dụng",
+      "Đánh giá tín dụng được đã được tạo",
+      null,
+      "Đánh giá tín dụng của bạn đã được tạo"),
 
   // Approval notifications
   APPROVE_LOAN_REQUEST(

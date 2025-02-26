@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.dto.application.CreditRatingRequest;
-import com.tsoftware.qtd.dto.application.CreditResponse;
+import com.tsoftware.qtd.dto.application.CreditRatingResponse;
 import com.tsoftware.qtd.event.CreditRatingCreatedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
@@ -25,7 +25,7 @@ public class CreditRatingService {
   private final CreditRatingMapper creditRatingMapper;
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  public CreditResponse create(CreditRatingRequest request, UUID applicationId) {
+  public CreditRatingResponse create(CreditRatingRequest request, UUID applicationId) {
     var application =
         applicationRepository
             .findById(applicationId)
@@ -36,6 +36,8 @@ public class CreditRatingService {
 
     var creditRating = creditRatingMapper.toEntity(request);
     creditRating.setApplication(application);
+    creditRating.getRatingByCIC().setCreditRating(creditRating);
+    creditRating.getRatingByCriteria().setCreditRating(creditRating);
 
     var saved = creditRatingRepository.save(creditRating);
     var result = creditRatingMapper.toResponse(saved);
@@ -45,7 +47,7 @@ public class CreditRatingService {
     return result;
   }
 
-  public CreditResponse update(UUID id, CreditRatingRequest request) {
+  public CreditRatingResponse update(UUID id, CreditRatingRequest request) {
     var creditRating =
         creditRatingRepository
             .findById(id)
@@ -62,7 +64,7 @@ public class CreditRatingService {
     creditRatingRepository.deleteById(id);
   }
 
-  public CreditResponse getById(UUID id) {
+  public CreditRatingResponse getById(UUID id) {
     return creditRatingMapper.toResponse(
         creditRatingRepository
             .findById(id)
@@ -72,11 +74,11 @@ public class CreditRatingService {
                         ErrorType.ENTITY_NOT_FOUND, "Credit rating not found: " + id)));
   }
 
-  public List<CreditResponse> getAll() {
+  public List<CreditRatingResponse> getAll() {
     return creditRatingRepository.findAll().stream().map(creditRatingMapper::toResponse).toList();
   }
 
-  public CreditResponse getByCreditId(UUID creditId) {
+  public CreditRatingResponse getByCreditId(UUID creditId) {
     return creditRatingMapper.toResponse(
         creditRatingRepository
             .findByApplicationId(creditId)

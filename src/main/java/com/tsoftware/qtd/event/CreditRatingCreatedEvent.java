@@ -1,16 +1,16 @@
 package com.tsoftware.qtd.event;
 
-import com.tsoftware.qtd.dto.application.CreditResponse;
+import com.tsoftware.qtd.dto.application.CreditRatingResponse;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
 public class CreditRatingCreatedEvent extends ApplicationEvent {
 
-  private final CreditResponse creditResponse;
+  private final CreditRatingResponse creditRatingResponse;
 
-  public CreditRatingCreatedEvent(Object source, CreditResponse creditResponse) {
+  public CreditRatingCreatedEvent(Object source, CreditRatingResponse creditRatingResponse) {
     super(source);
-    this.creditResponse = creditResponse;
+    this.creditRatingResponse = creditRatingResponse;
   }
 }
