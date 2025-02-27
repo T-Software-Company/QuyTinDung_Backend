@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.Valuation;
+package com.tsoftware.qtd.dto.appraisal;
 
 import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import com.tsoftware.qtd.validation.IsUUID;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ValuationMeetingRequest {
+public class AppraisalMeetingRequest {
   @NotBlank(message = "Address cannot be blank")
   private String address;
 
@@ -28,9 +28,7 @@ public class ValuationMeetingRequest {
   private ZonedDateTime endDate;
 
   private String note;
-
   private Map<String, Object> metadata;
-
   private List<Employee> participants;
 
   @AssertTrue(message = "End date must be after start date")

@@ -98,9 +98,7 @@ public class ApplicationListener {
     notificationMetadata.put("applicationId", valuationMeeting.getApplication().getId());
 
     var notification = createNotification(notificationType, notificationMetadata);
-
-    event
-        .getValuationMeetingResponse()
+    valuationMeeting
         .getParticipants()
         .forEach(
             participant -> {
@@ -140,6 +138,42 @@ public class ApplicationListener {
     var notification = createNotification(notificationType, notificationMetadata);
 
     createCustomerNotification(customer.getId(), notification.getId(), notificationType);
+
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handleAppraisalPlanCreatedEvent(AppraisalMeetingCreatedEvent event) {
+    var appraisalPlan = event.getAppraisalMeetingResponse();
+    var notificationType = NotificationType.CREATE_VALUATION_MEETING;
+
+    var notificationMetadata = new HashMap<String, Object>();
+    notificationMetadata.put("appraisalPlanId", appraisalPlan.getId());
+    notificationMetadata.put("applicationId", appraisalPlan.getApplication().getId());
+
+    var notification = createNotification(notificationType, notificationMetadata);
+
+    appraisalPlan
+        .getParticipants()
+        .forEach(
+            participant -> {
+              var employeeNotificationRequest =
+                  EmployeeNotificationRequest.builder()
+                      .message(notificationType.getContent())
+                      .notification(
+                          EmployeeNotificationRequest.Notification.builder()
+                              .id(notification.getId().toString())
+                              .build())
+                      .employee(
+                          EmployeeNotificationRequest.Employee.builder()
+                              .id(participant.getId().toString())
+                              .build())
+                      .isRead(false)
+                      .build();
+              employeeNotificationService.create(employeeNotificationRequest);
+            });
 
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }

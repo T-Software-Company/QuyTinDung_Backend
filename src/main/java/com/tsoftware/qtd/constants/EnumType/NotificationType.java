@@ -46,7 +46,11 @@ public enum NotificationType {
       "Đánh giá tín dụng được đã được tạo",
       null,
       "Đánh giá tín dụng của bạn đã được tạo"),
-
+  CREATE_APPRAISAL_PLAN(
+      ApprovalSubmittedHandler.class,
+      "Lịc thẩm định khoản vay",
+      "Cuộc họp thẩm định khoản vay được lên lịch",
+      "Bạn có lịch họp thẩm định khoản vay"),
   // Approval notifications
   APPROVE_LOAN_REQUEST(
       ApprovedHandler.class,

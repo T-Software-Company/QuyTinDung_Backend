@@ -2,10 +2,10 @@ package com.tsoftware.qtd.service;
 
 import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
-import com.tsoftware.qtd.dto.Valuation.ValuationReportRequest;
-import com.tsoftware.qtd.dto.Valuation.ValuationReportResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalProcessResponse;
 import com.tsoftware.qtd.dto.approval.ApprovalResponse;
+import com.tsoftware.qtd.dto.valuation.ValuationReportRequest;
+import com.tsoftware.qtd.dto.valuation.ValuationReportResponse;
 import com.tsoftware.qtd.entity.Approval;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationReport;

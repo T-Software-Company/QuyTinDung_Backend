@@ -4,15 +4,20 @@ import com.tsoftware.qtd.commonlib.annotation.TargetId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
+import com.tsoftware.qtd.dto.PageResponse;
+import com.tsoftware.qtd.dto.valuation.ValuationMeetingRequest;
+import com.tsoftware.qtd.dto.valuation.ValuationMeetingResponse;
+import com.tsoftware.qtd.entity.ValuationMeeting;
 import com.tsoftware.qtd.service.ValuationMeetingService;
 import com.tsoftware.qtd.util.ValidationUtils;
 import com.tsoftware.qtd.validation.IsUUID;
+import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,10 +63,10 @@ public class ValuationMeetingController {
 
   @PutMapping("/{id}")
   public ResponseEntity<ApiResponse<ValuationMeetingResponse>> update(
-      @PathVariable UUID id, @RequestBody ValuationMeetingRequest valuationmeetingRequest) {
+      @PathVariable UUID id, @RequestBody ValuationMeetingRequest valuationMeetingRequest) {
     return ResponseEntity.ok(
         new ApiResponse<>(
-            1000, "Updated", valuationMeetingService.update(id, valuationmeetingRequest)));
+            1000, "Updated", valuationMeetingService.update(id, valuationMeetingRequest)));
   }
 
   @DeleteMapping("/{id}")
@@ -77,8 +82,10 @@ public class ValuationMeetingController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<ValuationMeetingResponse>>> getAll() {
+  public ResponseEntity<ApiResponse<PageResponse<ValuationMeetingResponse>>> getAll(
+      @Filter Specification<ValuationMeeting> spec, Pageable page) {
     return ResponseEntity.ok(
-        new ApiResponse<>(1000, "Fetched All", valuationMeetingService.getAll()));
+        new ApiResponse<>(
+            HttpStatus.OK.value(), "Fetched All", valuationMeetingService.getAll(spec, page)));
   }
 }

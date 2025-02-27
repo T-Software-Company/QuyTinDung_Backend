@@ -1,7 +1,6 @@
-package com.tsoftware.qtd.dto.Valuation;
+package com.tsoftware.qtd.dto.appraisal;
 
 import com.tsoftware.qtd.dto.AbstractResponse;
-import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +13,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ValuationMeetingResponse extends AbstractResponse {
-
+public class AppraisalMeetingResponse extends AbstractResponse {
   private String address;
   private String note;
   private ZonedDateTime startDate;
   private ZonedDateTime endDate;
-  private List<EmployeeResponse> participants;
+  private List<Employee> participants;
   private Map<String, Object> metadata;
   private Application application;
 
@@ -30,6 +28,15 @@ public class ValuationMeetingResponse extends AbstractResponse {
   @AllArgsConstructor
   @RequiredArgsConstructor
   public static class Application {
+    UUID id;
+  }
+
+  @Getter
+  @Setter
+  @Builder
+  @AllArgsConstructor
+  @RequiredArgsConstructor
+  public static class Employee {
     UUID id;
   }
 }

@@ -52,7 +52,7 @@ public class Employee extends AbstractAuditEntity {
   private IdentityInfo identityInfo;
 
   @ManyToMany(mappedBy = "participants")
-  private List<AppraisalPlan> appraisalPlans;
+  private List<AppraisalMeeting> appraisalMeetings;
 
   @OneToMany(mappedBy = "approver", fetch = FetchType.LAZY)
   private List<Approval> approvals;

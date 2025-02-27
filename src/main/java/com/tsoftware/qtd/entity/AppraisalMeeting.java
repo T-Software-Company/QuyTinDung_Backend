@@ -24,7 +24,7 @@ import org.hibernate.annotations.Type;
 @SuperBuilder
 @Entity
 @Table
-public class AppraisalPlan extends AbstractAuditEntity {
+public class AppraisalMeeting extends AbstractAuditEntity {
   private String address;
   private String note;
 
