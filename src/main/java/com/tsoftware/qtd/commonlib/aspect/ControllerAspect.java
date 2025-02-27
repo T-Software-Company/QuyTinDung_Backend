@@ -23,7 +23,7 @@ public class ControllerAspect {
 
   @Around(
       value =
-          "execution(* *..controller..*(..)) || execution(* org.springframework.web.bind.annotation.RestController.*(..))")
+          "@within(org.springframework.web.bind.annotation.RestController) || @within(org.springframework.web.bind.annotation.ControllerAdvice)")
   protected Object proceedControllerResponse(ProceedingJoinPoint pjp) throws Throwable {
     return proceedResponse(pjp);
   }

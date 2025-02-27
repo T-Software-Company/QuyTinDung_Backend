@@ -87,6 +87,9 @@ google:
     storage:
       bucket-name: qtd_tsoftware
       service-account: service-account.json
+app:
+  file-storage:
+    active: ${APP_STORAGE_TYPE:localStorage}
 
 workflow:
   rules:
