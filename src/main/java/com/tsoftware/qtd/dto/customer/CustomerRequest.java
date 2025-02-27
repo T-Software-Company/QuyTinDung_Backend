@@ -17,31 +17,32 @@ import lombok.Setter;
     repositoryClass = CustomerRepository.class,
     fields = {"username"})
 public class CustomerRequest {
-  @IsUUID String id;
+  @IsUUID private String id;
+  private String avatarUrl;
 
   @NotNull
   @NotBlank
   @Size(min = 4)
-  String username;
+  private String username;
 
   @NotNull
   @NotBlank
   @Size(min = 6)
-  String password;
+  private String password;
 
-  @NotNull @NotBlank @Email String email;
-  String code;
+  @NotNull @NotBlank @Email private String email;
+  private String code;
 
   @NotNull
   @NotBlank
   @Size(max = 15)
   @Pattern(regexp = "^[0-9\\-\\+]{9,15}$")
-  String phone;
+  private String phone;
 
-  Boolean enabled;
-  @NotNull @NotBlank String firstName;
-  @NotNull @NotBlank String lastName;
-  @Valid @NotNull AddressDTO address;
-  @Valid @NotNull IdentityInfoDTO identityInfo;
-  @NotNull @NotBlank String signaturePhoto;
+  private Boolean enabled;
+  @NotNull @NotBlank private String firstName;
+  @NotNull @NotBlank private String lastName;
+  @Valid @NotNull private AddressDTO address;
+  @Valid @NotNull private IdentityInfoDTO identityInfo;
+  @NotNull @NotBlank private String signaturePhoto;
 }

@@ -1,35 +1,34 @@
 package com.tsoftware.qtd.dto.employee;
 
 import com.tsoftware.qtd.dto.address.AddressDTO;
+import com.tsoftware.qtd.dto.customer.IdentityInfoDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.time.ZonedDateTime;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileRequest {
 
-  @NotBlank @Email String email;
+  @NotBlank @Email private String email;
 
-  @Valid @NotNull AddressDTO address;
+  @Valid @NotNull private AddressDTO address;
 
-  @NotBlank String firstName;
+  @NotBlank private String firstName;
 
-  @NotBlank String lastName;
-
-  @Past ZonedDateTime setDayOfBirth;
+  @NotBlank private String lastName;
 
   @NotBlank
   @Size(max = 15)
   @Pattern(regexp = "^[0-9\\-\\+]{9,15}$")
-  String phone;
+  private String phone;
+
+  private String username;
+
+  @Valid @NotNull private IdentityInfoDTO identityInfo;
 }

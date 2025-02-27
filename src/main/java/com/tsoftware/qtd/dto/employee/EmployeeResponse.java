@@ -17,6 +17,7 @@ public class EmployeeResponse extends AbstractResponse {
 
   String userId;
   String email;
+  private String avatarUrl;
   String username;
   String firstName;
   String lastName;

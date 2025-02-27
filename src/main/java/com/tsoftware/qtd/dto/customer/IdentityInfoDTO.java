@@ -18,41 +18,41 @@ import lombok.Setter;
 @Setter
 public class IdentityInfoDTO {
   // CMND CCCD
-  @NotBlank String identifyId;
+  @NotBlank private String identifyId;
 
   @NotBlank
   @Size(min = 3, max = 100)
-  String fullName;
+  private String fullName;
 
-  @NotBlank String ethnicity;
+  @NotBlank private String ethnicity;
 
-  @NotBlank String religion;
+  @NotBlank private String religion;
 
   @NotNull
   @IsEnum(enumClass = Gender.class)
-  String gender;
+  private String gender;
 
-  @NotNull @Past ZonedDateTime dateOfBirth;
+  @NotNull @Past private ZonedDateTime dateOfBirth;
 
-  @NotBlank String nationality;
+  @NotBlank private String nationality;
 
-  @NotBlank String placeOfBirth;
+  @NotBlank private String placeOfBirth;
 
-  @NotBlank String permanentAddress;
+  @NotBlank private String permanentAddress;
 
   @NotNull ZonedDateTime issueDate;
 
   @NotNull ZonedDateTime expirationDate;
 
-  @NotBlank String issuingAuthority;
+  @NotBlank private String issuingAuthority;
 
-  @NotNull String frontPhotoUrl;
+  @NotNull private String frontPhotoUrl;
 
-  @NotNull String backPhotoUrl;
+  @NotNull private String backPhotoUrl;
 
   @NotNull
   @IsEnum(enumClass = IdentityType.class)
-  String legalDocType;
+  private String legalDocType;
 
   // Passport
   PassPortType passPortType;

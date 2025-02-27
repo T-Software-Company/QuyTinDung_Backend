@@ -20,6 +20,8 @@ public class Employee extends AbstractAuditEntity {
   @Column(unique = true, nullable = false)
   private String userId;
 
+  private String avatarUrl;
+
   @Column(unique = true, nullable = false)
   private String username;
 

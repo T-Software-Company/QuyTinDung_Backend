@@ -49,6 +49,7 @@ public class Customer extends AbstractAuditEntity {
 
   private String signaturePhoto;
   private String note;
+  private String avatarUrl;
 
   @OneToOne(cascade = CascadeType.ALL)
   private Address address;

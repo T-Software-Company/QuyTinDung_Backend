@@ -15,16 +15,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerDTO {
-  UUID id;
-  String username;
-  String password;
-  String email;
-  String code;
-  String phone;
-  Boolean enabled;
-  String firstName;
-  String lastName;
-  AddressDTO address;
-  IdentityInfoDTO identityInfo;
-  String signaturePhoto;
+  private UUID id;
+  private String avatarUrl;
+  private String username;
+  private String password;
+  private String email;
+  private String code;
+  private String phone;
+  private Boolean enabled;
+  private String firstName;
+  private String lastName;
+  private AddressDTO address;
+  private IdentityInfoDTO identityInfo;
+  private String signaturePhoto;
 }

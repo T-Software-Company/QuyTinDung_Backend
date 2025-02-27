@@ -156,7 +156,7 @@ public class KeycloakService {
     userResource.resetPassword(credential);
   }
 
-  public void resetPasswordByEmail(String userId) {
+  public void changePasswordByEmail(String userId) {
     realmResource
         .users()
         .get(userId)

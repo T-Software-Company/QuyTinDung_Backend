@@ -30,6 +30,8 @@ public class EmployeeRequest {
   @Size(min = 4)
   String username;
 
+  private String avatarUrl;
+
   @NotBlank
   @Size(min = 6)
   String password;
