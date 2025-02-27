@@ -1,6 +1,6 @@
 package com.tsoftware.qtd.event;
 
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
+import com.tsoftware.qtd.dto.valuation.ValuationMeetingResponse;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 

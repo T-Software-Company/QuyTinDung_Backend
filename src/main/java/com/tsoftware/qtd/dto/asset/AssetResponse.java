@@ -3,7 +3,7 @@ package com.tsoftware.qtd.dto.asset;
 import com.tsoftware.qtd.constants.EnumType.AssetType;
 import com.tsoftware.qtd.constants.EnumType.OwnershipType;
 import com.tsoftware.qtd.dto.AbstractResponse;
-import com.tsoftware.qtd.dto.Valuation.ValuationAssetResponse;
+import com.tsoftware.qtd.dto.valuation.ValuationAssetResponse;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.*;

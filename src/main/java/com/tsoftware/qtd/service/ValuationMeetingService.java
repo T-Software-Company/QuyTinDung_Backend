@@ -1,13 +1,15 @@
 package com.tsoftware.qtd.service;
 
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
+import com.tsoftware.qtd.dto.PageResponse;
+import com.tsoftware.qtd.dto.valuation.ValuationMeetingRequest;
+import com.tsoftware.qtd.dto.valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.ValuationMeeting;
 import com.tsoftware.qtd.event.ValuationMeetingCreatedEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
+import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.mapper.ValuationMeetingMapper;
 import com.tsoftware.qtd.repository.ApplicationRepository;
 import com.tsoftware.qtd.repository.EmployeeRepository;
@@ -18,6 +20,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +35,7 @@ public class ValuationMeetingService {
   private final ValuationMeetingMapper valuationMeetingMapper;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final EmployeeRepository employeeRepository;
+  private final PageResponseMapper pageResponseMapper;
 
   public ValuationMeetingResponse create(
       ValuationMeetingRequest valuationMeetingRequest, UUID applicationId) {
@@ -85,10 +90,11 @@ public class ValuationMeetingService {
     return valuationMeetingMapper.toResponse(valuationMeeting);
   }
 
-  public List<ValuationMeetingResponse> getAll() {
-    return valuationMeetingRepository.findAll().stream()
-        .map(valuationMeetingMapper::toResponse)
-        .collect(Collectors.toList());
+  public PageResponse<ValuationMeetingResponse> getAll(
+      Specification<ValuationMeeting> spec, Pageable page) {
+    var result =
+        valuationMeetingRepository.findAll(spec, page).map(valuationMeetingMapper::toResponse);
+    return pageResponseMapper.toPageResponse(result);
   }
 
   public void addParticipants(UUID id, List<UUID> participantIds) {

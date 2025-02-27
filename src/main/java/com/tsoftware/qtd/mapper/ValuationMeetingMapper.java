@@ -1,7 +1,7 @@
 package com.tsoftware.qtd.mapper;
 
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingRequest;
-import com.tsoftware.qtd.dto.Valuation.ValuationMeetingResponse;
+import com.tsoftware.qtd.dto.valuation.ValuationMeetingRequest;
+import com.tsoftware.qtd.dto.valuation.ValuationMeetingResponse;
 import com.tsoftware.qtd.entity.ValuationMeeting;
 import org.mapstruct.*;
 
