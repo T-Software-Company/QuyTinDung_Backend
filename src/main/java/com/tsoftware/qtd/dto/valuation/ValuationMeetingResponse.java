@@ -1,4 +1,4 @@
-package com.tsoftware.qtd.dto.Valuation;
+package com.tsoftware.qtd.dto.valuation;
 
 import com.tsoftware.qtd.dto.AbstractResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
