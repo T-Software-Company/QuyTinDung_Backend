@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.dto.application;
 
-import com.tsoftware.qtd.dto.AbstractResponse;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import lombok.*;
@@ -11,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class RatingByCICResponse extends AbstractResponse {
+public class RatingByCICResponse {
   private BigDecimal score;
   private String riskLevel;
   private ZonedDateTime scoringDate;
