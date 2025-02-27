@@ -3,6 +3,7 @@ package com.tsoftware.qtd.mapper;
 import com.tsoftware.qtd.dto.employee.EmployeeRequest;
 import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.dto.employee.EmployeeUpdateRequest;
+import com.tsoftware.qtd.dto.employee.ProfileRequest;
 import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.entity.Role;
 import org.mapstruct.BeanMapping;
@@ -31,4 +32,7 @@ public interface EmployeeMapper {
   default com.tsoftware.qtd.constants.EnumType.Role toRole(Role role) {
     return com.tsoftware.qtd.constants.EnumType.Role.valueOf(role.getName());
   }
+
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  void updateEntity(ProfileRequest request, @MappingTarget Employee employee);
 }

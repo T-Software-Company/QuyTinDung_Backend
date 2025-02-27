@@ -156,21 +156,21 @@ public class EmployeeController {
     return ResponseEntity.ok(new ApiResponse<>(200, "Successfully", Role.values()));
   }
 
-  @PostMapping("/reset-password")
+  @PostMapping("/change-password")
   public ResponseEntity<?> employeeResetPassword() {
     String id = SecurityContextHolder.getContext().getAuthentication().getName();
-    keycloakService.resetPasswordByEmail(id);
+    keycloakService.changePasswordByEmail(id);
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
-            .message("Password reset successfully")
+            .message("Password reset link has been sent to your registered email.")
             .build());
   }
 
-  @PostMapping("/{id}/reset-password")
+  @PostMapping("/{id}/change-password")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> resetPasswordForUserByAdmin(@PathVariable @Valid @IsUUID String id) {
-    employeeService.resetPassword(UUID.fromString(id));
+    employeeService.changePassword(UUID.fromString(id));
     return ResponseEntity.ok(
         ApiResponse.<Void>builder()
             .code(HttpStatus.OK.value())
@@ -261,5 +261,12 @@ public class EmployeeController {
       @RequestBody @Valid @IsEnum(enumClass = Role.class) List<String> roles) {
     employeeService.removeRoles(UUID.fromString(id), roles);
     return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Added roles", null));
+  }
+
+  @PostMapping("/change-avatar")
+  public ResponseEntity<?> changeAvatar(@RequestParam String url) {
+
+    employeeService.changeAvatar(url);
+    return ResponseEntity.ok(null);
   }
 }

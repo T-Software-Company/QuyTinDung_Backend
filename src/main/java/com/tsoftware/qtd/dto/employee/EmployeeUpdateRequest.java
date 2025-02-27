@@ -22,6 +22,7 @@ public class EmployeeUpdateRequest {
   String username;
 
   @NotBlank @Email String email;
+  private String avatarUrl;
 
   @Valid @NotNull AddressDTO address;
   @Valid @NotNull IdentityInfoDTO identityInfo;

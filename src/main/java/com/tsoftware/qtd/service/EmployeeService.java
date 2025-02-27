@@ -10,6 +10,7 @@ import com.tsoftware.qtd.mapper.PageResponseMapper;
 import com.tsoftware.qtd.repository.EmployeeRepository;
 import com.tsoftware.qtd.repository.GroupRepository;
 import com.tsoftware.qtd.repository.RoleRepository;
+import com.tsoftware.qtd.util.RequestUtil;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -92,10 +93,7 @@ public class EmployeeService {
             .findByUserId(userId)
             .orElseThrow(() -> new NotFoundException("Employee not found"));
     keycloakService.updateUser(request, userId);
-    employee.setFirstName(request.getFirstName());
-    employee.setLastName(request.getLastName());
-    employee.setEmail(request.getEmail());
-    employee.setPhone(request.getPhone());
+    employeeMapper.updateEntity(request, employee);
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 
@@ -111,12 +109,12 @@ public class EmployeeService {
     return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
   }
 
-  public void resetPassword(UUID id) {
+  public void changePassword(UUID id) {
     var employee =
         employeeRepository
             .findById(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, "employee: " + id));
-    keycloakService.resetPasswordByEmail(employee.getUserId());
+    keycloakService.changePasswordByEmail(employee.getUserId());
   }
 
   public void enable(UUID id) {
@@ -204,5 +202,16 @@ public class EmployeeService {
 
   public Set<Employee> findByUserIdIn(Set<String> assignees) {
     return employeeRepository.findByUserIdIn(assignees);
+  }
+
+  public void changeAvatar(String url) {
+    var userId = RequestUtil.getUserId();
+    var employee =
+        employeeRepository
+            .findByUserId(userId)
+            .orElseThrow(
+                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, "employeeUserId: " + userId));
+    employee.setAvatarUrl(url);
+    employeeRepository.save(employee);
   }
 }
