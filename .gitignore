@@ -38,3 +38,6 @@ deployment/server.key
 deployment/keycloak.json
 deployment/tsoftware-realm.json
 deployment/tsoftware.store.key
+
+### upload ###
+documents

@@ -7,7 +7,7 @@ import com.tsoftware.qtd.entity.Customer;
 import com.tsoftware.qtd.entity.Document;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
-import com.tsoftware.qtd.mapper.DTOMapper;
+import com.tsoftware.qtd.mapper.DocumentMapper;
 import com.tsoftware.qtd.repository.DocumentRepository;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -38,13 +38,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 public class DocumentService {
 
-  private final GoogleCloudStorageService storageService;
+  private final FileStorageService fileStorageService;
   private final DocumentRepository documentRepository;
-  private final DTOMapper dtoMapper;
+  private final DocumentMapper documentMapper;
 
   public DocumentDTO upload(MultipartFile file, DocumentType type) {
     validateFile(file);
-    var url = storageService.upload(file);
+    var url = fileStorageService.upload(file);
     DocumentDTO documentDTO =
         DocumentDTO.builder()
             .url(url)
@@ -52,8 +52,8 @@ public class DocumentService {
             .isUsed(false)
             .type(type)
             .build();
-    documentRepository.save(dtoMapper.toEntity(documentDTO));
-    return documentDTO;
+    var saved = documentRepository.save(documentMapper.toEntity(documentDTO));
+    return documentMapper.toDTO(saved);
   }
 
   private void validateFile(MultipartFile file) {
@@ -73,11 +73,13 @@ public class DocumentService {
         documentRepository
             .findById(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
-    return dtoMapper.toDTO(document);
+    return documentMapper.toDTO(document);
   }
 
   public List<DocumentDTO> getDocumentBelongToCustomer(UUID customerId) {
-    return documentRepository.findByCustomerId(customerId).stream().map(dtoMapper::toDTO).toList();
+    return documentRepository.findByCustomerId(customerId).stream()
+        .map(documentMapper::toDTO)
+        .toList();
   }
 
   public InputStream replace(Object object, InputStream templateFile, int depth) throws Exception {
