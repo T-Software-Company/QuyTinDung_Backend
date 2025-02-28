@@ -1,6 +1,5 @@
 package com.tsoftware.qtd.dto.asset;
 
-import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Map;

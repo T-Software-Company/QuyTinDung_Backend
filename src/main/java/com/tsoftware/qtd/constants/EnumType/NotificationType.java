@@ -51,6 +51,12 @@ public enum NotificationType {
       "Lịc thẩm định khoản vay",
       "Cuộc họp thẩm định khoản vay được lên lịch",
       "Bạn có lịch họp thẩm định khoản vay"),
+  CREATE_APPRAISAL_REPORT(
+      ApprovalSubmittedHandler.class,
+      "Báo cáo thẩm định khoản vay",
+      "Báo cáo thẩm định khoản vay được tạo và chờ xét duyệt",
+      "Bạn có báo cáo thẩm định khoản vay cần xét duyệt"),
+
   // Approval notifications
   APPROVE_LOAN_REQUEST(
       ApprovedHandler.class,
@@ -82,6 +88,12 @@ public enum NotificationType {
       "Báo cáo thẩm định đã được phê duyệt",
       "Bạn có kết quả phê duyệt báo cáo thẩm định",
       "Tài sản đảm bảo của bạn đã được định giá"),
+  APPROVE_APPRAISAL_REPORT(
+      ApprovedHandler.class,
+      "Kết quả xét duyệt báo cáo thẩm định khoản vay",
+      "Báo cáo thẩm định khoản vay đã được phê duyệt",
+      "Bạn có kết quả phê duyệt báo cáo thẩm định khoản vay",
+      "Báo cáo thẩm định khoản vay của bạn đã được chấp thuận"),
 
   // Rejection notifications
   REJECT_LOAN_REQUEST(
@@ -113,7 +125,13 @@ public enum NotificationType {
       "Kết quả xét duyệt báo cáo thẩm định",
       "Báo cáo thẩm định đã bị từ chối",
       "Bạn có kết quả phê duyệt báo cáo thẩm định",
-      "Định giá tài sản của bạn chưa được chấp thuận");
+      "Định giá tài sản của bạn chưa được chấp thuận"),
+  REJECT_APPRAISAL_REPORT(
+      ApprovedHandler.class,
+      "Kết quả xét duyệt báo cáo thẩm định khoản vay",
+      "Báo cáo thẩm định khoản vay đã bị từ chối",
+      "Bạn có kết quả phê duyệt báo cáo thẩm định khoản vay",
+      "Báo cáo thẩm định khoản vay của bạn chưa được chấp thuận");
 
   final Class<? extends NotificationHandler> handler;
   final String title;
@@ -136,6 +154,7 @@ public enum NotificationType {
       case CREATE_FINANCIAL_INFO -> APPROVE_FINANCIAL_INFO;
       case CREATE_ASSETS -> APPROVE_ASSETS;
       case CREATE_VALUATION_REPORT -> APPROVE_VALUATION_REPORT;
+      case CREATE_APPRAISAL_REPORT -> APPROVE_APPRAISAL_REPORT;
     };
   }
 
@@ -146,6 +165,7 @@ public enum NotificationType {
       case CREATE_FINANCIAL_INFO -> CREATE_FINANCIAL_INFO;
       case CREATE_ASSETS -> CREATE_ASSETS;
       case CREATE_VALUATION_REPORT -> CREATE_VALUATION_REPORT;
+      case CREATE_APPRAISAL_REPORT -> CREATE_APPRAISAL_REPORT;
     };
   }
 
@@ -156,6 +176,7 @@ public enum NotificationType {
       case CREATE_FINANCIAL_INFO -> REJECT_FINANCIAL_INFO;
       case CREATE_ASSETS -> REJECT_ASSETS;
       case CREATE_VALUATION_REPORT -> REJECT_VALUATION_REPORT;
+      case CREATE_APPRAISAL_REPORT -> REJECT_APPRAISAL_REPORT;
     };
   }
 }

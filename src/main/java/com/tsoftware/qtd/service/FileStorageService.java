@@ -14,7 +14,14 @@ public interface FileStorageService {
   String upload(MultipartFile file);
 
   default String getFileName(String fileName) {
-    return String.format("%s_%s.%s", fileName, UUID.randomUUID(), getFileExtension(fileName));
+    String extension = getFileExtension(fileName);
+    String baseName = fileName.substring(0, fileName.lastIndexOf('.'));
+    baseName = baseName.replaceAll("[^a-zA-Z0-9_-]", "_");
+    if (baseName.isEmpty()) {
+      baseName = "file";
+    }
+    String uniqueId = UUID.randomUUID().toString();
+    return String.format("%s_%s.%s", baseName, uniqueId, extension);
   }
 
   default String getFileExtension(String fileName) {

@@ -79,8 +79,8 @@ public class ApprovalProcessService {
     var entity = approvalProcessMapper.toEntity(approvalProcess);
     Optional.ofNullable(entity.getGroupApprovals())
         .ifPresent(
-            stef ->
-                stef.forEach(
+            seft ->
+                seft.forEach(
                     groupApprove -> {
                       groupApprove.setApprovalProcess(entity);
                       groupApprove
@@ -92,8 +92,8 @@ public class ApprovalProcessService {
                     }));
     Optional.ofNullable(entity.getRoleApprovals())
         .ifPresent(
-            stef ->
-                stef.forEach(
+            seft ->
+                seft.forEach(
                     roleApprove -> {
                       roleApprove.setApprovalProcess(entity);
                       roleApprove
@@ -105,7 +105,7 @@ public class ApprovalProcessService {
                     }));
 
     Optional.ofNullable(entity.getApprovals())
-        .ifPresent(stef -> stef.forEach(approval -> approval.setApprovalProcess(entity)));
+        .ifPresent(seft -> seft.forEach(approval -> approval.setApprovalProcess(entity)));
     var saved = approvalProcessRepository.save(entity);
     var result = approvalProcessMapper.toResponse(saved);
     applicationEventPublisher.publishEvent(new ApprovalSubmittedEvent(this, result));

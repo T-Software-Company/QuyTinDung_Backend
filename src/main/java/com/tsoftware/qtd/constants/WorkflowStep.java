@@ -10,6 +10,7 @@ public class WorkflowStep {
   public static final String CREATE_VALUATION_REPORT = "create-valuation-report";
   public static final String CREATE_CREDIT_RATING = "create-credit-rating";
   public static final String CREATE_APPRAISAL_MEETING = "create-appraisal-meeting";
+  public static final String CREATE_APPRAISAL_REPORT = "create-appraisal-report";
 
   private WorkflowStep() {}
 }
