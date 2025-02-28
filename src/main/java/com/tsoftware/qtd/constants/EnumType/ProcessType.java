@@ -13,7 +13,8 @@ public enum ProcessType {
   CREATE_LOAN_PLAN(LoanPlanExecutor.class),
   CREATE_FINANCIAL_INFO(FinancialInfoExecutor.class),
   CREATE_ASSETS(AssetsExecutor.class),
-  CREATE_VALUATION_REPORT(ValuationReportExecutor.class);
+  CREATE_VALUATION_REPORT(ValuationReportExecutor.class),
+  CREATE_APPRAISAL_REPORT(AppraisalReportExecutor.class);
 
   final Class<? extends BaseTransactionExecutor<ApprovalProcessDTO>> executor;
 }

@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Configuration;
 public class SpeLConfig {
   public WorkflowStatus extractStatusWitDefault(StepHistoryDTO stepHistory)
       throws JsonProcessingException {
-    var status = WorkflowStatus.INPROGRESS;
     var histories =
         JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]", List.class);
     if (histories.isEmpty()) {
@@ -34,7 +33,6 @@ public class SpeLConfig {
 
   public WorkflowStatus extractStatusWitApprove(StepHistoryDTO stepHistory)
       throws JsonProcessingException {
-    var status = WorkflowStatus.INPROGRESS;
     var histories =
         JsonPath.parse(stepHistory.getMetadata()).read("histories[?(@.response)]", List.class);
     if (histories.isEmpty()) {
