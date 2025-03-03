@@ -3,7 +3,7 @@ package com.tsoftware.qtd.commonlib.aspect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tsoftware.qtd.commonlib.annotation.*;
 import com.tsoftware.qtd.commonlib.context.WorkflowContext;
-import com.tsoftware.qtd.commonlib.strategy.WorkflowStrategy;
+import com.tsoftware.qtd.commonlib.factory.WorkflowStrategyFactory;
 import com.tsoftware.qtd.commonlib.util.JsonParser;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WorkflowAspect {
 
-  private final Map<WorkflowEngine.WorkflowAction, WorkflowStrategy> workflowStrategies;
+  private final WorkflowStrategyFactory workflowStrategyFactory;
 
   @AfterReturning(
       value = "@annotation(tryTransactionId)",
@@ -48,7 +48,7 @@ public class WorkflowAspect {
   public void beforeProceedWorkflow(JoinPoint joinPoint, WorkflowEngine workflowAPI) {
     var stepName = workflowAPI.step();
     var action = workflowAPI.action();
-    workflowStrategies.get(action).beforeProcess(joinPoint, stepName);
+    workflowStrategyFactory.getStrategy(action).beforeProcess(joinPoint, stepName);
   }
 
   @AfterReturning(
@@ -58,7 +58,7 @@ public class WorkflowAspect {
   public void afterReturnWorkflow(
       JoinPoint joinPoint, Object response, WorkflowEngine workflowAPI) {
     var action = workflowAPI.action();
-    workflowStrategies.get(action).afterProcess(response);
+    workflowStrategyFactory.getStrategy(action).afterProcess(response);
   }
 
   @AfterThrowing(
@@ -67,7 +67,7 @@ public class WorkflowAspect {
       argNames = "joinPoint,ex,workflowAPI")
   public void afterThrowWorkflow(JoinPoint joinPoint, Throwable ex, WorkflowEngine workflowAPI) {
     var action = workflowAPI.action();
-    this.workflowStrategies.get(action).afterThrowProcess(ex);
+    this.workflowStrategyFactory.getStrategy(action).afterThrowProcess(ex);
   }
 
   @After(value = "@annotation(workflowAPI)")

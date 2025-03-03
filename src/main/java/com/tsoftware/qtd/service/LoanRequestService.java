@@ -15,9 +15,7 @@ import com.tsoftware.qtd.repository.ApprovalProcessRepository;
 import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.repository.LoanRequestRepository;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,22 +71,12 @@ public class LoanRequestService {
     return loanrequestMapper.toResponse(loanrequestRepository.save(loanrequest));
   }
 
-  public void delete(UUID id) {
-    loanrequestRepository.deleteById(id);
-  }
-
   public LoanRequestResponse getById(UUID id) {
     com.tsoftware.qtd.entity.LoanRequest loanrequest =
         loanrequestRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanRequest not found"));
     return loanrequestMapper.toResponse(loanrequest);
-  }
-
-  public List<LoanRequestResponse> getAll() {
-    return loanrequestRepository.findAll().stream()
-        .map(loanrequestMapper::toResponse)
-        .collect(Collectors.toList());
   }
 
   private void validRequest(LoanRequestRequest loanRequestRequest) {
@@ -122,5 +110,11 @@ public class LoanRequestService {
                         + ")");
               }
             });
+  }
+
+  public ApprovalProcessResponse updateRequest(
+      UUID approvalProcessId, LoanRequestRequest loanRequestRequest) {
+    this.validRequest(loanRequestRequest);
+    return approvalProcessService.update(approvalProcessId, loanRequestRequest);
   }
 }

@@ -20,7 +20,6 @@ import com.tsoftware.qtd.repository.ApproveRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,31 +58,12 @@ public class AppraisalReportService {
     return appraisalReportMapper.toResponse(appraisalReportRepository.save(appraisalReport));
   }
 
-  public AppraisalReportResponse update(UUID id, AppraisalReportRequest appraisalReportRequest) {
-    AppraisalReport appraisalReport =
-        appraisalReportRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException("AppraisalReport not found"));
-    appraisalReportMapper.updateEntity(appraisalReportRequest, appraisalReport);
-    return appraisalReportMapper.toResponse(appraisalReportRepository.save(appraisalReport));
-  }
-
-  public void delete(UUID id) {
-    appraisalReportRepository.deleteById(id);
-  }
-
   public AppraisalReportResponse getById(UUID id) {
     AppraisalReport appraisalReport =
         appraisalReportRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("AppraisalReport not found"));
     return appraisalReportMapper.toResponse(appraisalReport);
-  }
-
-  public List<AppraisalReportResponse> getAll() {
-    return appraisalReportRepository.findAll().stream()
-        .map(appraisalReportMapper::toResponse)
-        .collect(Collectors.toList());
   }
 
   public List<ApprovalResponse> addApprove(UUID id, List<UUID> approverIds) {
@@ -102,5 +82,10 @@ public class AppraisalReportService {
 
   public void removeApprove(UUID id, List<UUID> approverIds) {
     approveRepository.deleteAllByIdInBatch(approverIds);
+  }
+
+  public ApprovalProcessResponse updateRequest(
+      UUID approvalProcessId, AppraisalReportRequest appraisalReportRequest) {
+    return approvalProcessService.update(approvalProcessId, appraisalReportRequest);
   }
 }

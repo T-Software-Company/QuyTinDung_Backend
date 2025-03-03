@@ -22,7 +22,7 @@ public class ApprovalProcessController {
   private final ApprovalProcessService approvalProcessService;
 
   @WorkflowEngine(action = WorkflowEngine.WorkflowAction.APPROVE)
-  @PostMapping("{id}/approve")
+  @PostMapping("/{id}/approve")
   public ResponseEntity<?> approve(
       @PathVariable @Valid @TransactionId @IsUUID String id,
       @Valid @RequestBody ApprovalRequest approvalRequest) {

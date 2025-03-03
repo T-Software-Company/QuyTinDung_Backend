@@ -41,4 +41,9 @@ public class FinancialInfoService {
     entity.setApplication(application);
     return financialInfoMapper.toResponse(financialInfoRepository.save(entity));
   }
+
+  public ApprovalProcessResponse updateRequest(
+      UUID approvalProcessId, FinancialInfoRequest financialInfoRequest) {
+    return approvalProcessService.update(approvalProcessId, financialInfoRequest);
+  }
 }

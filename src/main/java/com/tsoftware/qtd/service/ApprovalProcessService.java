@@ -6,9 +6,12 @@ import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.application.ApplicationRequest;
 import com.tsoftware.qtd.dto.approval.*;
+import com.tsoftware.qtd.dto.employee.EmployeeResponse;
 import com.tsoftware.qtd.entity.ApprovalProcess;
 import com.tsoftware.qtd.entity.ApprovalSetting;
+import com.tsoftware.qtd.entity.Employee;
 import com.tsoftware.qtd.event.ApprovalSubmittedEvent;
+import com.tsoftware.qtd.event.ApprovalUpdatedEvent;
 import com.tsoftware.qtd.event.ApprovedEvent;
 import com.tsoftware.qtd.event.RejectedEvent;
 import com.tsoftware.qtd.exception.CommonException;
@@ -52,13 +55,14 @@ public class ApprovalProcessService {
   public ApprovalProcessResponse create(
       Object object, ApplicationRequest applicationRequest, ProcessType type) {
 
-    applicationRepository
-        .findById(UUID.fromString(applicationRequest.getId()))
-        .orElseThrow(
-            () ->
-                new CommonException(
-                    ErrorType.ENTITY_NOT_FOUND,
-                    "Application not found: " + applicationRequest.getId()));
+    var application =
+        applicationRepository
+            .findById(UUID.fromString(applicationRequest.getId()))
+            .orElseThrow(
+                () ->
+                    new CommonException(
+                        ErrorType.ENTITY_NOT_FOUND,
+                        "Application not found: " + applicationRequest.getId()));
     var exists =
         approvalProcessRepository.existsByApplicationIdAndType(
             UUID.fromString(applicationRequest.getId()), type);
@@ -75,6 +79,7 @@ public class ApprovalProcessService {
             .status(ApprovalStatus.WAIT)
             .metadata(object)
             .build();
+    this.mappingApprovesFromProcessors(approvalProcess, application.getLoanProcessors());
     this.mappingApprovesFromSetting(approvalProcess, type);
     var entity = approvalProcessMapper.toEntity(approvalProcess);
     Optional.ofNullable(entity.getGroupApprovals())
@@ -112,6 +117,21 @@ public class ApprovalProcessService {
     return result;
   }
 
+  private void mappingApprovesFromProcessors(
+      ApprovalProcessDTO approvalProcess, List<Employee> loanProcessors) {
+    var approvals = new ArrayList<ApprovalDTO>();
+    loanProcessors.forEach(
+        e -> {
+          var approval =
+              ApprovalDTO.builder()
+                  .canApprove(true)
+                  .approver(EmployeeResponse.builder().id(e.getId()).build())
+                  .build();
+          approvals.add(approval);
+        });
+    approvalProcess.setApprovals(approvals);
+  }
+
   public ApprovalProcessResponse approve(UUID id, ApprovalRequest approvalRequest) {
     var entity =
         approvalProcessRepository
@@ -143,6 +163,13 @@ public class ApprovalProcessService {
     approvalProcessMapper.updateEntity(entity, approvalProcessDTO);
     if (approvalProcessDTO.getStatus().equals(ApprovalStatus.APPROVED)) {
       applicationContext.publishEvent(new ApprovedEvent(this, approvalProcessDTO));
+      entity.getApprovals().forEach(approval -> approval.setCanApprove(false));
+      entity
+          .getRoleApprovals()
+          .forEach(r -> r.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
+      entity
+          .getGroupApprovals()
+          .forEach(r -> r.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
     }
     if (approvalProcessDTO.getStatus().equals(ApprovalStatus.REJECTED)) {
       applicationContext.publishEvent(new RejectedEvent(this, approvalProcessDTO));
@@ -338,5 +365,38 @@ public class ApprovalProcessService {
             .findById(approvalProcessId)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, approvalProcessId));
     return approvalProcessMapper.toDTO(entity);
+  }
+
+  public ApprovalProcessResponse update(UUID id, Object metadata) {
+    var entity =
+        approvalProcessRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new CommonException(ErrorType.ENTITY_NOT_FOUND, "approvalProcessId: " + id));
+    entity.setMetadata(metadata);
+    var saved = approvalProcessRepository.save(entity);
+    applicationEventPublisher.publishEvent(
+        new ApprovalUpdatedEvent(this, approvalProcessMapper.toDTO(saved)));
+    return approvalProcessMapper.toResponse(saved);
+  }
+
+  public List<ApprovalProcessDTO> getDTOProcessingByApplicationId(UUID applicationId) {
+    var result =
+        approvalProcessRepository.findByStatusAndApplicationId(ApprovalStatus.WAIT, applicationId);
+    return result.stream().map(approvalProcessMapper::toDTO).toList();
+  }
+
+  public void handleCancelByApplicationId(UUID applicationId) {
+    var result =
+        approvalProcessRepository.findByStatusAndApplicationId(ApprovalStatus.WAIT, applicationId);
+    result.forEach(
+        ap -> {
+          ap.getApprovals().forEach(a -> a.setCanApprove(false));
+          ap.getGroupApprovals()
+              .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
+          ap.getRoleApprovals()
+              .forEach(g -> g.getCurrentApprovals().forEach(a -> a.setCanApprove(false)));
+        });
+    approvalProcessRepository.saveAll(result);
   }
 }
