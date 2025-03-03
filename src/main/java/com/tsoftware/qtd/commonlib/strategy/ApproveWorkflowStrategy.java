@@ -6,7 +6,6 @@ import com.tsoftware.qtd.commonlib.helper.MetadataManager;
 import com.tsoftware.qtd.commonlib.helper.WorkflowAspectExtractor;
 import com.tsoftware.qtd.commonlib.properties.WorkflowProperties;
 import com.tsoftware.qtd.commonlib.service.WorkflowService;
-import java.time.ZonedDateTime;
 import java.util.Map;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,6 @@ public class ApproveWorkflowStrategy extends AbstractWorkflowStrategy {
   public void afterProcess(Object response) {
     var workflow = WorkflowContext.getWorkflow();
     var step = WorkflowContext.getStep();
-    step.setEndTime(ZonedDateTime.now());
     Map<String, Object> metadata = step.getMetadata();
     this.metadataManager.updateHistoryResponse(
         metadata, this.workflowAspectExtractor.extractResponse(response));
