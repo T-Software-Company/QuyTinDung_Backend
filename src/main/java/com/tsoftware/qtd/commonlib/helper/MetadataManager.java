@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MetadataManager {
 
-  public void updateHistoryRequest(Map<String, Object> metadata, Object request, String action) {
-    int index = getHistoryIndex(metadata);
+  public void updateHistoryRequest(
+      Map<String, Object> metadata, Map<String, Object> request, String action) {
+    int index = getLastHistoryIndex(metadata);
     JsonParser.put(metadata, "histories[" + index + "].request", request);
     JsonParser.put(metadata, "histories[" + index + "].action", action);
   }
 
-  public void updateHistoryResponse(Map<String, Object> metadata, Object response) {
+  public void updateHistoryResponse(Map<String, Object> metadata, Map<String, Object> response) {
     int index = getLastHistoryIndex(metadata);
     JsonParser.put(metadata, "histories[" + index + "].response", response);
   }
@@ -26,12 +27,8 @@ public class MetadataManager {
     JsonParser.put(metadata, "histories[" + index + "].error", error);
   }
 
-  private int getHistoryIndex(Map<String, Object> metadata) {
+  private int getLastHistoryIndex(Map<String, Object> metadata) {
     var histories = metadata.get("histories");
     return histories == null ? 0 : JsonPath.parse(histories).read("$.length()", Integer.class);
-  }
-
-  private int getLastHistoryIndex(Map<String, Object> metadata) {
-    return getHistoryIndex(metadata) - 1;
   }
 }

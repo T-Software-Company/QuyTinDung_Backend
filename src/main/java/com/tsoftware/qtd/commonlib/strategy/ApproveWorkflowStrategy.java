@@ -1,11 +1,13 @@
 package com.tsoftware.qtd.commonlib.strategy;
 
+import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
+import com.tsoftware.qtd.commonlib.context.WorkflowContext;
 import com.tsoftware.qtd.commonlib.helper.MetadataManager;
-import com.tsoftware.qtd.commonlib.helper.WorkflowValidator;
-import com.tsoftware.qtd.commonlib.model.Workflow;
+import com.tsoftware.qtd.commonlib.helper.WorkflowAspectExtractor;
 import com.tsoftware.qtd.commonlib.properties.WorkflowProperties;
 import com.tsoftware.qtd.commonlib.service.WorkflowService;
-import com.tsoftware.qtd.commonlib.util.RequestExtractor;
+import java.time.ZonedDateTime;
+import java.util.Map;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.stereotype.Component;
 
@@ -16,17 +18,43 @@ public class ApproveWorkflowStrategy extends AbstractWorkflowStrategy {
       WorkflowService workflowService,
       WorkflowProperties properties,
       MetadataManager metadataManager,
-      WorkflowValidator validator,
-      RequestExtractor requestExtractor) {
-    super(workflowService, properties, metadataManager, validator, requestExtractor);
+      WorkflowAspectExtractor workflowAspectExtractor) {
+    super(workflowService, properties, metadataManager, workflowAspectExtractor);
   }
 
   @Override
-  public void beforeProcess(JoinPoint joinPoint, String stepName) {}
+  public void beforeProcess(JoinPoint joinPoint, String stepName) {
+    var transactionId = this.workflowAspectExtractor.extractTransactionId(joinPoint);
+    var workflow = workflowService.getByTransactionId(transactionId);
+    workflowService.validateWorkflow(workflow);
+    var step = this.findStepByTransactionId(workflow, transactionId);
+    var request = this.workflowAspectExtractor.extractRequest(joinPoint);
+    var metadata = step.getMetadata();
+    this.metadataManager.updateHistoryRequest(
+        metadata, request, WorkflowEngine.WorkflowAction.APPROVE.getValue());
+    WorkflowContext.setWorkflow(workflow);
+    WorkflowContext.setStep(step);
+  }
 
   @Override
-  public void afterProcess(Workflow<?> workflow, String stepName, Object response) {}
+  public void afterProcess(Object response) {
+    var workflow = WorkflowContext.getWorkflow();
+    var step = WorkflowContext.getStep();
+    step.setEndTime(ZonedDateTime.now());
+    Map<String, Object> metadata = step.getMetadata();
+    this.metadataManager.updateHistoryResponse(
+        metadata, this.workflowAspectExtractor.extractResponse(response));
+    this.finalizeWorkflow(workflow, step.getName());
+  }
 
   @Override
-  public void afterThrowProcess(Workflow<?> workflow, String stepName, Throwable ex) {}
+  public void afterThrowProcess(Throwable ex) {
+    var workflow = WorkflowContext.getWorkflow();
+    var step = WorkflowContext.getStep();
+    var stepName = step.getName();
+    Map<String, Object> metadata = step.getMetadata();
+    this.metadataManager.updateHistoryError(
+        metadata, this.workflowAspectExtractor.extractErrorMessage(ex));
+    this.finalizeWorkflow(workflow, stepName);
+  }
 }
