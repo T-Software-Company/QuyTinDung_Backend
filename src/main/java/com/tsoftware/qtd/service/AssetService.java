@@ -17,7 +17,6 @@ import com.tsoftware.qtd.repository.AssetRepository;
 import com.tsoftware.qtd.repository.LoanRequestRepository;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,6 +37,12 @@ public class AssetService {
   private final PageResponseMapper pageResponseMapper;
 
   public ApprovalProcessResponse request(List<AssetRequest> assetsRequest) {
+    this.validateRequest(assetsRequest);
+    return approvalProcessService.create(
+        assetsRequest, assetsRequest.getFirst().getApplication(), ProcessType.CREATE_ASSETS);
+  }
+
+  private void validateRequest(List<AssetRequest> assetsRequest) {
     var applicationId = assetsRequest.getFirst().getApplication().getId();
     var loanRequest =
         loanRequestRepository
@@ -61,8 +66,6 @@ public class AssetService {
                     + "not found on loan request");
           }
         });
-    return approvalProcessService.create(
-        assetsRequest, assetsRequest.getFirst().getApplication(), ProcessType.CREATE_ASSETS);
   }
 
   public List<AssetResponse> create(List<AssetRequest> assetsRequest, UUID applicationId) {
@@ -79,27 +82,10 @@ public class AssetService {
     return saved.stream().map(assetMapper::toResponse).toList();
   }
 
-  public AssetResponse update(UUID id, AssetRequest assetRequest) {
-    Asset asset =
-        assetRepository.findById(id).orElseThrow(() -> new NotFoundException("Asset not found"));
-    assetMapper.updateEntity(assetRequest, asset);
-    return assetMapper.toResponse(assetRepository.save(asset));
-  }
-
-  public void delete(UUID id) {
-    assetRepository.deleteById(id);
-  }
-
   public AssetResponse getById(UUID id) {
     Asset asset =
         assetRepository.findById(id).orElseThrow(() -> new NotFoundException("Asset not found"));
     return assetMapper.toResponse(asset);
-  }
-
-  public List<AssetResponse> getAll() {
-    return assetRepository.findAll().stream()
-        .map(assetMapper::toResponse)
-        .collect(Collectors.toList());
   }
 
   public PageResponse<AssetResponse> getAll(Specification<Asset> spec, Pageable page) {
@@ -107,9 +93,9 @@ public class AssetService {
     return pageResponseMapper.toPageResponse(result);
   }
 
-  public List<AssetResponse> getAssetsByCreditId(UUID id) {
-    return assetRepository.findByApplicationId(id).stream()
-        .map(assetMapper::toResponse)
-        .collect(Collectors.toList());
+  public ApprovalProcessResponse updateRequest(
+      UUID approvalProcessId, List<AssetRequest> assetsRequest) {
+    this.validateRequest(assetsRequest);
+    return approvalProcessService.update(approvalProcessId, assetsRequest);
   }
 }

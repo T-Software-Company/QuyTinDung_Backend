@@ -39,10 +39,12 @@ public class ApproveWorkflowStrategy extends AbstractWorkflowStrategy {
   public void afterProcess(Object response) {
     var workflow = WorkflowContext.getWorkflow();
     var step = WorkflowContext.getStep();
+    var stepName = step.getName();
+    workflowService.validateStep(workflow, stepName);
     Map<String, Object> metadata = step.getMetadata();
     this.metadataManager.updateHistoryResponse(
         metadata, this.workflowAspectExtractor.extractResponse(response));
-    this.finalizeWorkflow(workflow, step.getName());
+    this.finalizeWorkflow(workflow, stepName);
   }
 
   @Override

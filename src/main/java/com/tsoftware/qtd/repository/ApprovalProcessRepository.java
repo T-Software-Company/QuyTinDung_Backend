@@ -1,7 +1,9 @@
 package com.tsoftware.qtd.repository;
 
+import com.tsoftware.qtd.commonlib.constant.ApprovalStatus;
 import com.tsoftware.qtd.constants.EnumType.ProcessType;
 import com.tsoftware.qtd.entity.ApprovalProcess;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +16,7 @@ public interface ApprovalProcessRepository
   boolean existsByApplicationIdAndType(UUID id, ProcessType type);
 
   Optional<ApprovalProcess> findByApplicationIdAndType(UUID applicationId, ProcessType processType);
+
+  List<ApprovalProcess> findByStatusAndApplicationId(
+      ApprovalStatus approvalStatus, UUID applicationId);
 }

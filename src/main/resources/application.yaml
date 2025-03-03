@@ -190,7 +190,7 @@ workflow:
 
       - step: create-appraisal-report
         type: approval
-        extractStatus: "@speLConfig.extractStatusWitDefault(#step)"
+        extractStatus: "@speLConfig.extractStatusWitApprove(#step)"
         dependencies:
           - create-appraisal-meeting
         nextStepRules: []

@@ -46,7 +46,7 @@ public enum NotificationType {
       "Đánh giá tín dụng được đã được tạo",
       null,
       "Đánh giá tín dụng của bạn đã được tạo"),
-  CREATE_APPRAISAL_PLAN(
+  CREATE_APPRAISAL_MEETING(
       ApprovalSubmittedHandler.class,
       "Lịc thẩm định khoản vay",
       "Cuộc họp thẩm định khoản vay được lên lịch",
@@ -56,6 +56,37 @@ public enum NotificationType {
       "Báo cáo thẩm định khoản vay",
       "Báo cáo thẩm định khoản vay được tạo và chờ xét duyệt",
       "Bạn có báo cáo thẩm định khoản vay cần xét duyệt"),
+
+  UPDATE_LOAN_REQUEST(
+      ApprovalSubmittedHandler.class,
+      "Cập nhật hồ sơ vay",
+      "Hồ sơ vay đã được cập nhật và đang chờ xét duyệt",
+      "Bạn có một hồ sơ vay cần xét duyệt"),
+  UPDATE_LOAN_PLAN(
+      ApprovalSubmittedHandler.class,
+      "Cập nhật kế hoạch vay",
+      "Kế hoạch vay đã được cập nhật và đang chờ xét duyệt",
+      "Bạn có một kế hoạch vay cần xét duyệt"),
+  UPDATE_FINANCIAL_INFO(
+      ApprovalSubmittedHandler.class,
+      "Cập nhật thông tin tài chính",
+      "Thông tin tài chính đã được cập nhật và đang chờ xét duyệt",
+      "Bạn có một hồ sơ tài chính cần xét duyệt"),
+  UPDATE_ASSETS(
+      ApprovalSubmittedHandler.class,
+      "Cập nhật tài sản đảm bảo",
+      "Hồ sơ tài sản đảm bảo đã được cập nhật và đang chờ xét duyệt",
+      "Bạn có một hồ sơ tài sản cần xét duyệt"),
+  UPDATE_VALUATION_REPORT(
+      ApprovalSubmittedHandler.class,
+      "Cập nhật báo cáo thẩm định",
+      "Báo cáo thẩm định đã được cập nhật và đang chờ xét duyệt",
+      "Bạn có một báo cáo thẩm định cần xét duyệt"),
+  UPDATE_APPRAISAL_REPORT(
+      ApprovalSubmittedHandler.class,
+      "Cập nhật báo cáo thẩm định khoản vay",
+      "Báo cáo thẩm định khoản vay đã được cập nhật và đang chờ xét duyệt",
+      "Bạn có một báo cáo thẩm định khoản vay cần xét duyệt"),
 
   // Approval notifications
   APPROVE_LOAN_REQUEST(
@@ -131,8 +162,13 @@ public enum NotificationType {
       "Kết quả xét duyệt báo cáo thẩm định khoản vay",
       "Báo cáo thẩm định khoản vay đã bị từ chối",
       "Bạn có kết quả phê duyệt báo cáo thẩm định khoản vay",
-      "Báo cáo thẩm định khoản vay của bạn chưa được chấp thuận");
-
+      "Báo cáo thẩm định khoản vay của bạn chưa được chấp thuận"),
+  CANCELLED_APPLICATION(
+      ApprovedHandler.class,
+      "Hồ sơ vay bị huỷ",
+      "Hồ sơ vay đã bị huỷ bỏ",
+      "Một hồ sơ vay đã bị huỷ bỏ",
+      "Hồ sơ vay của bạn đã bị huỷ bỏ");
   final Class<? extends NotificationHandler> handler;
   final String title;
   final String content;
@@ -147,7 +183,7 @@ public enum NotificationType {
     this(handler, title, content, employeeMessage, null);
   }
 
-  public static NotificationType ApprovedTypeFromProcessType(ProcessType processType) {
+  public static NotificationType approvedTypeFromProcessType(ProcessType processType) {
     return switch (processType) {
       case CREATE_LOAN_REQUEST -> APPROVE_LOAN_REQUEST;
       case CREATE_LOAN_PLAN -> APPROVE_LOAN_PLAN;
@@ -158,7 +194,7 @@ public enum NotificationType {
     };
   }
 
-  public static NotificationType SubmittedTypeFromProcessType(ProcessType processType) {
+  public static NotificationType submittedTypeFromProcessType(ProcessType processType) {
     return switch (processType) {
       case CREATE_LOAN_REQUEST -> CREATE_LOAN_REQUEST;
       case CREATE_LOAN_PLAN -> CREATE_LOAN_PLAN;
@@ -169,7 +205,18 @@ public enum NotificationType {
     };
   }
 
-  public static NotificationType RejectedTypeFromProcessType(ProcessType processType) {
+  public static NotificationType updatedTypeFromProcessType(ProcessType processType) {
+    return switch (processType) {
+      case CREATE_LOAN_REQUEST -> UPDATE_LOAN_REQUEST;
+      case CREATE_LOAN_PLAN -> UPDATE_LOAN_PLAN;
+      case CREATE_FINANCIAL_INFO -> UPDATE_FINANCIAL_INFO;
+      case CREATE_ASSETS -> UPDATE_ASSETS;
+      case CREATE_VALUATION_REPORT -> UPDATE_VALUATION_REPORT;
+      case CREATE_APPRAISAL_REPORT -> UPDATE_APPRAISAL_REPORT;
+    };
+  }
+
+  public static NotificationType rejectedTypeFromProcessType(ProcessType processType) {
     return switch (processType) {
       case CREATE_LOAN_REQUEST -> REJECT_LOAN_REQUEST;
       case CREATE_LOAN_PLAN -> REJECT_LOAN_PLAN;

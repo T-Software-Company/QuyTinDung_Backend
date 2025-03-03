@@ -5,6 +5,7 @@ import com.tsoftware.qtd.constants.EnumType.LoanStatus;
 import com.tsoftware.qtd.dto.PageResponse;
 import com.tsoftware.qtd.dto.application.*;
 import com.tsoftware.qtd.entity.*;
+import com.tsoftware.qtd.event.CancelledEvent;
 import com.tsoftware.qtd.exception.CommonException;
 import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ public class ApplicationService {
   private final CustomerRepository customerRepository;
   private final EmployeeRepository employeeRepository;
   private final PageResponseMapper pageResponseMapper;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @TryInitTargetId
   public ApplicationResponse create(UUID customerId) {
@@ -95,6 +98,8 @@ public class ApplicationService {
             .findById(id)
             .orElseThrow(() -> new CommonException(ErrorType.ENTITY_NOT_FOUND, id));
     entity.setStatus(LoanStatus.CANCELLED);
+    applicationEventPublisher.publishEvent(
+        new CancelledEvent(this, applicationMapper.toResponse(entity)));
     applicationRepository.save(entity);
   }
 }
