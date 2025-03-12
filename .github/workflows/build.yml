@@ -29,17 +29,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
 
-      - name: Generate CodeArtifact Auth Token
-        id: codeartifact-auth-token
-        run: |
-          TOKEN=$(aws codeartifact get-authorization-token \
-            --domain rido \
-            --domain-owner 546505995906 \
-            --region us-west-2 \
-            --query authorizationToken \
-            --output text)
-          echo "TOKEN=$TOKEN"
-          echo "CODEARTIFACT_AUTH_TOKEN=$TOKEN" >> $GITHUB_ENV         
+#      - name: Generate CodeArtifact Auth Token
+#        id: codeartifact-auth-token
+#        run: |
+#          TOKEN=$(aws codeartifact get-authorization-token \
+#            --domain rido \
+#            --domain-owner 546505995906 \
+#            --region us-west-2 \
+#            --query authorizationToken \
+#            --output text)
+#          echo "TOKEN=$TOKEN"
+#          echo "CODEARTIFACT_AUTH_TOKEN=$TOKEN" >> $GITHUB_ENV
 
       - name: Decrypt large secret
         run: |
@@ -54,9 +54,9 @@ jobs:
           distribution: oracle
           java-version: 21
 
-      - name: Add aws to .m2
-        run: |
-          cp ./settings.xml ~/.m2/settings.xml
+#      - name: Add aws to .m2
+#        run: |
+#          cp ./settings.xml ~/.m2/settings.xml
 
       # - name: Test
       #   run: mvn -B test --file pom.xml
