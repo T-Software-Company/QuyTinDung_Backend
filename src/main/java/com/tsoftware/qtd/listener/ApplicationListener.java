@@ -35,9 +35,44 @@ public class ApplicationListener {
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void handApprovalSubmittedEvent(ApprovalSubmittedEvent event) {
     var notificationType =
-        NotificationType.SubmittedTypeFromProcessType(event.getApprovalProcessResponse().getType());
+        NotificationType.submittedTypeFromProcessType(event.getApprovalProcessResponse().getType());
     var approvalProcessId = event.getApprovalProcessResponse().getId();
     var notification = generateApprovalRequestNotification(approvalProcessId, notificationType);
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handApprovalUpdatedEvent(ApprovalUpdatedEvent event) {
+    var notificationType =
+        NotificationType.updatedTypeFromProcessType(event.getApprovalProcessDTO().getType());
+    var approvalProcessId = event.getApprovalProcessDTO().getId();
+    var notification = generateApprovalRequestNotification(approvalProcessId, notificationType);
+    applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
+  }
+
+  @Async
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void handleCancelledEvent(CancelledEvent event) {
+    var application = event.getApplicationResponse();
+    var notificationType = NotificationType.CANCELLED_APPLICATION;
+    var applicationId = application.getId();
+    var customerId = application.getCustomer().getId();
+    var metadata = new HashMap<String, Object>();
+    metadata.put("applicationId", applicationId);
+    metadata.put("customerId", customerId);
+
+    var notification = createNotification(notificationType, metadata);
+    var notificationId = notification.getId();
+    createCustomerNotification(UUID.fromString(customerId), notificationId, notificationType);
+    var approvalProcess = approvalProcessService.getDTOProcessingByApplicationId(applicationId);
+    approvalProcessService.handleCancelByApplicationId(applicationId);
+    approvalProcess.forEach(
+        approvalProcessDTO -> {
+          createEmployeeNotifications(approvalProcessDTO, notificationId, notificationType);
+        });
     applicationEventPublisher.publishEvent(new NotificationEvent(this, notification));
   }
 
@@ -48,7 +83,7 @@ public class ApplicationListener {
     var approvalProcess = event.getApprovalProcessDTO();
 
     var application = approvalProcess.getApplication();
-    var notificationType = NotificationType.ApprovedTypeFromProcessType(approvalProcess.getType());
+    var notificationType = NotificationType.approvedTypeFromProcessType(approvalProcess.getType());
 
     var notificationMetadata = new HashMap<String, Object>();
     notificationMetadata.put("applicationId", application.getId());
@@ -71,7 +106,7 @@ public class ApplicationListener {
     var approvalProcess = event.getApprovalProcessDTO();
 
     var application = approvalProcess.getApplication();
-    var notificationType = NotificationType.RejectedTypeFromProcessType(approvalProcess.getType());
+    var notificationType = NotificationType.rejectedTypeFromProcessType(approvalProcess.getType());
 
     var notificationMetadata = new HashMap<String, Object>();
     notificationMetadata.put("applicationId", application.getId());
@@ -145,17 +180,16 @@ public class ApplicationListener {
   @Async
   @TransactionalEventListener
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void handleAppraisalPlanCreatedEvent(AppraisalMeetingCreatedEvent event) {
-    var appraisalPlan = event.getAppraisalMeetingResponse();
-    var notificationType = NotificationType.CREATE_VALUATION_MEETING;
+  public void handleAppraisalMeetingCreatedEvent(AppraisalMeetingCreatedEvent event) {
+    var appraisalMeeting = event.getAppraisalMeetingResponse();
+    var notificationType = NotificationType.CREATE_APPRAISAL_MEETING;
 
     var notificationMetadata = new HashMap<String, Object>();
-    notificationMetadata.put("appraisalPlanId", appraisalPlan.getId());
-    notificationMetadata.put("applicationId", appraisalPlan.getApplication().getId());
-
+    notificationMetadata.put("appraisalMeetingId", appraisalMeeting.getId());
+    notificationMetadata.put("applicationId", appraisalMeeting.getApplication().getId());
     var notification = createNotification(notificationType, notificationMetadata);
 
-    appraisalPlan
+    appraisalMeeting
         .getParticipants()
         .forEach(
             participant -> {

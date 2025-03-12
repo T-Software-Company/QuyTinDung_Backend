@@ -21,7 +21,6 @@ import com.tsoftware.qtd.repository.ValuationReportRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,31 +77,12 @@ public class ValuationReportService {
     return valuationReportMapper.toResponse(valuationReportRepository.save(valuationReport));
   }
 
-  public ValuationReportResponse update(UUID id, ValuationReportRequest valuationReportRequest) {
-    ValuationReport valuationReport =
-        valuationReportRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException("ValuationReport not found"));
-    valuationReportMapper.updateEntity(valuationReportRequest, valuationReport);
-    return valuationReportMapper.toResponse(valuationReportRepository.save(valuationReport));
-  }
-
-  public void delete(UUID id) {
-    valuationReportRepository.deleteById(id);
-  }
-
   public ValuationReportResponse getById(UUID id) {
     ValuationReport valuationReport =
         valuationReportRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("ValuationReport not found"));
     return valuationReportMapper.toResponse(valuationReport);
-  }
-
-  public List<ValuationReportResponse> getAll() {
-    return valuationReportRepository.findAll().stream()
-        .map(valuationReportMapper::toResponse)
-        .collect(Collectors.toList());
   }
 
   public List<ApprovalResponse> addApprove(UUID id, List<UUID> approverIds) {
@@ -122,5 +102,10 @@ public class ValuationReportService {
 
   public void removeApprove(UUID id, List<UUID> approverIds) {
     approveRepository.deleteAllByIdInBatch(approverIds);
+  }
+
+  public ApprovalProcessResponse updateRequest(
+      UUID approvalProcessId, ValuationReportRequest valuationReportRequest) {
+    return approvalProcessService.update(approvalProcessId, valuationReportRequest);
   }
 }

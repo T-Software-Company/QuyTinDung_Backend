@@ -1,6 +1,7 @@
 package com.tsoftware.qtd.controller;
 
 import com.tsoftware.qtd.commonlib.annotation.TargetId;
+import com.tsoftware.qtd.commonlib.annotation.TransactionId;
 import com.tsoftware.qtd.commonlib.annotation.WorkflowEngine;
 import com.tsoftware.qtd.commonlib.model.ApiResponse;
 import com.tsoftware.qtd.constants.WorkflowStep;
@@ -36,29 +37,18 @@ public class AppraisalReportController {
     return ResponseEntity.ok(appraisalReportService.request(appraisalReportRequest));
   }
 
+  @WorkflowEngine(action = WorkflowEngine.WorkflowAction.UPDATE)
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<AppraisalReportResponse>> update(
-      @PathVariable UUID id, @RequestBody AppraisalReportRequest appraisalReportRequest) {
+  public ResponseEntity<?> updateRequest(
+      @PathVariable @Valid @IsUUID @TransactionId String id,
+      @RequestBody @Valid AppraisalReportRequest appraisalReportRequest) {
     return ResponseEntity.ok(
-        new ApiResponse<>(
-            200, "Updated", appraisalReportService.update(id, appraisalReportRequest)));
-  }
-
-  @DeleteMapping("/{id}")
-  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
-    appraisalReportService.delete(id);
-    return ResponseEntity.ok(new ApiResponse<>(200, "Deleted", null));
+        appraisalReportService.updateRequest(UUID.fromString(id), appraisalReportRequest));
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse<AppraisalReportResponse>> getById(@PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(200, "Fetched", appraisalReportService.getById(id)));
-  }
-
-  @GetMapping
-  public ResponseEntity<ApiResponse<List<AppraisalReportResponse>>> getAll() {
-    return ResponseEntity.ok(
-        new ApiResponse<>(200, "Fetched All", appraisalReportService.getAll()));
   }
 
   @PostMapping("/{id}/add-approve")

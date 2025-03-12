@@ -16,9 +16,7 @@ import com.tsoftware.qtd.repository.ApprovalProcessRepository;
 import com.tsoftware.qtd.repository.LoanPlanRepository;
 import com.tsoftware.qtd.repository.LoanRequestRepository;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,31 +56,12 @@ public class LoanPlanService {
     return loanplanMapper.toDTO(loanplanRepository.save(loanplan));
   }
 
-  public LoanPlanResponse update(UUID id, LoanPlanRequest loanplanRequest) {
-    LoanPlan loanplan =
-        loanplanRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException("LoanPlan not found"));
-    loanplanMapper.updateEntity(loanplanRequest, loanplan);
-    return loanplanMapper.toDTO(loanplanRepository.save(loanplan));
-  }
-
-  public void delete(UUID id) {
-    loanplanRepository.deleteById(id);
-  }
-
   public LoanPlanResponse getById(UUID id) {
     LoanPlan loanplan =
         loanplanRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("LoanPlan not found"));
     return loanplanMapper.toDTO(loanplan);
-  }
-
-  public List<LoanPlanResponse> getAll() {
-    return loanplanRepository.findAll().stream()
-        .map(loanplanMapper::toDTO)
-        .collect(Collectors.toList());
   }
 
   private void validRequest(LoanPlanRequest loanPlanRequest) {
@@ -116,5 +95,11 @@ public class LoanPlanService {
                         + ")");
               }
             });
+  }
+
+  public ApprovalProcessResponse updateRequest(
+      UUID approvalProcessId, LoanPlanRequest loanPlanRequest) {
+    this.validRequest(loanPlanRequest);
+    return approvalProcessService.update(approvalProcessId, loanPlanRequest);
   }
 }
