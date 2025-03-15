@@ -1,7 +1,10 @@
 package com.tsoftware.qtd.service;
 
+import com.tsoftware.qtd.constants.EnumType.DisbursementStatus;
 import com.tsoftware.qtd.dto.application.DisbursementDTO;
 import com.tsoftware.qtd.entity.Disbursement;
+import com.tsoftware.qtd.exception.CommonException;
+import com.tsoftware.qtd.exception.ErrorType;
 import com.tsoftware.qtd.exception.NotFoundException;
 import com.tsoftware.qtd.mapper.DisbursementMapper;
 import com.tsoftware.qtd.repository.DisbursementRepository;
@@ -23,6 +26,15 @@ public class DisbursementService {
 
   public DisbursementDTO create(DisbursementDTO disbursementDTO) {
     Disbursement disbursement = disbursementMapper.toEntity(disbursementDTO);
+    List<Disbursement> disbursementExists =
+        disbursementRepository.findByStatusNotAndApplicationId(
+            DisbursementStatus.REJECTED, UUID.fromString(disbursementDTO.getApplication().getId()));
+    if (disbursementExists.size() > 0) {
+      throw new CommonException(
+          ErrorType.DUPLICATED_REQUEST, "A disbursement request has already been submitted.");
+    }
+    disbursement.setId(null);
+    disbursement.setStatus(DisbursementStatus.PENDING);
     return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
   }
 
@@ -31,6 +43,7 @@ public class DisbursementService {
         disbursementRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("DisbursementDTO not found"));
+    disbursementDTO.setStatus(null);
     disbursementMapper.updateEntity(disbursementDTO, disbursement);
     return disbursementMapper.toDTO(disbursementRepository.save(disbursement));
   }

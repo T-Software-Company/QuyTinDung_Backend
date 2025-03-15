@@ -1,11 +1,14 @@
 package com.tsoftware.qtd.entity;
 
 import com.tsoftware.qtd.constants.EnumType.DisbursementStatus;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
 
 @Entity
 @AllArgsConstructor
@@ -27,4 +30,11 @@ public class Disbursement extends AbstractAuditEntity {
   private DisbursementStatus status;
 
   @ManyToOne private LoanAccount loanAccount;
+
+  @Type(JsonType.class)
+  @Column(columnDefinition = "jsonb")
+  private Map<String, Object> metadata;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Application application;
 }
